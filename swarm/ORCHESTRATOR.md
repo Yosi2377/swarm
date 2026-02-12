@@ -122,4 +122,33 @@ When a coding task is completed (koder/tzayar reports ✅):
 
 **Flow:** Task → Agent works → Agent tests → Agent reports done → שומר reviews → Approved ✅ / Fix needed ❌
 
+### Step 7: Active Monitoring — Never Let a Task Die
+
+**After activating an agent**, track it:
+
+1. **If sessions_send returns `timeout`** — agent is still working. Follow up:
+   - Wait 2 min, then `sessions_send`: "מה המצב? תעדכן בטלגרם דרך send.sh."
+   - If still silent, check `sessions_list` for session status
+
+2. **Agent went silent** (no send.sh message for 5+ min):
+   - Reactivate: `sessions_send` with context: "המשך מאיפה שעצרת. המשימה: [summary]"
+   - If stuck 3 times → split task into smaller pieces
+
+3. **Task persistence** — Update tasks.json via task.sh:
+   ```bash
+   /root/.openclaw/workspace/swarm/task.sh add "description" <thread_id> <agent_id>
+   /root/.openclaw/workspace/swarm/task.sh done <thread_id>
+   /root/.openclaw/workspace/swarm/task.sh stuck <thread_id> "reason"
+   ```
+
+4. **During heartbeats**, scan tasks.json for:
+   - `active` tasks older than 10 min → check and reactivate
+   - `stuck` tasks → try different approach or split
+
+5. **Never give up on a task:**
+   - Try again with more context
+   - Split into smaller steps
+   - Try a different agent
+   - Only mark "blocked" if it needs user input
+
 ## ⚠️ NEVER answer tasks directly. ALWAYS delegate to the correct agent.

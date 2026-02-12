@@ -25,7 +25,31 @@
       "updatedAt": "2026-02-12T03:01:17+01:00",
       "summary": "test",
       "completedAt": "2026-02-12T03:01:17+01:00"
+    },
+    {
+      "id": 3,
+      "agent": "koder",
+      "thread": 999,
+      "title": "verify test",
+      "priority": "urgent",
+      "status": "done",
+      "startedAt": "2026-02-12T03:02:18+01:00",
+      "updatedAt": "2026-02-12T03:02:18+01:00",
+      "summary": "test",
+      "completedAt": "2026-02-12T03:02:18+01:00"
+    },
+    {
+      "id": 4,
+      "agent": "koder",
+      "thread": 999,
+      "title": "verify low",
+      "priority": "low",
+      "status": "done",
+      "startedAt": "2026-02-12T03:02:18+01:00",
+      "updatedAt": "2026-02-12T03:02:18+01:00",
+      "summary": "test",
+      "completedAt": "2026-02-12T03:02:18+01:00"
     }
   ],
-  "nextId": 3
+  "nextId": 5
 }

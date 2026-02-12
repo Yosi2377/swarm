@@ -1,0 +1,43 @@
+{
+  "agents": {
+    "or": {
+      "name": "אור",
+      "emoji": "🐝",
+      "role": "מתאם ראשי",
+      "username": "Orworking_bot",
+      "tokenFile": ".bot-token"
+    },
+    "shomer": {
+      "name": "שומר",
+      "emoji": "🔒",
+      "role": "אבטחה",
+      "username": "TeamShomer_Bot",
+      "tokenFile": ".shomer-token"
+    },
+    "koder": {
+      "name": "קודר",
+      "emoji": "⚙️",
+      "role": "פיתוח",
+      "username": "TeamKoder_Bot",
+      "tokenFile": ".koder-token"
+    },
+    "tzayar": {
+      "name": "צייר",
+      "emoji": "🎨",
+      "role": "עיצוב",
+      "username": "TeamTzayar_Bot",
+      "tokenFile": ".tzayar-token"
+    },
+    "worker": {
+      "name": "עובד",
+      "emoji": "🤖",
+      "role": "תת-סוכנים זמניים",
+      "username": "TeamTWorker_Bot",
+      "tokenFile": ".worker-token"
+    }
+  },
+  "group": {
+    "chatId": -1003815143703,
+    "agentChatTopic": 479
+  }
+}

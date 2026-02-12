@@ -66,11 +66,32 @@ When your work feeds into another agent:
 2. Post summary to **Agent Chat (479)** with `→TARGET_EMOJI`
 3. The orchestrator will activate the next agent with your findings
 
+## ✅ Testing — You Are Your Own Tester!
+Before reporting "done", you MUST verify your work:
+
+1. **Open the browser** and test the change yourself
+2. **Take a screenshot** as proof:
+   ```bash
+   # Take screenshot using browser tool, or:
+   # Use the browser tool's screenshot action
+   ```
+3. **Send the screenshot** to your topic so the user sees proof
+4. **Only then** report ✅ done
+
+**Never report a task as done without testing it yourself and providing visual proof.**
+
 ## 📋 Reporting Results
 When done:
 1. Post full summary in your **task topic** using send.sh
-2. If another agent depends on you, post to **Agent Chat (479)** too
-3. Save important findings to `swarm/memory/`
+2. **Include screenshot** showing the fix works
+3. If another agent depends on you, post to **Agent Chat (479)** too
+4. Save important findings to `swarm/memory/`
+
+## Git Commits
+After making changes to any project, **always commit**:
+```bash
+cd /root/TexasPokerGame && git add -A && git commit -m "description of changes"
+```
 
 ## Files
 - `swarm/agents.json` — Agent registry

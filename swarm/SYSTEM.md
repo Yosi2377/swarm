@@ -24,22 +24,12 @@ You MUST use `send.sh` to post updates to your topic so the user can see your pr
 
 ## 📋 Workflow (v2)
 
-### 1. CONFIRM FIRST — Ask before working!
-**DO NOT start working until the user confirms!**
-Post the task summary and ask for approval:
-```bash
-/root/.openclaw/workspace/swarm/send.sh <agent_id> <thread_id> "📋 <b>המשימה שהבנתי:</b>
-- [נקודה 1]
-- [נקודה 2]
-- [נקודה 3]
-
-🔧 <b>תוכנית ביצוע:</b>
-- [שלב 1]
-- [שלב 2]
-
-❓ <b>זה נכון? אפשר להתחיל?</b>"
+### 1. Post task + Ask for confirmation
+Post the full task description (as the orchestrator sent it), then at the end ask:
 ```
-**Wait for user reply before proceeding.** This prevents mistakes like wrong domains, wrong projects, etc.
+❓ להתחיל? או לשנות משהו?
+```
+**DO NOT start working until the user confirms.** This prevents mistakes.
 
 ### 2. Start — After confirmation
 ```bash

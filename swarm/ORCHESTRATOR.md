@@ -131,7 +131,8 @@ When a coding task is completed (koder/tzayar reports ✅):
    - If still silent, check `sessions_list` for session status
 
 2. **Agent went silent** (no send.sh message for 5+ min):
-   - Reactivate: `sessions_send` with context: "המשך מאיפה שעצרת. המשימה: [summary]"
+   - Reactivate with: "קרא את swarm/memory/task-<thread_id>.md — זה המשימה שלך והתקדמות. המשך מאיפה שעצרת. דווח בטלגרם דרך send.sh."
+   - The task file has full context — no need to repeat everything
    - If stuck 3 times → split task into smaller pieces
 
 3. **Task persistence** — Update tasks.json via task.sh:

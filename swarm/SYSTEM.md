@@ -120,6 +120,51 @@ send.sh shomer <thread_id> "🔴 ROLLBACK — 3 ניסיונות תיקון נכ
 
 The orchestrator activates שומר automatically after each completed task.
 
+## 💾 Task State Persistence — Survive Timeouts!
+
+Your session can die mid-work (context limit, timeout). **Save your state to a file** so you can resume.
+
+### When you START a task:
+```bash
+cat > /root/.openclaw/workspace/swarm/memory/task-<thread_id>.md << 'EOF'
+# Task: <thread_id>
+## משימה
+<full task description>
+
+## שלבים
+- [ ] שלב 1: ...
+- [ ] שלב 2: ...
+- [ ] שלב 3: ...
+
+## התקדמות
+<empty - will be updated>
+
+## קבצים ששונו
+<empty - will be updated>
+
+## Safe Commit
+<output of git rev-parse HEAD>
+EOF
+```
+
+### After EACH step completed:
+Update the file — mark completed steps, add notes:
+```bash
+# Update progress in task file
+sed -i 's/- \[ \] שלב 1/- [x] שלב 1/' /root/.openclaw/workspace/swarm/memory/task-<thread_id>.md
+```
+
+### When you RESUME after restart:
+```bash
+cat /root/.openclaw/workspace/swarm/memory/task-<thread_id>.md
+```
+Read it, find where you stopped, continue from there.
+
+### When task is DONE:
+Add final summary to the file and mark all steps complete.
+
+**Rule: If it's not in the file, it didn't happen.** Always save progress.
+
 ## ✅ Testing — You Are Your Own Tester!
 Before reporting "done":
 1. **Test the change** (browser, curl, etc.)

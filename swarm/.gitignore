@@ -1,0 +1,9 @@
+# Bot tokens - NEVER commit these!
+.*-token
+.bot-token
+
+# Logs
+logs/
+
+# OS files
+.DS_Store

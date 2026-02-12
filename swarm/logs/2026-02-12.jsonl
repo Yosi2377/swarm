@@ -40,3 +40,46 @@
   "message": "⚙️ תיקנתי את 2 הבאגים:\n\n**באג 1 - לובי לא מתעדכן real-time:**\n- ה-leave middleware היה ריק לגמרי — כשלקוח מתנתק, הלובי לא קיבל עדכון\n- הוספתי leave.ts שמזהה ניתוק, מסיר שחקן מהחדר, ושולח broadcastLobbyUpdate ללובי\n- גם תיקנתי await חסר ב-gameOverCallBack\n\n**באג 2 - Stand Up לא עובד לשחקן יחיד:**\n- הבעיה: standUp קרא ל-updateGameInfo() שעובד רק כשיש משחק פעיל\n- כששחקן יחיד יושב (אין משחק), ה-sitList לא שודר ללקוח → הוא לא ראה שקם\n- הוספתי שידור sitList ישיר תמיד (לפני בדיקת game)\n\n✅ קומפילציה עברה, שירות הופעל מחדש, commit נעשה.",
   "message_id": "701"
 }
+{
+  "timestamp": "2026-02-12T02:25:32+01:00",
+  "agent": "koder",
+  "thread": 783,
+  "message": "⚙️ משימה: העלאת פרויקט הסוכנים לגיטהאב\n\nלהעלות את תיקיית /root/.openclaw/workspace/swarm/ לגיטהאב כ-repo חדש.\n\n⚠️ חשוב: לוודא שקבצי טוקנים (.bot-token, .shomer-token, .koder-token, .tzayar-token, .worker-token) לא עולים! להוסיף .gitignore מתאים.\n\nהפרויקט כולל: agents.json, send.sh, reply.sh, SYSTEM.md, ORCHESTRATOR.md, avatars, logs, memory",
+  "message_id": "784"
+}
+{
+  "timestamp": "2026-02-12T02:25:48+01:00",
+  "agent": "koder",
+  "thread": 783,
+  "message": "⚙️ 🚀 מתחיל לעבוד על העלאת פרויקט ה-swarm לגיטהאב...",
+  "message_id": "785"
+}
+{
+  "timestamp": "2026-02-12T02:26:10+01:00",
+  "agent": "koder",
+  "thread": 783,
+  "message": "⚙️ ✅ הפרויקט עלה בהצלחה לגיטהאב!\n\n📦 Repo: https://github.com/Yosi2377/swarm\n🔒 .gitignore מוגדר - טוקנים לא עלו (.*-token, .bot-token)\n📁 20 קבצים: MD docs, avatars, scripts, memory, registry\n\nהכל נקי, בלי סודות 🔐",
+  "message_id": "786"
+}
+{
+  "timestamp": "2026-02-12T02:28:50+01:00",
+  "agent": "koder",
+  "thread": 791,
+  "message": "⚙️ משימה: שדרוג מלא של מערכת הסוכנים v2\n\n10 שיפורים לבנות:\n\n🔥 דחוף:\n1. דיווח אמין — מנגנון שמוודא שסוכנים תמיד מדווחים בטלגרם (לא נשאר ריק)\n2. מעקב משימות — מערכת שעוקבת: מה פתוח, סגור, תקוע\n\n💡 שיפורים:\n3. סטטוס בורד — נושא מוצמד שמתעדכן: מי עובד על מה, כמה זמן, סטטוס\n4. QA אוטומטי — אחרי שקודר מסיים, שומר בודק אבטחה אוטומטית\n5. תבניות משימה — templates מוכנים לפי סוג (באג, פיצ'ר, עיצוב, אבטחה)\n6. היסטוריית משימות — לוג מסודר של כל המשימות שהושלמו + לינקים\n7. הודעות מעוצבות — אימוג'י, פורמט יפה, progress indicators\n8. התראות — אם סוכן תקוע 5+ דקות בלי עדכון, שליחת התראה\n\n🚀 עתיד:\n9. זיכרון משותף — סוכנים לומדים מטעויות של אחרים\n10. פקודות מהירות — /status למצב כל הסוכנים\n\nהכל בתיקייה: /root/.openclaw/workspace/swarm/\nתעדכן: SYSTEM.md, ORCHESTRATOR.md, agents.json, send.sh + קבצים חדשים לפי הצורך",
+  "message_id": "792"
+}
+{
+  "timestamp": "2026-02-12T02:29:14+01:00",
+  "agent": "koder",
+  "thread": 791,
+  "message": "🚀 מתחיל שדרוג מערכת סוכנים v2 — 10 שיפורים. עובד על זה עכשיו.",
+  "message_id": "793"
+}
+{
+  "timestamp": "2026-02-12T02:32:00+01:00",
+  "agent": "koder",
+  "thread": 791,
+  "message": "✅ <b>שדרוג מערכת סוכנים v2 — הושלם!</b>\n\n📝 <b>10 שיפורים:</b>\n\n🔥 <b>דחוף:</b>\n1️⃣ <b>דיווח אמין</b> — retry בsend.sh, כלל ברזל בSYSTEM.md\n2️⃣ <b>מעקב משימות</b> — tasks.json + task.sh CLI\n\n💡 <b>שיפורים:</b>\n3️⃣ <b>סטטוס בורד</b> — task.sh board (פורמט יפה)\n4️⃣ <b>QA אוטומטי</b> — קודר→שומר chain\n5️⃣ <b>תבניות</b> — templates/ (באג, פיצ׳ר, אבטחה, עיצוב)\n6️⃣ <b>היסטוריה</b> — task.sh history + completed[]\n7️⃣ <b>הודעות מעוצבות</b> — HTML formatting guide\n8️⃣ <b>התראות</b> — stuck detection 5 דקות\n\n🚀 <b>עתיד:</b>\n9️⃣ <b>זיכרון משותף</b> — memory/lessons.md\n🔟 <b>פקודות מהירות</b> — /status /history /stuck\n\n📁 <b>קבצים חדשים:</b>\n• task.sh — CLI ניהול משימות\n• tasks.json — מסד משימות\n• templates/ — 4 תבניות\n• memory/lessons.md — לקחים משותפים\n\n📁 <b>עודכנו:</b>\n• SYSTEM.md — v2 עם כל ההנחיות\n• ORCHESTRATOR.md — v2 עם QA chain + stuck alerts\n• agents.json — v2 עם הגדרות\n• send.sh — retry + photo support\n\n🔗 commit: 9f5a41a\n⏱ זמן: ~3 דקות",
+  "message_id": "795",
+  "ok": "true"
+}

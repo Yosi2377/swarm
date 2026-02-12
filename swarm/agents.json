@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "agents": {
     "or": {
       "name": "אור",
@@ -12,14 +13,16 @@
       "emoji": "🔒",
       "role": "אבטחה",
       "username": "TeamShomer_Bot",
-      "tokenFile": ".shomer-token"
+      "tokenFile": ".shomer-token",
+      "qaFor": ["koder"]
     },
     "koder": {
       "name": "קודר",
       "emoji": "⚙️",
       "role": "פיתוח",
       "username": "TeamKoder_Bot",
-      "tokenFile": ".koder-token"
+      "tokenFile": ".koder-token",
+      "integratesFrom": ["tzayar"]
     },
     "tzayar": {
       "name": "צייר",
@@ -38,6 +41,12 @@
   },
   "group": {
     "chatId": -1003815143703,
-    "agentChatTopic": 479
+    "agentChatTopic": 479,
+    "generalTopic": 1
+  },
+  "settings": {
+    "stuckAlertMinutes": 5,
+    "qaAutoChain": true,
+    "statusBoardEnabled": true
   }
 }

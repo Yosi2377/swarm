@@ -1,0 +1,9 @@
+{
+  "name": "swarm-dashboard",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.18.0",
+    "chokidar": "^3.5.0"
+  }
+}

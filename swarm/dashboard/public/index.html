@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐝 Swarm Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--orange:#d29922;--purple:#bc8cff}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1e2e,#0d1117);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.header h1{font-size:1.4rem;display:flex;align-items:center;gap:8px}
+.header .live{font-size:.75rem;background:var(--green);color:#000;padding:2px 8px;border-radius:10px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.stats-bar{display:flex;gap:12px;flex-wrap:wrap;padding:12px 24px;background:var(--card);border-bottom:1px solid var(--border)}
+.stat{text-align:center;padding:8px 16px;border-radius:8px;background:var(--bg);min-width:100px}
+.stat .num{font-size:1.6rem;font-weight:700}
+.stat .label{font-size:.7rem;color:var(--dim);margin-top:2px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 24px;max-width:1400px;margin:0 auto}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.panel-head{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;display:flex;align-items:center;gap:8px;font-size:.95rem}
+.panel-body{padding:12px;max-height:400px;overflow-y:auto}
+.panel-body::-webkit-scrollbar{width:6px}
+.panel-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.full-width{grid-column:1/-1}
+/* Agent cards */
+.agent-grid{display:flex;flex-wrap:wrap;gap:10px}
+.agent-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;min-width:140px;flex:1;text-align:center;transition:border-color .2s}
+.agent-card:hover{border-color:var(--accent)}
+.agent-card .emoji{font-size:2rem}
+.agent-card .name{font-weight:600;margin:4px 0}
+.agent-card .role{font-size:.75rem;color:var(--dim)}
+.agent-card .status{font-size:.7rem;margin-top:6px;padding:2px 8px;border-radius:8px;display:inline-block}
+.status-idle{background:#30363d;color:var(--dim)}
+.status-active{background:rgba(63,185,80,.15);color:var(--green)}
+.status-stuck{background:rgba(248,81,73,.15);color:var(--red)}
+/* Task list */
+.task-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;margin-bottom:4px;background:var(--bg);font-size:.85rem}
+.task-row:hover{background:#1c2129}
+.task-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.task-status.active{background:var(--green)}
+.task-status.stuck{background:var(--red)}
+.task-status.done{background:var(--dim)}
+.task-priority{font-size:.65rem;padding:1px 6px;border-radius:4px;flex-shrink:0}
+.priority-urgent{background:rgba(248,81,73,.2);color:var(--red)}
+.priority-normal{background:rgba(88,166,255,.15);color:var(--accent)}
+.priority-low{background:rgba(139,148,158,.15);color:var(--dim)}
+.task-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.task-agent{color:var(--purple);font-size:.75rem;flex-shrink:0}
+.task-time{color:var(--dim);font-size:.7rem;flex-shrink:0}
+/* Log entries */
+.log-entry{padding:6px 8px;border-radius:6px;margin-bottom:3px;font-size:.8rem;background:var(--bg);line-height:1.4}
+.log-entry .log-time{color:var(--dim);font-size:.7rem;margin-left:8px}
+.log-entry .log-agent{font-weight:600;margin-left:6px}
+.log-entry .log-msg{color:var(--text);word-break:break-word}
+/* Tabs */
+.tab-bar{display:flex;gap:4px;padding:8px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.tab{padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.8rem;color:var(--dim);transition:all .2s}
+.tab:hover,.tab.active{background:var(--accent);color:#fff}
+.empty{text-align:center;padding:24px;color:var(--dim);font-size:.85rem}
+.date-select{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.8rem;margin-right:auto}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🐝 Swarm Dashboard <span class="live">LIVE</span></h1>
+  <div id="clock" style="color:var(--dim);font-size:.85rem"></div>
+</div>
+
+<div class="stats-bar" id="stats"></div>
+
+<div class="grid">
+  <!-- Agents -->
+  <div class="panel">
+    <div class="panel-head">👥 סוכנים</div>
+    <div class="panel-body"><div class="agent-grid" id="agents"></div></div>
+  </div>
+
+  <!-- Active Tasks -->
+  <div class="panel">
+    <div class="panel-head">📋 משימות פעילות</div>
+    <div class="panel-body" id="active-tasks"></div>
+  </div>
+
+  <!-- History -->
+  <div class="panel">
+    <div class="panel-head">📜 היסטוריה</div>
+    <div class="panel-body" id="history"></div>
+  </div>
+
+  <!-- Agent Chat -->
+  <div class="panel">
+    <div class="panel-head">💬 Agent Chat</div>
+    <div class="panel-body" id="agent-chat"></div>
+  </div>
+
+  <!-- Live Logs -->
+  <div class="panel full-width">
+    <div class="panel-head">
+      📡 לוגים חיים
+      <select class="date-select" id="log-date"></select>
+    </div>
+    <div class="panel-body" id="logs" style="max-height:500px"></div>
+  </div>
+</div>
+
+<script>
+const AGENT_EMOJIS = {};
+const AGENT_NAMES = {};
+
+function timeAgo(d) {
+  const s = Math.floor((Date.now() - new Date(d).getTime()) / 1000);
+  if (s < 60) return `${s}ש'`;
+  if (s < 3600) return `${Math.floor(s/60)}ד'`;
+  if (s < 86400) return `${Math.floor(s/3600)}ש'`;
+  return `${Math.floor(s/86400)}י'`;
+}
+
+function formatTime(ts) {
+  return new Date(ts).toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function loadAgents() {
+  const agents = await fetch('/api/agents').then(r=>r.json());
+  const el = document.getElementById('agents');
+  let html = '';
+  for (const [id, a] of Object.entries(agents)) {
+    AGENT_EMOJIS[id] = a.emoji;
+    AGENT_NAMES[id] = a.name;
+    html += `<div class="agent-card">
+      <div class="emoji">${a.emoji}</div>
+      <div class="name">${a.name}</div>
+      <div class="role">${a.role}</div>
+      <div class="status status-idle" id="agent-status-${id}">ממתין</div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+async function loadTasks() {
+  const data = await fetch('/api/tasks').then(r=>r.json());
+  const tasks = data.tasks || [];
+  const completed = data.completed || [];
+
+  // Update agent statuses
+  const activeAgents = new Set();
+  tasks.forEach(t => { if(t.status==='active') activeAgents.add(t.agent); });
+  const stuckAgents = new Set();
+  tasks.forEach(t => { if(t.status==='stuck') stuckAgents.add(t.agent); });
+
+  for (const id of Object.keys(AGENT_NAMES)) {
+    const el = document.getElementById(`agent-status-${id}`);
+    if (!el) continue;
+    if (stuckAgents.has(id)) { el.className='status status-stuck'; el.textContent='תקוע'; }
+    else if (activeAgents.has(id)) { el.className='status status-active'; el.textContent='פעיל'; }
+    else { el.className='status status-idle'; el.textContent='ממתין'; }
+  }
+
+  // Active tasks
+  const ael = document.getElementById('active-tasks');
+  if (!tasks.length) { ael.innerHTML='<div class="empty">אין משימות פעילות</div>'; }
+  else {
+    ael.innerHTML = tasks.map(t => `<div class="task-row">
+      <span class="task-status ${t.status}"></span>
+      <span class="task-priority priority-${t.priority||'normal'}">${t.priority||'normal'}</span>
+      <span class="task-title" title="${escHtml(t.title)}">${escHtml(t.title)}</span>
+      <span class="task-agent">${AGENT_EMOJIS[t.agent]||''} ${AGENT_NAMES[t.agent]||t.agent}</span>
+      <span class="task-time">${t.updatedAt ? timeAgo(t.updatedAt) : ''}</span>
+    </div>`).join('');
+  }
+
+  // History
+  const hel = document.getElementById('history');
+  const hist = completed.slice().reverse().slice(0, 20);
+  if (!hist.length) { hel.innerHTML='<div class="empty">אין היסטוריה</div>'; }
+  else {
+    hel.innerHTML = hist.map(t => `<div class="task-row">
+      <span class="task-status done"></span>
+      <span class="task-priority priority-${t.priority||'normal'}">${t.priority||'normal'}</span>
+      <span class="task-title" title="${escHtml(t.title)}">${escHtml(t.title)}</span>
+      <span class="task-agent">${AGENT_EMOJIS[t.agent]||''} ${AGENT_NAMES[t.agent]||t.agent}</span>
+      <span class="task-time">${t.completedAt ? formatTime(t.completedAt) : ''}</span>
+    </div>`).join('');
+  }
+
+  // Stats
+  const todayStr = new Date().toISOString().slice(0,10);
+  const todayCompleted = completed.filter(t => (t.completedAt||'').startsWith(todayStr));
+  const totalToday = tasks.length + todayCompleted.length;
+  const successRate = totalToday ? Math.round(todayCompleted.length / totalToday * 100) : 0;
+  const stuckCount = tasks.filter(t=>t.status==='stuck').length;
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="num">${tasks.length}</div><div class="label">פעילות</div></div>
+    <div class="stat"><div class="num" style="color:var(--green)">${todayCompleted.length}</div><div class="label">הושלמו היום</div></div>
+    <div class="stat"><div class="num" style="color:var(--red)">${stuckCount}</div><div class="label">תקועות</div></div>
+    <div class="stat"><div class="num">${totalToday}</div><div class="label">סה"כ היום</div></div>
+    <div class="stat"><div class="num" style="color:var(--accent)">${successRate}%</div><div class="label">אחוז הצלחה</div></div>
+    <div class="stat"><div class="num" style="color:var(--purple)">${Object.keys(AGENT_NAMES).length}</div><div class="label">סוכנים</div></div>
+  `;
+}
+
+let currentLogDate = '';
+async function loadLogDates() {
+  const dates = await fetch('/api/log-dates').then(r=>r.json());
+  const sel = document.getElementById('log-date');
+  sel.innerHTML = dates.map(d => `<option value="${d}">${d}</option>`).join('');
+  if (dates.length) { currentLogDate = dates[0]; }
+  sel.onchange = () => { currentLogDate = sel.value; loadLogs(); };
+}
+
+async function loadLogs() {
+  const date = currentLogDate || new Date().toISOString().slice(0,10);
+  const logs = await fetch(`/api/logs?date=${date}`).then(r=>r.json());
+  const el = document.getElementById('logs');
+  const agentChatEl = document.getElementById('agent-chat');
+
+  if (!logs.length) { el.innerHTML='<div class="empty">אין לוגים</div>'; }
+  else {
+    const reversed = logs.slice().reverse();
+    el.innerHTML = reversed.map(l => `<div class="log-entry">
+      <span class="log-time">${formatTime(l.timestamp)}</span>
+      <span class="log-agent">${AGENT_EMOJIS[l.agent]||''} ${l.agent}</span>
+      <span class="log-msg">${escHtml((l.message||'').slice(0,200))}</span>
+    </div>`).join('');
+  }
+
+  // Agent chat = logs from agent chat topic (479)
+  const chatLogs = logs.filter(l => l.thread === 479).slice().reverse().slice(0, 20);
+  if (!chatLogs.length) { agentChatEl.innerHTML='<div class="empty">אין הודעות</div>'; }
+  else {
+    agentChatEl.innerHTML = chatLogs.map(l => `<div class="log-entry">
+      <span class="log-time">${formatTime(l.timestamp)}</span>
+      <span class="log-agent">${AGENT_EMOJIS[l.agent]||''} ${l.agent}</span>
+      <span class="log-msg">${escHtml((l.message||'').slice(0,200))}</span>
+    </div>`).join('');
+  }
+}
+
+// Clock
+function updateClock() {
+  document.getElementById('clock').textContent = new Date().toLocaleString('he-IL');
+}
+
+// SSE
+function connectSSE() {
+  const es = new EventSource('/api/events');
+  es.onmessage = () => { loadTasks(); loadLogs(); };
+  es.onerror = () => { setTimeout(connectSSE, 3000); };
+}
+
+// Init
+(async () => {
+  await loadAgents();
+  await loadLogDates();
+  await loadTasks();
+  await loadLogs();
+  updateClock();
+  setInterval(updateClock, 1000);
+  setInterval(() => { loadTasks(); loadLogs(); }, 10000); // fallback polling
+  connectSSE();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "shomer": {"completed": 0, "rollbacks": 0, "totalMinutes": 0, "successRate": 100, "tasks": []},
+  "koder": {"completed": 0, "rollbacks": 0, "totalMinutes": 0, "successRate": 100, "tasks": []},
+  "tzayar": {"completed": 0, "rollbacks": 0, "totalMinutes": 0, "successRate": 100, "tasks": []},
+  "worker": {"completed": 0, "rollbacks": 0, "totalMinutes": 0, "successRate": 100, "tasks": []}
+}

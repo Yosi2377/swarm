@@ -152,4 +152,27 @@ When a coding task is completed (koder/tzayar reports ✅):
    - Try a different agent
    - Only mark "blocked" if it needs user input
 
+## 🔒 Project Isolation
+When creating a task, specify allowed paths:
+```bash
+/root/.openclaw/workspace/swarm/task.sh add <agent> <thread> "title" normal "/root/ProjectFolder"
+```
+This prevents agents from accidentally modifying the wrong project.
+
+**Path mapping:**
+| Project | Allowed Path |
+|---------|-------------|
+| פוקר | /root/TexasPokerGame |
+| בלאקג'ק | /root/Blackjack-Game-Multiplayer |
+| Swarm | /root/.openclaw/workspace/swarm |
+
+## 📊 Ratings & Weekly Reports
+- After task completion, update ratings: `./rate.sh <agent> <task_id> success [minutes]`
+- After rollback: `./rate.sh <agent> <task_id> rollback`
+- Weekly summary: `./weekly-summary.sh --send` (sends to General)
+
+## ❌ Cancel Support
+When user writes "ביטול" in a task topic → the agent stops + rollback.
+Orchestrator should also mark: `./task.sh stuck <id> "cancelled by user"`
+
 ## ⚠️ NEVER answer tasks directly. ALWAYS delegate to the correct agent.

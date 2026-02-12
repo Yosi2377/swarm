@@ -208,6 +208,35 @@ Templates are in `swarm/templates/`. Use when creating tasks:
 - `security.md` — בדיקות אבטחה
 - `design.md` — משימות עיצוב
 
+## 🔒 Allowed Paths — Project Isolation
+Each task may have `allowedPaths` in tasks.json. **Before modifying ANY file**, check:
+1. Read your task in tasks.json: `jq '.tasks[] | select(.thread == THREAD_ID)' swarm/tasks.json`
+2. If `allowedPaths` is set (non-empty array), you may ONLY modify files under those paths
+3. If you need to touch files outside allowed paths → **STOP and ask in Agent Chat (479)**
+4. The swarm/ directory is always allowed (for memory, logs, task updates)
+
+**Example:** If allowedPaths = ["/root/Blackjack-Game-Multiplayer"], do NOT touch /root/TexasPokerGame!
+
+## ❌ Cancel — Immediate Stop + Rollback
+If the user writes **"ביטול"** in your topic:
+1. **STOP immediately** — do not continue working
+2. **Rollback** to safe checkpoint:
+   ```bash
+   SAFE=$(cat /tmp/safe_commit_$(basename $(pwd)))
+   cd /path/to/project && git reset --hard $SAFE
+   ```
+3. **Report:**
+   ```bash
+   send.sh <agent_id> <thread_id> "🛑 <b>בוטל!</b> הקוד הוחזר למצב הקודם."
+   ```
+
+## 💾 Backup Before Big Tasks
+Before starting any task that modifies project files:
+```bash
+/root/.openclaw/workspace/swarm/backup.sh /path/to/project [label]
+```
+This creates a tar.gz backup in /root/backups/ with timestamp. Always backup first!
+
 ## Git Commits & Safe Rollback
 
 ### Before starting ANY code changes:

@@ -22,6 +22,7 @@ case "$ACTION" in
     THREAD="$3"
     TITLE="$4"
     PRIORITY="${5:-normal}"
+    ALLOWED_PATHS="${6:-}"
     # Validate priority
     case "$PRIORITY" in
       urgent|high|normal|low) ;;
@@ -32,8 +33,10 @@ case "$ACTION" in
     
     jq --arg agent "$AGENT" --argjson thread "$THREAD" --arg title "$TITLE" \
        --arg priority "$PRIORITY" --arg now "$NOW" --argjson id "$NEXT_ID" \
+       --arg paths "$ALLOWED_PATHS" \
        '.tasks += [{id: $id, agent: $agent, thread: $thread, title: $title, 
-         priority: $priority, status: "active", startedAt: $now, updatedAt: $now}] 
+         priority: $priority, status: "active", startedAt: $now, updatedAt: $now,
+         allowedPaths: (if $paths == "" then [] else ($paths | split(",")) end)}] 
        | .nextId = ($id + 1)' "$TASKS_FILE" > "$TASKS_FILE.tmp" && mv "$TASKS_FILE.tmp" "$TASKS_FILE"
     
     # Priority emoji

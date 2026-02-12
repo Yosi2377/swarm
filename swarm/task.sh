@@ -21,7 +21,12 @@ case "$ACTION" in
     AGENT="$2"
     THREAD="$3"
     TITLE="$4"
-    PRIORITY="${5:-medium}"
+    PRIORITY="${5:-normal}"
+    # Validate priority
+    case "$PRIORITY" in
+      urgent|high|normal|low) ;;
+      *) echo "Invalid priority: $PRIORITY (use: urgent|high|normal|low)"; exit 1 ;;
+    esac
     NEXT_ID=$(jq '.nextId' "$TASKS_FILE")
     NOW=$(date -Iseconds)
     
@@ -31,7 +36,14 @@ case "$ACTION" in
          priority: $priority, status: "active", startedAt: $now, updatedAt: $now}] 
        | .nextId = ($id + 1)' "$TASKS_FILE" > "$TASKS_FILE.tmp" && mv "$TASKS_FILE.tmp" "$TASKS_FILE"
     
-    echo "Task #$NEXT_ID created: $TITLE → $AGENT (thread $THREAD)"
+    # Priority emoji
+    case "$PRIORITY" in
+      urgent) P_EMOJI="🔴" ;;
+      high)   P_EMOJI="🟠" ;;
+      normal) P_EMOJI="🟢" ;;
+      low)    P_EMOJI="⚪" ;;
+    esac
+    echo "Task #$NEXT_ID created: $P_EMOJI $TITLE → $AGENT (thread $THREAD) [$PRIORITY]"
     ;;
     
   done)
@@ -73,10 +85,11 @@ case "$ACTION" in
     AGENT_FILTER="$2"
     if [ -n "$AGENT_FILTER" ]; then
       jq -r --arg a "$AGENT_FILTER" '.tasks[] | select(.agent == $a) | 
-        "#\(.id) [\(.status)] \(.title) (thread \(.thread))"' "$TASKS_FILE"
+        "#\(.id) [\(.priority // "normal")] [\(.status)] \(.title) (thread \(.thread))"' "$TASKS_FILE"
     else
-      echo "=== Active Tasks ==="
-      jq -r '.tasks[] | "#\(.id) \(.agent) [\(.status)] \(.title) (thread \(.thread))"' "$TASKS_FILE"
+      echo "=== Active Tasks (sorted by priority) ==="
+      jq -r '.tasks | sort_by(if .priority == "urgent" then 0 elif .priority == "high" then 1 elif .priority == "normal" then 2 else 3 end)[] | 
+        "#\(.id) \(.agent) [\(.priority // "normal")] [\(.status)] \(.title) (thread \(.thread))"' "$TASKS_FILE"
       echo ""
       echo "=== Recently Completed ==="
       jq -r '.completed[-5:][] | "#\(.id) \(.agent) ✅ \(.title)"' "$TASKS_FILE"
@@ -89,7 +102,7 @@ case "$ACTION" in
     
   board)
     # Generate status board text
-    ACTIVE=$(jq -r '.tasks[] | select(.status == "active") | "▶️ #\(.id) \(.agent) — \(.title)"' "$TASKS_FILE")
+    ACTIVE=$(jq -r '.tasks | sort_by(if .priority == "urgent" then 0 elif .priority == "high" then 1 elif .priority == "normal" then 2 else 3 end)[] | select(.status == "active") | (if .priority == "urgent" then "🔴" elif .priority == "high" then "🟠" else "🟢" end) as $p | "\($p) #\(.id) \(.agent) — \(.title)"' "$TASKS_FILE")
     STUCK=$(jq -r '.tasks[] | select(.status == "stuck") | "⚠️ #\(.id) \(.agent) — \(.title) (\(.stuckReason))"' "$TASKS_FILE")
     DONE_TODAY=$(jq -r --arg today "$(date +%Y-%m-%d)" '.completed[] | select(.completedAt | startswith($today)) | "✅ #\(.id) \(.agent) — \(.title)"' "$TASKS_FILE")
     

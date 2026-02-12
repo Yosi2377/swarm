@@ -59,5 +59,17 @@ SUMMARY="$SUMMARY
 <b>הודעות היום:</b> $MSG_COUNT
 ⏰ $(date '+%H:%M')"
 
-# Send to General (thread 1)
-"$SEND" "$AGENT" 1 "$SUMMARY"
+# Send to General — forum General topic requires NO thread_id
+# send.sh always sets message_thread_id, so we send directly here
+TOKEN=$(cat "$SWARM_DIR/.bot-token")
+case "$AGENT" in
+  shomer) TOKEN=$(cat "$SWARM_DIR/.shomer-token") ;;
+  koder)  TOKEN=$(cat "$SWARM_DIR/.koder-token") ;;
+  tzayar) TOKEN=$(cat "$SWARM_DIR/.tzayar-token") ;;
+  worker) TOKEN=$(cat "$SWARM_DIR/.worker-token") ;;
+esac
+CHAT_ID="-1003815143703"
+curl -s "https://api.telegram.org/bot$TOKEN/sendMessage" \
+  -H "Content-Type: application/json" \
+  -d "$(jq -n --arg chat "$CHAT_ID" --arg text "$SUMMARY" \
+    '{chat_id: $chat, text: $text, parse_mode: "HTML"}')"

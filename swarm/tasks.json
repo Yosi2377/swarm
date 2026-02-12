@@ -1,6 +1,31 @@
 {
   "version": 2,
   "tasks": [],
-  "completed": [],
-  "nextId": 1
+  "completed": [
+    {
+      "id": 1,
+      "agent": "koder",
+      "thread": 826,
+      "title": "test priority",
+      "priority": "urgent",
+      "status": "done",
+      "startedAt": "2026-02-12T03:01:17+01:00",
+      "updatedAt": "2026-02-12T03:01:17+01:00",
+      "summary": "test",
+      "completedAt": "2026-02-12T03:01:17+01:00"
+    },
+    {
+      "id": 2,
+      "agent": "koder",
+      "thread": 826,
+      "title": "test normal",
+      "priority": "normal",
+      "status": "done",
+      "startedAt": "2026-02-12T03:01:17+01:00",
+      "updatedAt": "2026-02-12T03:01:17+01:00",
+      "summary": "test",
+      "completedAt": "2026-02-12T03:01:17+01:00"
+    }
+  ],
+  "nextId": 3
 }

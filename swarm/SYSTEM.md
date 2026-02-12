@@ -109,8 +109,14 @@ Then post to Agent Chat (479) for help.
 הערות: ...
 ```
 
-**If issues found** → שומר tags the original agent to fix.
+**If issues found** → שומר tags the original agent to fix. (attempt count +1)
 **If approved** → משימה נחשבת סגורה.
+**If 3 failed attempts** → שומר triggers automatic rollback:
+```bash
+SAFE=$(cat /tmp/safe_commit_$(basename $(pwd)))
+cd /path/to/project && git reset --hard $SAFE
+send.sh shomer <thread_id> "🔴 ROLLBACK — 3 ניסיונות תיקון נכשלו. הקוד הוחזר למצב שעבד. צריך גישה אחרת."
+```
 
 The orchestrator activates שומר automatically after each completed task.
 
@@ -151,11 +157,38 @@ Templates are in `swarm/templates/`. Use when creating tasks:
 - `security.md` — בדיקות אבטחה
 - `design.md` — משימות עיצוב
 
-## Git Commits
-After making changes to any project, **always commit**:
+## Git Commits & Safe Rollback
+
+### Before starting ANY code changes:
+```bash
+# Save checkpoint — the last known working commit
+cd /path/to/project
+SAFE_COMMIT=$(git rev-parse HEAD)
+echo "$SAFE_COMMIT" > /tmp/safe_commit_$(basename $(pwd))
+echo "📌 Checkpoint saved: $SAFE_COMMIT"
+```
+
+### After making changes:
 ```bash
 cd /path/to/project && git add -A && git commit -m "description"
 ```
+
+### 🔴 3-Strike Rollback Rule
+If your fix breaks something and you've tried to fix it **3 times** without success:
+
+1. **STOP trying to fix**
+2. **Rollback** to the safe checkpoint:
+   ```bash
+   SAFE=$(cat /tmp/safe_commit_$(basename $(pwd)))
+   git reset --hard $SAFE
+   ```
+3. **Report** in your topic:
+   ```bash
+   send.sh <agent_id> <thread_id> "❌ 3 ניסיונות נכשלו. בוצע rollback ל-commit שעבד. צריך גישה אחרת או עזרה."
+   ```
+4. **Post in Agent Chat (479)** asking for help or a different approach
+
+**Never leave the project in a broken state.** If in doubt — rollback.
 
 ## Files
 - `swarm/agents.json` — Agent registry

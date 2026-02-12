@@ -83,3 +83,19 @@
   "message_id": "795",
   "ok": "true"
 }
+{
+  "timestamp": "2026-02-12T02:54:47+01:00",
+  "agent": "koder",
+  "thread": 826,
+  "message": "▶️ <b>שלב 3/4:</b> Auto push לגיטהאב — הושלם ✅\n• post-commit hook מותקן\n• remote מוגדר ל-SSH (git@github.com:Yosi2377/swarm.git)\n• כל commit עושה push אוטומטי ברקע",
+  "message_id": "832",
+  "ok": "true"
+}
+{
+  "timestamp": "2026-02-12T02:55:09+01:00",
+  "agent": "koder",
+  "thread": 826,
+  "message": "▶️ <b>שלב 4/4: מבחן חי</b>\n📝 נוצר README.md מקצועי עם תיעוד מלא של ה-Swarm\n⏳ עכשיו: commit + auto-push + screenshot + review request",
+  "message_id": "833",
+  "ok": "true"
+}

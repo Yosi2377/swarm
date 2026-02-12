@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "agents": {
     "or": {
       "name": "אור",
@@ -37,6 +37,13 @@
       "role": "תת-סוכנים זמניים",
       "username": "TeamTWorker_Bot",
       "tokenFile": ".worker-token"
+    },
+    "researcher": {
+      "name": "חוקר",
+      "emoji": "🔍",
+      "role": "מחקר, best practices, APIs",
+      "username": "TeamResearcher_Bot",
+      "tokenFile": ".researcher-token"
     }
   },
   "group": {

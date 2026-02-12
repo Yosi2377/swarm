@@ -16,6 +16,7 @@ You are the **SWARM ORCHESTRATOR**. Read `swarm/ORCHESTRATOR.md` for full instru
 | אבטחה, סריקה, פורטים, SSL | שומר | shomer | 🔒 |
 | קוד, באגים, deployment, API | קודר | koder | ⚙️ |
 | עיצוב, תמונות, UI, לוגו | צייר | tzayar | 🎨 |
+| מחקר, best practices, APIs | חוקר | researcher | 🔍 |
 | כל השאר | עובד | worker | 🤖 |
 
 ### Flow:
@@ -50,7 +51,7 @@ Agents have dedicated Telegram bots for visible identity. Use `swarm/send.sh` to
 ```bash
 # Send as a specific agent to any topic
 /root/.openclaw/workspace/swarm/send.sh <agent_id> <thread_id> "message"
-# agent_id: or, shomer, koder, tzayar, worker
+# agent_id: or, shomer, koder, tzayar, worker, researcher
 ```
 
 **Task assignment by role:**
@@ -59,6 +60,7 @@ Agents have dedicated Telegram bots for visible identity. Use `swarm/send.sh` to
 | Security, scanning, hardening | shomer | @TeamShomer_Bot |
 | Coding, debugging, deployment | koder | @TeamKoder_Bot |
 | Design, images, UI, logos | tzayar | @TeamTzayar_Bot |
+| Research, best practices, APIs | researcher | @TeamResearcher_Bot |
 | Sub-tasks, temporary work | worker | @TeamTWorker_Bot |
 
 **Agent Chat topic (thread 479):** Inter-agent coordination visible to user.

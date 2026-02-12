@@ -13,7 +13,7 @@ PHOTO_PATH="$5"
 
 if [ -z "$AGENT_ID" ] || [ -z "$THREAD_ID" ] || [ -z "$MESSAGE" ]; then
   echo "Usage: $0 <agent_id> <thread_id> <message> [--photo path]"
-  echo "Agents: or, shomer, koder, tzayar, worker"
+  echo "Agents: or, shomer, koder, tzayar, worker, researcher"
   exit 1
 fi
 
@@ -23,8 +23,9 @@ case "$AGENT_ID" in
   shomer)  TOKEN_FILE="$SWARM_DIR/.shomer-token" ;;
   koder)   TOKEN_FILE="$SWARM_DIR/.koder-token" ;;
   tzayar)  TOKEN_FILE="$SWARM_DIR/.tzayar-token" ;;
-  worker)  TOKEN_FILE="$SWARM_DIR/.worker-token" ;;
-  *)       echo "Unknown agent: $AGENT_ID"; exit 1 ;;
+  worker)     TOKEN_FILE="$SWARM_DIR/.worker-token" ;;
+  researcher) TOKEN_FILE="$SWARM_DIR/.researcher-token" ;;
+  *)          echo "Unknown agent: $AGENT_ID"; exit 1 ;;
 esac
 
 TOKEN=$(cat "$TOKEN_FILE")

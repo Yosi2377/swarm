@@ -235,3 +235,28 @@
   "message_id": "893",
   "ok": "true"
 }
+{
+  "timestamp": "2026-02-12T03:35:07+01:00",
+  "agent": "koder",
+  "thread": 883,
+  "message": "✅ <b>הושלם! 5 שדרוגים מותקנים</b>\n\n1️⃣ <b>הרשאות לפי פרויקט</b>\n• task.sh תומך ב-allowedPaths\n• סוכנים חייבים לבדוק הרשאות לפני כל שינוי\n• SYSTEM.md מעודכן עם הכללים\n\n2️⃣ <b>גיבוי לפני משימה</b>\n• סקריפט backup.sh — tar.gz עם timestamp ל-/root/backups/\n• שומר רק 10 גיבויים אחרונים (ניקוי אוטומטי)\n• סוכנים חייבים לגבות לפני עבודה\n\n3️⃣ <b>דוח שבועי</b>\n• סקריפט weekly-summary.sh\n• סטטיסטיקות: משימות, סוכנים, הצלחות/כישלונות\n• שליחה אוטומטית ל-General עם --send\n\n4️⃣ <b>Rating לסוכנים</b>\n• ratings.json — מעקב אוטומטי\n• rate.sh — עדכון אחרי כל משימה (success/rollback)\n• אחוז הצלחה, זמן ממוצע, rollbacks\n\n5️⃣ <b>Cancel משימה</b>\n• כתיבת 'ביטול' בנושא → עצירה מיידית + rollback\n• SYSTEM.md מעודכן עם הוראות ברורות\n\n🔗 <b>קבצים חדשים:</b>\n• swarm/backup.sh\n• swarm/rate.sh\n• swarm/ratings.json\n• swarm/weekly-summary.sh\n\n🔗 <b>קבצים מעודכנים:</b>\n• swarm/task.sh (allowedPaths)\n• swarm/SYSTEM.md (3 סעיפים חדשים)\n• swarm/ORCHESTRATOR.md (הוראות חדשות)\n\n⏱ זמן: 3 דקות",
+  "message_id": "894",
+  "ok": "true"
+}
+{
+  "timestamp": "2026-02-12T03:37:55+01:00",
+  "agent": "koder",
+  "thread": 906,
+  "message": "⚙️ משימה: הדשבורד ב-https://tworkswarm.duckdns.org לא מתעדכן בכלל\n\nהדשבורד צריך להתעדכן בזמן אמת — כשמשימה חדשה נפתחת, סוכן שולח הודעה, או סטטוס משתנה — הדשבורד צריך להראות את זה מיד בלי רענון.\n\nתבדוק: /root/.openclaw/workspace/swarm/dashboard/\nשרת: פורט 8090, systemd service\n\n❓ להתחיל? או לשנות משהו?",
+  "message_id": "907",
+  "ok": "true"
+}
+test
+{
+  "timestamp": "2026-02-12T11:16:36+01:00",
+  "agent": "koder",
+  "thread": 932,
+  "message": "⚙️ משימה: בניית אתר הימורים (Betting Platform)\n\n<b>📋 איפיון מלא:</b>\n\n<b>סטאק:</b> Node.js + Express + MongoDB + Redis + Socket.io + Vue.js\n<b>תיקייה:</b> /root/BettingPlatform\n<b>APIs:</b> The Odds API + SportScore (RapidAPI) — מפתחות ב /root/.openclaw/workspace/betting-project/.env\n\n<b>מבנה המערכת:</b>\n\n1. <b>Data Aggregator (Microservice)</b>\n   - מושך odds מ-The Odds API + scores מ-SportScore\n   - Fuzzy Matcher לאיחוד שמות קבוצות\n   - שומר ב-Redis (live) + MongoDB (היסטוריה)\n   - רץ כ-service נפרד\n\n2. <b>Backend (Express + Socket.io)</b>\n   - REST API: auth, bets, users, agents\n   - Socket.io: real-time odds + scores לכל הדפדפנים (diffing)\n   - Betting Engine: validation, slip management\n   - Settlement Engine: סגירת הימורים אוטומטית בסוף משחק\n\n3. <b>מבנה משתמשים (3 רמות):</b>\n   - מנהל → רואה הכל, מטעין נקודות לסוכנים, risk management\n   - סוכן → רואה רק שחקנים שלו, מטעין נקודות משלו\n   - שחקן → מהמר, רואה היסטוריה, יתרה\n\n4. <b>Frontend (Vue.js)</b>\n   - Live Dashboard: משחקים + odds שמשתנים (ירוק/אדום)\n   - Bet Slip: תפריט צדדי לבחירות\n   - Multi-bet / Parlay\n   - Cashout\n   - History: היסטוריית הימורים\n   - Agent Dashboard: ניהול שחקנים, credits, risk\n   - Admin Dashboard: ניהול הכל\n\n5. <b>הגבלות:</b>\n   - Max bet למשחק\n   - Max exposure כולל\n   - הגבלה לפי שחקן\n   - Rate limiting\n\n6. <b>Security:</b>\n   - JWT + httpOnly cookies\n   - Redis caching\n   - Microservice architecture\n\n<b>פורטים:</b> 3001 (backend) + 3002 (aggregator) + 8089 (frontend)\n\n❓ להתחיל? או לשנות משהו?",
+  "message_id": "933",
+  "ok": "true"
+}

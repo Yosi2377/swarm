@@ -13,7 +13,9 @@
 | **פוקר (Texas Poker)** | `/root/TexasPokerGame` | `zozopoker.duckdns.org` | 8088 (client) + 7001 (server) | texas-poker, poker-client, poker-admin |
 | **בלאקג'ק (Blackjack)** | `/root/Blackjack-Game-Multiplayer` | `95.111.247.22:3000` | 3000 | blackjack |
 
-⚠️ When Yossi says "פוקר" = TexasPokerGame. When he says "בלאקג'ק" = Blackjack-Game-Multiplayer. Don't mix them up!
+| **הימורים (Betting)** | `/root/BettingPlatform` | TBD | 3001 (backend) + 3002 (aggregator) + 8089 (frontend) | TBD |
+
+⚠️ When Yossi says "פוקר" = TexasPokerGame. When he says "בלאקג'ק" = Blackjack-Game-Multiplayer. When he says "הימורים"/"בטים" = BettingPlatform. Don't mix them up!
 
 ## Current Project: Multiplayer Blackjack Game
 **Started**: 2026-02-06

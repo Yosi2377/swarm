@@ -249,10 +249,37 @@ function updateClock() {
 }
 
 // SSE
+let currentSSE = null;
+let sseStatus = 'disconnected';
+
+function updateLiveIndicator() {
+  const el = document.querySelector('.live');
+  if (!el) return;
+  if (sseStatus === 'connected') { el.textContent = 'LIVE'; el.style.background = 'var(--green)'; }
+  else if (sseStatus === 'reconnecting') { el.textContent = 'RECONNECTING'; el.style.background = 'var(--orange)'; }
+  else { el.textContent = 'OFFLINE'; el.style.background = 'var(--red)'; }
+}
+
 function connectSSE() {
+  if (currentSSE) { currentSSE.close(); currentSSE = null; }
+  sseStatus = 'reconnecting';
+  updateLiveIndicator();
+
   const es = new EventSource('/api/events');
-  es.onmessage = () => { loadTasks(); loadLogs(); };
-  es.onerror = () => { setTimeout(connectSSE, 3000); };
+  currentSSE = es;
+
+  es.onopen = () => { sseStatus = 'connected'; updateLiveIndicator(); };
+  es.onmessage = (e) => {
+    if (e.data === 'connected') { sseStatus = 'connected'; updateLiveIndicator(); return; }
+    loadTasks(); loadLogs();
+  };
+  es.onerror = () => {
+    sseStatus = 'disconnected';
+    updateLiveIndicator();
+    es.close();
+    currentSSE = null;
+    setTimeout(connectSSE, 3000);
+  };
 }
 
 // Init

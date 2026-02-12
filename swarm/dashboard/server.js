@@ -13,11 +13,24 @@ const LOGS_DIR = path.join(SWARM, 'logs');
 // SSE clients
 let sseClients = [];
 
-// Watch for changes
-chokidar.watch([TASKS_FILE, AGENTS_FILE, LOGS_DIR], { ignoreInitial: true })
-  .on('all', () => {
-    sseClients.forEach(res => res.write(`data: update\n\n`));
-  });
+// Watch for changes with debounce
+let notifyTimeout = null;
+function notifyClients() {
+  if (notifyTimeout) return;
+  notifyTimeout = setTimeout(() => {
+    notifyTimeout = null;
+    sseClients.forEach(res => {
+      try { res.write(`data: update\n\n`); } catch(e) {}
+    });
+  }, 300);
+}
+
+chokidar.watch([TASKS_FILE, AGENTS_FILE, LOGS_DIR], {
+  ignoreInitial: true,
+  usePolling: true,
+  interval: 1000,
+  awaitWriteFinish: { stabilityThreshold: 500, pollInterval: 200 }
+}).on('all', notifyClients);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -73,6 +86,13 @@ app.get('/api/events', (req, res) => {
   sseClients.push(res);
   req.on('close', () => { sseClients = sseClients.filter(c => c !== res); });
 });
+
+// SSE keepalive heartbeat every 30s
+setInterval(() => {
+  sseClients.forEach(res => {
+    try { res.write(`:heartbeat\n\n`); } catch(e) {}
+  });
+}, 30000);
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Swarm Dashboard running on port ${PORT}`);

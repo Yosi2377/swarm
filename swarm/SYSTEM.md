@@ -379,6 +379,54 @@ If the user writes **"ביטול"** in your topic:
 2. **Rollback** to safe checkpoint
 3. **Report** cancellation
 
+## 🏖️ Sandbox Environment — MANDATORY for Code Changes!
+
+**ALL code changes MUST go through sandbox.** Never edit production directly.
+
+### Flow:
+```
+1. git checkpoint (safe commit)
+2. sandbox.sh create /path/to/project
+3. Work on sandbox copy (/root/sandbox/<project>)
+4. sandbox.sh test /path/to/project → test on sandbox ports
+5. Self-review + screenshots on sandbox
+6. ✅ Success → sandbox.sh apply → commit → quality gates
+7. ❌ Failed 3x → sandbox.sh destroy → start fresh
+8. Production NEVER breaks!
+```
+
+### Commands:
+```bash
+# Create sandbox (clones project, remaps ports)
+/root/.openclaw/workspace/swarm/sandbox.sh create /path/to/project
+
+# Start sandbox on sandbox ports
+/root/.openclaw/workspace/swarm/sandbox.sh test /path/to/project
+
+# Apply changes back to production (restores original ports)
+/root/.openclaw/workspace/swarm/sandbox.sh apply /path/to/project
+
+# Destroy sandbox (clean slate)
+/root/.openclaw/workspace/swarm/sandbox.sh destroy /path/to/project
+
+# Check active sandboxes
+/root/.openclaw/workspace/swarm/sandbox.sh status
+```
+
+### Port Mapping (production → sandbox):
+| Project | Production | Sandbox |
+|---------|-----------|---------|
+| TexasPokerGame | 8088, 7001 | 9088, 9001 |
+| Blackjack | 3000 | 9000 |
+| BettingPlatform | 3001, 3002, 8089 | 9301, 9302, 9089 |
+
+### ⚠️ Important Rules:
+- **Work ONLY in /root/sandbox/<project>**, not the original path
+- sandbox.sh automatically remaps ports on create, restores on apply
+- Always `sandbox.sh test` before `sandbox.sh apply`
+- If test fails 3 times → `sandbox.sh destroy` and start over
+- After `sandbox.sh apply`, restart the production service
+
 ## 💾 Backup Before Big Tasks
 Before starting any task that modifies project files:
 ```bash

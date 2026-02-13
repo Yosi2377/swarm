@@ -181,14 +181,33 @@ When an agent reports done:
 4. Update status board
 5. Log to history
 
+## 🏖️ Sandbox — Agents Work on Copies, Not Production!
+
+**When assigning code tasks**, always instruct agents to use sandbox:
+
+```
+בהוראות המשימה, הוסף:
+"⚠️ עבוד דרך sandbox! הפקודות:
+sandbox.sh create /path → sandbox.sh test /path → sandbox.sh apply /path"
+```
+
+**Port mapping for testing:**
+| Project | Production | Sandbox |
+|---------|-----------|---------|
+| TexasPokerGame | 8088, 7001 | 9088, 9001 |
+| Blackjack | 3000 | 9000 |
+| BettingPlatform | 3001, 3002, 8089 | 9301, 9302, 9089 |
+
+**Sandbox script:** `/root/.openclaw/workspace/swarm/sandbox.sh`
+
 ## 🔒 Project Isolation
 
-| Project | Allowed Path |
-|---------|-------------|
-| פוקר | /root/TexasPokerGame |
-| בלאקג'ק | /root/Blackjack-Game-Multiplayer |
-| הימורים | /root/BettingPlatform |
-| Swarm | /root/.openclaw/workspace/swarm |
+| Project | Allowed Path | Sandbox Path |
+|---------|-------------|-------------|
+| פוקר | /root/TexasPokerGame | /root/sandbox/TexasPokerGame |
+| בלאקג'ק | /root/Blackjack-Game-Multiplayer | /root/sandbox/Blackjack-Game-Multiplayer |
+| הימורים | /root/BettingPlatform | /root/sandbox/BettingPlatform |
+| Swarm | /root/.openclaw/workspace/swarm | (direct edit allowed) |
 
 ## 📊 Ratings & Weekly Reports
 - After completion: `./rate.sh <agent> <task_id> success [minutes]`

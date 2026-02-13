@@ -24,10 +24,12 @@ TeamWork group `-1003815143703`. Each task = own topic. Use send.sh for ALL comm
 
 ### 2. PROOF — שלח screenshots (3 viewports) לפני done
 ```bash
-# Take screenshots at: Desktop 1920×1080, Tablet 768×1024, Mobile 375×812
-# Save as /tmp/screenshot-{desktop,tablet,mobile}-<thread_id>.png
-# Post all 3 via send.sh --photo BEFORE reporting done
-# Non-UI tasks: curl/test output instead
+# Use browser-test.sh for ALL browser testing:
+/root/.openclaw/workspace/swarm/browser-test.sh multi-screenshot <url> /tmp/screenshots-<thread_id>
+# This takes 3 screenshots: desktop (1920x1080), tablet (768x1024), mobile (375x812)
+# For poker testing with 2 players:
+/root/.openclaw/workspace/swarm/browser-test.sh test-poker <url> <user1> <pass1> <user2> <pass2> /tmp/test-<thread_id>
+# Post screenshots via send.sh BEFORE reporting done
 # Then run: enforce.sh post-work <thread_id> → must return PASS
 ```
 

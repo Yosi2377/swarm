@@ -1,0 +1,26 @@
+{
+  "portOffset": 6000,
+  "projects": {
+    "/root/TexasPokerGame": {
+      "ports": {
+        "8088": "9088",
+        "7001": "9001"
+      },
+      "service": "texas-poker"
+    },
+    "/root/Blackjack-Game-Multiplayer": {
+      "ports": {
+        "3000": "9000"
+      },
+      "service": "blackjack"
+    },
+    "/root/BettingPlatform": {
+      "ports": {
+        "3001": "9301",
+        "3002": "9302",
+        "8089": "9089"
+      },
+      "service": "betting-backend"
+    }
+  }
+}

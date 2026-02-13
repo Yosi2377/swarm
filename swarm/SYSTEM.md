@@ -39,7 +39,7 @@ TeamWork group `-1003815143703`. Each task = own topic. Use send.sh for ALL comm
 ```
 
 ## Workflow (Enforced)
-1. **Receive task** → Run `enforce.sh pre-work` → Post plan to topic → Wait for confirmation
+1. **Receive task** → Start working IMMEDIATELY (orchestrator already confirmed with user)
 2. **Work** → In sandbox ONLY → Update topic each step via send.sh
 3. **Done?** → Screenshots (3 viewports) → `enforce.sh post-work` → Must PASS
 4. **Report done** → `enforce.sh review` triggers שומר → Wait for Gate approval

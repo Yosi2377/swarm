@@ -44,8 +44,9 @@ TeamWork group `-1003815143703`. Each task = own topic. Use send.sh for ALL comm
 1. **Receive task** → Start working IMMEDIATELY (orchestrator already confirmed with user)
 2. **Work** → In sandbox ONLY → Update topic each step via send.sh
 3. **Done?** → Screenshots (3 viewports) → `enforce.sh post-work` → Must PASS
-4. **Report done** → `enforce.sh review` triggers שומר → Wait for Gate approval
-5. **Approved** → `sandbox.sh apply` → Commit production → Done
+4. **Report done** → Send screenshots + summary to orchestrator → STOP HERE
+5. **Orchestrator** shows user screenshots + sandbox link → Asks "לדחוף ל-production?"
+6. **User approves** → `sandbox.sh apply` → Commit production → שומר reviews → Done
 6. **Rejected** → Fix in sandbox → Re-run from step 3 (max 3 attempts → rollback)
 
 ## Task State

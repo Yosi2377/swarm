@@ -2,15 +2,27 @@
 
 ## When you receive a message in the TeamWork General topic (topic:1):
 
-### Step 1: Analyze & Route by Role
+### Step 1: Analyze & Auto-Route by Role
+
+**Auto-routing algorithm:**
+1. Read `agents.json` — each agent has `keywords`, `description`, and `role`
+2. Match user message against keywords (case-insensitive, Hebrew + English)
+3. If multiple agents match → pick the one with the MOST keyword hits
+4. If tie → use priority order: shomer > koder > tzayar > researcher > worker
+5. If NO keywords match → use agent `description` for semantic matching
+6. Fallback → worker
+
+**Routing table (from agents.json keywords):**
 
 | Keywords / Domain | Agent | Bot ID | Emoji |
 |-------------------|-------|--------|-------|
-| אבטחה, סריקה, פורטים, חולשות, firewall, SSL, hardening | שומר | shomer | 🔒 |
-| קוד, באג, תיקון, deployment, API, שרת, דאטאבייס | קודר | koder | ⚙️ |
-| עיצוב, לוגו, תמונה, UI, UX, CSS, אנימציה | צייר | tzayar | 🎨 |
-| מחקר, best practices, השוואה, API docs, ספריות | חוקר | researcher | 🔍 |
-| כל השאר / תת-משימות | עובד | worker | 🤖 |
+| אבטחה, סריקה, פורטים, חולשות, firewall, SSL, hardening, pentest, security, ביקורת | שומר | shomer | 🔒 |
+| קוד, באג, תיקון, deployment, API, שרת, דאטאבייס, node, python, javascript, CSS, HTML, backend, frontend, MongoDB, WebSocket, npm, build, error, crash | קודר | koder | ⚙️ |
+| עיצוב, לוגו, תמונה, UI, UX, CSS, אנימציה, אייקון, צבע, פונט, layout, responsive, design, image, icon, style | צייר | tzayar | 🎨 |
+| מחקר, best practices, השוואה, API docs, ספריות, חקור, מצא, ניתוח, דוח, research, compare, analyze, library, framework, benchmark | חוקר | researcher | 🔍 |
+| כל השאר / תת-משימות / קובץ, ארגון, העברה, ניקוי, תיעוד | עובד | worker | 🤖 |
+
+**⚠️ CSS conflict resolution:** If message mentions CSS WITH design/visual context → צייר. If CSS WITH bug/fix context → קודר.
 
 ### Step 2: Identify Workflow Type
 Before creating topics, classify each task into a workflow:
@@ -186,5 +198,42 @@ When an agent reports done:
 ## ❌ Cancel Support
 "ביטול" in task topic → agent stops + rollback.
 Mark: `./task.sh stuck <id> "cancelled by user"`
+
+## 🔁 Feedback Loop Protocol
+
+When a quality gate **REJECTS** a task:
+
+1. **Parse rejection** — extract specific issues from שומר's review
+2. **Auto-reassign** to original agent with:
+   ```
+   "🔁 <b>תיקון נדרש (ניסיון X/3):</b>
+   
+   ❌ בעיות שנמצאו:
+   • issue 1
+   • issue 2
+   
+   📋 תקן ודווח מחדש."
+   ```
+3. **Track attempts** — update task with retry count
+4. **3 failures → auto-rollback:**
+   ```bash
+   /root/.openclaw/workspace/swarm/send.sh shomer <thread> "🔴 ROLLBACK — 3 ניסיונות נכשלו"
+   ```
+5. **Escalate** — notify in General + Agent Chat
+
+## 🧠 Shared Memory Protocol
+
+Agents can share findings through `swarm/memory/shared/`:
+
+- **Writing:** Agent saves to `swarm/memory/shared/<topic>.md` after significant findings
+- **Reading:** Before starting work, agents check shared memory for relevant context
+- **Orchestrator role:** When activating an agent, include relevant shared memory references:
+  ```
+  "📚 קונטקסט רלוונטי: ראה swarm/memory/shared/<topic>.md"
+  ```
+- **Auto-share triggers:**
+  - Researcher completes analysis → saves to shared/
+  - שומר finds vulnerability → saves to shared/security-findings.md
+  - Any architectural decision → saves to vault/
 
 ## ⚠️ NEVER answer tasks directly. ALWAYS delegate to the correct agent.

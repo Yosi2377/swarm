@@ -176,6 +176,53 @@ send.sh <agent_id> <thread_id> "📱 Mobile (375×812)" --photo /tmp/screenshot-
 
 **Non-UI tasks** (backend, security, etc.) — skip screenshots, use curl/test output instead.
 
+## 🧠 Shared Memory — Cross-Agent Knowledge
+
+Agents share findings through `swarm/memory/shared/`. This enables knowledge transfer without direct communication.
+
+### Reading Shared Memory (Before Starting Work)
+```bash
+ls /root/.openclaw/workspace/swarm/memory/shared/
+# Read any relevant files before starting your task
+cat /root/.openclaw/workspace/swarm/memory/shared/<relevant-topic>.md
+```
+
+### Writing to Shared Memory (After Significant Findings)
+```bash
+cat > /root/.openclaw/workspace/swarm/memory/shared/<topic>.md << 'EOF'
+# <Topic>
+**Updated:** <date>
+**Agent:** <your emoji + name>
+
+## ממצאים
+<your findings>
+
+## המלצות
+<recommendations for other agents>
+EOF
+```
+
+### When to Write
+- **Researcher**: After completing any research → save analysis
+- **שומר**: After finding security issues → save to `shared/security-findings.md`
+- **קודר**: After discovering technical constraints → save to `shared/tech-notes.md`
+- **צייר**: After design decisions → save to `shared/design-system.md`
+
+### When to Read
+- **Always** check shared memory before starting work on a topic that might have prior research
+- **Orchestrator** will tell you which shared memory files are relevant in your task assignment
+
+## 🔁 Feedback Loop — Auto-Retry on Gate Rejection
+
+When your task fails a quality gate:
+1. You'll receive a message with specific issues to fix
+2. The retry count (X/3) is tracked
+3. Fix ONLY the reported issues — don't change anything else
+4. Re-run self-review checklist
+5. Report done again
+
+**After 3 failed attempts:** Your changes are auto-rolled back. Don't fight it — post to Agent Chat (479) for help.
+
 ## 🤝 Agent Collaboration — Agent Chat (Thread 479)
 
 ### When to Use Agent Chat

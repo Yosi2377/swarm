@@ -22,15 +22,27 @@ TeamWork group `-1003815143703`. Each task = own topic. Use send.sh for ALL comm
 # NEVER edit production files directly. enforce.sh check-sandbox verifies this.
 ```
 
-### 2. PROOF — שלח screenshots (3 viewports) לפני done
+### 2. PROOF — שלח screenshots לטלגרם לפני done
 ```bash
-# Use browser-test.sh for ALL browser testing:
-/root/.openclaw/workspace/swarm/browser-test.sh multi-screenshot <url> /tmp/screenshots-<thread_id>
-# This takes 3 screenshots: desktop (1920x1080), tablet (768x1024), mobile (375x812)
-# For poker testing with 2 players:
-/root/.openclaw/workspace/swarm/browser-test.sh test-poker <url> <user1> <pass1> <user2> <pass2> /tmp/test-<thread_id>
-# Post screenshots via send.sh BEFORE reporting done
-# Then run: enforce.sh post-work <thread_id> → must return PASS
+# Use browser.sh for testing:
+B="/root/.openclaw/workspace/swarm/browser.sh"
+$B start 1920 1080
+$B goto <sandbox_url>
+$B type "input[type='text']" "<username>"
+$B type "input[type='password']" "<password>"
+$B click "button"
+$B wait 2
+$B screenshot step-01-login
+# ... continue testing each feature ...
+$B stop
+
+# ⛔ MUST send screenshots to Telegram! Your session messages are NOT visible!
+TOKEN=$(cat /root/.openclaw/workspace/swarm/.<agent>-token)
+curl -F "chat_id=-1003815143703" -F "message_thread_id=<THREAD>" \
+  -F "photo=@/tmp/browser-step-01-login.png" -F "caption=📸 Step 1: Login" \
+  "https://api.telegram.org/bot${TOKEN}/sendPhoto"
+
+# NO SCREENSHOTS = TASK NOT DONE. Even if code works, user needs visual proof.
 ```
 
 ### 3. REPORT — עדכן בטלגרם כל שלב דרך send.sh

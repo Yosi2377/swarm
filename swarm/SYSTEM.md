@@ -53,6 +53,40 @@ TeamWork group `-1003815143703`. Each task = own topic. Use send.sh for ALL comm
 Save progress to `swarm/memory/task-<thread_id>.md` after EACH step.
 Resume from file if session restarts. If it's not in the file, it didn't happen.
 
+## 🤝 Delegation — העצל sub-tasks לסוכנים אחרים
+
+אתה **יכול ורצוי** להאציל sub-tasks לסוכנים אחרים! לא חייב לעשות הכל לבד.
+
+### מתי להאציל?
+- המשימה שלך כוללת עבודה שלא בתחום שלך (קודר צריך עיצוב → צייר)
+- יש כמה דברים שאפשר לעשות במקביל
+- אתה תקוע ומישהו אחר יכול לעזור
+
+### איך?
+```bash
+# delegate.sh <from_agent> <to_agent> <parent_thread> "task description"
+/root/.openclaw/workspace/swarm/delegate.sh koder tzayar 1631 "עצב לוגו ל-ZozoBet בסגנון קזינו"
+```
+זה:
+1. פותח נושא חדש בטלגרם
+2. שולח את המשימה כסוכן היעד
+3. כותב בקשת הפעלה ל-/tmp/delegate-queue/ (אור מפעיל אוטומטית)
+
+### חוקי delegation:
+- **תמיד** ציין מה אתה צריך בחזרה ואיפה לדווח
+- הסוכן השני ידווח לנושא שלו **ו**גם ל-parent thread שלך כשסיים
+- אתה יכול להמשיך לעבוד על דברים אחרים בזמן שהוא עובד
+- אל תאציל את **כל** המשימה — רק sub-tasks ספציפיים
+
+### Agent routing:
+| תחום | סוכן | ID |
+|------|-------|----|
+| קוד, באגים, API | קודר | koder |
+| אבטחה, סריקה | שומר | shomer |
+| עיצוב, תמונות, UI | צייר | tzayar |
+| מחקר, best practices | חוקר | researcher |
+| כל השאר | עובד | worker |
+
 ## Stuck? Post to Agent Chat (479):
 ```bash
 send.sh <agent_id> 479 "EMOJI→TARGET_EMOJI request"

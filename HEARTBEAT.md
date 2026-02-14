@@ -1,5 +1,11 @@
 # HEARTBEAT.md
 
+## Delegation Queue
+- Check /tmp/delegate-queue/ for pending .json files
+- For each pending file: activate the target agent session via sessions_send
+- Mark file as "activated" after sending
+- This enables agent-to-agent delegation without orchestrator bottleneck
+
 ## Active Task Monitoring
 - Check swarm/tasks.json for active tasks
 - If any task is active for 10+ minutes with no updates → reactivate the agent

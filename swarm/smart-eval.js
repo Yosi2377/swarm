@@ -67,11 +67,15 @@ async function investigate(page, failedTests) {
   diagnosis.push(`📄 Page title: "${title}"`);
   
   // 3. Check if it's a login page
-  const inputs = await page.$$('input[type="password"], input[type="text"]');
-  const hasLoginForm = inputs.length >= 2;
-  if (hasLoginForm) {
+  // Check if STILL on login (not just that login inputs exist hidden in DOM)
+  const bodyText2 = await page.evaluate(() => document.body?.innerText?.substring(0, 500) || '').catch(() => '');
+  const isLoggedIn = bodyText2.includes('יתרה') || bodyText2.includes('balance') || bodyText2.includes('logout') || bodyText2.includes('יציאה');
+  const visiblePasswordInputs = await page.$$eval('input[type="password"]', els => els.filter(el => el.offsetParent !== null).length).catch(() => 0);
+  if (visiblePasswordInputs > 0 && !isLoggedIn) {
     diagnosis.push('🔒 DIAGNOSIS: Page shows a LOGIN FORM — authentication failed or session expired!');
     diagnosis.push('   FIX: Check if login credentials are correct, or if cookies are being set properly');
+  } else if (isLoggedIn) {
+    diagnosis.push('✅ User is logged in');
   }
   
   // 4. What elements ARE visible on page
@@ -169,7 +173,16 @@ async function main() {
   
   // Monitor console
   page.on('console', msg => {
-    if (msg.type() === 'error') consoleErrors.push(msg.text());
+    if (msg.type() === 'error') {
+      const text = msg.text();
+      // Ignore known noise: COOP headers, pre-login 401, blocked aggregator 502
+      if (text.includes('Cross-Origin-Opener-Policy') ||
+          text.includes('origin-keyed agent cluster') ||
+          text.includes('Password field is not contained') ||
+          text.includes('Failed to load resource') ||
+          text.includes('net::ERR_')) return;
+      consoleErrors.push(text);
+    }
   });
   
   // Monitor network
@@ -262,7 +275,11 @@ async function main() {
     }
     
     // Network failures
-    const realFailures = networkFailures.filter(f => !f.url.includes('favicon'));
+    const realFailures = networkFailures.filter(f => 
+      !f.url.includes('favicon') && 
+      !f.url.includes('agg/socket.io') &&  // blocked sandbox aggregator
+      !(f.status === 401 && f.url.includes('/auth/me'))  // pre-login check, normal
+    );
     if (realFailures.length > 0) {
       console.log(`\n🌐 Network Failures (${realFailures.length}):`);
       realFailures.slice(0, 5).forEach(f => console.log(`   ${f.status} ${f.url.replace(/https?:\/\/[^/]+/, '')}`));

@@ -54,8 +54,13 @@ declare -A PROJECT_PATHS=(
   ["dashboard"]="/root/.openclaw/workspace/swarm/dashboard"
 )
 
-SANDBOX_PATH="/root/sandbox/${PROJECT_PATHS[$PROJECT]##*/}" 2>/dev/null || true
-PROD_PATH="${PROJECT_PATHS[$PROJECT]:-}" 2>/dev/null || true
+if [[ -n "${PROJECT_PATHS[$PROJECT]+x}" ]]; then
+  SANDBOX_PATH="/root/sandbox/${PROJECT_PATHS[$PROJECT]##*/}"
+  PROD_PATH="${PROJECT_PATHS[$PROJECT]}"
+else
+  SANDBOX_PATH=""
+  PROD_PATH=""
+fi
 
 if [ -n "$PROD_PATH" ] && [ -d "$SANDBOX_PATH" ] && [ -d "$PROD_PATH" ]; then
   DIFF_STAT=$(diff -rq "$SANDBOX_PATH" "$PROD_PATH" --exclude=node_modules --exclude=.git --exclude=dist 2>/dev/null | head -20) || true
@@ -75,7 +80,11 @@ declare -A PROJECT_URLS=(
   ["poker"]="https://zozopoker.duckdns.org"
   ["dashboard"]="http://localhost:8090"
 )
-URL="${PROJECT_URLS[$PROJECT]:-}"
+if [[ -n "${PROJECT_URLS[$PROJECT]+x}" ]]; then
+  URL="${PROJECT_URLS[$PROJECT]}"
+else
+  URL=""
+fi
 
 if [ -n "$URL" ] && command -v node >/dev/null 2>&1; then
   for viewport in "1920x1080:desktop" "768x1024:tablet" "375x812:mobile"; do
@@ -95,6 +104,13 @@ const puppeteer = require('puppeteer');
 })();" 2>/dev/null && SCREENSHOTS+=("$SHOT")
   done
 fi
+
+# 4b. Save eval output to history
+mkdir -p "$SWARM_DIR/learning"
+echo "[$(date -u +"%Y-%m-%dT%H:%M:%SZ")] THREAD=$THREAD AGENT=$AGENT RC=$TEST_RC" >> "$SWARM_DIR/learning/eval-history.log"
+echo "$TEST_OUTPUT" >> "$SWARM_DIR/learning/eval-history.log"
+echo "---" >> "$SWARM_DIR/learning/eval-history.log"
+echo "$TEST_OUTPUT" > "/tmp/eval-errors-${THREAD}.txt"
 
 # 5. Determine result and send to Telegram
 if [ $TEST_RC -eq 0 ]; then

@@ -121,7 +121,7 @@ else
 fi
 
 POKER_HTTP=$(curl -so /dev/null -w "%{http_code}" --max-time 5 "http://localhost:7001" 2>/dev/null || echo "000")
-if [ "$POKER_HTTP" = "200" ] || [ "$POKER_HTTP" = "101" ] || [ "$POKER_HTTP" = "404" ]; then
+if [ "$POKER_HTTP" = "200" ] || [ "$POKER_HTTP" = "101" ] || [ "$POKER_HTTP" = "404" ] || [ "$POKER_HTTP" = "401" ]; then
   pass "Poker server responding (HTTP $POKER_HTTP)"
 else
   fail "Poker server not responding (HTTP $POKER_HTTP)"

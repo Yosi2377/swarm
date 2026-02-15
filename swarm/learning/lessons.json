@@ -9,7 +9,7 @@
       "what": "Pushed code directly to production without sandbox",
       "lesson": "ALWAYS work in sandbox first, never push to production without user approval",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 4
+      "applied": 5
     },
     {
       "id": "e82efb93",
@@ -19,7 +19,7 @@
       "what": "Didn't create topic for task",
       "lesson": "EVERY task gets its own Telegram topic, no exceptions",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "eeb50f4e",
@@ -49,7 +49,7 @@
       "what": "isBall variable undefined in modal tabs",
       "lesson": "Always check variable scope when using variables in array definitions",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "29193cd3",
@@ -59,7 +59,7 @@
       "what": "Route order bug - full-odds after :eventId",
       "lesson": "Specific routes must come BEFORE parameterized routes in Express",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "6c6f0d33",
@@ -69,7 +69,7 @@
       "what": "trust proxy not set for rate limiter",
       "lesson": "Behind nginx, always set app.set('trust proxy', 1) for express-rate-limit",
       "timestamp": "2026-02-15T04:03:56Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "ad647fff",
@@ -79,7 +79,7 @@
       "what": "Koder deployed dashboard changes directly without waiting for user approval",
       "lesson": "Even for non-production services like the dashboard, WAIT for user approval before deploying. The flow is: screenshots → user reviews → user approves → deploy.",
       "timestamp": "2026-02-15T04:13:47Z",
-      "applied": 2
+      "applied": 3
     },
     {
       "id": "611b3199",
@@ -89,7 +89,7 @@
       "what": "commenceTime saved as string not Date object",
       "lesson": "Always use new Date() when saving dates to MongoDB, not toString(). Mongoose won't auto-convert strings to Date type.",
       "timestamp": "2026-02-15T11:53:28Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "bdf77ff4",
@@ -99,7 +99,7 @@
       "what": "limit(100) blocked events from loading",
       "lesson": "Never use hard limit() on queries that may return more results. Use pagination or remove limit for admin/internal queries.",
       "timestamp": "2026-02-15T11:53:28Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "70b8ae5a",
@@ -109,7 +109,7 @@
       "what": "rate limit exceeded from 300ms delay between API calls",
       "lesson": "When calling external APIs in loops, use at least 500ms delay. For bulk operations, use 1000ms+ or batch endpoints.",
       "timestamp": "2026-02-15T11:53:28Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "6a400dc4",
@@ -119,7 +119,27 @@
       "what": "stale events not marked completed after date passed",
       "lesson": "Add a cleanup job or query filter: if event.commenceTime < now and status is not completed, auto-mark or filter out.",
       "timestamp": "2026-02-15T11:53:28Z",
+      "applied": 2
+    },
+    {
+      "id": "1e36a270",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "test lesson",
+      "lesson": "test",
+      "timestamp": "2026-02-15T13:20:11Z",
       "applied": 1
+    },
+    {
+      "id": "f706aebd",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "success #2551",
+      "lesson": "למידה מכל טעות + הצלחה",
+      "timestamp": "2026-02-15T13:20:23Z",
+      "applied": 0
     }
   ]
 }

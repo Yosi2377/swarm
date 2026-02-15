@@ -12,12 +12,21 @@ TeamWork group `-1003815143703`. Each task = own topic. Use send.sh for ALL comm
 | worker | 🤖 | כללי | @TeamTWorker_Bot |
 | researcher | 🔍 | מחקר | @TeamResearcher_Bot |
 
-## 🧠 PRE-WORK: Query Past Lessons
+## 🧠 LEARN — תמיד!
+
+**לפני עבודה:**
 ```bash
-# BEFORE starting ANY task — check what past-you learned:
 swarm/learn.sh query "relevant keywords for this task"
-# This injects past lessons into your context. Don't repeat old mistakes!
+swarm/learn.sh inject <your_agent_id> "task context"
 ```
+
+**אחרי עבודה (הצלחה או כישלון):**
+```bash
+swarm/learn.sh lesson <your_agent_id> <critical|medium|low> "what happened" "what I learned"
+swarm/learn.sh score <your_agent_id> success  # or fail
+```
+
+**⚠️ זה חובה. כל task חייב להתחיל ב-query ולהסתיים ב-lesson+score.**
 
 ## ⛔ 3 IRON RULES — BREAK THESE = INSTANT ROLLBACK
 

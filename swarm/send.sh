@@ -31,39 +31,35 @@ esac
 TOKEN=$(cat "$TOKEN_FILE")
 CHAT_ID="-1003815143703"
 
-# Send photo if requested
-if [ "$PHOTO_FLAG" = "--photo" ] && [ -n "$PHOTO_PATH" ] && [ -f "$PHOTO_PATH" ]; then
-  RESULT=$(curl -s "https://api.telegram.org/bot$TOKEN/sendPhoto" \
-    -F "chat_id=$CHAT_ID" \
-    -F "message_thread_id=$THREAD_ID" \
-    -F "photo=@$PHOTO_PATH" \
-    -F "caption=$MESSAGE" \
-    -F "parse_mode=HTML")
-else
-  # Send text message
-  RESULT=$(curl -s "https://api.telegram.org/bot$TOKEN/sendMessage" \
-    -H "Content-Type: application/json" \
-    -d "$(jq -n --arg chat "$CHAT_ID" --argjson thread "$THREAD_ID" --arg text "$MESSAGE" \
-      '{chat_id: $chat, message_thread_id: $thread, text: $text, parse_mode: "HTML"}')")
+# Build thread args — omit message_thread_id for General (thread=1) in forum groups
+THREAD_FORM_ARGS=()
+THREAD_JSON_EXTRA=""
+if [ "$THREAD_ID" != "1" ]; then
+  THREAD_FORM_ARGS=(-F "message_thread_id=$THREAD_ID")
+  THREAD_JSON_EXTRA=", \"message_thread_id\": $THREAD_ID"
 fi
 
-# Retry once on failure
+send_msg() {
+  if [ "$PHOTO_FLAG" = "--photo" ] && [ -n "$PHOTO_PATH" ] && [ -f "$PHOTO_PATH" ]; then
+    curl -s "https://api.telegram.org/bot$TOKEN/sendPhoto" \
+      -F "chat_id=$CHAT_ID" \
+      "${THREAD_FORM_ARGS[@]}" \
+      -F "photo=@$PHOTO_PATH" \
+      -F "caption=$MESSAGE" \
+      -F "parse_mode=HTML"
+  else
+    curl -s "https://api.telegram.org/bot$TOKEN/sendMessage" \
+      -H "Content-Type: application/json" \
+      -d "{\"chat_id\": \"$CHAT_ID\"$THREAD_JSON_EXTRA, \"text\": $(echo "$MESSAGE" | jq -Rs .), \"parse_mode\": \"HTML\"}"
+  fi
+}
+
+# Send (with one retry on failure)
+RESULT=$(send_msg)
 OK=$(echo "$RESULT" | jq -r '.ok')
 if [ "$OK" != "true" ]; then
   sleep 2
-  if [ "$PHOTO_FLAG" = "--photo" ] && [ -n "$PHOTO_PATH" ] && [ -f "$PHOTO_PATH" ]; then
-    RESULT=$(curl -s "https://api.telegram.org/bot$TOKEN/sendPhoto" \
-      -F "chat_id=$CHAT_ID" \
-      -F "message_thread_id=$THREAD_ID" \
-      -F "photo=@$PHOTO_PATH" \
-      -F "caption=$MESSAGE" \
-      -F "parse_mode=HTML")
-  else
-    RESULT=$(curl -s "https://api.telegram.org/bot$TOKEN/sendMessage" \
-      -H "Content-Type: application/json" \
-      -d "$(jq -n --arg chat "$CHAT_ID" --argjson thread "$THREAD_ID" --arg text "$MESSAGE" \
-        '{chat_id: $chat, message_thread_id: $thread, text: $text, parse_mode: "HTML"}')")
-  fi
+  RESULT=$(send_msg)
 fi
 
 # Log to file

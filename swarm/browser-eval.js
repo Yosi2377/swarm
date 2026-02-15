@@ -81,8 +81,9 @@ async function runTests(page, tests, jsErrors) {
 }
 
 async function doLogin(page, login) {
-  console.log(`  🔑 Logging in to ${login.url} as ${login.user}`);
-  await page.goto(login.url, {waitUntil: 'networkidle2', timeout: 15000});
+  const loginUrl = login.url || login.base;
+  console.log(`  🔑 Logging in to ${loginUrl} as ${login.user}`);
+  await page.goto(loginUrl, {waitUntil: 'networkidle2', timeout: 15000});
   await new Promise(r => setTimeout(r, 2000));
   const userInput = await page.$('#lu') || await page.$('input[type="text"]');
   const passInput = await page.$('#lp') || await page.$('input[type="password"]');

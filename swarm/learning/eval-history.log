@@ -596,3 +596,13 @@ ProtocolError: Protocol error (Page.navigate): Invalid parameters Failed to dese
 
 Node.js v22.22.0
 ---
+[2026-02-15T15:51:05Z] THREAD=2809 AGENT=koder RC=1
+
+PASS: 5/5 tests passed
+  🔑 Logging in to http://95.111.247.22:9089 as zozo
+  ✅ Page loads
+  ❌ No JS console errors — 4 errors: Failed to load resource: the server responded with a status of 502 (Bad Gateway); Failed to load resource: the server responded with a status of 502 (Bad Gateway); Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+  ✅ Screenshot saved: /tmp/eval-browser-betting.png
+
+FAIL: 2/3 browser tests passed
+---

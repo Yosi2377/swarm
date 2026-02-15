@@ -390,6 +390,16 @@
       "lesson": "🔍 Evaluating thread 2656 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master fc4ef43] #2656: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 36 insertions(+), 4 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n  ✅ Page loads\n  ✅ No JS console errors\n  ✅ Screenshot saved: /tmp/eval-browser-betting.png\n\nPASS: 3/3 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089/admin.html\n  🔑 Auto-login to http://95.111.247.22:9089\n  ✅ מודל פירוט רווח/הפסד קיים\n  ✅ לחיצה על רווח/הפסד פותחת פירוט\n  ❌ \"יש שורות פירוט\" (needs bets data) — expected min 1, found 0\n  ❌ סה\"כ מוצג — expected \"₪\", got \"\"\n  ✅ טבלת פירוט קיימת\n\nFAIL: 3/5 browser tests passed\n\n❌ EVALUATION FAILED",
       "timestamp": "2026-02-15T14:45:19Z",
       "applied": 1
+    },
+    {
+      "id": "f62c27dd",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "eval fail #2809 attempt 1",
+      "lesson": "🔍 Evaluating thread 2809 for agent koder...\n📝 Auto-committing 1 workspace files...\n[master edb95a2] #2809: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 1 file changed, 37 insertions(+), 37 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n\nPASS: 0/0 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  ❌ אירועים מופיעים — selector \".event-row, tr\" not found\n  ❌ אין אירועים שנגמרו בטבלה — expected min undefined, found 0\n\nFAIL: 0/2 browser tests passed\n\n❌ EVALUATION FAILED",
+      "timestamp": "2026-02-15T15:19:57Z",
+      "applied": 0
     }
   ]
 }

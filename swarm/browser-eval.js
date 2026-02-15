@@ -168,7 +168,7 @@ async function doLogin(page, login) {
       '8088': {base: 'https://zozopoker.duckdns.org', user: 'admin', pass: 'admin123'},
     };
     const port = url.match(/:(\d+)/)?.[1];
-    if (port && loginUrls[port] && (url.includes('admin') || url.includes('Admin'))) {
+    if (port && loginUrls[port]) {
       await doLogin(page, loginUrls[port]);
     }
 

@@ -202,3 +202,11 @@ PASS: 5/5 tests passed
 
 FAIL: 0/2 browser tests passed
 ---
+[2026-02-15T15:25:35Z] THREAD=2809 AGENT=koder RC=1
+
+PASS: 5/5 tests passed
+  ❌ אירועים מופיעים — selector ".event-row, tr" not found
+  ❌ אין אירועים שנגמרו בטבלה — expected min undefined, found 0
+
+FAIL: 0/2 browser tests passed
+---

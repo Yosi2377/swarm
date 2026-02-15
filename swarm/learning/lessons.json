@@ -430,6 +430,16 @@
       "lesson": "Errors: \nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 22 insertions(+), 4 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n\nPASS: 0/0 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  ❌ אירועים מופיעים — selector \".event-row, tr\" not found\n  ❌ אין אירועים שנגמרו בטבלה — expected min undefined, found 0\n\nFAIL: 0/2 browser tests passed\n\n❌ EVALUATION FAILED",
       "timestamp": "2026-02-15T15:24:41Z",
       "applied": 0
+    },
+    {
+      "id": "150d3b18",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Phase 2 eval fail #2809 attempt 1",
+      "lesson": "🔍 Evaluating thread 2809 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master 328d55f] #2809: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 32 insertions(+), 4 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n\nPASS: 0/0 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  ❌ אירועים מופיעים — selector \".event-row, tr\" not found\n  ❌ אין אירועים שנגמרו בטבלה — expected min undefined, found 0\n\nFAIL: 0/2 browser tests passed\n\n❌ EVALUATION FAILED",
+      "timestamp": "2026-02-15T15:25:35Z",
+      "applied": 0
     }
   ]
 }

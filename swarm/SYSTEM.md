@@ -138,6 +138,28 @@ journalctl -u sandbox-betting-backend --no-pager -n 20
 **כל 5 דקות עבודה = לפחות הרצה אחת.**
 אם עברו 5 דקות בלי שהרצת משהו — אתה עושה משהו לא נכון.
 
+## ⛔ STEP 2c: WRITE TESTS — חובה!
+
+לפני שמסיים, כתוב tests ב-task file (`swarm/tasks/<thread_id>.md`):
+
+```markdown
+## Tests
+- curl -s http://localhost:PORT/api/ENDPOINT | python3 -c "import sys,json;d=json.load(sys.stdin);assert len(d)>0, 'empty'"
+- curl -so /dev/null -w "%{http_code}" http://localhost:PORT/page → expect 200
+- systemctl is-active SERVICE_NAME → expect active
+```
+
+Tests אלה ירוצו אוטומטית ע"י `evaluator.sh`.
+אם הם נכשלים — תקבל את השגיאות ותתקן.
+מקסימום 3 ניסיונות.
+
+**דוגמה:**
+```markdown
+## Tests
+- curl -sf http://localhost:8090/api/agents/live | python3 -c "import sys,json;d=json.load(sys.stdin);assert isinstance(d,list)" 
+- curl -so /dev/null -w "%{http_code}" http://localhost:8090 → expect 200
+```
+
 ## ⛔ STEP 3: SELF-TEST — חובה לפני דיווח "הושלם"!
 
 **אסור לדווח "✅ הושלם" בלי לבדוק בפועל!**

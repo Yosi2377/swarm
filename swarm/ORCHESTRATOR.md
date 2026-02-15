@@ -76,6 +76,30 @@ Review the 3 viewport screenshots. Verify no layout breaks.
 **Both gates PASS** → `sandbox.sh apply` → `task.sh done` → Update General
 **Gate FAIL** → Return to agent with specific issues (max 3 attempts → rollback)
 
+### 5b. Auto-Evaluator Flow (after agent reports "done")
+```bash
+# 1. Run evaluator
+swarm/evaluator.sh <thread_id> <agent_id>
+# If PASS → shows screenshots + report in General → wait for Yossi approval → deploy
+# If FAIL → sends errors to agent topic automatically
+
+# 2. For auto-retry loop:
+swarm/retry.sh <thread_id> <agent_id> 3
+# Runs evaluator, sends feedback on fail, max 3 retries
+# After max retries → escalates to user
+
+# 3. Run specific project tests:
+swarm/test-runner.sh <project> <thread_id>
+# project: betting / poker / dashboard / auto
+```
+
+**Flow:**
+1. Agent reports done → orchestrator runs `evaluator.sh <thread> <agent>`
+2. FAIL → errors sent to agent topic → agent retries → run evaluator again
+3. Max 3 retries (use `retry.sh` for automatic loop)
+4. PASS → screenshots + "✅ PASSED" sent to General → wait for Yossi approval
+5. Yossi approves → `sandbox.sh apply` → deploy
+
 ### 6. Rollback (3 failures)
 ```bash
 PROJECT_NAME=$(basename /path/to/project)

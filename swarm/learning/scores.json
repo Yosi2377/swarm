@@ -26,21 +26,21 @@
       "tasks": 0,
       "success": 0,
       "fail": 0,
-      "score": 100,
+      "score": 50,
       "streak": 0
     },
     "worker": {
       "tasks": 0,
       "success": 0,
       "fail": 0,
-      "score": 100,
+      "score": 50,
       "streak": 0
     },
     "researcher": {
       "tasks": 0,
       "success": 0,
       "fail": 0,
-      "score": 100,
+      "score": 50,
       "streak": 0
     }
   },

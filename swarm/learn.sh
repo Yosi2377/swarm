@@ -190,8 +190,8 @@ for l in ldata['lessons']:
     for w in l['lesson'].lower().split():
         if len(w) > 4: words[w] += 1
 
-# Find repeated patterns (5+ occurrences)
-repeated = {w: c for w, c in words.items() if c >= 5}
+# Find repeated patterns (2+ occurrences)
+repeated = {w: c for w, c in words.items() if c >= 2}
 
 new_skills = 0
 if repeated:
@@ -205,7 +205,7 @@ if repeated:
                 themes.setdefault(w, []).append(l)
     
     for theme, lessons in themes.items():
-        if len(lessons) >= 3:
+        if len(lessons) >= 2:
             skill_id = hashlib.md5(theme.encode()).hexdigest()[:8]
             
             # Check if already generated
@@ -238,10 +238,65 @@ if repeated:
     with open('$PATTERNS', 'w') as f: json.dump(pdata, f, indent=2, ensure_ascii=False)
 
 if new_skills == 0:
-    print('🔍 No new patterns detected (need 3+ lessons with 5+ repeated keywords)')
+    print('🔍 No new patterns detected (need 2+ lessons with 2+ repeated keywords)')
     print(f'   Current: {len(ldata[\"lessons\"])} lessons stored')
 else:
     print(f'✅ Generated {new_skills} new skills!')
+"
+  ;;
+
+# ===== INJECT =====
+inject)
+  AGENT="$2"
+  CONTEXT="$3"  # optional keyword/context
+  
+  if [ -z "$AGENT" ]; then
+    echo "Usage: learn.sh inject <agent> [context_keyword]"
+    exit 1
+  fi
+  
+  python3 -c "
+import json
+with open('$LESSONS') as f: data = json.load(f)
+with open('$SCORES') as f: sdata = json.load(f)
+
+agent = '$AGENT'
+context = '$CONTEXT'.lower() if '$CONTEXT' else ''
+
+# Get agent's own lessons + critical lessons from all agents
+lessons = []
+for l in data['lessons']:
+    relevant = False
+    if l['agent'] == agent: relevant = True
+    if l['severity'] == 'critical': relevant = True
+    if context and (context in l['what'].lower() or context in l['lesson'].lower()): relevant = True
+    if relevant:
+        lessons.append(l)
+        l['applied'] += 1
+
+# Save updated applied counts
+with open('$LESSONS', 'w') as f: json.dump(data, f, indent=2, ensure_ascii=False)
+
+# Get agent score
+a = sdata['agents'].get(agent, {})
+score = a.get('score', 50)
+streak = a.get('streak', 0)
+
+# Output injectable text
+print(f'## 🧠 Learning Context for {agent}')
+print(f'Score: {score}% | Streak: {streak}')
+if score < 50: print('⚠️ LOW SCORE — be extra careful, follow all rules strictly.')
+if streak <= -2: print('🚨 FAILING STREAK — slow down, verify each step before proceeding.')
+print()
+if lessons:
+    print(f'### Lessons ({len(lessons)}):')
+    for l in sorted(lessons, key=lambda x: x['impact'], reverse=True):
+        sev = {'critical':'🔴','medium':'🟡','low':'🟢'}.get(l['severity'],'⚪')
+        print(f'{sev} {l[\"lesson\"]}')
+    print()
+    print('Apply these lessons to your current task. Do not repeat past mistakes.')
+else:
+    print('No specific lessons found. Proceed carefully.')
 "
   ;;
 
@@ -251,6 +306,7 @@ else:
   echo "  learn.sh lesson <agent> <severity> <what> <lesson>  — Save a lesson"
   echo "  learn.sh score <agent> <success|fail> [desc]        — Update agent score"
   echo "  learn.sh query <keyword>                            — Find relevant lessons"
+  echo "  learn.sh inject <agent> [context]                   — Get lessons as injectable prompt text"
   echo "  learn.sh report                                     — Agent scores report"
   echo "  learn.sh evolve                                     — Auto-generate skills from patterns"
   ;;

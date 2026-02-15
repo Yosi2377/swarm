@@ -67,12 +67,76 @@ swarm/progress.sh <your_agent_id> <thread_id> "task description" &
 PROGRESS_PID=$!
 ```
 2. **Work** → In sandbox ONLY → Update topic each step via send.sh
+2b. **FEEDBACK LOOP** → כתוב → הרץ → תקן → חזור! (ראה סקשן מפורט למטה)
 3. **Self-Test** → ⛔ חובה! פתח browser, היכנס לאתר, בדוק שהכל עובד בפועל (ראה שלב 3 למטה)
 4. **Done?** → Run `screenshot.sh <url> <thread> <agent>` (3 viewports) → Run `guard.sh pre-done <thread> [sandbox] [url]` → Must PASS → Then `enforce.sh post-work`
 5. **Report done** → Run `swarm/auto-update.sh <agent> <thread> "summary"` → Send screenshots + summary to orchestrator → STOP HERE
 6. **Orchestrator** shows user screenshots + sandbox link → Asks "לדחוף ל-production?"
 7. **User approves** → `sandbox.sh apply` → Commit production → שומר reviews → Done
 7. **Rejected** → Fix in sandbox → Re-run from step 3 (max 3 attempts → rollback)
+
+## ⛔ STEP 2b: FEEDBACK LOOP — כתוב → הרץ → תקן → חזור!
+
+**אסור לכתוב קוד בלי להריץ אותו!**
+
+כל שינוי קוד חייב לעבור את הלולאה:
+
+### הלולאה:
+```
+while not working:
+    1. כתוב/תקן קוד
+    2. הרץ ובדוק תוצאה:
+       - Backend: curl -s http://localhost:PORT/api/... | בדוק response
+       - Frontend: browser navigate → snapshot → ראה מה על המסך
+       - שגיאה: journalctl -u SERVICE --no-pager -n 20
+    3. קרא את ה-output בעיון
+    4. יש שגיאה? → חזור ל-1
+    5. עובד? → המשך לפיצ'ר הבא
+```
+
+### דוגמאות:
+
+**Backend — API endpoint:**
+```bash
+# כתבת route חדש? הרץ מיד:
+systemctl restart sandbox-betting-backend
+sleep 2
+curl -s http://95.111.247.22:9089/api/NEW_ENDPOINT | python3 -c "import sys,json;d=json.load(sys.stdin);print(json.dumps(d,indent=2)[:500])"
+# רואה שגיאה? → תקן → restart → curl שוב
+```
+
+**Frontend — UI change:**
+```bash
+# שינית CSS/HTML? בדוק מיד:
+systemctl restart sandbox-betting-backend
+# Use browser tool:
+browser action=navigate url="http://95.111.247.22:9089"
+browser action=snapshot
+# רואה שהכפתור לא במקום? → תקן → refresh → snapshot שוב
+```
+
+**שגיאות:**
+```bash
+# שירות קרס? בדוק log:
+journalctl -u sandbox-betting-backend --no-pager -n 20
+# רואה "Cannot find module"? → תקן import → restart → בדוק שוב
+```
+
+### ❌ דוגמה לעבודה שגויה:
+"שיניתי 5 קבצים, הוספתי 3 endpoints, עיצבתי מחדש את הUI. ✅ הושלם!"
+→ איך אתה יודע שזה עובד?! לא הרצת כלום!
+
+### ✅ דוגמה לעבודה נכונה:
+"הוספתי /api/report endpoint.
+→ curl test: מחזיר 200 + data ✅
+→ שיניתי UI.
+→ browser snapshot: רואה את הטבלה החדשה ✅
+→ לחצתי על כפתור: עובד ✅
+→ בדקתי mobile: רספונסיבי ✅"
+
+### כלל הזהב:
+**כל 5 דקות עבודה = לפחות הרצה אחת.**
+אם עברו 5 דקות בלי שהרצת משהו — אתה עושה משהו לא נכון.
 
 ## ⛔ STEP 3: SELF-TEST — חובה לפני דיווח "הושלם"!
 

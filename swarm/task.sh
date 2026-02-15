@@ -128,13 +128,187 @@ case "$ACTION" in
     echo -e "$BOARD"
     ;;
     
+  review)
+    TASK_ID="$2"
+    if [ -z "$TASK_ID" ]; then
+      echo "Usage: task.sh review <task_id>"
+      exit 1
+    fi
+    
+    TASK=$(jq --argjson id "$TASK_ID" '.tasks[] | select(.id == $id)' "$TASKS_FILE")
+    if [ -z "$TASK" ]; then
+      echo "Task #$TASK_ID not found"
+      exit 1
+    fi
+    
+    AGENT=$(echo "$TASK" | jq -r '.agent')
+    THREAD=$(echo "$TASK" | jq -r '.thread')
+    TITLE=$(echo "$TASK" | jq -r '.title')
+    NOW=$(date -Iseconds)
+    
+    # Determine reviewer based on agent type
+    case "$AGENT" in
+      koder)   REVIEWER="shomer"; REVIEWER_NAME="שומר"; REVIEW_FOCUS="אבטחה, באגים, secrets" ;;
+      shomer)  REVIEWER="koder";  REVIEWER_NAME="קודר"; REVIEW_FOCUS="קוד תקין, לא שבר כלום" ;;
+      tzayar)  REVIEWER="koder";  REVIEWER_NAME="קודר"; REVIEW_FOCUS="קוד תקין, responsive" ;;
+      worker)  REVIEWER="koder";  REVIEWER_NAME="קודר"; REVIEW_FOCUS="קוד תקין, best practices" ;;
+      *)       REVIEWER="shomer"; REVIEWER_NAME="שומר"; REVIEW_FOCUS="בדיקה כללית" ;;
+    esac
+    
+    # Update task status
+    jq --argjson id "$TASK_ID" --arg now "$NOW" --arg reviewer "$REVIEWER" \
+       '(.tasks[] | select(.id == $id)).status = "in-review" |
+        (.tasks[] | select(.id == $id)).reviewer = $reviewer |
+        (.tasks[] | select(.id == $id)).updatedAt = $now' \
+       "$TASKS_FILE" > "$TASKS_FILE.tmp" && mv "$TASKS_FILE.tmp" "$TASKS_FILE"
+    
+    # Post review request
+    "$SWARM_DIR/send.sh" "$REVIEWER" 479 "🔍 <b>Peer Review נדרש!</b>
+
+📋 Task #$TASK_ID: $TITLE
+👤 עבד: $AGENT → בודק: $REVIEWER_NAME
+📍 Thread: $THREAD
+🎯 מיקוד: $REVIEW_FOCUS
+
+בדוק את העבודה ודווח:
+✅ אישור: <code>task.sh approve $TASK_ID \"הערות\"</code>
+❌ דחייה: <code>task.sh reject $TASK_ID \"סיבה\"</code>"
+    
+    echo "📋 Task #$TASK_ID sent for peer review → $REVIEWER_NAME"
+    ;;
+    
+  approve)
+    TASK_ID="$2"
+    NOTES="${3:-approved}"
+    NOW=$(date -Iseconds)
+    
+    TASK=$(jq --argjson id "$TASK_ID" '.tasks[] | select(.id == $id)' "$TASKS_FILE")
+    if [ -z "$TASK" ]; then
+      echo "Task #$TASK_ID not found"
+      exit 1
+    fi
+    
+    THREAD=$(echo "$TASK" | jq -r '.thread')
+    AGENT=$(echo "$TASK" | jq -r '.agent')
+    REVIEWER=$(echo "$TASK" | jq -r '.reviewer // "unknown"')
+    
+    jq --argjson id "$TASK_ID" --arg notes "$NOTES" --arg now "$NOW" \
+       '(.tasks[] | select(.id == $id)).status = "approved" |
+        (.tasks[] | select(.id == $id)).reviewNotes = $notes |
+        (.tasks[] | select(.id == $id)).updatedAt = $now' \
+       "$TASKS_FILE" > "$TASKS_FILE.tmp" && mv "$TASKS_FILE.tmp" "$TASKS_FILE"
+    
+    "$SWARM_DIR/send.sh" "$AGENT" "$THREAD" "✅ <b>Peer Review אושר!</b>
+בודק: $REVIEWER
+הערות: $NOTES
+מוכן לפרודקשן! 🚀"
+    
+    echo "✅ Task #$TASK_ID approved by $REVIEWER"
+    ;;
+    
+  reject)
+    TASK_ID="$2"
+    REASON="${3:-needs fixes}"
+    NOW=$(date -Iseconds)
+    
+    TASK=$(jq --argjson id "$TASK_ID" '.tasks[] | select(.id == $id)' "$TASKS_FILE")
+    if [ -z "$TASK" ]; then
+      echo "Task #$TASK_ID not found"
+      exit 1
+    fi
+    
+    THREAD=$(echo "$TASK" | jq -r '.thread')
+    AGENT=$(echo "$TASK" | jq -r '.agent')
+    REVIEWER=$(echo "$TASK" | jq -r '.reviewer // "unknown"')
+    
+    jq --argjson id "$TASK_ID" --arg reason "$REASON" --arg now "$NOW" \
+       '(.tasks[] | select(.id == $id)).status = "active" |
+        (.tasks[] | select(.id == $id)).reviewNotes = $reason |
+        (.tasks[] | select(.id == $id)).updatedAt = $now' \
+       "$TASKS_FILE" > "$TASKS_FILE.tmp" && mv "$TASKS_FILE.tmp" "$TASKS_FILE"
+    
+    "$SWARM_DIR/send.sh" "$AGENT" "$THREAD" "❌ <b>Peer Review — נדרשים תיקונים</b>
+בודק: $REVIEWER
+סיבה: $REASON
+תקן ודווח שוב."
+    
+    echo "❌ Task #$TASK_ID rejected: $REASON"
+    ;;
+
+  retry)
+    TASK_ID="$2"
+    if [ -z "$TASK_ID" ]; then
+      echo "Usage: task.sh retry <task_id>"
+      exit 1
+    fi
+    
+    TASK=$(jq --argjson id "$TASK_ID" '.tasks[] | select(.id == $id)' "$TASKS_FILE")
+    if [ -z "$TASK" ]; then
+      echo "Task #$TASK_ID not found"
+      exit 1
+    fi
+    
+    AGENT=$(echo "$TASK" | jq -r '.agent')
+    THREAD=$(echo "$TASK" | jq -r '.thread')
+    TITLE=$(echo "$TASK" | jq -r '.title')
+    RETRY_COUNT=$(echo "$TASK" | jq -r '.retryCount // 0')
+    MAX_RETRIES=3
+    NOW=$(date -Iseconds)
+    
+    if [ "$RETRY_COUNT" -ge "$MAX_RETRIES" ]; then
+      echo "🚨 Task #$TASK_ID exceeded max retries ($MAX_RETRIES). Escalating!"
+      # Escalate: reassign to different agent or split
+      case "$AGENT" in
+        koder) NEW_AGENT="worker" ;;
+        worker) NEW_AGENT="koder" ;;
+        shomer) NEW_AGENT="koder" ;;
+        *) NEW_AGENT="worker" ;;
+      esac
+      
+      jq --argjson id "$TASK_ID" --arg new_agent "$NEW_AGENT" --arg now "$NOW" \
+         '(.tasks[] | select(.id == $id)).agent = $new_agent |
+          (.tasks[] | select(.id == $id)).status = "active" |
+          (.tasks[] | select(.id == $id)).escalated = true |
+          (.tasks[] | select(.id == $id)).updatedAt = $now' \
+         "$TASKS_FILE" > "$TASKS_FILE.tmp" && mv "$TASKS_FILE.tmp" "$TASKS_FILE"
+      
+      "$SWARM_DIR/send.sh" "$NEW_AGENT" "$THREAD" "🚨 <b>משימה הועברה אליך (escalation)</b>
+Task #$TASK_ID: $TITLE
+$AGENT ניסה $RETRY_COUNT פעמים ונכשל.
+נסה גישה אחרת!"
+      
+      echo "🔄 Escalated Task #$TASK_ID → $NEW_AGENT"
+      exit 0
+    fi
+    
+    # Determine retry strategy based on count
+    NEW_RETRY=$((RETRY_COUNT + 1))
+    case "$NEW_RETRY" in
+      1) STRATEGY="retry — ניסיון נוסף עם אותה גישה" ;;
+      2) STRATEGY="rethink — נסה גישה אחרת לגמרי" ;;
+      3) STRATEGY="split — פצל את המשימה לחלקים קטנים" ;;
+    esac
+    
+    jq --argjson id "$TASK_ID" --argjson retry "$NEW_RETRY" --arg now "$NOW" \
+       '(.tasks[] | select(.id == $id)).status = "active" |
+        (.tasks[] | select(.id == $id)).retryCount = $retry |
+        (.tasks[] | select(.id == $id)).updatedAt = $now' \
+       "$TASKS_FILE" > "$TASKS_FILE.tmp" && mv "$TASKS_FILE.tmp" "$TASKS_FILE"
+    
+    "$SWARM_DIR/send.sh" "$AGENT" "$THREAD" "🔄 <b>Retry #$NEW_RETRY/$MAX_RETRIES</b>
+Task #$TASK_ID: $TITLE
+אסטרטגיה: $STRATEGY"
+    
+    echo "🔄 Task #$TASK_ID retry #$NEW_RETRY ($STRATEGY)"
+    ;;
+    
   history)
     jq -r '.completed | reverse | .[:20][] | 
       "#\(.id) | \(.agent) | \(.title) | thread \(.thread) | \(.completedAt // "?")"' "$TASKS_FILE"
     ;;
     
   *)
-    echo "Usage: task.sh {add|done|stuck|status|list|board|history}"
+    echo "Usage: task.sh {add|done|stuck|status|list|board|history|review|approve|reject}"
     echo "  add <agent> <thread> <title> [priority]"
     echo "  done <task_id> [summary]"
     echo "  stuck <task_id> [reason]"

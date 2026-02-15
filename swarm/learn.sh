@@ -85,6 +85,52 @@ if a['streak'] <= -3:
 "
   ;;
 
+# ===== QUALITY SCORE =====
+quality)
+  AGENT="$2"
+  SCORE="$3"     # 1-10
+  TASK_ID="$4"
+  NOTES="${5:-}"
+  
+  if [ -z "$SCORE" ] || [ -z "$TASK_ID" ]; then
+    echo "Usage: learn.sh quality <agent> <1-10> <task_id> [notes]"
+    exit 1
+  fi
+  
+  python3 -c "
+import json, os
+
+QUALITY_FILE = '$DIR/quality.json'
+if not os.path.exists(QUALITY_FILE):
+    data = {'reviews': [], 'agentAverages': {}}
+else:
+    with open(QUALITY_FILE) as f: data = json.load(f)
+
+from datetime import datetime
+data['reviews'].append({
+    'agent': '$AGENT',
+    'score': int('$SCORE'),
+    'taskId': '$TASK_ID',
+    'notes': '''$NOTES''',
+    'timestamp': datetime.utcnow().isoformat() + 'Z'
+})
+
+# Recalc averages
+from collections import defaultdict
+scores = defaultdict(list)
+for r in data['reviews']:
+    scores[r['agent']].append(r['score'])
+data['agentAverages'] = {a: round(sum(s)/len(s), 1) for a, s in scores.items()}
+
+with open(QUALITY_FILE, 'w') as f: json.dump(data, f, indent=2, ensure_ascii=False)
+
+avg = data['agentAverages'].get('$AGENT', 0)
+stars = '⭐' * int('$SCORE') + '☆' * (10 - int('$SCORE'))
+print(f'{stars} $AGENT: quality $SCORE/10 (avg: {avg}/10)')
+if avg < 4: print('⚠️ Low quality average! Consider training or reassignment.')
+"
+  ;;
+
 # ===== QUERY =====
 query)
   KEYWORD="$2"

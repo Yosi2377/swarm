@@ -1,0 +1,36 @@
+{
+  "$schema": "task-schema-v1",
+  "description": "Structured task handoff schema for swarm agents",
+  "template": {
+    "id": "<auto>",
+    "title": "<short title>",
+    "agent": "<target agent>",
+    "thread": "<thread_id>",
+    "priority": "normal|high|urgent|low",
+    "inputs": {
+      "description": "<detailed task description>",
+      "files": ["<list of relevant files>"],
+      "context": "<background info the agent needs>",
+      "dependencies": ["<task IDs this depends on>"]
+    },
+    "expected_output": {
+      "type": "code|report|design|security|other",
+      "deliverables": ["<what should be produced>"],
+      "success_criteria": ["<how to know it's done right>"]
+    },
+    "constraints": {
+      "sandbox_only": true,
+      "allowed_paths": ["<paths agent can modify>"],
+      "deadline_minutes": null,
+      "max_retries": 3,
+      "review_required": true
+    },
+    "metadata": {
+      "parent_task": null,
+      "created_by": "<agent>",
+      "created_at": "<ISO timestamp>",
+      "retry_count": 0,
+      "retry_strategy": "same|different_model|split|escalate"
+    }
+  }
+}

@@ -113,6 +113,49 @@ app.get('/api/task-files', (req, res) => {
   } catch (e) { res.json([]); }
 });
 
+// API: timeline — task events from logs
+app.get('/api/timeline', (req, res) => {
+  try {
+    const events = [];
+    const logFiles = fs.readdirSync(LOGS_DIR).filter(f => f.endsWith('.jsonl')).sort().reverse().slice(0, 7);
+    for (const f of logFiles) {
+      const lines = fs.readFileSync(path.join(LOGS_DIR, f), 'utf8').split('\n').filter(Boolean);
+      for (const line of lines) {
+        try {
+          const entry = JSON.parse(line);
+          events.push({
+            timestamp: entry.timestamp || entry.ts,
+            agent: entry.agent || entry.from || 'unknown',
+            thread: entry.thread || entry.threadId || 0,
+            action: entry.action || 'message',
+            message: (entry.message || entry.text || '').substring(0, 200)
+          });
+        } catch (e) {}
+      }
+    }
+    // Sort by time, return last 200
+    events.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    res.json(events.slice(0, 200));
+  } catch (e) { res.json([]); }
+});
+
+// API: quality scores
+app.get('/api/quality', (req, res) => {
+  try {
+    const QUALITY_FILE = path.join(SWARM, 'learning', 'quality.json');
+    const data = JSON.parse(fs.readFileSync(QUALITY_FILE, 'utf8'));
+    res.json(data);
+  } catch (e) { res.json({ reviews: [], agentAverages: {} }); }
+});
+
+// API: active context
+app.get('/api/active-context', (req, res) => {
+  try {
+    const content = fs.readFileSync(path.join(SWARM, 'memory', 'shared', 'active-context.md'), 'utf8');
+    res.json({ content });
+  } catch (e) { res.json({ content: 'No active context' }); }
+});
+
 // API: scores
 app.get('/api/scores', (req, res) => {
   try {

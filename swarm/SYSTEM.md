@@ -179,3 +179,40 @@ swarm/learn.sh lesson <your_agent_id> <critical|medium|low> "what happened" "les
 ```
 
 The orchestrator runs `learn.sh evolve` periodically to auto-generate skills from patterns.
+
+## 🆕 Enhanced Tools (v5)
+
+### Shared Context — מצב חי של כל הסוכנים
+**כשמתחילים משימה:** עדכנו `swarm/memory/shared/active-context.md` עם הסטטוס שלכם.
+**כשמסיימים:** עדכנו חזרה ל-idle.
+זה מאפשר לסוכנים אחרים לדעת מה קורה ולמנוע עבודה כפולה.
+
+### Checkpoints — שמירת התקדמות
+```bash
+# שמור נקודת ציון אחרי כל שלב חשוב
+swarm/checkpoint.sh save <task_id> "step-name" '{"key":"value"}'
+
+# אם נפלת — בדוק איפה הפסקת
+swarm/checkpoint.sh resume <task_id>
+```
+
+### Guardrails — בדיקות לפני שליחה
+```bash
+# הרץ לפני דיווח "done":
+swarm/guard.sh full <thread_id> <sandbox_path>
+```
+
+### Quality Score — ציון איכות
+```bash
+# אחרי peer review, הבודק נותן ציון 1-10:
+swarm/learn.sh quality <agent> <1-10> <task_id> "notes"
+```
+
+### Episode — שמירת משימה שלמה לזיכרון
+```bash
+# אחרי task.sh done:
+swarm/episode.sh save <task_id>
+
+# חיפוש משימות דומות מהעבר:
+swarm/episode.sh find "<keyword>"
+```

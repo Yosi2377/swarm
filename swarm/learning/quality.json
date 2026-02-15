@@ -1,0 +1,14 @@
+{
+  "reviews": [
+    {
+      "agent": "koder",
+      "score": 8,
+      "taskId": "99",
+      "notes": "good work",
+      "timestamp": "2026-02-15T11:11:35.462602Z"
+    }
+  ],
+  "agentAverages": {
+    "koder": 8.0
+  }
+}

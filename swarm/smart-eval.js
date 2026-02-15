@@ -188,12 +188,14 @@ async function main() {
     console.log(`  🔑 Auto-login to ${loginUrl}`);
     await page.goto(loginUrl, { waitUntil: 'networkidle2', timeout: 15000 }).catch(() => {});
     await new Promise(r => setTimeout(r, 2000));
-    const inputs = await page.$$('input');
-    if (inputs.length >= 2) {
-      await inputs[0].type(creds.user);
-      await inputs[1].type(creds.pass);
-      const btns = await page.$$('button');
-      if (btns.length > 0) await btns[0].click();
+    // Try specific IDs first, then fall back to generic inputs
+    const userInput = await page.$('#lu') || await page.$('input[type="text"]');
+    const passInput = await page.$('#lp') || await page.$('input[type="password"]');
+    if (userInput && passInput) {
+      await userInput.type(creds.user);
+      await passInput.type(creds.pass);
+      const loginBtn = await page.$('button');
+      if (loginBtn) await loginBtn.click();
     }
     await new Promise(r => setTimeout(r, 3000));
   }

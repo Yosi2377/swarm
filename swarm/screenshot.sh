@@ -29,20 +29,10 @@ for vp in "${VIEWPORTS[@]}"; do
 
   echo "📸 Capturing $NAME ($W×$H) → $OUTFILE"
 
-  # Use Playwright via the openclaw browser tool (CLI fallback)
-  # We use npx playwright screenshot with viewport
-  npx --yes playwright screenshot \
-    --viewport-size="${W},${H}" \
-    --wait-for-timeout=3000 \
-    --full-page \
-    "$URL" "$OUTFILE" 2>/dev/null || {
-    # Fallback: use chromium directly
-    chromium-browser --headless --disable-gpu --no-sandbox \
-      --screenshot="$OUTFILE" --window-size="${W},${H}" \
-      "$URL" 2>/dev/null || {
-      echo "⚠️ Failed to capture $NAME viewport"
-      continue
-    }
+  # Use browser-test.sh with auto-login
+  "$SWARM_DIR/browser-test.sh" screenshot "$URL" "$OUTFILE" "$W" "$H" 2>/dev/null || {
+    echo "⚠️ Failed to capture $NAME viewport"
+    continue
   }
 
   if [ -f "$OUTFILE" ] && [ -s "$OUTFILE" ]; then

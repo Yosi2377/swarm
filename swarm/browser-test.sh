@@ -13,16 +13,19 @@ ACTION=$1
 shift
 
 CHROME_PATH="/root/.cache/puppeteer/chrome/linux-145.0.7632.46/chrome-linux64/chrome"
+SWARM_DIR="/root/.openclaw/workspace/swarm"
 
 case "$ACTION" in
   screenshot)
     URL="$1"; OUTPUT="$2"; WIDTH="${3:-1920}"; HEIGHT="${4:-1080}"
     node -e "
     const puppeteer = require('puppeteer');
+    const autoLogin = require('${SWARM_DIR}/auto-login');
     (async () => {
       const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox','--disable-gpu']});
       const page = await browser.newPage();
       await page.setViewport({width: ${WIDTH}, height: ${HEIGHT}});
+      await autoLogin(page, '${URL}');
       await page.goto('${URL}', {waitUntil: 'networkidle2', timeout: 30000});
       await new Promise(r => setTimeout(r, 2000));
       await page.screenshot({path: '${OUTPUT}', fullPage: false});
@@ -98,9 +101,11 @@ case "$ACTION" in
     URL="$1"; EXPR="$2"
     node -e "
     const puppeteer = require('puppeteer');
+    const autoLogin = require('${SWARM_DIR}/auto-login');
     (async () => {
       const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox','--disable-gpu']});
       const page = await browser.newPage();
+      await autoLogin(page, '${URL}');
       await page.goto('${URL}', {waitUntil: 'networkidle2', timeout: 30000});
       const result = await page.evaluate(() => { return ${EXPR}; });
       console.log(JSON.stringify(result, null, 2));

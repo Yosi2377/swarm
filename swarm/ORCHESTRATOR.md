@@ -32,18 +32,21 @@ curl -s "https://api.telegram.org/bot$(cat /root/.openclaw/workspace/swarm/.bot-
 5. <code>enforce.sh review THREAD</code> → שומר בודק"
 ```
 
-Then sessions_send to activate:
+Then **sessions_spawn** to activate (runs in background, non-blocking!):
 ```
-sessionKey: agent:main:telegram:group:-1003815143703:topic:THREAD_ID
-message: "TASK\n\nקרא את swarm/SYSTEM.md. אתה NAME (EMOJI). דווח דרך send.sh AGENT_ID.
-
-⛔ חובה:
-1. מיד כשמתחיל: swarm/progress.sh AGENT_ID THREAD 'task desc' &
-2. לפני done: swarm/guard.sh pre-done THREAD (חייב PASS!)
-3. כשמסיים: swarm/auto-update.sh AGENT_ID THREAD 'summary'"
+sessions_spawn(
+  task="TASK\n\nקרא את swarm/SYSTEM.md. אתה NAME (EMOJI). דווח דרך send.sh AGENT_ID.\n\n⛔ חובה:\n1. מיד כשמתחיל: swarm/progress.sh AGENT_ID THREAD 'task desc' &\n2. לפני done: swarm/guard.sh pre-done THREAD (חייב PASS!)\n3. כשמסיים: swarm/auto-update.sh AGENT_ID THREAD 'summary'",
+  label="task-THREAD_ID"
+)
+# Returns immediately! Agent works in background.
+# When done, announces result back to this session.
 ```
 
 **⚠️ אם שכחת להוסיף את 3 ההוראות — תתקן! זה לא אופציונלי.**
+
+> **sessions_spawn vs sessions_send:**
+> - `sessions_spawn` = **מקבילי**, רץ ברקע, לא חוסם — **תמיד לעבודה!**
+> - `sessions_send` = **סדרתי**, חוסם — **רק לפינגים קצרים / בדיקת סטטוס**
 
 ### 4. Acknowledge in General
 ```bash
@@ -101,7 +104,7 @@ send.sh or 1 "$(/root/.openclaw/workspace/swarm/task.sh board)"
 | בלאקג'ק | /root/Blackjack-Game-Multiplayer | /root/sandbox/Blackjack-Game-Multiplayer |
 | הימורים | /root/BettingPlatform | /root/sandbox/BettingPlatform |
 
-## ⚡ PARALLEL WORK — חובה!
+## ⚡ PARALLEL WORK — חובה! (עד 8 סוכנים במקביל)
 **תמיד** פצל משימות בין כמה סוכנים כשאפשר! אסור לשלוח הכל לסוכן אחד.
 
 דוגמאות:
@@ -110,7 +113,18 @@ send.sh or 1 "$(/root/.openclaw/workspace/swarm/task.sh board)"
 - קוד + עיצוב → קודר על הקוד, צייר על העיצוב
 - תיקון + בדיקה → קודר מתקן, שומר בודק במקביל
 
-כל sessions_send יוצר session נפרד — הם רצים במקביל!
-**אם יש יותר ממשימה אחת — תמיד במקביל. אין תירוצים.**
+### How to launch parallel agents:
+```
+# ALWAYS use sessions_spawn for each task — they run concurrently!
+sessions_spawn(task="...", label="task-101")  # → returns immediately
+sessions_spawn(task="...", label="task-102")  # → returns immediately
+sessions_spawn(task="...", label="task-103")  # → returns immediately
+# All 3 agents now working in background simultaneously (up to 8 concurrent)
+```
+
+**⚠️ ALWAYS use `sessions_spawn` when there are multiple tasks.**
+`sessions_send` is ONLY for short pings / status checks — it blocks until response!
+
+**אם יש יותר ממשימה אחת — תמיד sessions_spawn במקביל. אין תירוצים.**
 
 ## ⚠️ NEVER answer tasks directly. ALWAYS delegate.

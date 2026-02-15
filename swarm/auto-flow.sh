@@ -94,8 +94,35 @@ while [ $WAITED -lt $WAIT_MAX ]; do
   log "⏳ Waiting... (${WAITED}s / ${WAIT_MAX}s)"
 done
 
+# ── STEP 2.5: Validate test selectors before eval ──
+validate_selectors() {
+  TASK_FILE="$SWARM_DIR/tasks/${THREAD}.md"
+  if [ -f "$TASK_FILE" ] && grep -q "## Browser Tests" "$TASK_FILE"; then
+    # Detect URL from task file or project
+    local TEST_URL=""
+    case "$PROJECT" in
+      betting) TEST_URL="http://95.111.247.22:9089" ;;
+      poker) TEST_URL="http://95.111.247.22:9088" ;;
+      dashboard) TEST_URL="http://95.111.247.22:8090" ;;
+    esac
+    if [ -n "$TEST_URL" ]; then
+      log "🔍 Validating browser test selectors..."
+      if ! "$SWARM_DIR/validate-tests.sh" "$TEST_URL" "$TASK_FILE" 2>&1; then
+        log "⚠️ Invalid selectors in task file — fixing before eval"
+        # Remove invalid Browser Tests section to prevent false failures
+        sed -i '/^## Browser Tests/,/^##/{/^## Browser Tests/d;/^##/!d}' "$TASK_FILE"
+        log "✂️ Removed invalid Browser Tests section"
+      fi
+    fi
+  fi
+}
+
 # ── STEP 3: Run evaluator ──
 evaluate() {
+  # Validate selectors on first attempt only
+  if [ "$RETRY" -eq 0 ]; then
+    validate_selectors
+  fi
   feed "eval" "ניסיון $((RETRY + 1))/$MAX_RETRIES"
   log "🔍 Running evaluator (attempt $((RETRY + 1))/$MAX_RETRIES)..."
   

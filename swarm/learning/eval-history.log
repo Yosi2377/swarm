@@ -789,3 +789,28 @@ FAIL: 0/2 browser tests passed
 💡 ========== SUGGESTED FIXES ==========
    → Expected 2+ elements but found fewer. Check: is data loading? Is the API returning results? Is the DOM being populated?
 ---
+[2026-02-15T18:15:35Z] THREAD=3009 AGENT=koder RC=1
+
+PASS: 5/5 tests passed
+  🔑 Auto-login to http://95.111.247.22:9089
+  ❌ לחיצה על משחק פותחת מודל — button ".match-row" not found
+  ❌ יש יותר מקו אחד — found 0, expected min:2 max:undefined
+
+FAIL: 0/2 browser tests passed
+
+🔍 ========== INVESTIGATION ==========
+
+🩺 Diagnosis:
+   📍 Current URL: http://95.111.247.22:9089/
+   📄 Page title: "ZozoBet - Premium Sports Betting"
+   ✅ User is logged in
+   📝 Page text (first 200 chars): "⚽ ספורט 🔴 ליין רץ 163 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 5102.02₪ 15.2, 19:15:21 EN/HE יציאה ענפי ספורט 🏆 הכל 619 🎾 Challenger New Delhi 251 ⚽ England Premier League 40 ⚽ "
+   📊 Elements on page: {"tr":0,"td":0,"div":3064,"button":11,"table":0,"form":0,"a":11,"img":2,"modal":0}
+      🔎 Similar classes found: c-match
+      ❌ "לחיצה על משחק פותחת מודל": selector ".match-row" not found
+      ❌ "יש יותר מקו אחד": selector ".totals-line, .total-row" not found
+   📸 Screenshot: /tmp/eval-diagnosis.png
+
+💡 ========== SUGGESTED FIXES ==========
+   → Expected 2+ elements but found fewer. Check: is data loading? Is the API returning results? Is the DOM being populated?
+---

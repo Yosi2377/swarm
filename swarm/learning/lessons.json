@@ -140,6 +140,16 @@
       "lesson": "למידה מכל טעות + הצלחה",
       "timestamp": "2026-02-15T13:20:23Z",
       "applied": 1
+    },
+    {
+      "id": "13111560",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "success #2572",
+      "lesson": "auto-commit חובה",
+      "timestamp": "2026-02-15T13:34:04Z",
+      "applied": 0
     }
   ]
 }

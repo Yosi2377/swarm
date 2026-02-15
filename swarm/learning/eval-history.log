@@ -8,3 +8,6 @@ FAIL: 4/9 tests passed
   ❌ Test 7: custom: /root/.openclaw/workspace/swarm/learn.sh lesson koder low "test lesson" "test" — got: ✅ Lesson saved: 1e36a270 (impact: 0.3)
   ❌ Test 8: custom: grep -q "learn.sh" /root/.openclaw/workspace/swarm/auto-flow.sh — got: 
 ---
+[2026-02-15T13:34:03Z] THREAD=2572 AGENT=koder RC=0
+SKIP: Could not auto-detect project
+---

@@ -12,6 +12,13 @@ TeamWork group `-1003815143703`. Each task = own topic. Use send.sh for ALL comm
 | worker | 🤖 | כללי | @TeamTWorker_Bot |
 | researcher | 🔍 | מחקר | @TeamResearcher_Bot |
 
+## 🧠 PRE-WORK: Query Past Lessons
+```bash
+# BEFORE starting ANY task — check what past-you learned:
+swarm/learn.sh query "relevant keywords for this task"
+# This injects past lessons into your context. Don't repeat old mistakes!
+```
+
 ## ⛔ 3 IRON RULES — BREAK THESE = INSTANT ROLLBACK
 
 ### 1. SANDBOX — עבוד רק על /root/sandbox/
@@ -106,6 +113,32 @@ curl -s -X POST http://95.111.247.22:9089/api/bets -H "Content-Type: application
 - שלחתי הימור 10₪ → יתרה ירדה מ-5200 ל-5190 ✅
 - בדקתי ב-DB → bet document נשמר ✅
 📸 screenshots מצורפים"
+
+## ⛔ STEP 3b: REFLECTION — לפני דיווח הושלם!
+
+אחרי שבדקת (self-test), עצור ושאל את עצמך:
+
+### שאלות חובה:
+1. "מה יכול להישבר בגלל השינוי שלי?"
+2. "האם בדקתי את כל ה-edge cases?"
+3. "האם המשתמש יראה בדיוק מה שהוא ביקש?"
+4. "האם יש side effects על פיצ'רים אחרים?"
+5. "אם הייתי המשתמש, מה הייתי מתלונן עליו?"
+
+### Iterative Fix:
+- מצאת בעיה? → תקן → בדוק שוב → reflection שוב
+- מקסימום 3 סבבים
+- כל סבב: log מה מצאת ומה תיקנת
+
+### Learn:
+- `learn.sh lesson <agent> <severity> "what happened" "what I learned"`
+- `learn.sh query "<relevant keywords>"` BEFORE starting (check past mistakes)
+
+### Reflection Script:
+```bash
+# Run automated reflection checks:
+swarm/reflect.sh <agent_id> <thread_id>
+```
 
 ## ⛔ STEP 4: PRE-DONE GATE — guard.sh חובה!
 

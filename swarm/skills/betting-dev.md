@@ -1,5 +1,7 @@
 # Skill: ZozoBet Development
 
+> 📖 **DB Schema Reference**: See `swarm/skills/zozobet-schema.md` for full MongoDB collections, fields, and common mistakes.
+
 ## Project Overview
 ZozoBet — אתר הימורי ספורט עם odds בזמן אמת, multi-bet, cashout, settlement engine.
 

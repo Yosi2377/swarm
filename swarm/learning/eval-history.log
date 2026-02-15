@@ -166,3 +166,15 @@ PASS: 5/5 tests passed
 
 FAIL: 3/5 browser tests passed
 ---
+[2026-02-15T14:45:18Z] THREAD=2656 AGENT=koder RC=1
+
+PASS: 5/5 tests passed
+  🔑 Auto-login to http://95.111.247.22:9089
+  ✅ מודל פירוט רווח/הפסד קיים
+  ✅ לחיצה על רווח/הפסד פותחת פירוט
+  ❌ "יש שורות פירוט" (needs bets data) — expected min 1, found 0
+  ❌ סה"כ מוצג — expected "₪", got ""
+  ✅ טבלת פירוט קיימת
+
+FAIL: 3/5 browser tests passed
+---

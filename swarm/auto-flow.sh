@@ -180,6 +180,20 @@ while [ $RETRY -lt $MAX_RETRIES ]; do
     "$SWARM_DIR/learn.sh" lesson "$AGENT" "medium" "eval fail #$THREAD attempt $RETRY" "$EVAL_OUTPUT" 2>/dev/null || true
     "$SWARM_DIR/learn.sh" score "$AGENT" fail "$DESC" 2>/dev/null || true
     feed "fail" "ניסיון $RETRY/$MAX_RETRIES"
+    # Extract what passed and what failed for clear reporting
+    PASSED=$(echo "$EVAL_OUTPUT" | grep "✅" | head -5)
+    FAILED=$(echo "$EVAL_OUTPUT" | grep "❌" | head -5)
+    
+    send_telegram 1 "or" "🔄 #$THREAD — ניסיון $RETRY/$MAX_RETRIES
+
+✅ מה עובד:
+$PASSED
+
+❌ מה עדיין לא:
+$FAILED
+
+⏳ הסוכן מקבל feedback ומתקן..."
+    
     log "❌ EVALUATION FAILED (attempt $RETRY/$MAX_RETRIES)"
     
     if [ $RETRY -lt $MAX_RETRIES ]; then

@@ -184,7 +184,8 @@ async function main() {
   const port = url.match(/:(\d+)/)?.[1];
   if (port && LOGIN_CREDS[port]) {
     const creds = LOGIN_CREDS[port];
-    const loginUrl = url.replace(/\/[^/]*$/, '/').replace(/\/$/, '');
+    const parsedUrl = new URL(url);
+    const loginUrl = `${parsedUrl.protocol}//${parsedUrl.host}`;
     console.log(`  🔑 Auto-login to ${loginUrl}`);
     await page.goto(loginUrl, { waitUntil: 'networkidle2', timeout: 15000 }).catch(() => {});
     await new Promise(r => setTimeout(r, 2000));

@@ -55,11 +55,52 @@ curl -F "chat_id=-1003815143703" -F "message_thread_id=<THREAD>" \
 ## Workflow (Enforced)
 1. **Receive task** → Start working IMMEDIATELY (orchestrator already confirmed with user)
 2. **Work** → In sandbox ONLY → Update topic each step via send.sh
-3. **Done?** → Screenshots (3 viewports) → `enforce.sh post-work` → Must PASS
-4. **Report done** → Send screenshots + summary to orchestrator → STOP HERE
-5. **Orchestrator** shows user screenshots + sandbox link → Asks "לדחוף ל-production?"
-6. **User approves** → `sandbox.sh apply` → Commit production → שומר reviews → Done
-6. **Rejected** → Fix in sandbox → Re-run from step 3 (max 3 attempts → rollback)
+3. **Self-Test** → ⛔ חובה! פתח browser, היכנס לאתר, בדוק שהכל עובד בפועל (ראה שלב 3 למטה)
+4. **Done?** → Screenshots (3 viewports) → `enforce.sh post-work` → Must PASS
+5. **Report done** → Send screenshots + summary to orchestrator → STOP HERE
+6. **Orchestrator** shows user screenshots + sandbox link → Asks "לדחוף ל-production?"
+7. **User approves** → `sandbox.sh apply` → Commit production → שומר reviews → Done
+7. **Rejected** → Fix in sandbox → Re-run from step 3 (max 3 attempts → rollback)
+
+## ⛔ STEP 3: SELF-TEST — חובה לפני דיווח "הושלם"!
+
+**אסור לדווח "✅ הושלם" בלי לבדוק בפועל!**
+הסוכן חייב להיכנס לאתר דרך browser ולבצע את הפעולות בעצמו.
+
+### מה זה אומר:
+- אם עשית שינוי UI → **פתח browser, ראה שזה נראה נכון**
+- אם הוספת API → **קרא ל-API עם curl, ראה שמחזיר תוצאה**
+- אם תיקנת הימור → **תנסה להמר בפועל!** לחץ odds → הכנס סכום → שלח
+- אם שינית admin → **היכנס כ-admin ובדוק שהפיצ'ר עובד**
+
+### איך לבדוק עם browser:
+```bash
+# Use the browser tool directly:
+browser action=navigate url="http://95.111.247.22:9089"
+browser action=snapshot  # see what's on screen
+browser action=act request={kind:"click", ref:"..."} # click elements
+browser action=act request={kind:"type", ref:"...", text:"..."} # type text
+browser action=screenshot  # take screenshot for proof
+```
+
+### או עם curl לבדיקות API:
+```bash
+curl -s http://95.111.247.22:9089/api/events | python3 -c "import sys,json;d=json.load(sys.stdin);print(len(d),'events')"
+curl -s -X POST http://95.111.247.22:9089/api/bets -H "Content-Type: application/json" -d '{"selections":[...]}'
+```
+
+### ❌ דוגמה לדיווח שקרי (אסור!):
+"✅ הושלם. שיניתי את הקוד, הוספתי CSS, הכל עובד."
+→ איך אתה יודע שזה עובד אם לא בדקת?!
+
+### ✅ דוגמה לדיווח אמיתי (נכון):
+"✅ בדקתי בפועל:
+- נכנסתי לאתר → רשימת 185 משחקים ✅
+- פתחתי מודאל → 8 טאבים עם odds ✅
+- לחצתי על odds 2.15 → נוסף לסליפ ✅
+- שלחתי הימור 10₪ → יתרה ירדה מ-5200 ל-5190 ✅
+- בדקתי ב-DB → bet document נשמר ✅
+📸 screenshots מצורפים"
 
 ## Task State
 Save progress to `swarm/memory/task-<thread_id>.md` after EACH step.

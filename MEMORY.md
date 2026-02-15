@@ -77,3 +77,9 @@
 - Standard Shader is unreliable in WebGL - need alternative approach
 - Always use ShaderHelper.CreateMaterial() instead of raw Shader.Find()
 - Firefox on VNC can crash - restart with fresh profile when stuck
+- BetsAPI inplay returns ALL sports in one call (sport_id param ignored)
+- Events filter must be 12h+ not 3h — matches last longer than 3h window
+- ALWAYS create topic + sandbox + screenshots + approval before production
+- NEVER code directly as orchestrator — delegate to koder
+- Agent skills system: swarm/skills/ for project knowledge, swarm/tasks/ for task files
+- Learning system: swarm/learn.sh for lessons, scores, auto-skill evolution

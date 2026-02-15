@@ -70,6 +70,16 @@
       "lesson": "Behind nginx, always set app.set('trust proxy', 1) for express-rate-limit",
       "timestamp": "2026-02-15T04:03:56Z",
       "applied": 0
+    },
+    {
+      "id": "ad647fff",
+      "agent": "or",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "Koder deployed dashboard changes directly without waiting for user approval",
+      "lesson": "Even for non-production services like the dashboard, WAIT for user approval before deploying. The flow is: screenshots → user reviews → user approves → deploy.",
+      "timestamp": "2026-02-15T04:13:47Z",
+      "applied": 0
     }
   ]
 }

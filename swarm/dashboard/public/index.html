@@ -60,6 +60,25 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Tahoma,sans-s
 .tab:hover,.tab.active{background:var(--accent);color:#fff}
 .empty{text-align:center;padding:24px;color:var(--dim);font-size:.85rem}
 .date-select{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.8rem;margin-right:auto}
+/* Score bar */
+.score-bar{display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:4px;background:var(--bg);border-radius:8px;font-size:.85rem}
+.score-bar .agent-name{min-width:80px;font-weight:600}
+.score-bar .bar-wrap{flex:1;height:16px;background:var(--border);border-radius:8px;overflow:hidden;position:relative}
+.score-bar .bar-fill{height:100%;border-radius:8px;transition:width .5s}
+.score-bar .bar-text{position:absolute;right:8px;top:0;line-height:16px;font-size:.7rem;font-weight:700}
+.score-bar .score-stats{font-size:.7rem;color:var(--dim);min-width:100px;text-align:left}
+/* Lessons */
+.lesson-card{padding:8px 10px;margin-bottom:4px;background:var(--bg);border-radius:8px;border-right:3px solid var(--dim);font-size:.82rem}
+.lesson-card.critical{border-right-color:var(--red)}
+.lesson-card.medium{border-right-color:var(--orange)}
+.lesson-card.low{border-right-color:var(--accent)}
+.lesson-card .lesson-head{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.lesson-card .lesson-sev{font-size:.65rem;padding:1px 6px;border-radius:4px;font-weight:600}
+.sev-critical{background:rgba(248,81,73,.2);color:var(--red)}
+.sev-medium{background:rgba(210,153,34,.2);color:var(--orange)}
+.sev-low{background:rgba(88,166,255,.15);color:var(--accent)}
+.lesson-card .lesson-what{color:var(--dim);font-size:.75rem}
+.lesson-card .lesson-text{margin-top:2px}
 </style>
 </head>
 <body>
@@ -78,10 +97,28 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Tahoma,sans-s
     <div class="panel-body"><div class="agent-grid" id="agents"></div></div>
   </div>
 
-  <!-- Active Tasks -->
+  <!-- Agent Scores -->
+  <div class="panel">
+    <div class="panel-head">📊 ציוני סוכנים</div>
+    <div class="panel-body" id="scores"></div>
+  </div>
+
+  <!-- Active Tasks (from tasks.json) -->
   <div class="panel">
     <div class="panel-head">📋 משימות פעילות</div>
     <div class="panel-body" id="active-tasks"></div>
+  </div>
+
+  <!-- Task Files (from tasks/*.md) -->
+  <div class="panel">
+    <div class="panel-head">📂 קבצי משימות (tasks/*.md)</div>
+    <div class="panel-body" id="task-files"></div>
+  </div>
+
+  <!-- Lessons Learned -->
+  <div class="panel">
+    <div class="panel-head">📖 לקחים נלמדים</div>
+    <div class="panel-body" id="lessons"></div>
   </div>
 
   <!-- History -->
@@ -206,6 +243,53 @@ async function loadTasks() {
   `;
 }
 
+async function loadScores() {
+  const scores = await fetch('/api/scores').then(r=>r.json());
+  const el = document.getElementById('scores');
+  if (!Object.keys(scores).length) { el.innerHTML='<div class="empty">אין ציונים</div>'; return; }
+  el.innerHTML = Object.entries(scores).sort((a,b)=>b[1].score-a[1].score).map(([id,s]) => {
+    const color = s.score >= 70 ? 'var(--green)' : s.score >= 40 ? 'var(--orange)' : 'var(--red)';
+    return `<div class="score-bar">
+      <span class="agent-name">${AGENT_EMOJIS[id]||'🤖'} ${AGENT_NAMES[id]||id}</span>
+      <div class="bar-wrap">
+        <div class="bar-fill" style="width:${s.score}%;background:${color}"></div>
+        <span class="bar-text">${s.score}%</span>
+      </div>
+      <span class="score-stats">${s.success}✅ ${s.fail}❌ | streak: ${s.streak}</span>
+    </div>`;
+  }).join('');
+}
+
+async function loadLessons() {
+  const lessons = await fetch('/api/lessons').then(r=>r.json());
+  const el = document.getElementById('lessons');
+  if (!lessons.length) { el.innerHTML='<div class="empty">אין לקחים</div>'; return; }
+  el.innerHTML = lessons.slice().reverse().map(l => `<div class="lesson-card ${l.severity}">
+    <div class="lesson-head">
+      <span class="lesson-sev sev-${l.severity}">${l.severity}</span>
+      <span>${AGENT_EMOJIS[l.agent]||''} ${AGENT_NAMES[l.agent]||l.agent}</span>
+    </div>
+    <div class="lesson-what">${escHtml(l.what)}</div>
+    <div class="lesson-text">${escHtml(l.lesson)}</div>
+  </div>`).join('');
+}
+
+async function loadTaskFiles() {
+  const tasks = await fetch('/api/task-files').then(r=>r.json());
+  const el = document.getElementById('task-files');
+  if (!tasks.length) { el.innerHTML='<div class="empty">אין קבצי משימות</div>'; return; }
+  el.innerHTML = tasks.sort((a,b)=>b.mtime.localeCompare(a.mtime)).map(t => {
+    const statusClass = t.status === 'done' ? 'done' : t.status === 'stuck' ? 'stuck' : 'active';
+    return `<div class="task-row">
+      <span class="task-status ${statusClass}"></span>
+      <span class="task-priority priority-${t.priority||'normal'}">${t.priority||'normal'}</span>
+      <span class="task-title" title="${escHtml(t.preview)}">#${t.id} — ${escHtml(t.title)}</span>
+      <span class="task-agent">${escHtml(t.agent)}</span>
+      <span class="task-time">${timeAgo(t.mtime)}</span>
+    </div>`;
+  }).join('');
+}
+
 let currentLogDate = '';
 async function loadLogDates() {
   const dates = await fetch('/api/log-dates').then(r=>r.json());
@@ -271,7 +355,7 @@ function connectSSE() {
   es.onopen = () => { sseStatus = 'connected'; updateLiveIndicator(); };
   es.onmessage = (e) => {
     if (e.data === 'connected') { sseStatus = 'connected'; updateLiveIndicator(); return; }
-    loadTasks(); loadLogs();
+    loadTasks(); loadTaskFiles(); loadLogs(); loadScores(); loadLessons();
   };
   es.onerror = () => {
     sseStatus = 'disconnected';
@@ -285,12 +369,15 @@ function connectSSE() {
 // Init
 (async () => {
   await loadAgents();
+  await loadScores();
+  await loadLessons();
+  await loadTaskFiles();
   await loadLogDates();
   await loadTasks();
   await loadLogs();
   updateClock();
   setInterval(updateClock, 1000);
-  setInterval(() => { loadTasks(); loadLogs(); }, 10000); // fallback polling
+  setInterval(() => { loadTasks(); loadTaskFiles(); loadLogs(); loadScores(); loadLessons(); }, 5000); // polling every 5s
   connectSSE();
 })();
 </script>

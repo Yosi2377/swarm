@@ -7,8 +7,11 @@ const app = express();
 const PORT = 8090;
 const SWARM = path.join(__dirname, '..');
 const TASKS_FILE = path.join(SWARM, 'tasks.json');
+const TASKS_DIR = path.join(SWARM, 'tasks');
 const AGENTS_FILE = path.join(SWARM, 'agents.json');
 const LOGS_DIR = path.join(SWARM, 'logs');
+const SCORES_FILE = path.join(SWARM, 'learning', 'scores.json');
+const LESSONS_FILE = path.join(SWARM, 'learning', 'lessons.json');
 
 // SSE clients
 let sseClients = [];
@@ -25,7 +28,7 @@ function notifyClients() {
   }, 300);
 }
 
-chokidar.watch([TASKS_FILE, AGENTS_FILE, LOGS_DIR], {
+chokidar.watch([TASKS_FILE, TASKS_DIR, AGENTS_FILE, LOGS_DIR, SCORES_FILE, LESSONS_FILE], {
   ignoreInitial: true,
   usePolling: true,
   interval: 1000,
@@ -76,6 +79,53 @@ app.get('/api/log-dates', (req, res) => {
   try {
     const files = fs.readdirSync(LOGS_DIR).filter(f => f.endsWith('.jsonl')).sort().reverse();
     res.json(files.map(f => f.replace('.jsonl', '')));
+  } catch (e) { res.json([]); }
+});
+
+// API: task files (*.md from tasks dir)
+app.get('/api/task-files', (req, res) => {
+  try {
+    if (!fs.existsSync(TASKS_DIR)) return res.json([]);
+    const files = fs.readdirSync(TASKS_DIR).filter(f => f.endsWith('.md'));
+    const tasks = files.map(f => {
+      const content = fs.readFileSync(path.join(TASKS_DIR, f), 'utf8');
+      const id = f.replace('.md', '');
+      const lines = content.split('\n');
+      // Parse frontmatter-style fields
+      const get = (label) => {
+        const line = lines.find(l => l.toLowerCase().includes(`**${label}**`));
+        if (line) { const m = line.match(/\*\*[^*]+\*\*[:\s]*(.+)/); return m ? m[1].trim() : ''; }
+        return '';
+      };
+      const title = (lines[0] || '').replace(/^#\s*/, '').replace(/Task[:\s]*\d*\s*[—-]*\s*/i, '').trim();
+      return {
+        id,
+        title: title || id,
+        agent: get('agent') || get('Agent') || '',
+        status: (get('status') || get('Status') || 'active').toLowerCase().replace(/[^a-z]/g,''),
+        priority: (get('priority') || get('Priority') || 'normal').toLowerCase().replace(/[^a-z]/g,''),
+        topic: get('topic') || get('Topic') || id,
+        preview: lines.slice(0, 8).join('\n'),
+        mtime: fs.statSync(path.join(TASKS_DIR, f)).mtime.toISOString()
+      };
+    });
+    res.json(tasks);
+  } catch (e) { res.json([]); }
+});
+
+// API: scores
+app.get('/api/scores', (req, res) => {
+  try {
+    const data = JSON.parse(fs.readFileSync(SCORES_FILE, 'utf8'));
+    res.json(data.agents || {});
+  } catch (e) { res.json({}); }
+});
+
+// API: lessons
+app.get('/api/lessons', (req, res) => {
+  try {
+    const data = JSON.parse(fs.readFileSync(LESSONS_FILE, 'utf8'));
+    res.json(data.lessons || []);
   } catch (e) { res.json([]); }
 });
 

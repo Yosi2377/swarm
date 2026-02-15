@@ -2,18 +2,18 @@
   "version": 1,
   "agents": {
     "or": {
-      "tasks": 3,
+      "tasks": 4,
       "success": 1,
-      "fail": 2,
-      "score": 33,
-      "streak": 1
+      "fail": 3,
+      "score": 25,
+      "streak": -1
     },
     "koder": {
-      "tasks": 1,
-      "success": 1,
+      "tasks": 3,
+      "success": 3,
       "fail": 0,
       "score": 100,
-      "streak": 1
+      "streak": 3
     },
     "shomer": {
       "tasks": 1,

@@ -74,3 +74,14 @@ PASS: 5/5 tests passed
 
 FAIL: 0/5 browser tests passed
 ---
+[2026-02-15T14:35:37Z] THREAD=2656 AGENT=koder RC=1
+
+PASS: 5/5 tests passed
+  ❌ מודל פירוט רווח/הפסד קיים — selector "#modalPnlDetail" not found
+  ❌ לחיצה על רווח/הפסד פותחת פירוט — button "td[onclick*="showPnlDetail"]" not found
+  ❌ "יש שורות פירוט" (needs bets data) — expected min 1, found 0
+  ❌ סה"כ מוצג — Error: failed to find element matching selector "#pnlDetailSummary"
+  ❌ טבלת פירוט קיימת — selector "#pnlDetailBody" not found
+
+FAIL: 0/5 browser tests passed
+---

@@ -82,6 +82,14 @@ TASK_FILE="$SWARM_DIR/tasks/$THREAD.md"
 if [ -f "$TASK_FILE" ] && grep -q "## Browser Tests" "$TASK_FILE"; then
   echo "🧪 Running feature-specific browser tests..."
   FEAT_URL="${_PROJECT_URLS[$PROJECT]:-http://95.111.247.22:8090}"
+  # Check task file for specific URL hint (e.g. admin.html)
+  TASK_URL_HINT=$(grep -oP 'URL:\s*\K\S+' "$TASK_FILE" 2>/dev/null | tail -1)
+  if [ -n "$TASK_URL_HINT" ]; then
+    FEAT_URL="$TASK_URL_HINT"
+  elif grep -qi "admin\|פאנל\|ניהול" "$TASK_FILE" 2>/dev/null; then
+    FEAT_URL="${FEAT_URL}/admin.html"
+  fi
+  echo "  📍 Testing URL: $FEAT_URL"
   FEAT_OUTPUT=$(node "$SWARM_DIR/browser-eval.js" "$FEAT_URL" --task "$TASK_FILE" 2>&1)
   FEAT_EXIT=$?
   echo "$FEAT_OUTPUT"

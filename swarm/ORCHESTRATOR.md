@@ -189,3 +189,24 @@ curl -s URL/api/... | python3 -c "import sys,json;..."
 - לדווח "הסוכן סיים" בלי screenshot
 - לסמוך על הסוכן שאומר "עובד" — לבדוק בעצמי
 - לשכוח לעדכן ב-General
+
+## ⚡ AUTO-FLOW — הFlow האוטומטי (חובה!)
+
+**כשמקבל משימה מיוסי:**
+
+1. צור topic בטלגרם
+2. צור task file
+3. הפעל סוכן עם sessions_spawn
+4. הפעל auto-flow ברקע:
+```bash
+nohup swarm/auto-flow.sh <agent> <thread> <project> "description" &
+```
+
+**auto-flow.sh עושה הכל לבד:**
+- מחכה שהסוכן יסיים
+- מריץ evaluator + tests
+- FAIL → שולח feedback לסוכן → retry
+- PASS → screenshot + "הושלם" ל-General
+- 3 כישלונות → מתריע ליוסי
+
+**יוסי לא צריך לשאול "מה קורה?"** — המערכת מדווחת לו אוטומטית.

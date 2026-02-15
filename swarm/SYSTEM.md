@@ -120,3 +120,21 @@ Your task file is at `swarm/tasks/<topic-id>.md` — read it first.
 ## Task File
 When activated, you should receive a path to your task file.
 Read it + the relevant skill → work in sandbox → send screenshots → wait for review.
+
+## Learning System
+Before starting a task, query relevant lessons:
+```bash
+swarm/learn.sh query "<keyword>"
+```
+
+After completing a task:
+```bash
+# If successful
+swarm/learn.sh score <your_agent_id> success "task description"
+
+# If failed
+swarm/learn.sh score <your_agent_id> fail "task description"
+swarm/learn.sh lesson <your_agent_id> <critical|medium|low> "what happened" "lesson learned"
+```
+
+The orchestrator runs `learn.sh evolve` periodically to auto-generate skills from patterns.

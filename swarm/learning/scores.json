@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "agents": {
+    "or": {
+      "tasks": 3,
+      "success": 1,
+      "fail": 2,
+      "score": 33,
+      "streak": 1
+    },
+    "koder": {
+      "tasks": 1,
+      "success": 1,
+      "fail": 0,
+      "score": 100,
+      "streak": 1
+    },
+    "shomer": {
+      "tasks": 1,
+      "success": 1,
+      "fail": 0,
+      "score": 100,
+      "streak": 1
+    },
+    "tzayar": {
+      "tasks": 0,
+      "success": 0,
+      "fail": 0,
+      "score": 100,
+      "streak": 0
+    },
+    "worker": {
+      "tasks": 0,
+      "success": 0,
+      "fail": 0,
+      "score": 100,
+      "streak": 0
+    },
+    "researcher": {
+      "tasks": 0,
+      "success": 0,
+      "fail": 0,
+      "score": 100,
+      "streak": 0
+    }
+  },
+  "tools": {}
+}

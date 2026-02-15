@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "lessons": [
+    {
+      "id": "54e36a54",
+      "agent": "or",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "Pushed code directly to production without sandbox",
+      "lesson": "ALWAYS work in sandbox first, never push to production without user approval",
+      "timestamp": "2026-02-15T04:03:55Z",
+      "applied": 2
+    },
+    {
+      "id": "e82efb93",
+      "agent": "or",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "Didn't create topic for task",
+      "lesson": "EVERY task gets its own Telegram topic, no exceptions",
+      "timestamp": "2026-02-15T04:03:55Z",
+      "applied": 0
+    },
+    {
+      "id": "eeb50f4e",
+      "agent": "or",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Didn't send screenshots as proof",
+      "lesson": "Always take screenshots with Puppeteer and send to topic before asking for approval",
+      "timestamp": "2026-02-15T04:03:55Z",
+      "applied": 0
+    },
+    {
+      "id": "5f36b13a",
+      "agent": "or",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Orchestrator coded instead of delegating to koder",
+      "lesson": "Orchestrator must DELEGATE to agents, never code directly",
+      "timestamp": "2026-02-15T04:03:55Z",
+      "applied": 0
+    },
+    {
+      "id": "1fd332a1",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "isBall variable undefined in modal tabs",
+      "lesson": "Always check variable scope when using variables in array definitions",
+      "timestamp": "2026-02-15T04:03:55Z",
+      "applied": 0
+    },
+    {
+      "id": "29193cd3",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Route order bug - full-odds after :eventId",
+      "lesson": "Specific routes must come BEFORE parameterized routes in Express",
+      "timestamp": "2026-02-15T04:03:55Z",
+      "applied": 0
+    },
+    {
+      "id": "6c6f0d33",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "trust proxy not set for rate limiter",
+      "lesson": "Behind nginx, always set app.set('trust proxy', 1) for express-rate-limit",
+      "timestamp": "2026-02-15T04:03:56Z",
+      "applied": 0
+    }
+  ]
+}

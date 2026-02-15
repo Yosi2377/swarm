@@ -35,8 +35,15 @@ curl -s "https://api.telegram.org/bot$(cat /root/.openclaw/workspace/swarm/.bot-
 Then sessions_send to activate:
 ```
 sessionKey: agent:main:telegram:group:-1003815143703:topic:THREAD_ID
-message: "TASK\n\nקרא את swarm/SYSTEM.md. אתה NAME (EMOJI). enforce.sh חובה. דווח דרך send.sh AGENT_ID."
+message: "TASK\n\nקרא את swarm/SYSTEM.md. אתה NAME (EMOJI). דווח דרך send.sh AGENT_ID.
+
+⛔ חובה:
+1. מיד כשמתחיל: swarm/progress.sh AGENT_ID THREAD 'task desc' &
+2. לפני done: swarm/guard.sh pre-done THREAD (חייב PASS!)
+3. כשמסיים: swarm/auto-update.sh AGENT_ID THREAD 'summary'"
 ```
+
+**⚠️ אם שכחת להוסיף את 3 ההוראות — תתקן! זה לא אופציונלי.**
 
 ### 4. Acknowledge in General
 ```bash

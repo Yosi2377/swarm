@@ -123,6 +123,80 @@ case "$ACTION" in
     check_sandbox_committed "$SANDBOX"
     ;;
     
+  pre-done)
+    SANDBOX="${3:-}"
+    echo "🛡️ PRE-DONE Check — Thread $THREAD"
+    echo "=================================="
+    
+    # 1. Screenshots exist and are recent (last 10 min)
+    RECENT_SCREENSHOTS=$(find /tmp -maxdepth 1 -name "browser-*${THREAD}*.png" -o -name "browser-*-${THREAD}.png" 2>/dev/null | while read f; do
+      if [ -f "$f" ] && [ $(( $(date +%s) - $(stat -c %Y "$f") )) -lt 600 ]; then echo "$f"; fi
+    done | wc -l)
+    if [ "$RECENT_SCREENSHOTS" -lt 1 ]; then
+      fail "No recent screenshots (<10min) found for thread $THREAD in /tmp/browser-*"
+    else
+      pass "Found $RECENT_SCREENSHOTS recent screenshots"
+    fi
+    
+    # 2. Sandbox service running
+    SANDBOX_RUNNING=$(systemctl list-units --type=service --state=running 2>/dev/null | grep -c "sandbox" || true)
+    if [ -n "$SANDBOX" ]; then
+      if [ -d "$SANDBOX" ]; then
+        pass "Sandbox directory exists: $SANDBOX"
+      else
+        fail "Sandbox directory missing: $SANDBOX"
+      fi
+    elif [ "$SANDBOX_RUNNING" -gt 0 ]; then
+      pass "Sandbox service(s) running"
+    else
+      warn "No sandbox service detected (pass sandbox path as arg 3 if applicable)"
+    fi
+    
+    # 3. Git diff in sandbox (verify work was done)
+    if [ -n "$SANDBOX" ] && [ -d "$SANDBOX/.git" ]; then
+      cd "$SANDBOX"
+      CHANGES=$(git diff --stat HEAD 2>/dev/null | wc -l)
+      STAGED=$(git diff --cached --stat 2>/dev/null | wc -l)
+      COMMITS=$(git log --oneline -5 2>/dev/null | wc -l)
+      if [ "$CHANGES" -gt 0 ] || [ "$STAGED" -gt 0 ] || [ "$COMMITS" -gt 0 ]; then
+        pass "Sandbox has changes (diff=$CHANGES staged=$STAGED commits=$COMMITS)"
+      else
+        fail "Sandbox has NO changes — agent didn't do any work!"
+      fi
+    fi
+    
+    # 4. URL returns 200
+    SANDBOX_URL="${4:-}"
+    if [ -n "$SANDBOX_URL" ]; then
+      HTTP_CODE=$(curl -so /dev/null -w "%{http_code}" --max-time 5 "$SANDBOX_URL" 2>/dev/null || echo "000")
+      if [ "$HTTP_CODE" = "200" ]; then
+        pass "URL $SANDBOX_URL returns HTTP $HTTP_CODE"
+      else
+        fail "URL $SANDBOX_URL returns HTTP $HTTP_CODE (expected 200)"
+      fi
+    fi
+    
+    # Also check production is clean
+    check_production_safe "$SANDBOX"
+    
+    echo "=================================="
+    if [ ${#ERRORS[@]} -gt 0 ]; then
+      echo ""
+      echo "🔴 PRE-DONE FAILED — ${#ERRORS[@]} errors. Fix before reporting done!"
+      for e in "${ERRORS[@]}"; do echo "  ❌ $e"; done
+      exit 1
+    elif [ ${#WARNINGS[@]} -gt 0 ]; then
+      echo ""
+      echo "🟡 ${#WARNINGS[@]} warnings — Review carefully"
+      for w in "${WARNINGS[@]}"; do echo "  ⚠️ $w"; done
+      exit 0
+    else
+      echo ""
+      echo "🟢 PRE-DONE PASSED — You may report done!"
+      exit 0
+    fi
+    ;;
+
   full)
     SANDBOX="${3:-}"
     echo "🛡️ Full Guardrails Check — Thread $THREAD"
@@ -154,6 +228,7 @@ case "$ACTION" in
   *)
     echo "🛡️ Guardrails — Agent Output Validation"
     echo "Usage:"
+    echo "  guard.sh pre-done <thread> [sandbox] [url]          — MANDATORY before reporting done"
     echo "  guard.sh production-safe <thread> [sandbox_path]  — Check no production edits"
     echo "  guard.sh screenshots <thread>                     — Check screenshots exist"
     echo "  guard.sh task-updated <thread>                    — Check task file updated"

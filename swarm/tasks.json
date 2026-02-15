@@ -1,6 +1,18 @@
 {
   "version": 2,
-  "tasks": [],
+  "tasks": [
+    {
+      "id": 5,
+      "agent": "koder",
+      "thread": 2408,
+      "title": "דאשבורד סטטוס סוכנים + sub-agents",
+      "priority": "high",
+      "status": "active",
+      "startedAt": "2026-02-15T13:05:29+01:00",
+      "updatedAt": "2026-02-15T13:05:29+01:00",
+      "allowedPaths": []
+    }
+  ],
   "completed": [
     {
       "id": 1,
@@ -51,5 +63,5 @@
       "completedAt": "2026-02-12T03:02:18+01:00"
     }
   ],
-  "nextId": 5
+  "nextId": 6
 }

@@ -21,6 +21,11 @@
         "8089": "9089"
       },
       "service": "betting-backend"
+    },
+    "/root/.openclaw/workspace/swarm/dashboard": {
+      "ports": {
+        "8090": "14090"
+      }
     }
   }
 }

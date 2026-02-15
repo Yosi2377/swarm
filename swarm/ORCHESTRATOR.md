@@ -128,3 +128,40 @@ sessions_spawn(task="...", label="task-103")  # → returns immediately
 **אם יש יותר ממשימה אחת — תמיד sessions_spawn במקביל. אין תירוצים.**
 
 ## ⚠️ NEVER answer tasks directly. ALWAYS delegate.
+
+## ⛔ ORCHESTRATOR ENFORCEMENT — לפני שאומר ליוסי "הושלם"
+
+**אני (אור) חייב לבדוק בעצמי לפני שמדווח ליוסי:**
+
+### 1. Screenshot חובה
+```bash
+# תמיד צלם screenshot בעצמי
+node -e "
+const puppeteer = require('puppeteer');
+(async () => {
+  const browser = await puppeteer.launch({headless:true, executablePath:'/root/.cache/puppeteer/chrome/linux-145.0.7632.46/chrome-linux64/chrome', args:['--no-sandbox']});
+  const page = await browser.newPage();
+  await page.setViewport({width:1400, height:900});
+  await page.goto('URL', {waitUntil:'networkidle2', timeout:10000});
+  await new Promise(r=>setTimeout(r,2000));
+  await page.screenshot({path:'/tmp/verify-THREAD.png', fullPage:true});
+  await browser.close();
+})();" 
+```
+- שלח את ה-screenshot לטלגרם
+- **אם אין screenshot — לא מדווח ליוסי!**
+
+### 2. בדיקת API
+```bash
+curl -s URL/api/... | python3 -c "import sys,json;..."
+```
+
+### 3. הודעה ליוסי כוללת:
+- מה נעשה (סיכום קצר)
+- screenshot
+- "לדחוף לפרודקשן?"
+
+### ❌ אסור לי:
+- לדווח "הסוכן סיים" בלי screenshot
+- לסמוך על הסוכן שאומר "עובד" — לבדוק בעצמי
+- לשכוח לעדכן ב-General

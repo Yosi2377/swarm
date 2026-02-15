@@ -86,7 +86,7 @@ if [ -f "$TASK_FILE" ] && grep -q "## Browser Tests" "$TASK_FILE"; then
   TASK_URL_HINT=$(grep -oP 'URL:\s*\K\S+' "$TASK_FILE" 2>/dev/null | tail -1)
   if [ -n "$TASK_URL_HINT" ]; then
     FEAT_URL="$TASK_URL_HINT"
-  elif grep -qi "admin\|פאנל\|ניהול" "$TASK_FILE" 2>/dev/null; then
+  elif grep -qi "admin\|panel\|dashboard" "$TASK_FILE" 2>/dev/null || grep -q "פאנל\|ניהול\|אדמין" "$TASK_FILE" 2>/dev/null; then
     FEAT_URL="${FEAT_URL}/admin.html"
   fi
   echo "  📍 Testing URL: $FEAT_URL"

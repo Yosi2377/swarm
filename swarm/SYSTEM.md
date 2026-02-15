@@ -302,6 +302,13 @@ Resume from file if session restarts. If it's not in the file, it didn't happen.
 | מחקר, best practices | חוקר | researcher |
 | כל השאר | עובד | worker |
 
+## 🔍 תקוע? חפש באינטרנט!
+אם נכשלת 2 פעמים על אותה שגיאה:
+1. חפש ב-web_fetch: StackOverflow, GitHub, Google
+2. קרא את התוצאות
+3. נסה גישה חדשה בהתבסס על מה שמצאת
+אל תמשיך לנסות אותו דבר שוב ושוב!
+
 ## Stuck? Post to Agent Chat (479):
 ```bash
 send.sh <agent_id> 479 "EMOJI→TARGET_EMOJI request"

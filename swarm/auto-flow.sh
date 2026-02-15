@@ -341,9 +341,77 @@ $FEEDBACK
   fi
 done
 
-# Both phases exhausted — escalate
+# ── Phase 2.5: Web Search ──
+log "🔍 Phase 2.5: Searching web for solution..."
+feed "progress" "🔍 מחפש פתרון באינטרנט..."
+
+SEARCH_QUERY=$(echo "$ERRORS_HISTORY" | tail -5 | tr '\n' ' ' | head -c 200)
+
+# Search StackOverflow
+SO_RESULTS=$(curl -s "https://api.stackexchange.com/2.3/search?order=desc&sort=relevance&intitle=$(echo "$SEARCH_QUERY" | head -c 80 | python3 -c 'import sys,urllib.parse;print(urllib.parse.quote(sys.stdin.read().strip()))')&site=stackoverflow" 2>/dev/null | python3 -c "
+import sys,json
+try:
+  d=json.load(sys.stdin)
+  for item in d.get('items',[])[:3]:
+    print(f\"- {item['title']}: https://stackoverflow.com/q/{item['question_id']}\")
+except: pass
+" 2>/dev/null || echo "No results")
+
+# Search GitHub
+GH_RESULTS=$(curl -s "https://api.github.com/search/code?q=$(echo "$SEARCH_QUERY" | head -c 60 | python3 -c 'import sys,urllib.parse;print(urllib.parse.quote(sys.stdin.read().strip()))')&per_page=3" 2>/dev/null | python3 -c "
+import sys,json
+try:
+  d=json.load(sys.stdin)
+  for item in d.get('items',[])[:3]:
+    print(f\"- {item['repository']['full_name']}: {item['html_url']}\")
+except: pass
+" 2>/dev/null || echo "No results")
+
+# Send to agent with web results
+send_telegram "$THREAD" "$AGENT" "🔍 Phase 2.5 — חיפוש אינטרנט
+
+📝 השגיאות שלך:
+$(echo "$ERRORS_HISTORY" | tail -10)
+
+💡 מ-StackOverflow:
+$SO_RESULTS
+
+💡 מ-GitHub:
+$GH_RESULTS
+
+🔄 נסה גישה חדשה בהתבסס על מה שנמצא!"
+
+# Reactivate and try 2 more times
+RETRY=0
+MAX_PHASE25=2
+while [ $RETRY -lt $MAX_PHASE25 ]; do
+  sleep 120
+  if evaluate; then
+    feed "pass" "הצליח אחרי חיפוש אינטרנט!"
+
+    # Take success screenshot
+    if [ -f "$SWARM_DIR/screenshot.sh" ] && [ -n "$SANDBOX_URL" ]; then
+      "$SWARM_DIR/screenshot.sh" "$SANDBOX_URL" "$THREAD" "$AGENT" "phase25-success" 2>/dev/null || true
+    fi
+
+    send_telegram 1 "or" "✅ #$THREAD הושלם (Phase 2.5 — חיפוש אינטרנט!) — $DESC
+
+👤 סוכן: $AGENT
+📂 פרויקט: $PROJECT
+🧪 בדיקות: עברו ✅ (אחרי חיפוש אינטרנט)
+
+❓ לדחוף לפרודקשן?"
+
+    feed "done" "Phase 2.5 הצליח! נשלח ליוסי לאישור"
+    log "📢 Phase 2.5 success — sent to General"
+    exit 0
+  fi
+  RETRY=$((RETRY + 1))
+done
+
+# All phases exhausted — escalate
 FULL_ERRORS=$(cat "/tmp/eval-errors-${THREAD}.txt" 2>/dev/null | tail -50 || echo "no error log")
-send_telegram 1 "or" "🚨 #$THREAD — נכשל אחרי 2 שלבים (6 ניסיונות)!
+send_telegram 1 "or" "🚨 #$THREAD — נכשל אחרי 3 שלבים (8 ניסיונות, כולל חיפוש אינטרנט)!
 
 👤 סוכן: $AGENT
 📂 פרויקט: $PROJECT
@@ -355,6 +423,6 @@ $(echo "$FULL_ERRORS" | tail -10)
 
 "$SWARM_DIR/learn.sh" lesson "$AGENT" "critical" "Failed both phases on #$THREAD ($DESC)" "Total 6 retries exhausted" 2>/dev/null || true
 
-feed "error" "נכשל אחרי 6 ניסיונות (2 שלבים) — צריך עזרה"
+feed "error" "נכשל אחרי 8 ניסיונות (3 שלבים) — צריך עזרה"
 log "🚨 Both phases exhausted — escalated to user"
 exit 1

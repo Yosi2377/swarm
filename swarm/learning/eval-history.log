@@ -530,3 +530,25 @@ ProtocolError: Protocol error (Page.navigate): Invalid parameters Failed to dese
 
 Node.js v22.22.0
 ---
+[2026-02-15T15:43:17Z] THREAD=2809 AGENT=koder RC=1
+
+PASS: 5/5 tests passed
+  🔑 Logging in to undefined as zozo
+/root/node_modules/puppeteer-core/lib/cjs/puppeteer/common/CallbackRegistry.js:103
+    #error = new Errors_js_1.ProtocolError();
+             ^
+
+ProtocolError: Protocol error (Page.navigate): Invalid parameters Failed to deserialize params.url - BINDINGS: mandatory field missing at position 50
+    at <instance_members_initializer> (/root/node_modules/puppeteer-core/lib/cjs/puppeteer/common/CallbackRegistry.js:103:14)
+    at new Callback (/root/node_modules/puppeteer-core/lib/cjs/puppeteer/common/CallbackRegistry.js:107:16)
+    at CallbackRegistry.create (/root/node_modules/puppeteer-core/lib/cjs/puppeteer/common/CallbackRegistry.js:25:26)
+    at Connection._rawSend (/root/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Connection.js:108:26)
+    at CdpCDPSession.send (/root/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/CdpSession.js:74:33)
+    at navigate (/root/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Frame.js:173:51)
+    at CdpFrame.goto (/root/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Frame.js:151:17)
+    at CdpFrame.<anonymous> (/root/node_modules/puppeteer-core/lib/cjs/puppeteer/util/decorators.js:109:27)
+    at CdpPage.goto (/root/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Page.js:580:43)
+    at doLogin (/root/.openclaw/workspace/swarm/browser-eval.js:85:14)
+
+Node.js v22.22.0
+---

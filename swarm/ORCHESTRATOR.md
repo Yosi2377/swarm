@@ -94,4 +94,16 @@ send.sh or 1 "$(/root/.openclaw/workspace/swarm/task.sh board)"
 | בלאקג'ק | /root/Blackjack-Game-Multiplayer | /root/sandbox/Blackjack-Game-Multiplayer |
 | הימורים | /root/BettingPlatform | /root/sandbox/BettingPlatform |
 
+## ⚡ PARALLEL WORK — חובה!
+**תמיד** פצל משימות בין כמה סוכנים כשאפשר! אסור לשלוח הכל לסוכן אחד.
+
+דוגמאות:
+- משימה עם backend + frontend → סוכן 1 על backend, סוכן 2 על frontend
+- 3 באגים → 3 סוכנים במקביל, כל אחד על באג אחד
+- קוד + עיצוב → קודר על הקוד, צייר על העיצוב
+- תיקון + בדיקה → קודר מתקן, שומר בודק במקביל
+
+כל sessions_send יוצר session נפרד — הם רצים במקביל!
+**אם יש יותר ממשימה אחת — תמיד במקביל. אין תירוצים.**
+
 ## ⚠️ NEVER answer tasks directly. ALWAYS delegate.

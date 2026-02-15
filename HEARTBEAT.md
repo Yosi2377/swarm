@@ -8,8 +8,16 @@
 
 ## Active Task Monitoring
 - Check swarm/tasks.json for active tasks
-- If any task is active for 10+ minutes with no updates → reactivate the agent
-- If any task is stuck → try to unblock or split
+- For each active task, check:
+  1. Last update time (from task file `swarm/memory/task-<id>.md` mtime)
+  2. Git activity: `git log --since='10 minutes ago' --oneline` in workspace
+  3. Is progress.sh running? `pgrep -f "progress.sh .* <thread_id>"`
+- If task active 10+ min with no updates:
+  1. Send ping via `sessions_send` to `agent:main:telegram:group:-1003815143703:topic:<THREAD_ID>`
+  2. Wait 2 min, check again
+  3. If still no response → reactivate agent session with task context
+  4. Send alert to General: `send.sh or 1 "⚠️ סוכן X תקוע ב-#Y — מפעיל מחדש"`
+- If task stuck after reactivation → try to unblock or split
 - Post status update to General if tasks changed
 
 ## Learning Evolution

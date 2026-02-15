@@ -54,10 +54,15 @@ curl -F "chat_id=-1003815143703" -F "message_thread_id=<THREAD>" \
 
 ## Workflow (Enforced)
 1. **Receive task** → Start working IMMEDIATELY (orchestrator already confirmed with user)
+1b. **Start progress reporter:**
+```bash
+swarm/progress.sh <your_agent_id> <thread_id> "task description" &
+PROGRESS_PID=$!
+```
 2. **Work** → In sandbox ONLY → Update topic each step via send.sh
 3. **Self-Test** → ⛔ חובה! פתח browser, היכנס לאתר, בדוק שהכל עובד בפועל (ראה שלב 3 למטה)
-4. **Done?** → Screenshots (3 viewports) → `enforce.sh post-work` → Must PASS
-5. **Report done** → Send screenshots + summary to orchestrator → STOP HERE
+4. **Done?** → Run `screenshot.sh <url> <thread> <agent>` (3 viewports) → Run `guard.sh pre-done <thread> [sandbox] [url]` → Must PASS → Then `enforce.sh post-work`
+5. **Report done** → Run `swarm/auto-update.sh <agent> <thread> "summary"` → Send screenshots + summary to orchestrator → STOP HERE
 6. **Orchestrator** shows user screenshots + sandbox link → Asks "לדחוף ל-production?"
 7. **User approves** → `sandbox.sh apply` → Commit production → שומר reviews → Done
 7. **Rejected** → Fix in sandbox → Re-run from step 3 (max 3 attempts → rollback)
@@ -101,6 +106,28 @@ curl -s -X POST http://95.111.247.22:9089/api/bets -H "Content-Type: application
 - שלחתי הימור 10₪ → יתרה ירדה מ-5200 ל-5190 ✅
 - בדקתי ב-DB → bet document נשמר ✅
 📸 screenshots מצורפים"
+
+## ⛔ STEP 4: PRE-DONE GATE — guard.sh חובה!
+
+**לפני** שאתה מדווח "✅ הושלם", חובה להריץ:
+
+```bash
+# 1. צלם screenshots (3 viewports — desktop, tablet, mobile)
+swarm/screenshot.sh <sandbox_url> <thread_id> <agent_id> [label]
+
+# 2. הרץ pre-done check
+swarm/guard.sh pre-done <thread_id> [sandbox_path] [sandbox_url]
+```
+
+**guard.sh pre-done** בודק:
+- ✅ יש screenshots שנוצרו ב-10 הדקות האחרונות
+- ✅ ה-sandbox קיים ורץ
+- ✅ יש git diff (עבדת באמת)
+- ✅ ה-URL מחזיר 200
+- ✅ production לא נגעו
+
+**FAIL = אסור לדווח done!** תתקן את הבעיות ותנסה שוב.
+**PASS = מותר להמשיך** → enforce.sh post-work → דיווח done.
 
 ## Task State
 Save progress to `swarm/memory/task-<thread_id>.md` after EACH step.

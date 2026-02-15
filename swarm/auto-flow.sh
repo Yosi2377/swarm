@@ -23,6 +23,12 @@ BOT_TOKEN=$(cat "$SWARM_DIR/.bot-token" 2>/dev/null)
 
 log() { echo "[$(date '+%H:%M:%S')] $1"; }
 
+feed() {
+  local step="$1"
+  local msg="${2:-}"
+  "$SWARM_DIR/live-feed.sh" "$AGENT" "$THREAD" "$step" "$msg" 2>/dev/null
+}
+
 send_telegram() {
   local target_thread="$1"
   local agent_id="$2"
@@ -32,6 +38,7 @@ send_telegram() {
 
 # ── STEP 1: Notify start ──
 log "📋 Starting auto-flow for #$THREAD ($AGENT → $PROJECT)"
+feed "start" "$DESC"
 send_telegram 1 "or" "🐝 #$THREAD — $DESC
 👤 סוכן: $AGENT
 📂 פרויקט: $PROJECT
@@ -76,6 +83,7 @@ done
 
 # ── STEP 3: Run evaluator ──
 evaluate() {
+  feed "eval" "ניסיון $((RETRY + 1))/$MAX_RETRIES"
   log "🔍 Running evaluator (attempt $((RETRY + 1))/$MAX_RETRIES)..."
   
   EVAL_OUTPUT=$("$SWARM_DIR/evaluator.sh" "$THREAD" "$AGENT" 2>&1)
@@ -92,6 +100,7 @@ evaluate() {
 
 while [ $RETRY -lt $MAX_RETRIES ]; do
   if evaluate; then
+    feed "pass" "כל הבדיקות עברו!"
     log "✅ EVALUATION PASSED!"
     
     # Take screenshot
@@ -134,10 +143,12 @@ while [ $RETRY -lt $MAX_RETRIES ]; do
 ❓ לדחוף לפרודקשן?"
     fi
     
+    feed "done" "נשלח ליוסי לאישור"
     log "📢 Sent results to General"
     exit 0
   else
     RETRY=$((RETRY + 1))
+    feed "fail" "ניסיון $RETRY/$MAX_RETRIES"
     log "❌ EVALUATION FAILED (attempt $RETRY/$MAX_RETRIES)"
     
     if [ $RETRY -lt $MAX_RETRIES ]; then
@@ -149,6 +160,7 @@ $FEEDBACK
 
 תקן ודווח שוב!"
       
+      feed "feedback" "$(head -3 /tmp/eval-feedback-${THREAD}.txt 2>/dev/null || echo 'fix needed')"
       log "📨 Sent feedback to agent, waiting 120s for fix..."
       sleep 120
     fi
@@ -163,5 +175,6 @@ send_telegram 1 "or" "🚨 #$THREAD — נכשל אחרי $MAX_RETRIES ניסי�
 
 @יוסי — צריך עזרה ידנית"
 
+feed "error" "נכשל אחרי $MAX_RETRIES ניסיונות — צריך עזרה"
 log "🚨 Max retries exhausted — escalated to user"
 exit 1

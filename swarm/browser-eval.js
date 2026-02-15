@@ -3,6 +3,7 @@ const fs = require('fs');
 
 // Usage: node browser-eval.js <url> <test-file.json>
 // OR:    node browser-eval.js <url> --task <task-file.md>
+// OR:    node browser-eval.js --config <test-file.json>  (uses login+pages from JSON)
 
 function parseTaskBrowserTests(taskPath) {
   const content = fs.readFileSync(taskPath, 'utf8');
@@ -36,66 +37,10 @@ function parseTaskBrowserTests(taskPath) {
     });
 }
 
-const url = process.argv[2];
-let tests;
-
-if (process.argv[3] === '--task') {
-  const taskPath = process.argv[4];
-  const parsed = parseTaskBrowserTests(taskPath);
-  if (parsed.length === 0) {
-    console.log('No ## Browser Tests section found in task file');
-    process.exit(0);
-  }
-  tests = { tests: parsed };
-} else {
-  const testFile = process.argv[3];
-  tests = JSON.parse(fs.readFileSync(testFile, 'utf8'));
-}
-
-(async () => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath: '/root/.cache/puppeteer/chrome/linux-145.0.7632.46/chrome-linux64/chrome',
-    args: ['--no-sandbox']
-  });
-  const page = await browser.newPage();
-  await page.setViewport({width: 1400, height: 900});
-  
-  // Collect JS errors
-  const jsErrors = [];
-  const ignorePat = /favicon|stylesheet|Cross-Origin-Opener-Policy|status of 40[134]/i;
-  page.on('pageerror', err => { if (!ignorePat.test(err.message)) jsErrors.push(err.message); });
-  page.on('console', msg => { if (msg.type() === 'error' && !ignorePat.test(msg.text())) jsErrors.push(msg.text()); });
-  
-  // Auto-login for betting/poker admin pages
-  const loginUrls = {
-    '9089': {base: 'http://95.111.247.22:9089', user: 'zozo', pass: '123456'},
-    '8089': {base: 'http://95.111.247.22:8089', user: 'zozo', pass: '123456'},
-    '9088': {base: 'http://95.111.247.22:9088', user: 'admin', pass: 'admin123'},
-    '8088': {base: 'https://zozopoker.duckdns.org', user: 'admin', pass: 'admin123'},
-  };
-  const port = url.match(/:(\d+)/)?.[1];
-  if (port && loginUrls[port] && (url.includes('admin') || url.includes('Admin'))) {
-    const login = loginUrls[port];
-    console.log('  🔑 Auto-login to', login.base);
-    await page.goto(login.base, {waitUntil: 'networkidle2', timeout: 15000});
-    await new Promise(r => setTimeout(r, 2000));
-    const inputs = await page.$$('input');
-    if (inputs.length >= 2) {
-      await inputs[0].type(login.user);
-      await inputs[1].type(login.pass);
-      const btns = await page.$$('button');
-      if (btns.length > 0) await btns[0].click();
-    }
-    await new Promise(r => setTimeout(r, 3000));
-  }
-  
-  await page.goto(url, {waitUntil: 'networkidle2', timeout: 15000});
-  await new Promise(r => setTimeout(r, 2000));
-  
+async function runTests(page, tests, jsErrors) {
   let passed = 0, failed = 0, results = [];
   
-  for (const test of tests.tests) {
+  for (const test of tests) {
     try {
       switch(test.type) {
         case 'exists':
@@ -132,15 +77,118 @@ if (process.argv[3] === '--task') {
     }
   }
   
+  return { passed, failed, results };
+}
+
+async function doLogin(page, login) {
+  console.log(`  🔑 Logging in to ${login.url} as ${login.user}`);
+  await page.goto(login.url, {waitUntil: 'networkidle2', timeout: 15000});
+  await new Promise(r => setTimeout(r, 2000));
+  const inputs = await page.$$('input');
+  if (inputs.length >= 2) {
+    await inputs[0].type(login.user);
+    await inputs[1].type(login.pass);
+    const btns = await page.$$('button');
+    if (btns.length > 0) await btns[0].click();
+  }
+  await new Promise(r => setTimeout(r, 3000));
+}
+
+(async () => {
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath: '/root/.cache/puppeteer/chrome/linux-145.0.7632.46/chrome-linux64/chrome',
+    args: ['--no-sandbox']
+  });
+  const page = await browser.newPage();
+  await page.setViewport({width: 1400, height: 900});
+  
+  const jsErrors = [];
+  const ignorePat = /favicon|stylesheet|Cross-Origin-Opener-Policy|status of 40[134]/i;
+  page.on('pageerror', err => { if (!ignorePat.test(err.message)) jsErrors.push(err.message); });
+  page.on('console', msg => { if (msg.type() === 'error' && !ignorePat.test(msg.text())) jsErrors.push(msg.text()); });
+
+  // Determine mode
+  let totalPassed = 0, totalFailed = 0, allResults = [];
+
+  if (process.argv[2] === '--config') {
+    // New mode: --config <test-file.json> — supports login + pages
+    const testConfig = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
+    
+    // Login if specified
+    if (testConfig.login) {
+      await doLogin(page, testConfig.login);
+    }
+    
+    // Pages mode
+    if (testConfig.pages) {
+      for (const p of testConfig.pages) {
+        const baseUrl = testConfig.login ? testConfig.login.url : '';
+        const fullUrl = p.url.startsWith('http') ? p.url : baseUrl + p.url;
+        console.log(`\n📄 Testing: ${fullUrl}`);
+        jsErrors.length = 0; // reset errors per page
+        await page.goto(fullUrl, {waitUntil: 'networkidle2', timeout: 15000});
+        await new Promise(r => setTimeout(r, 2000));
+        
+        const { passed, failed, results } = await runTests(page, p.tests, jsErrors);
+        totalPassed += passed;
+        totalFailed += failed;
+        results.forEach(r => console.log('  ' + r));
+      }
+    } else if (testConfig.tests) {
+      // Flat tests mode (backward compat)
+      const { passed, failed, results } = await runTests(page, testConfig.tests, jsErrors);
+      totalPassed += passed;
+      totalFailed += failed;
+      results.forEach(r => console.log('  ' + r));
+    }
+  } else {
+    // Legacy mode: node browser-eval.js <url> <test-file.json|--task file.md>
+    const url = process.argv[2];
+    let tests;
+
+    if (process.argv[3] === '--task') {
+      const parsed = parseTaskBrowserTests(process.argv[4]);
+      if (parsed.length === 0) {
+        console.log('No ## Browser Tests section found in task file');
+        await browser.close();
+        process.exit(0);
+      }
+      tests = parsed;
+    } else {
+      const testConfig = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
+      tests = testConfig.tests || [];
+    }
+
+    // Auto-login for known ports
+    const loginUrls = {
+      '9089': {base: 'http://95.111.247.22:9089', user: 'zozo', pass: '123456'},
+      '8089': {base: 'http://95.111.247.22:8089', user: 'zozo', pass: '123456'},
+      '9088': {base: 'http://95.111.247.22:9088', user: 'admin', pass: 'admin123'},
+      '8088': {base: 'https://zozopoker.duckdns.org', user: 'admin', pass: 'admin123'},
+    };
+    const port = url.match(/:(\d+)/)?.[1];
+    if (port && loginUrls[port] && (url.includes('admin') || url.includes('Admin'))) {
+      await doLogin(page, loginUrls[port]);
+    }
+
+    await page.goto(url, {waitUntil: 'networkidle2', timeout: 15000});
+    await new Promise(r => setTimeout(r, 2000));
+
+    const { passed, failed, results } = await runTests(page, tests, jsErrors);
+    totalPassed = passed;
+    totalFailed = failed;
+    results.forEach(r => console.log('  ' + r));
+  }
+
   await browser.close();
   
-  const total = passed + failed;
-  results.forEach(r => console.log('  ' + r));
-  if (failed === 0) {
-    console.log(`\nPASS: ${passed}/${total} browser tests passed`);
+  const total = totalPassed + totalFailed;
+  if (totalFailed === 0) {
+    console.log(`\nPASS: ${totalPassed}/${total} browser tests passed`);
     process.exit(0);
   } else {
-    console.log(`\nFAIL: ${passed}/${total} browser tests passed`);
+    console.log(`\nFAIL: ${totalPassed}/${total} browser tests passed`);
     process.exit(1);
   }
 })();

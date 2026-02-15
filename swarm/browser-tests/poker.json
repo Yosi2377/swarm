@@ -1,0 +1,13 @@
+{
+  "login": {"url": "https://zozopoker.duckdns.org", "user": "admin", "pass": "admin123"},
+  "pages": [
+    {
+      "url": "/",
+      "tests": [
+        {"type": "exists", "selector": ".lobby, .table-list, .tables, #lobby", "desc": "Lobby loads"},
+        {"type": "exists", "selector": "table, .table-row, .table-card, tr", "desc": "Tables visible"},
+        {"type": "noErrors", "desc": "No JS errors on lobby"}
+      ]
+    }
+  ]
+}

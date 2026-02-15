@@ -81,6 +81,21 @@ $BROWSER_OUTPUT"
   fi
 fi
 
+# 2c. Feature-specific browser tests from task file
+TASK_FILE="$SWARM_DIR/tasks/$THREAD.md"
+if [ -f "$TASK_FILE" ] && grep -q "## Browser Tests" "$TASK_FILE"; then
+  echo "🧪 Running feature-specific browser tests..."
+  FEAT_URL="${_PROJECT_URLS[$PROJECT]:-http://95.111.247.22:8090}"
+  FEAT_OUTPUT=$(node "$SWARM_DIR/browser-eval.js" "$FEAT_URL" --task "$TASK_FILE" 2>&1)
+  FEAT_EXIT=$?
+  echo "$FEAT_OUTPUT"
+  if [ $FEAT_EXIT -ne 0 ]; then
+    TEST_RC=1
+    TEST_OUTPUT="$TEST_OUTPUT
+$FEAT_OUTPUT"
+  fi
+fi
+
 # 3. Check git diff (sandbox vs production)
 GIT_SUMMARY=""
 declare -A PROJECT_PATHS=(

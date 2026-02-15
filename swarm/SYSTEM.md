@@ -176,6 +176,29 @@ Tests אלה ירוצו אוטומטית ע"י `evaluator.sh`.
 - curl -so /dev/null -w "%{http_code}" http://localhost:8090 → expect 200
 ```
 
+### Browser Tests (חובה לכל שינוי UI!)
+ב-task file הוסף סקשן:
+
+```markdown
+## Browser Tests
+- exists: SELECTOR → "תיאור"
+- text: SELECTOR → contains: TEXT → "תיאור"
+- count: SELECTOR → min: N → "תיאור"
+- click: SELECTOR → waitFor: SELECTOR2 → "תיאור"
+- type: SELECTOR → value: TEXT → waitFor: SELECTOR2 → "תיאור"
+```
+
+דוגמה:
+```markdown
+## Browser Tests
+- exists: #refresh-btn → "כפתור רענון קיים"
+- click: #refresh-btn → waitFor: .updated → "לחיצה מרעננת"
+- count: .agent-card → min: 3 → "לפחות 3 סוכנים"
+- text: .status → contains: active → "סטטוס פעיל"
+```
+
+Tests אלה ירוצו אוטומטית ע"י `evaluator.sh` דרך `browser-eval.js --task`.
+
 ## ⛔ STEP 3: SELF-TEST — חובה לפני דיווח "הושלם"!
 
 **אסור לדווח "✅ הושלם" בלי לבדוק בפועל!**

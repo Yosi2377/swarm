@@ -1,9 +1,56 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
+// Usage: node browser-eval.js <url> <test-file.json>
+// OR:    node browser-eval.js <url> --task <task-file.md>
+
+function parseTaskBrowserTests(taskPath) {
+  const content = fs.readFileSync(taskPath, 'utf8');
+  const match = content.match(/## Browser Tests\n([\s\S]*?)(?=\n## |\n$|$)/);
+  if (!match) return [];
+  
+  return match[1].split('\n')
+    .filter(l => l.trim().startsWith('- '))
+    .map(line => {
+      const clean = line.replace(/^[\s-]+/, '');
+      const parts = clean.split('→').map(s => s.trim());
+      
+      const first = parts[0];
+      const colonIdx = first.indexOf(':');
+      const type = colonIdx > -1 ? first.substring(0, colonIdx).trim() : first.trim();
+      const selector = colonIdx > -1 ? first.substring(colonIdx + 1).trim() : '';
+      
+      const desc = parts[parts.length - 1].replace(/^"(.*)"$/, '$1');
+      
+      const test = { type, selector, desc };
+      
+      for (let i = 1; i < parts.length - 1; i++) {
+        const p = parts[i].trim();
+        if (p.startsWith('contains:')) test.contains = p.replace('contains:', '').trim();
+        if (p.startsWith('min:')) test.min = parseInt(p.replace('min:', '').trim());
+        if (p.startsWith('waitFor:')) test.waitFor = p.replace('waitFor:', '').trim();
+        if (p.startsWith('value:')) test.value = p.replace('value:', '').trim();
+      }
+      
+      return test;
+    });
+}
+
 const url = process.argv[2];
-const testFile = process.argv[3];
-const tests = JSON.parse(fs.readFileSync(testFile, 'utf8'));
+let tests;
+
+if (process.argv[3] === '--task') {
+  const taskPath = process.argv[4];
+  const parsed = parseTaskBrowserTests(taskPath);
+  if (parsed.length === 0) {
+    console.log('No ## Browser Tests section found in task file');
+    process.exit(0);
+  }
+  tests = { tests: parsed };
+} else {
+  const testFile = process.argv[3];
+  tests = JSON.parse(fs.readFileSync(testFile, 'utf8'));
+}
 
 (async () => {
   const browser = await puppeteer.launch({

@@ -4,88 +4,142 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🐝 Swarm Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--dim:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--orange:#d29922;--purple:#bc8cff}
-body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;min-height:100vh}
-.header{background:linear-gradient(135deg,#1a1e2e,#0d1117);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.header h1{font-size:1.4rem;display:flex;align-items:center;gap:8px}
-.header .live{font-size:.75rem;background:var(--green);color:#000;padding:2px 8px;border-radius:10px;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-.stats-bar{display:flex;gap:12px;flex-wrap:wrap;padding:12px 24px;background:var(--card);border-bottom:1px solid var(--border)}
-.stat{text-align:center;padding:8px 16px;border-radius:8px;background:var(--bg);min-width:100px}
-.stat .num{font-size:1.6rem;font-weight:700}
-.stat .label{font-size:.7rem;color:var(--dim);margin-top:2px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 24px;max-width:1400px;margin:0 auto}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
-.panel{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.panel-head{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;display:flex;align-items:center;gap:8px;font-size:.95rem}
-.panel-body{padding:12px;max-height:400px;overflow-y:auto}
-.panel-body::-webkit-scrollbar{width:6px}
-.panel-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+:root{
+  --bg:#0a0e17;--bg2:#0f1320;--card:rgba(17,22,38,0.85);--card-hover:rgba(22,28,48,0.95);
+  --border:rgba(255,255,255,0.06);--border-hover:rgba(255,255,255,0.12);
+  --text:#e8edf5;--dim:#6b7a90;--accent:#4ea4f6;--accent2:#7c6cf0;
+  --green:#34d399;--red:#f87171;--orange:#fbbf24;--purple:#a78bfa;--pink:#f472b6;
+  --glass:rgba(255,255,255,0.03);--shadow:0 8px 32px rgba(0,0,0,0.3);
+  --radius:14px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;direction:rtl;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(78,164,246,0.04),transparent 50%),radial-gradient(circle at 70% 80%,rgba(124,108,240,0.04),transparent 50%);pointer-events:none;z-index:0}
+
+/* Header */
+.header{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(10,14,23,0.8);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-right{display:flex;align-items:center;gap:12px}
+.logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}
+.logo span{-webkit-text-fill-color:initial;font-size:1.4rem}
+.live-badge{font-size:.65rem;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px}
+.live-badge::before{content:'';width:6px;height:6px;border-radius:50%;animation:pulse 2s infinite}
+.live-badge.connected{background:rgba(52,211,153,0.15);color:var(--green)}
+.live-badge.connected::before{background:var(--green)}
+.live-badge.reconnecting{background:rgba(251,191,36,0.15);color:var(--orange)}
+.live-badge.reconnecting::before{background:var(--orange)}
+.live-badge.disconnected{background:rgba(248,113,113,0.15);color:var(--red)}
+.live-badge.disconnected::before{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+#clock{color:var(--dim);font-size:.82rem;font-weight:500;font-variant-numeric:tabular-nums}
+
+/* Stats */
+.stats-bar{display:flex;gap:10px;padding:16px 28px;overflow-x:auto;position:relative;z-index:1}
+.stat{flex:1;min-width:110px;text-align:center;padding:16px 12px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);backdrop-filter:blur(10px);transition:all .25s}
+.stat:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:var(--shadow)}
+.stat .num{font-size:1.8rem;font-weight:800;line-height:1}
+.stat .label{font-size:.68rem;color:var(--dim);margin-top:6px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 28px 28px;max-width:1500px;margin:0 auto;position:relative;z-index:1}
+@media(max-width:960px){.grid{grid-template-columns:1fr}.stats-bar{flex-wrap:wrap}}
+
+/* Panels */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;backdrop-filter:blur(10px);transition:border-color .2s}
+.panel:hover{border-color:var(--border-hover)}
+.panel-head{padding:14px 18px;border-bottom:1px solid var(--border);font-weight:700;font-size:.88rem;display:flex;align-items:center;gap:8px;color:var(--text)}
+.panel-body{padding:10px;max-height:420px;overflow-y:auto}
+.panel-body::-webkit-scrollbar{width:4px}
+.panel-body::-webkit-scrollbar-track{background:transparent}
+.panel-body::-webkit-scrollbar-thumb{background:var(--border-hover);border-radius:2px}
 .full-width{grid-column:1/-1}
+
 /* Agent cards */
-.agent-grid{display:flex;flex-wrap:wrap;gap:10px}
-.agent-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;min-width:140px;flex:1;text-align:center;transition:border-color .2s}
-.agent-card:hover{border-color:var(--accent)}
-.agent-card .emoji{font-size:2rem}
-.agent-card .name{font-weight:600;margin:4px 0}
-.agent-card .role{font-size:.75rem;color:var(--dim)}
-.agent-card .status{font-size:.7rem;margin-top:6px;padding:2px 8px;border-radius:8px;display:inline-block}
-.status-idle{background:#30363d;color:var(--dim)}
-.status-active{background:rgba(63,185,80,.15);color:var(--green)}
-.status-stuck{background:rgba(248,81,73,.15);color:var(--red)}
-/* Task list */
-.task-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;margin-bottom:4px;background:var(--bg);font-size:.85rem}
-.task-row:hover{background:#1c2129}
-.task-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.task-status.active{background:var(--green)}
-.task-status.stuck{background:var(--red)}
-.task-status.done{background:var(--dim)}
-.task-priority{font-size:.65rem;padding:1px 6px;border-radius:4px;flex-shrink:0}
-.priority-urgent{background:rgba(248,81,73,.2);color:var(--red)}
-.priority-normal{background:rgba(88,166,255,.15);color:var(--accent)}
-.priority-low{background:rgba(139,148,158,.15);color:var(--dim)}
-.task-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.task-agent{color:var(--purple);font-size:.75rem;flex-shrink:0}
-.task-time{color:var(--dim);font-size:.7rem;flex-shrink:0}
-/* Log entries */
-.log-entry{padding:6px 8px;border-radius:6px;margin-bottom:3px;font-size:.8rem;background:var(--bg);line-height:1.4}
-.log-entry .log-time{color:var(--dim);font-size:.7rem;margin-left:8px}
-.log-entry .log-agent{font-weight:600;margin-left:6px}
-.log-entry .log-msg{color:var(--text);word-break:break-word}
-/* Tabs */
-.tab-bar{display:flex;gap:4px;padding:8px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.tab{padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.8rem;color:var(--dim);transition:all .2s}
-.tab:hover,.tab.active{background:var(--accent);color:#fff}
-.empty{text-align:center;padding:24px;color:var(--dim);font-size:.85rem}
-.date-select{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.8rem;margin-right:auto}
-/* Score bar */
-.score-bar{display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:4px;background:var(--bg);border-radius:8px;font-size:.85rem}
-.score-bar .agent-name{min-width:80px;font-weight:600}
-.score-bar .bar-wrap{flex:1;height:16px;background:var(--border);border-radius:8px;overflow:hidden;position:relative}
-.score-bar .bar-fill{height:100%;border-radius:8px;transition:width .5s}
-.score-bar .bar-text{position:absolute;right:8px;top:0;line-height:16px;font-size:.7rem;font-weight:700}
-.score-bar .score-stats{font-size:.7rem;color:var(--dim);min-width:100px;text-align:left}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.agent-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;transition:all .25s;cursor:default;position:relative;overflow:hidden}
+.agent-card:hover{border-color:var(--border-hover);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+.agent-card .emoji{font-size:2.2rem;margin-bottom:4px}
+.agent-card .name{font-weight:700;font-size:.9rem;margin:2px 0}
+.agent-card .role{font-size:.7rem;color:var(--dim);font-weight:500}
+.agent-card .current-task{font-size:.65rem;color:var(--accent);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;margin-inline:auto}
+.agent-card .status{font-size:.65rem;margin-top:8px;padding:3px 10px;border-radius:10px;display:inline-block;font-weight:600;letter-spacing:.3px}
+.status-idle{background:rgba(107,122,144,0.15);color:var(--dim)}
+.status-active{background:rgba(52,211,153,0.12);color:var(--green);animation:glow-green 2s infinite}
+.status-stuck{background:rgba(248,113,113,0.12);color:var(--red)}
+@keyframes glow-green{0%,100%{box-shadow:0 0 0 rgba(52,211,153,0)}50%{box-shadow:0 0 12px rgba(52,211,153,0.15)}}
+
+/* Score bars */
+.score-bar{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:4px;background:var(--bg2);border-radius:10px;font-size:.82rem}
+.score-bar .agent-name{min-width:90px;font-weight:600;display:flex;align-items:center;gap:4px}
+.score-bar .bar-wrap{flex:1;height:20px;background:rgba(255,255,255,0.04);border-radius:10px;overflow:hidden;position:relative}
+.score-bar .bar-fill{height:100%;border-radius:10px;transition:width .6s cubic-bezier(.4,0,.2,1);position:relative}
+.score-bar .bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1));border-radius:10px}
+.score-bar .bar-text{position:absolute;right:8px;top:0;line-height:20px;font-size:.7rem;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,0.3)}
+.score-bar .score-stats{font-size:.68rem;color:var(--dim);min-width:100px;text-align:left;font-variant-numeric:tabular-nums}
+
+/* Task rows */
+.task-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;margin-bottom:3px;background:var(--bg2);font-size:.82rem;transition:background .15s;cursor:default}
+.task-row:hover{background:rgba(78,164,246,0.06)}
+.task-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px currentColor}
+.task-dot.active{color:var(--green);background:var(--green)}
+.task-dot.stuck{color:var(--red);background:var(--red)}
+.task-dot.done{color:var(--dim);background:var(--dim);box-shadow:none}
+.task-priority{font-size:.6rem;padding:2px 7px;border-radius:6px;font-weight:700;flex-shrink:0;text-transform:uppercase;letter-spacing:.5px}
+.priority-urgent{background:rgba(248,113,113,0.15);color:var(--red)}
+.priority-normal{background:rgba(78,164,246,0.12);color:var(--accent)}
+.priority-low{background:rgba(107,122,144,0.12);color:var(--dim)}
+.task-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.task-agent{color:var(--purple);font-size:.72rem;flex-shrink:0;font-weight:600}
+.task-time{color:var(--dim);font-size:.68rem;flex-shrink:0;font-variant-numeric:tabular-nums}
+
 /* Lessons */
-.lesson-card{padding:8px 10px;margin-bottom:4px;background:var(--bg);border-radius:8px;border-right:3px solid var(--dim);font-size:.82rem}
+.lesson-card{padding:10px 12px;margin-bottom:4px;background:var(--bg2);border-radius:10px;border-right:3px solid var(--dim);font-size:.8rem;transition:background .15s}
+.lesson-card:hover{background:rgba(78,164,246,0.04)}
 .lesson-card.critical{border-right-color:var(--red)}
 .lesson-card.medium{border-right-color:var(--orange)}
 .lesson-card.low{border-right-color:var(--accent)}
-.lesson-card .lesson-head{display:flex;align-items:center;gap:6px;margin-bottom:2px}
-.lesson-card .lesson-sev{font-size:.65rem;padding:1px 6px;border-radius:4px;font-weight:600}
-.sev-critical{background:rgba(248,81,73,.2);color:var(--red)}
-.sev-medium{background:rgba(210,153,34,.2);color:var(--orange)}
-.sev-low{background:rgba(88,166,255,.15);color:var(--accent)}
-.lesson-card .lesson-what{color:var(--dim);font-size:.75rem}
-.lesson-card .lesson-text{margin-top:2px}
+.lesson-card .lesson-head{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.lesson-card .lesson-sev{font-size:.6rem;padding:2px 7px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.sev-critical{background:rgba(248,113,113,0.15);color:var(--red)}
+.sev-medium{background:rgba(251,191,36,0.15);color:var(--orange)}
+.sev-low{background:rgba(78,164,246,0.12);color:var(--accent)}
+.lesson-card .lesson-what{color:var(--dim);font-size:.7rem;font-weight:500}
+.lesson-card .lesson-text{margin-top:3px;line-height:1.5}
+
+/* Timeline */
+.timeline{position:relative;padding-right:20px}
+.timeline::before{content:'';position:absolute;right:7px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--accent2),transparent);border-radius:1px}
+.tl-item{position:relative;padding:8px 24px 8px 8px;margin-bottom:2px;font-size:.78rem}
+.tl-item::before{content:'';position:absolute;right:-1px;top:12px;width:10px;height:10px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);z-index:1}
+.tl-item.tl-done::before{background:var(--green);border-color:var(--green)}
+.tl-item.tl-lesson::before{background:var(--orange);border-color:var(--orange)}
+.tl-item.tl-stuck::before{background:var(--red);border-color:var(--red)}
+.tl-time{color:var(--dim);font-size:.68rem;font-variant-numeric:tabular-nums}
+.tl-text{color:var(--text);margin-top:2px}
+.tl-agent{color:var(--purple);font-weight:600}
+
+/* Logs */
+.log-entry{padding:6px 10px;border-radius:8px;margin-bottom:2px;font-size:.78rem;background:var(--bg2);line-height:1.5;display:flex;gap:8px;align-items:baseline}
+.log-entry:hover{background:rgba(78,164,246,0.04)}
+.log-time{color:var(--dim);font-size:.68rem;flex-shrink:0;font-variant-numeric:tabular-nums;min-width:60px}
+.log-agent{font-weight:700;flex-shrink:0;min-width:30px}
+.log-msg{color:var(--text);word-break:break-word;flex:1}
+
+.empty{text-align:center;padding:30px;color:var(--dim);font-size:.82rem}
+.date-select{background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:.78rem;margin-right:auto;font-family:inherit;cursor:pointer}
+.date-select:focus{outline:none;border-color:var(--accent)}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>🐝 Swarm Dashboard <span class="live">LIVE</span></h1>
-  <div id="clock" style="color:var(--dim);font-size:.85rem"></div>
+  <div class="header-right">
+    <div class="logo"><span>🐝</span> Swarm Dashboard</div>
+    <div class="live-badge disconnected" id="live-badge">CONNECTING</div>
+  </div>
+  <div id="clock"></div>
 </div>
 
 <div class="stats-bar" id="stats"></div>
@@ -97,34 +151,34 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Tahoma,sans-s
     <div class="panel-body"><div class="agent-grid" id="agents"></div></div>
   </div>
 
-  <!-- Agent Scores -->
+  <!-- Scores -->
   <div class="panel">
     <div class="panel-head">📊 ציוני סוכנים</div>
     <div class="panel-body" id="scores"></div>
   </div>
 
-  <!-- Active Tasks (from tasks.json) -->
+  <!-- Active Tasks -->
   <div class="panel">
     <div class="panel-head">📋 משימות פעילות</div>
     <div class="panel-body" id="active-tasks"></div>
   </div>
 
-  <!-- Task Files (from tasks/*.md) -->
+  <!-- Task Files -->
   <div class="panel">
-    <div class="panel-head">📂 קבצי משימות (tasks/*.md)</div>
+    <div class="panel-head">📂 קבצי משימות</div>
     <div class="panel-body" id="task-files"></div>
   </div>
 
-  <!-- Lessons Learned -->
+  <!-- Lessons -->
   <div class="panel">
     <div class="panel-head">📖 לקחים נלמדים</div>
     <div class="panel-body" id="lessons"></div>
   </div>
 
-  <!-- History -->
+  <!-- Timeline -->
   <div class="panel">
-    <div class="panel-head">📜 היסטוריה</div>
-    <div class="panel-body" id="history"></div>
+    <div class="panel-head">⏱️ Timeline</div>
+    <div class="panel-body" id="timeline"></div>
   </div>
 
   <!-- Agent Chat -->
@@ -144,240 +198,214 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Tahoma,sans-s
 </div>
 
 <script>
-const AGENT_EMOJIS = {};
-const AGENT_NAMES = {};
+const AGENT_EMOJIS={}, AGENT_NAMES={};
+let agentTasks={};
 
-function timeAgo(d) {
-  const s = Math.floor((Date.now() - new Date(d).getTime()) / 1000);
-  if (s < 60) return `${s}ש'`;
-  if (s < 3600) return `${Math.floor(s/60)}ד'`;
-  if (s < 86400) return `${Math.floor(s/3600)}ש'`;
-  return `${Math.floor(s/86400)}י'`;
+function timeAgo(d){
+  const s=Math.floor((Date.now()-new Date(d).getTime())/1000);
+  if(s<60) return `${s}שנ'`;
+  if(s<3600) return `${Math.floor(s/60)}ד'`;
+  if(s<86400) return `${Math.floor(s/3600)}שע'`;
+  return `${Math.floor(s/86400)}ימ'`;
 }
+function formatTime(ts){return new Date(ts).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
-function formatTime(ts) {
-  return new Date(ts).toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-
-function escHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-async function loadAgents() {
-  const agents = await fetch('/api/agents').then(r=>r.json());
-  const el = document.getElementById('agents');
-  let html = '';
-  for (const [id, a] of Object.entries(agents)) {
-    AGENT_EMOJIS[id] = a.emoji;
-    AGENT_NAMES[id] = a.name;
-    html += `<div class="agent-card">
+async function loadAgents(){
+  const agents=await fetch('/api/agents').then(r=>r.json());
+  const el=document.getElementById('agents');
+  let html='';
+  for(const[id,a]of Object.entries(agents)){
+    AGENT_EMOJIS[id]=a.emoji; AGENT_NAMES[id]=a.name;
+    html+=`<div class="agent-card" id="acard-${id}">
       <div class="emoji">${a.emoji}</div>
       <div class="name">${a.name}</div>
       <div class="role">${a.role}</div>
-      <div class="status status-idle" id="agent-status-${id}">ממתין</div>
+      <div class="current-task" id="atask-${id}"></div>
+      <div class="status status-idle" id="astatus-${id}">ממתין</div>
     </div>`;
   }
-  el.innerHTML = html;
+  el.innerHTML=html;
 }
 
-async function loadTasks() {
-  const data = await fetch('/api/tasks').then(r=>r.json());
-  const tasks = data.tasks || [];
-  const completed = data.completed || [];
+async function loadTasks(){
+  const data=await fetch('/api/tasks').then(r=>r.json());
+  const tasks=data.tasks||[], completed=data.completed||[];
 
-  // Update agent statuses
-  const activeAgents = new Set();
-  tasks.forEach(t => { if(t.status==='active') activeAgents.add(t.agent); });
-  const stuckAgents = new Set();
-  tasks.forEach(t => { if(t.status==='stuck') stuckAgents.add(t.agent); });
+  // Agent status + current tasks
+  const activeMap={}, stuckSet=new Set();
+  tasks.forEach(t=>{
+    if(t.status==='active'){activeMap[t.agent]=t.title;}
+    if(t.status==='stuck') stuckSet.add(t.agent);
+  });
 
-  for (const id of Object.keys(AGENT_NAMES)) {
-    const el = document.getElementById(`agent-status-${id}`);
-    if (!el) continue;
-    if (stuckAgents.has(id)) { el.className='status status-stuck'; el.textContent='תקוע'; }
-    else if (activeAgents.has(id)) { el.className='status status-active'; el.textContent='פעיל'; }
-    else { el.className='status status-idle'; el.textContent='ממתין'; }
+  for(const id of Object.keys(AGENT_NAMES)){
+    const sEl=document.getElementById(`astatus-${id}`);
+    const tEl=document.getElementById(`atask-${id}`);
+    if(!sEl)continue;
+    if(stuckSet.has(id)){sEl.className='status status-stuck';sEl.textContent='תקוע';}
+    else if(activeMap[id]){sEl.className='status status-active';sEl.textContent='פעיל';}
+    else{sEl.className='status status-idle';sEl.textContent='ממתין';}
+    if(tEl) tEl.textContent=activeMap[id]||'';
   }
 
-  // Active tasks
-  const ael = document.getElementById('active-tasks');
-  if (!tasks.length) { ael.innerHTML='<div class="empty">אין משימות פעילות</div>'; }
-  else {
-    ael.innerHTML = tasks.map(t => `<div class="task-row">
-      <span class="task-status ${t.status}"></span>
-      <span class="task-priority priority-${t.priority||'normal'}">${t.priority||'normal'}</span>
-      <span class="task-title" title="${escHtml(t.title)}">${escHtml(t.title)}</span>
-      <span class="task-agent">${AGENT_EMOJIS[t.agent]||''} ${AGENT_NAMES[t.agent]||t.agent}</span>
-      <span class="task-time">${t.updatedAt ? timeAgo(t.updatedAt) : ''}</span>
-    </div>`).join('');
-  }
-
-  // History
-  const hel = document.getElementById('history');
-  const hist = completed.slice().reverse().slice(0, 20);
-  if (!hist.length) { hel.innerHTML='<div class="empty">אין היסטוריה</div>'; }
-  else {
-    hel.innerHTML = hist.map(t => `<div class="task-row">
-      <span class="task-status done"></span>
-      <span class="task-priority priority-${t.priority||'normal'}">${t.priority||'normal'}</span>
-      <span class="task-title" title="${escHtml(t.title)}">${escHtml(t.title)}</span>
-      <span class="task-agent">${AGENT_EMOJIS[t.agent]||''} ${AGENT_NAMES[t.agent]||t.agent}</span>
-      <span class="task-time">${t.completedAt ? formatTime(t.completedAt) : ''}</span>
-    </div>`).join('');
-  }
+  // Active tasks panel
+  const ael=document.getElementById('active-tasks');
+  if(!tasks.length){ael.innerHTML='<div class="empty">אין משימות פעילות</div>';}
+  else{ael.innerHTML=tasks.map(t=>`<div class="task-row">
+    <span class="task-dot ${t.status}"></span>
+    <span class="task-priority priority-${t.priority||'normal'}">${t.priority||'normal'}</span>
+    <span class="task-title">#${t.thread||''} ${esc(t.title)}</span>
+    <span class="task-agent">${AGENT_EMOJIS[t.agent]||''} ${AGENT_NAMES[t.agent]||t.agent}</span>
+    <span class="task-time">${t.updatedAt?timeAgo(t.updatedAt):''}</span>
+  </div>`).join('');}
 
   // Stats
-  const todayStr = new Date().toISOString().slice(0,10);
-  const todayCompleted = completed.filter(t => (t.completedAt||'').startsWith(todayStr));
-  const totalToday = tasks.length + todayCompleted.length;
-  const successRate = totalToday ? Math.round(todayCompleted.length / totalToday * 100) : 0;
-  const stuckCount = tasks.filter(t=>t.status==='stuck').length;
+  const todayStr=new Date().toISOString().slice(0,10);
+  const todayDone=completed.filter(t=>(t.completedAt||'').startsWith(todayStr));
+  const stuck=tasks.filter(t=>t.status==='stuck').length;
+  const activeCount=tasks.filter(t=>t.status==='active').length;
+  const total=tasks.length+todayDone.length;
+  const rate=total?Math.round(todayDone.length/total*100):0;
 
-  document.getElementById('stats').innerHTML = `
-    <div class="stat"><div class="num">${tasks.length}</div><div class="label">פעילות</div></div>
-    <div class="stat"><div class="num" style="color:var(--green)">${todayCompleted.length}</div><div class="label">הושלמו היום</div></div>
-    <div class="stat"><div class="num" style="color:var(--red)">${stuckCount}</div><div class="label">תקועות</div></div>
-    <div class="stat"><div class="num">${totalToday}</div><div class="label">סה"כ היום</div></div>
-    <div class="stat"><div class="num" style="color:var(--accent)">${successRate}%</div><div class="label">אחוז הצלחה</div></div>
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="num" style="color:var(--accent)">${activeCount}</div><div class="label">פעילות</div></div>
+    <div class="stat"><div class="num" style="color:var(--green)">${todayDone.length}</div><div class="label">הושלמו היום</div></div>
+    <div class="stat"><div class="num" style="color:var(--red)">${stuck}</div><div class="label">תקועות</div></div>
+    <div class="stat"><div class="num">${total}</div><div class="label">סה"כ היום</div></div>
+    <div class="stat"><div class="num" style="color:var(--green)">${rate}%</div><div class="label">הצלחה</div></div>
     <div class="stat"><div class="num" style="color:var(--purple)">${Object.keys(AGENT_NAMES).length}</div><div class="label">סוכנים</div></div>
   `;
+
+  // Timeline from completed + active
+  buildTimeline(tasks, completed);
 }
 
-async function loadScores() {
-  const scores = await fetch('/api/scores').then(r=>r.json());
-  const el = document.getElementById('scores');
-  if (!Object.keys(scores).length) { el.innerHTML='<div class="empty">אין ציונים</div>'; return; }
-  el.innerHTML = Object.entries(scores).sort((a,b)=>b[1].score-a[1].score).map(([id,s]) => {
-    const color = s.score >= 70 ? 'var(--green)' : s.score >= 40 ? 'var(--orange)' : 'var(--red)';
+function buildTimeline(tasks, completed){
+  const el=document.getElementById('timeline');
+  const items=[];
+  completed.slice(-15).forEach(t=>items.push({time:t.completedAt,type:'done',text:`${esc(t.title)}`,agent:t.agent}));
+  tasks.filter(t=>t.status==='stuck').forEach(t=>items.push({time:t.updatedAt,type:'stuck',text:`${esc(t.title)}`,agent:t.agent}));
+  tasks.filter(t=>t.status==='active').forEach(t=>items.push({time:t.updatedAt||t.createdAt,type:'active',text:`${esc(t.title)}`,agent:t.agent}));
+  items.sort((a,b)=>new Date(b.time)-new Date(a.time));
+  if(!items.length){el.innerHTML='<div class="empty">אין אירועים</div>';return;}
+  el.innerHTML='<div class="timeline">'+items.slice(0,20).map(i=>`<div class="tl-item tl-${i.type}">
+    <div class="tl-time">${i.time?formatTime(i.time):''}</div>
+    <div class="tl-text"><span class="tl-agent">${AGENT_EMOJIS[i.agent]||''} ${AGENT_NAMES[i.agent]||i.agent}</span> — ${i.text}</div>
+  </div>`).join('')+'</div>';
+}
+
+async function loadScores(){
+  const scores=await fetch('/api/scores').then(r=>r.json());
+  const el=document.getElementById('scores');
+  if(!Object.keys(scores).length){el.innerHTML='<div class="empty">אין ציונים</div>';return;}
+  el.innerHTML=Object.entries(scores).sort((a,b)=>b[1].score-a[1].score).map(([id,s])=>{
+    const c=s.score>=70?'var(--green)':s.score>=40?'var(--orange)':'var(--red)';
     return `<div class="score-bar">
       <span class="agent-name">${AGENT_EMOJIS[id]||'🤖'} ${AGENT_NAMES[id]||id}</span>
-      <div class="bar-wrap">
-        <div class="bar-fill" style="width:${s.score}%;background:${color}"></div>
-        <span class="bar-text">${s.score}%</span>
-      </div>
-      <span class="score-stats">${s.success}✅ ${s.fail}❌ | streak: ${s.streak}</span>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${s.score}%;background:${c}"></div><span class="bar-text">${s.score}%</span></div>
+      <span class="score-stats">${s.success}✅ ${s.fail}❌ streak:${s.streak}</span>
     </div>`;
   }).join('');
 }
 
-async function loadLessons() {
-  const lessons = await fetch('/api/lessons').then(r=>r.json());
-  const el = document.getElementById('lessons');
-  if (!lessons.length) { el.innerHTML='<div class="empty">אין לקחים</div>'; return; }
-  el.innerHTML = lessons.slice().reverse().map(l => `<div class="lesson-card ${l.severity}">
+async function loadLessons(){
+  const lessons=await fetch('/api/lessons').then(r=>r.json());
+  const el=document.getElementById('lessons');
+  if(!lessons.length){el.innerHTML='<div class="empty">אין לקחים</div>';return;}
+  el.innerHTML=lessons.slice().reverse().slice(0,25).map(l=>`<div class="lesson-card ${l.severity}">
     <div class="lesson-head">
       <span class="lesson-sev sev-${l.severity}">${l.severity}</span>
       <span>${AGENT_EMOJIS[l.agent]||''} ${AGENT_NAMES[l.agent]||l.agent}</span>
+      <span style="margin-right:auto;color:var(--dim);font-size:.65rem">${l.date||''}</span>
     </div>
-    <div class="lesson-what">${escHtml(l.what)}</div>
-    <div class="lesson-text">${escHtml(l.lesson)}</div>
+    <div class="lesson-what">${esc(l.what)}</div>
+    <div class="lesson-text">${esc(l.lesson)}</div>
   </div>`).join('');
 }
 
-async function loadTaskFiles() {
-  const tasks = await fetch('/api/task-files').then(r=>r.json());
-  const el = document.getElementById('task-files');
-  if (!tasks.length) { el.innerHTML='<div class="empty">אין קבצי משימות</div>'; return; }
-  el.innerHTML = tasks.sort((a,b)=>b.mtime.localeCompare(a.mtime)).map(t => {
-    const statusClass = t.status === 'done' ? 'done' : t.status === 'stuck' ? 'stuck' : 'active';
+async function loadTaskFiles(){
+  const tasks=await fetch('/api/task-files').then(r=>r.json());
+  const el=document.getElementById('task-files');
+  if(!tasks.length){el.innerHTML='<div class="empty">אין קבצי משימות</div>';return;}
+  el.innerHTML=tasks.sort((a,b)=>b.mtime.localeCompare(a.mtime)).map(t=>{
+    const sc=t.status==='done'?'done':t.status==='stuck'?'stuck':'active';
     return `<div class="task-row">
-      <span class="task-status ${statusClass}"></span>
+      <span class="task-dot ${sc}"></span>
       <span class="task-priority priority-${t.priority||'normal'}">${t.priority||'normal'}</span>
-      <span class="task-title" title="${escHtml(t.preview)}">#${t.id} — ${escHtml(t.title)}</span>
-      <span class="task-agent">${escHtml(t.agent)}</span>
+      <span class="task-title">#${t.id} — ${esc(t.title)}</span>
+      <span class="task-agent">${esc(t.agent)}</span>
       <span class="task-time">${timeAgo(t.mtime)}</span>
     </div>`;
   }).join('');
 }
 
-let currentLogDate = '';
-async function loadLogDates() {
-  const dates = await fetch('/api/log-dates').then(r=>r.json());
-  const sel = document.getElementById('log-date');
-  sel.innerHTML = dates.map(d => `<option value="${d}">${d}</option>`).join('');
-  if (dates.length) { currentLogDate = dates[0]; }
-  sel.onchange = () => { currentLogDate = sel.value; loadLogs(); };
+let currentLogDate='';
+async function loadLogDates(){
+  const dates=await fetch('/api/log-dates').then(r=>r.json());
+  const sel=document.getElementById('log-date');
+  sel.innerHTML=dates.map(d=>`<option value="${d}">${d}</option>`).join('');
+  if(dates.length) currentLogDate=dates[0];
+  sel.onchange=()=>{currentLogDate=sel.value;loadLogs();};
 }
 
-async function loadLogs() {
-  const date = currentLogDate || new Date().toISOString().slice(0,10);
-  const logs = await fetch(`/api/logs?date=${date}`).then(r=>r.json());
-  const el = document.getElementById('logs');
-  const agentChatEl = document.getElementById('agent-chat');
+async function loadLogs(){
+  const date=currentLogDate||new Date().toISOString().slice(0,10);
+  const logs=await fetch(`/api/logs?date=${date}`).then(r=>r.json());
+  const el=document.getElementById('logs');
+  const chatEl=document.getElementById('agent-chat');
 
-  if (!logs.length) { el.innerHTML='<div class="empty">אין לוגים</div>'; }
-  else {
-    const reversed = logs.slice().reverse();
-    el.innerHTML = reversed.map(l => `<div class="log-entry">
+  if(!logs.length){el.innerHTML='<div class="empty">אין לוגים</div>';}
+  else{
+    el.innerHTML=logs.slice().reverse().map(l=>`<div class="log-entry">
       <span class="log-time">${formatTime(l.timestamp)}</span>
-      <span class="log-agent">${AGENT_EMOJIS[l.agent]||''} ${l.agent}</span>
-      <span class="log-msg">${escHtml((l.message||'').slice(0,200))}</span>
+      <span class="log-agent">${AGENT_EMOJIS[l.agent]||''}</span>
+      <span class="log-msg">${esc((l.message||'').slice(0,250))}</span>
     </div>`).join('');
   }
 
-  // Agent chat = logs from agent chat topic (479)
-  const chatLogs = logs.filter(l => l.thread === 479).slice().reverse().slice(0, 20);
-  if (!chatLogs.length) { agentChatEl.innerHTML='<div class="empty">אין הודעות</div>'; }
-  else {
-    agentChatEl.innerHTML = chatLogs.map(l => `<div class="log-entry">
+  const chat=logs.filter(l=>l.thread===479).slice().reverse().slice(0,25);
+  if(!chat.length){chatEl.innerHTML='<div class="empty">אין הודעות</div>';}
+  else{
+    chatEl.innerHTML=chat.map(l=>`<div class="log-entry">
       <span class="log-time">${formatTime(l.timestamp)}</span>
-      <span class="log-agent">${AGENT_EMOJIS[l.agent]||''} ${l.agent}</span>
-      <span class="log-msg">${escHtml((l.message||'').slice(0,200))}</span>
+      <span class="log-agent">${AGENT_EMOJIS[l.agent]||''}</span>
+      <span class="log-msg">${esc((l.message||'').slice(0,250))}</span>
     </div>`).join('');
   }
-}
-
-// Clock
-function updateClock() {
-  document.getElementById('clock').textContent = new Date().toLocaleString('he-IL');
 }
 
 // SSE
-let currentSSE = null;
-let sseStatus = 'disconnected';
-
-function updateLiveIndicator() {
-  const el = document.querySelector('.live');
-  if (!el) return;
-  if (sseStatus === 'connected') { el.textContent = 'LIVE'; el.style.background = 'var(--green)'; }
-  else if (sseStatus === 'reconnecting') { el.textContent = 'RECONNECTING'; el.style.background = 'var(--orange)'; }
-  else { el.textContent = 'OFFLINE'; el.style.background = 'var(--red)'; }
+let sse=null;
+function updateBadge(s){
+  const b=document.getElementById('live-badge');
+  b.className='live-badge '+s;
+  b.textContent=s==='connected'?'LIVE':s==='reconnecting'?'RECONNECTING':'OFFLINE';
+}
+function connectSSE(){
+  if(sse)sse.close();
+  updateBadge('reconnecting');
+  const es=new EventSource('/api/events');
+  sse=es;
+  es.onopen=()=>updateBadge('connected');
+  es.onmessage=e=>{
+    if(e.data==='connected'){updateBadge('connected');return;}
+    loadTasks();loadTaskFiles();loadLogs();loadScores();loadLessons();
+  };
+  es.onerror=()=>{updateBadge('disconnected');es.close();sse=null;setTimeout(connectSSE,3000);};
 }
 
-function connectSSE() {
-  if (currentSSE) { currentSSE.close(); currentSSE = null; }
-  sseStatus = 'reconnecting';
-  updateLiveIndicator();
-
-  const es = new EventSource('/api/events');
-  currentSSE = es;
-
-  es.onopen = () => { sseStatus = 'connected'; updateLiveIndicator(); };
-  es.onmessage = (e) => {
-    if (e.data === 'connected') { sseStatus = 'connected'; updateLiveIndicator(); return; }
-    loadTasks(); loadTaskFiles(); loadLogs(); loadScores(); loadLessons();
-  };
-  es.onerror = () => {
-    sseStatus = 'disconnected';
-    updateLiveIndicator();
-    es.close();
-    currentSSE = null;
-    setTimeout(connectSSE, 3000);
-  };
-}
+// Clock
+function tick(){document.getElementById('clock').textContent=new Date().toLocaleString('he-IL',{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'})}
 
 // Init
-(async () => {
+(async()=>{
   await loadAgents();
-  await loadScores();
-  await loadLessons();
-  await loadTaskFiles();
-  await loadLogDates();
+  await Promise.all([loadScores(),loadLessons(),loadTaskFiles(),loadLogDates()]);
   await loadTasks();
   await loadLogs();
-  updateClock();
-  setInterval(updateClock, 1000);
-  setInterval(() => { loadTasks(); loadTaskFiles(); loadLogs(); loadScores(); loadLessons(); }, 5000); // polling every 5s
+  tick(); setInterval(tick,1000);
+  setInterval(()=>{loadTasks();loadTaskFiles();loadLogs();loadScores();loadLessons();},5000);
   connectSSE();
 })();
 </script>

@@ -9,7 +9,7 @@ set -uo pipefail
 
 PROD_DB="betting"
 SANDBOX_DB="betting_sandbox"
-COLLECTIONS="events"  # Only events (contains odds too)
+COLLECTIONS="events bets transactions"  # Events + bets + transactions for testing
 
 sync_once() {
   echo "[$(date '+%H:%M:%S')] Syncing $PROD_DB → $SANDBOX_DB..."

@@ -1,7 +1,15 @@
 {
+  "login": {
+    "url": "http://95.111.247.22:9089",
+    "steps": [
+      {"action": "type", "selector": "input:nth-of-type(1)", "value": "zozo"},
+      {"action": "type", "selector": "input:nth-of-type(2)", "value": "123456"},
+      {"action": "click", "selector": "button:first-of-type"},
+      {"action": "wait", "ms": 3000}
+    ]
+  },
   "tests": [
     {"type": "exists", "selector": "body", "desc": "Page loads"},
-    {"type": "exists", "selector": "input, form, .login, #login", "desc": "Login form exists"},
     {"type": "noErrors", "desc": "No JS console errors"},
     {"type": "screenshot", "path": "/tmp/eval-browser-betting.png"}
   ]

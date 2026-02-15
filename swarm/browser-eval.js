@@ -67,6 +67,29 @@ if (process.argv[3] === '--task') {
   page.on('pageerror', err => { if (!ignorePat.test(err.message)) jsErrors.push(err.message); });
   page.on('console', msg => { if (msg.type() === 'error' && !ignorePat.test(msg.text())) jsErrors.push(msg.text()); });
   
+  // Auto-login for betting/poker admin pages
+  const loginUrls = {
+    '9089': {base: 'http://95.111.247.22:9089', user: 'zozo', pass: '123456'},
+    '8089': {base: 'http://95.111.247.22:8089', user: 'zozo', pass: '123456'},
+    '9088': {base: 'http://95.111.247.22:9088', user: 'admin', pass: 'admin123'},
+    '8088': {base: 'https://zozopoker.duckdns.org', user: 'admin', pass: 'admin123'},
+  };
+  const port = url.match(/:(\d+)/)?.[1];
+  if (port && loginUrls[port] && (url.includes('admin') || url.includes('Admin'))) {
+    const login = loginUrls[port];
+    console.log('  🔑 Auto-login to', login.base);
+    await page.goto(login.base, {waitUntil: 'networkidle2', timeout: 15000});
+    await new Promise(r => setTimeout(r, 2000));
+    const inputs = await page.$$('input');
+    if (inputs.length >= 2) {
+      await inputs[0].type(login.user);
+      await inputs[1].type(login.pass);
+      const btns = await page.$$('button');
+      if (btns.length > 0) await btns[0].click();
+    }
+    await new Promise(r => setTimeout(r, 3000));
+  }
+  
   await page.goto(url, {waitUntil: 'networkidle2', timeout: 15000});
   await new Promise(r => setTimeout(r, 2000));
   

@@ -650,6 +650,16 @@
       "lesson": "קווים מרובים - frontend",
       "timestamp": "2026-02-15T18:36:06Z",
       "applied": 1
+    },
+    {
+      "id": "31ae96ca",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "success #3009",
+      "lesson": "קווים מרובים - modal",
+      "timestamp": "2026-02-15T18:53:45Z",
+      "applied": 0
     }
   ]
 }

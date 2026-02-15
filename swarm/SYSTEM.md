@@ -28,6 +28,13 @@ swarm/learn.sh score <your_agent_id> success  # or fail
 
 **⚠️ זה חובה. כל task חייב להתחיל ב-query ולהסתיים ב-lesson+score.**
 
+## ⛔ GIT COMMIT — חובה!
+אחרי **כל** שינוי קוד:
+```bash
+cd /root/.openclaw/workspace && git add -A && git commit -m "#THREAD: תיאור קצר"
+```
+אם לא תעשה commit — ה-evaluator ייכשל אוטומטית! (בודק `git status --porcelain`)
+
 ## ⛔ 3 IRON RULES — BREAK THESE = INSTANT ROLLBACK
 
 ### 1. SANDBOX — עבוד רק על /root/sandbox/

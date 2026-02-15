@@ -121,6 +121,14 @@ while [ $RETRY -lt $MAX_RETRIES ]; do
     feed "pass" "כל הבדיקות עברו!"
     log "✅ EVALUATION PASSED!"
     
+    # Auto-commit workspace changes
+    cd /root/.openclaw/workspace
+    if [ $(git status --porcelain | wc -l) -gt 0 ]; then
+      git add -A
+      git commit -m "#$THREAD: $DESC" || true
+      log "📦 Auto-committed workspace changes"
+    fi
+    
     # Take screenshot
     SCREENSHOT="/tmp/auto-flow-${THREAD}.png"
     node -e "
@@ -259,6 +267,14 @@ while [ $RETRY -lt $MAX_RETRIES ]; do
     "$SWARM_DIR/learn.sh" score "$AGENT" success "$DESC" 2>/dev/null || true
     feed "pass" "Phase 2 — כל הבדיקות עברו!"
     log "✅ PHASE 2 EVALUATION PASSED!"
+    
+    # Auto-commit workspace changes
+    cd /root/.openclaw/workspace
+    if [ $(git status --porcelain | wc -l) -gt 0 ]; then
+      git add -A
+      git commit -m "#$THREAD: $DESC (Phase 2)" || true
+      log "📦 Auto-committed workspace changes (Phase 2)"
+    fi
     
     # Same success flow as Phase 1
     SCREENSHOT="/tmp/auto-flow-${THREAD}.png"

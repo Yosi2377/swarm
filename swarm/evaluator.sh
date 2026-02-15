@@ -26,6 +26,19 @@ send_msg() {
 
 echo "🔍 Evaluating thread $THREAD for agent $AGENT..."
 
+# 0. Check for uncommitted changes in workspace
+cd /root/.openclaw/workspace
+UNCOMMITTED=$(git status --porcelain | wc -l)
+if [ "$UNCOMMITTED" -gt 0 ]; then
+  echo "❌ FAIL: Uncommitted changes in workspace: $UNCOMMITTED files"
+  send_msg "$THREAD" "❌ <b>Evaluator FAILED</b> — Thread $THREAD
+
+Uncommitted changes in workspace: $UNCOMMITTED files
+Run: git add -A && git commit before reporting done."
+  echo "Uncommitted changes: $UNCOMMITTED files" > "/tmp/retry-feedback-${THREAD}.txt"
+  exit 1
+fi
+
 # 1. Detect project if auto
 if [ "$PROJECT" = "auto" ]; then
   if [ -f "$SWARM_DIR/tasks/${THREAD}.md" ]; then

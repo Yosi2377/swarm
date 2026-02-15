@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {"type": "exists", "selector": "header, .header, h1", "desc": "Header exists"},
+    {"type": "text", "selector": "body", "contains": "Dashboard", "desc": "Page shows Dashboard"},
+    {"type": "count", "selector": ".agent-card, .agent, [class*=agent]", "min": 1, "desc": "Agent cards visible"},
+    {"type": "count", "selector": ".task, [class*=task]", "min": 1, "desc": "Tasks visible"},
+    {"type": "noErrors", "desc": "No JS console errors"},
+    {"type": "screenshot", "path": "/tmp/eval-browser-dashboard.png"}
+  ]
+}

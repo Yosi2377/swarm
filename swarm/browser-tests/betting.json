@@ -1,0 +1,8 @@
+{
+  "tests": [
+    {"type": "exists", "selector": "body", "desc": "Page loads"},
+    {"type": "exists", "selector": "input, form, .login, #login", "desc": "Login form exists"},
+    {"type": "noErrors", "desc": "No JS console errors"},
+    {"type": "screenshot", "path": "/tmp/eval-browser-betting.png"}
+  ]
+}

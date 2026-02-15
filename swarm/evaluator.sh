@@ -53,11 +53,33 @@ if [ "$PROJECT" = "auto" ]; then
   fi
 fi
 
+# 1b. Resolve project URL
+declare -A _PROJECT_URLS=(
+  ["betting"]="http://95.111.247.22:9089"
+  ["poker"]="https://zozopoker.duckdns.org"
+  ["dashboard"]="http://localhost:8090"
+)
+URL="${_PROJECT_URLS[$PROJECT]:-}"
+
 # 2. Run tests
 echo "📋 Running tests (project: $PROJECT)..."
 TEST_OUTPUT=$("$SWARM_DIR/test-runner.sh" "$PROJECT" "$THREAD" 2>&1) || true
 TEST_RC=$?
 echo "$TEST_OUTPUT"
+
+# 2b. Browser tests
+BROWSER_TESTS="$SWARM_DIR/browser-tests/${PROJECT}.json"
+if [ -f "$BROWSER_TESTS" ]; then
+  echo "🌐 Running browser tests..."
+  BROWSER_OUTPUT=$(node "$SWARM_DIR/browser-eval.js" "$URL" "$BROWSER_TESTS" 2>&1)
+  BROWSER_EXIT=$?
+  echo "$BROWSER_OUTPUT"
+  if [ $BROWSER_EXIT -ne 0 ]; then
+    TEST_RC=1
+    TEST_OUTPUT="$TEST_OUTPUT
+$BROWSER_OUTPUT"
+  fi
+fi
 
 # 3. Check git diff (sandbox vs production)
 GIT_SUMMARY=""

@@ -9,7 +9,7 @@
       "what": "Pushed code directly to production without sandbox",
       "lesson": "ALWAYS work in sandbox first, never push to production without user approval",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 8
+      "applied": 9
     },
     {
       "id": "e82efb93",
@@ -19,7 +19,7 @@
       "what": "Didn't create topic for task",
       "lesson": "EVERY task gets its own Telegram topic, no exceptions",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 5
+      "applied": 6
     },
     {
       "id": "eeb50f4e",
@@ -49,7 +49,7 @@
       "what": "isBall variable undefined in modal tabs",
       "lesson": "Always check variable scope when using variables in array definitions",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 5
+      "applied": 6
     },
     {
       "id": "29193cd3",
@@ -59,7 +59,7 @@
       "what": "Route order bug - full-odds after :eventId",
       "lesson": "Specific routes must come BEFORE parameterized routes in Express",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 5
+      "applied": 6
     },
     {
       "id": "6c6f0d33",
@@ -69,7 +69,7 @@
       "what": "trust proxy not set for rate limiter",
       "lesson": "Behind nginx, always set app.set('trust proxy', 1) for express-rate-limit",
       "timestamp": "2026-02-15T04:03:56Z",
-      "applied": 5
+      "applied": 6
     },
     {
       "id": "ad647fff",
@@ -79,7 +79,7 @@
       "what": "Koder deployed dashboard changes directly without waiting for user approval",
       "lesson": "Even for non-production services like the dashboard, WAIT for user approval before deploying. The flow is: screenshots → user reviews → user approves → deploy.",
       "timestamp": "2026-02-15T04:13:47Z",
-      "applied": 6
+      "applied": 7
     },
     {
       "id": "611b3199",
@@ -89,7 +89,7 @@
       "what": "commenceTime saved as string not Date object",
       "lesson": "Always use new Date() when saving dates to MongoDB, not toString(). Mongoose won't auto-convert strings to Date type.",
       "timestamp": "2026-02-15T11:53:28Z",
-      "applied": 5
+      "applied": 6
     },
     {
       "id": "bdf77ff4",
@@ -99,7 +99,7 @@
       "what": "limit(100) blocked events from loading",
       "lesson": "Never use hard limit() on queries that may return more results. Use pagination or remove limit for admin/internal queries.",
       "timestamp": "2026-02-15T11:53:28Z",
-      "applied": 5
+      "applied": 6
     },
     {
       "id": "70b8ae5a",
@@ -109,7 +109,7 @@
       "what": "rate limit exceeded from 300ms delay between API calls",
       "lesson": "When calling external APIs in loops, use at least 500ms delay. For bulk operations, use 1000ms+ or batch endpoints.",
       "timestamp": "2026-02-15T11:53:28Z",
-      "applied": 5
+      "applied": 6
     },
     {
       "id": "6a400dc4",
@@ -119,7 +119,7 @@
       "what": "stale events not marked completed after date passed",
       "lesson": "Add a cleanup job or query filter: if event.commenceTime < now and status is not completed, auto-mark or filter out.",
       "timestamp": "2026-02-15T11:53:28Z",
-      "applied": 5
+      "applied": 6
     },
     {
       "id": "1e36a270",
@@ -129,7 +129,7 @@
       "what": "test lesson",
       "lesson": "test",
       "timestamp": "2026-02-15T13:20:11Z",
-      "applied": 4
+      "applied": 5
     },
     {
       "id": "f706aebd",
@@ -139,7 +139,7 @@
       "what": "success #2551",
       "lesson": "למידה מכל טעות + הצלחה",
       "timestamp": "2026-02-15T13:20:23Z",
-      "applied": 3
+      "applied": 4
     },
     {
       "id": "13111560",
@@ -149,7 +149,7 @@
       "what": "success #2572",
       "lesson": "auto-commit חובה",
       "timestamp": "2026-02-15T13:34:04Z",
-      "applied": 2
+      "applied": 3
     },
     {
       "id": "5c40f734",
@@ -159,7 +159,7 @@
       "what": "eval fail #2592 attempt 1",
       "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 5 files",
       "timestamp": "2026-02-15T13:40:58Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "2f55afd1",
@@ -169,7 +169,7 @@
       "what": "eval fail #2592 attempt 2",
       "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
       "timestamp": "2026-02-15T13:42:59Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "e5698bae",
@@ -179,7 +179,7 @@
       "what": "eval fail #2592 attempt 3",
       "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
       "timestamp": "2026-02-15T13:45:01Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "01a8a26d",
@@ -189,7 +189,7 @@
       "what": "Failed 3 times on #2592",
       "lesson": "Errors: 🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 5 files\n🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files\n🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
       "timestamp": "2026-02-15T13:45:01Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "3ba97ffa",
@@ -199,7 +199,7 @@
       "what": "Phase 2 eval fail #2592 attempt 1",
       "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
       "timestamp": "2026-02-15T13:47:32Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "277ca068",
@@ -209,7 +209,7 @@
       "what": "Phase 2 eval fail #2592 attempt 2",
       "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
       "timestamp": "2026-02-15T13:49:33Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "c278a011",
@@ -219,7 +219,7 @@
       "what": "Phase 2 eval fail #2592 attempt 3",
       "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
       "timestamp": "2026-02-15T13:51:34Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "3efb8e13",
@@ -229,7 +229,7 @@
       "what": "Failed both phases on #2592 (בדיקות Browser אמיתיות)",
       "lesson": "Total 6 retries exhausted",
       "timestamp": "2026-02-15T13:51:34Z",
-      "applied": 1
+      "applied": 2
     },
     {
       "id": "244331e8",
@@ -239,7 +239,7 @@
       "what": "eval fail #2656 attempt 1",
       "lesson": "🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 2 files",
       "timestamp": "2026-02-15T14:16:45Z",
-      "applied": 0
+      "applied": 1
     },
     {
       "id": "c818464b",
@@ -249,7 +249,7 @@
       "what": "eval fail #2656 attempt 2",
       "lesson": "🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 3 files",
       "timestamp": "2026-02-15T14:18:46Z",
-      "applied": 0
+      "applied": 1
     },
     {
       "id": "7a5b1a29",
@@ -259,7 +259,7 @@
       "what": "eval fail #2656 attempt 3",
       "lesson": "🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 3 files",
       "timestamp": "2026-02-15T14:20:47Z",
-      "applied": 0
+      "applied": 1
     },
     {
       "id": "a5ce7a55",
@@ -269,7 +269,7 @@
       "what": "Failed 3 times on #2656",
       "lesson": "Errors: 🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 2 files\n🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 3 files\n🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 3 files",
       "timestamp": "2026-02-15T14:20:47Z",
-      "applied": 0
+      "applied": 1
     },
     {
       "id": "acac1daf",
@@ -279,7 +279,7 @@
       "what": "Phase 2 eval fail #2656 attempt 1",
       "lesson": "🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 3 files",
       "timestamp": "2026-02-15T14:21:18Z",
-      "applied": 0
+      "applied": 1
     }
   ]
 }

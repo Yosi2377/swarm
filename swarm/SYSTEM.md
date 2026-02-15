@@ -108,3 +108,15 @@ send.sh <agent_id> 479 "EMOJI→TARGET_EMOJI request"
 
 ## Files: agents.json, tasks.json, task.sh, memory/, memory/vault/, memory/shared/
 ## HTML formatting: <b>bold</b> <i>italic</i> <code>code</code> <pre>block</pre>
+
+## Skills System
+Before starting any task, read the relevant skill file from `swarm/skills/`:
+- **betting-dev.md** — ZozoBet architecture, files, APIs, rules
+- **poker-dev.md** — Texas Poker architecture, files, rules
+- **security-review.md** — Code review process and checklist (שומר)
+
+Your task file is at `swarm/tasks/<topic-id>.md` — read it first.
+
+## Task File
+When activated, you should receive a path to your task file.
+Read it + the relevant skill → work in sandbox → send screenshots → wait for review.

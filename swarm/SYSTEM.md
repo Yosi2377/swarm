@@ -344,9 +344,12 @@ send.sh <agent_id> 479 "EMOJI→TARGET_EMOJI request"
 
 ## Skills System
 Before starting any task, read the relevant skill file from `swarm/skills/`:
+- **zozobet-schema.md** — ⚠️ MANDATORY for ZozoBet! DB schema, field names, API routes, common mistakes
 - **betting-dev.md** — ZozoBet architecture, files, APIs, rules
 - **poker-dev.md** — Texas Poker architecture, files, rules
 - **security-review.md** — Code review process and checklist (שומר)
+
+⛔ **READ zozobet-schema.md BEFORE writing any ZozoBet code!** It has the exact field names (e.g. `user` not `userId`).
 
 Your task file is at `swarm/tasks/<topic-id>.md` — read it first.
 

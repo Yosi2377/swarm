@@ -1,5 +1,36 @@
 {
   "version": 1,
   "patterns": [],
-  "generatedSkills": []
+  "generatedSkills": [
+    {
+      "id": "f9f90eea",
+      "theme": "always",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f9f90eea.md"
+    },
+    {
+      "id": "c7561db7",
+      "theme": "never",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c7561db7.md"
+    },
+    {
+      "id": "fb251350",
+      "theme": "approval",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-fb251350.md"
+    },
+    {
+      "id": "4b3cdc4c",
+      "theme": "screenshots",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-4b3cdc4c.md"
+    },
+    {
+      "id": "2f444175",
+      "theme": "before",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2f444175.md"
+    }
+  ]
 }

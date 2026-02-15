@@ -1,5 +1,17 @@
 # HEARTBEAT.md
 
+## 🔔 Sub-Agent Check (FIRST PRIORITY)
+- Run sessions_list(kinds=["subagent"], activeMinutes=60, messageLimit=1)
+- For each sub-agent that has a final message (stopReason="stop"):
+  - Check if label was already reported: read swarm/memory/reported-spawns.json
+  - If NOT reported:
+    1. Read the result (last message)
+    2. Run evaluator.sh if applicable
+    3. Take screenshot if applicable  
+    4. Post summary to General via send.sh or 1 "✅ [label] הושלם: [summary]"
+    5. Add label to swarm/memory/reported-spawns.json
+  - This prevents Yossi from asking "מה קורה?" — we report automatically!
+
 ## Delegation Queue
 - Check /tmp/delegate-queue/ for pending .json files
 - For each pending file: activate the target agent session via sessions_send

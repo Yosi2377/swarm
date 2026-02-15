@@ -94,7 +94,12 @@ if [ -f "$TASK_FILE" ] && grep -q "## Browser Tests" "$TASK_FILE"; then
     fi
   fi
   echo "  📍 Testing URL: $FEAT_URL"
-  FEAT_OUTPUT=$(node "$SWARM_DIR/browser-eval.js" "$FEAT_URL" --task "$TASK_FILE" 2>&1)
+  # Use smart-eval (investigates failures) if available, fallback to browser-eval
+  if [ -f "$SWARM_DIR/smart-eval.js" ]; then
+    FEAT_OUTPUT=$(node "$SWARM_DIR/smart-eval.js" "$FEAT_URL" --task "$TASK_FILE" 2>&1)
+  else
+    FEAT_OUTPUT=$(node "$SWARM_DIR/browser-eval.js" "$FEAT_URL" --task "$TASK_FILE" 2>&1)
+  fi
   FEAT_EXIT=$?
   echo "$FEAT_OUTPUT"
   if [ $FEAT_EXIT -ne 0 ]; then

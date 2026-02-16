@@ -854,3 +854,25 @@ PASS: 5/5 tests passed
 
 PASS: 5/5 tests passed
 ---
+[2026-02-16T05:48:23Z] THREAD=3338 AGENT=koder RC=1
+
+PASS: 5/5 tests passed
+  🔑 Auto-login to http://95.111.247.22:9089
+  ❌ יש כפתורי odds — selector ".ob" not found
+
+FAIL: 0/1 browser tests passed
+
+🔍 ========== INVESTIGATION ==========
+
+🩺 Diagnosis:
+   📍 Current URL: http://95.111.247.22:9089/
+   📄 Page title: "ZozoBet - Premium Sports Betting"
+   ✅ User is logged in
+   📝 Page text (first 200 chars): "⚽ ספורט 🔴 ליין רץ 8 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 6738.02₪ 16.2, 06:48:10 EN/HE יציאה ענפי ספורט 🏆 הכל 793 🎾 Challenger Tigre 246 ⚽ Nigeria Premier League 26 ⚽ Englan"
+   📊 Elements on page: {"tr":0,"td":0,"div":3476,"button":11,"table":0,"form":0,"a":11,"img":2,"modal":0}
+      ❌ "יש כפתורי odds": selector ".ob" not found
+   📸 Screenshot: /tmp/eval-diagnosis.png
+
+💡 ========== SUGGESTED FIXES ==========
+   → Selector ".ob" not found. Check: is the element rendered? Is the ID/class name correct? Is it hidden (display:none)?
+---

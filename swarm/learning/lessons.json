@@ -660,6 +660,16 @@
       "lesson": "קווים מרובים - modal",
       "timestamp": "2026-02-15T18:53:45Z",
       "applied": 6
+    },
+    {
+      "id": "45076057",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "success #3247",
+      "lesson": "sidebar count + no-cache",
+      "timestamp": "2026-02-16T05:18:51Z",
+      "applied": 0
     }
   ]
 }

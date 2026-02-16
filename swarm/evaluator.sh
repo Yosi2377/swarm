@@ -156,12 +156,14 @@ if [ -n "$URL" ] && command -v node >/dev/null 2>&1; then
     SHOT="/tmp/eval-${THREAD}-${label}.png"
     node -e "
 const puppeteer = require('puppeteer');
+const autoLogin = require('$SWARM_DIR/auto-login.js');
 (async () => {
   const b = await puppeteer.launch({headless:true, executablePath:'/root/.cache/puppeteer/chrome/linux-145.0.7632.46/chrome-linux64/chrome', args:['--no-sandbox']});
   const p = await b.newPage();
   await p.setViewport({width:$w, height:$h});
   try { await p.goto('$URL', {waitUntil:'networkidle2', timeout:10000}); } catch(e) {}
-  await new Promise(r=>setTimeout(r,2000));
+  await new Promise(r=>setTimeout(r,1000));
+  try { await autoLogin(p, '$URL'); await new Promise(r=>setTimeout(r,3000)); } catch(e) {}
   await p.screenshot({path:'$SHOT', fullPage:false});
   await b.close();
 })();" 2>/dev/null && SCREENSHOTS+=("$SHOT")

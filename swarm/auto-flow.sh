@@ -167,24 +167,9 @@ while [ $RETRY -lt $MAX_RETRIES ]; do
       log "📦 Auto-committed workspace changes"
     fi
     
-    # Take screenshot
+    # Take screenshot (with auto-login!)
     SCREENSHOT="/tmp/auto-flow-${THREAD}.png"
-    node -e "
-    const puppeteer = require('puppeteer');
-    (async () => {
-      const browser = await puppeteer.launch({headless:true, executablePath:'/root/.cache/puppeteer/chrome/linux-145.0.7632.46/chrome-linux64/chrome', args:['--no-sandbox']});
-      const page = await browser.newPage();
-      await page.setViewport({width:1400, height:900});
-      const urls = {
-        'betting': 'http://95.111.247.22:8089',
-        'poker': 'https://zozopoker.duckdns.org',
-        'dashboard': 'http://95.111.247.22:8090'
-      };
-      await page.goto(urls['$PROJECT'] || 'http://95.111.247.22:8090', {waitUntil:'networkidle2', timeout:10000});
-      await new Promise(r=>setTimeout(r,2000));
-      await page.screenshot({path:'$SCREENSHOT', fullPage:false});
-      await browser.close();
-    })();" 2>/dev/null
+    "$SWARM_DIR/browser-test.sh" screenshot "$SANDBOX_URL" "$SCREENSHOT" 1400 900 2>/dev/null || true
     
     # Send screenshot to task topic, text summary to General
     if [ -f "$SCREENSHOT" ]; then
@@ -330,22 +315,7 @@ while [ $RETRY -lt $MAX_RETRIES ]; do
     
     # Same success flow as Phase 1
     SCREENSHOT="/tmp/auto-flow-${THREAD}.png"
-    node -e "
-    const puppeteer = require('puppeteer');
-    (async () => {
-      const browser = await puppeteer.launch({headless:true, executablePath:'/root/.cache/puppeteer/chrome/linux-145.0.7632.46/chrome-linux64/chrome', args:['--no-sandbox']});
-      const page = await browser.newPage();
-      await page.setViewport({width:1400, height:900});
-      const urls = {
-        'betting': 'http://95.111.247.22:8089',
-        'poker': 'https://zozopoker.duckdns.org',
-        'dashboard': 'http://95.111.247.22:8090'
-      };
-      await page.goto(urls['$PROJECT'] || 'http://95.111.247.22:8090', {waitUntil:'networkidle2', timeout:10000});
-      await new Promise(r=>setTimeout(r,2000));
-      await page.screenshot({path:'$SCREENSHOT', fullPage:false});
-      await browser.close();
-    })();" 2>/dev/null
+    "$SWARM_DIR/browser-test.sh" screenshot "$SANDBOX_URL" "$SCREENSHOT" 1400 900 2>/dev/null || true
     
     if [ -f "$SCREENSHOT" ]; then
       curl -s -F "chat_id=-1003815143703" -F "message_thread_id=$THREAD" \

@@ -914,3 +914,15 @@ FAIL: 0/1 browser tests passed
 
 PASS: 5/5 tests passed
 ---
+[2026-02-16T18:21:13Z] THREAD=3708 AGENT=researcher RC=0
+
+PASS: 5/5 tests passed
+---
+[2026-02-16T18:21:14Z] THREAD=3708 AGENT=worker RC=0
+
+PASS: 5/5 tests passed
+---
+[2026-02-16T18:21:14Z] THREAD=3708 AGENT=koder RC=0
+
+PASS: 5/5 tests passed
+---

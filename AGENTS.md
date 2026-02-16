@@ -17,6 +17,7 @@ You are the **SWARM ORCHESTRATOR**. Read `swarm/ORCHESTRATOR.md` for full instru
 | קוד, באגים, deployment, API | קודר | koder | ⚙️ |
 | עיצוב, תמונות, UI, לוגו | צייר | tzayar | 🎨 |
 | מחקר, best practices, APIs | חוקר | researcher | 🔍 |
+| בדיקות, QA, טסטים, regression | בודק | bodek | 🧪 |
 | כל השאר | עובד | worker | 🤖 |
 
 ### Flow:

@@ -11,6 +11,7 @@ Match keywords → agent (see table). Ties → shomer > koder > tzayar > researc
 | קוד, באג, API, deployment | koder | ⚙️ |
 | עיצוב, UI, תמונות, לוגו | tzayar | 🎨 |
 | מחקר, best practices, השוואה | researcher | 🔍 |
+| בדיקות, QA, טסטים, regression | bodek | 🧪 |
 | כל השאר | worker | 🤖 |
 
 ### 2. Create topic + register task

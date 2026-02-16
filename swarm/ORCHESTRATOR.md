@@ -203,6 +203,32 @@ curl -s URL/api/... | python3 -c "import sys,json;..."
 
 **אין "רק שינוי אחד". אין "זה מהיר אעשה בעצמי". אין יוצא מן הכלל.**
 
+## ⛔ PRODUCTION BLOCK — מעצור אוטומטי
+
+**אסור לדחוף לפרודקשן בלי `production-guard.sh`!**
+```bash
+# BEFORE any cp/deploy to production:
+/root/.openclaw/workspace/swarm/production-guard.sh <project>
+# Returns 1 = BLOCKED. Only user approval creates the file.
+```
+כשיוסי מאשר, צור: `touch /tmp/production-approved-<project>`
+אז ורק אז — deploy.
+
+## ⛔ AUTO-UPDATE — חובה!
+
+אחרי כל שלב (evaluator, screenshot, deploy) — שלח עדכון ל-General:
+```bash
+send.sh or 1 "⏳/#3xxx — [מה קורה עכשיו]"
+```
+**לא לחכות שיוסי ישאל. לדווח בזמן אמת.**
+
+## ⛔ STAY ON SCREEN
+
+אחרי שמפעיל auto-flow:
+1. בדוק כל 60 שניות אם סיים
+2. ברגע שסיים — evaluator + screenshot + דיווח מיידי
+3. לא לעזוב עד שהתהליך מסתיים ויוסי מקבל עדכון
+
 למה? כי:
 - הסוכנים לומדים מטעויות (learn.sh)
 - הevaluator תופס באגים

@@ -49,6 +49,13 @@ sessions_spawn(
 > - `sessions_spawn` = **מקבילי**, רץ ברקע, לא חוסם — **תמיד לעבודה!**
 > - `sessions_send` = **סדרתי**, חוסם — **רק לפינגים קצרים / בדיקת סטטוס**
 
+### 3b. Update Status Dashboard
+```bash
+swarm/update-status.sh <agent_id> <thread_id> working "task description"
+```
+אחרי כל task assignment → update status.md
+אחרי כל task completion → update status.md
+
 ### 4. Acknowledge in General + AUTO-WATCH (חובה!)
 ```bash
 send.sh or 1 "🐝 <b>משימה חדשה:</b> EMOJI task → agent (thread X)"
@@ -86,7 +93,15 @@ Activate שומר in the task topic to review git diff.
 **Gate 2: UX Check** (UI tasks only)
 Review the 3 viewport screenshots. Verify no layout breaks.
 
-**Both gates PASS** → `sandbox.sh apply` → `task.sh done` → Update General
+**Gate 3: בודק QA Check** (כל task)
+הפעל בודק לבדיקות regression + functionality:
+```bash
+sessions_spawn(task="בדוק את thread THREAD. קרא swarm/SYSTEM.md. אתה בודק (🧪).", label="bodek-THREAD")
+```
+
+**Full Chain: koder → shomer → bodek → user approval**
+
+**All gates PASS** → `sandbox.sh apply` → `task.sh done` → `update-status.sh <agent> <thread> done "desc"` → Update General
 **Gate FAIL** → Return to agent with specific issues (max 3 attempts → rollback)
 
 ### 5b. Auto-Evaluator Flow (after agent reports "done")

@@ -376,6 +376,46 @@ Resume from file if session restarts. If it's not in the file, it didn't happen.
 3. נסה גישה חדשה בהתבסס על מה שמצאת
 אל תמשיך לנסות אותו דבר שוב ושוב!
 
+---
+
+## COMMUNICATION PROTOCOL
+
+### Agent Chat (Topic 479) Format
+כל הודעה ב-Agent Chat חייבת להיות בפורמט:
+```
+[FROM:emoji] → [TO:emoji] | TYPE: request/response/update/alert
+MESSAGE
+```
+
+דוגמאות:
+- `[⚙️] → [🔒] | TYPE: review-request` — בדוק את commit abc123
+- `[🔒] → [⚙️] | TYPE: review-response` — ✅ APPROVED — אין בעיות אבטחה
+- `[🧪] → [🐝] | TYPE: alert` — ❌ FAIL — כפתור login לא עובד במובייל
+- `[⚙️] → [🐝] | TYPE: update` — commit pushed — באג 3 תוקן
+
+### Dependency Tracking
+בtask files (`swarm/tasks/XXXX.md`) הוסף:
+```markdown
+## Dependencies
+- depends_on: [task_id] — תיאור
+- blocks: [task_id] — תיאור
+```
+
+### Status Updates
+כל סוכן חייב לשלוח update כל 2 דקות עבודה:
+- `⏳ עובד על X...`
+- `✅ סיימתי X, עובר ל-Y`
+- `❌ נתקעתי ב-X, צריך עזרה`
+
+וגם לעדכן dashboard:
+```bash
+swarm/update-status.sh <agent_id> <thread_id> working "description"
+swarm/update-status.sh <agent_id> <thread_id> done "description"
+swarm/update-status.sh <agent_id> <thread_id> blocked "description"
+```
+
+---
+
 ## Stuck? Post to Agent Chat (479):
 ```bash
 send.sh <agent_id> 479 "EMOJI→TARGET_EMOJI request"

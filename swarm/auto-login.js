@@ -36,7 +36,12 @@ async function autoLogin(page, url) {
     await userInput.type(creds.user);
     await passField.type(creds.pass);
     const btn = await page.$('button');
-    if (btn) await btn.click();
+    if (btn) {
+      try { await btn.click(); } catch(e) {
+        // Fallback: click via JS
+        await page.evaluate(() => document.querySelector('button')?.click());
+      }
+    }
     await new Promise(r => setTimeout(r, 3000));
     console.log('🔑 Logged in as ' + creds.user);
     return true;

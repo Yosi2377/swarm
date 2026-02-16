@@ -79,12 +79,31 @@ while [ $WAITED -lt $WAIT_MAX ]; do
     fi
   fi
   
-  # Check git for recent commits mentioning this thread
-  cd "$SWARM_DIR/.." 2>/dev/null
-  RECENT_COMMITS=$(git log --since="$((WAITED))seconds ago" --oneline 2>/dev/null | grep -c "$THREAD" || true)
+  # Check git for recent commits in BOTH swarm and sandbox project
+  SANDBOX_DIR=""
+  case "$PROJECT" in
+    betting) SANDBOX_DIR="/root/sandbox/BettingPlatform" ;;
+    poker) SANDBOX_DIR="/root/sandbox/TexasPokerGame" ;;
+    dashboard) SANDBOX_DIR="$SWARM_DIR/dashboard" ;;
+  esac
+  
+  RECENT_COMMITS=0
+  for CHECK_DIR in "$SWARM_DIR/.." "$SANDBOX_DIR"; do
+    [ -z "$CHECK_DIR" ] && continue
+    [ -d "$CHECK_DIR/.git" ] || continue
+    RC=$(cd "$CHECK_DIR" && git log --since="$((WAITED))seconds ago" --oneline 2>/dev/null | wc -l || true)
+    RECENT_COMMITS=$((RECENT_COMMITS + RC))
+  done
   if [ "$RECENT_COMMITS" -gt 0 ] && [ $WAITED -gt 120 ]; then
     # Had commits but stopped — might be done
-    LAST_COMMIT_AGE=$(( $(date +%s) - $(git log -1 --format=%ct 2>/dev/null || echo "0") ))
+    LAST_AGES=""
+    for CHECK_DIR in "$SWARM_DIR/.." "$SANDBOX_DIR"; do
+      [ -z "$CHECK_DIR" ] && continue
+      [ -d "$CHECK_DIR/.git" ] || continue
+      AGE=$(( $(date +%s) - $(cd "$CHECK_DIR" && git log -1 --format=%ct 2>/dev/null || echo "0") ))
+      LAST_AGES="$LAST_AGES $AGE"
+    done
+    LAST_COMMIT_AGE=$(echo $LAST_AGES | tr ' ' '\n' | sort -n | head -1)
     if [ "$LAST_COMMIT_AGE" -gt 60 ]; then
       log "📝 No new commits for ${LAST_COMMIT_AGE}s — assuming done"
       break

@@ -47,26 +47,21 @@ cd /root/.openclaw/workspace && git add -A && git commit -m "#THREAD: תיאור
 
 ### 2. PROOF — שלח screenshots לטלגרם לפני done
 ```bash
-# Use browser.sh for testing:
-B="/root/.openclaw/workspace/swarm/browser.sh"
-$B start 1920 1080
-$B goto <sandbox_url>
-$B type "input[type='text']" "<username>"
-$B type "input[type='password']" "<password>"
-$B click "button"
-$B wait 2
-$B screenshot step-01-login
-# ... continue testing each feature ...
-$B stop
+# Take screenshot (auto-login included!):
+/root/.openclaw/workspace/swarm/browser-test.sh screenshot "<sandbox_url>" "/tmp/proof-<THREAD>.png"
 
-# ⛔ MUST send screenshots to Telegram! Your session messages are NOT visible!
+# Send to Telegram topic:
 TOKEN=$(cat /root/.openclaw/workspace/swarm/.<agent>-token)
 curl -F "chat_id=-1003815143703" -F "message_thread_id=<THREAD>" \
-  -F "photo=@/tmp/browser-step-01-login.png" -F "caption=📸 Step 1: Login" \
+  -F "photo=@/tmp/proof-<THREAD>.png" -F "caption=📸 Screenshot — <description>" \
   "https://api.telegram.org/bot${TOKEN}/sendPhoto"
 
 # NO SCREENSHOTS = TASK NOT DONE. Even if code works, user needs visual proof.
 ```
+
+**browser-test.sh כולל auto-login!** לא צריך לכתוב login בעצמך.
+- Betting (9089/8089): zozo/123456
+- Poker (9088/8088): admin/admin123
 
 ### 3. REPORT — עדכן בטלגרם כל שלב דרך send.sh
 ```bash

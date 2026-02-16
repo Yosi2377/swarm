@@ -87,27 +87,19 @@ while [ $WAITED -lt $WAIT_MAX ]; do
     dashboard) SANDBOX_DIR="$SWARM_DIR/dashboard" ;;
   esac
   
-  RECENT_COMMITS=0
+  # Check last commit age in sandbox project (catches pre-existing commits too)
+  YOUNGEST_COMMIT=999999
   for CHECK_DIR in "$SWARM_DIR/.." "$SANDBOX_DIR"; do
     [ -z "$CHECK_DIR" ] && continue
     [ -d "$CHECK_DIR/.git" ] || continue
-    RC=$(cd "$CHECK_DIR" && git log --since="$((WAITED))seconds ago" --oneline 2>/dev/null | wc -l || true)
-    RECENT_COMMITS=$((RECENT_COMMITS + RC))
+    AGE=$(( $(date +%s) - $(cd "$CHECK_DIR" && git log -1 --format=%ct 2>/dev/null || echo "0") ))
+    [ "$AGE" -lt "$YOUNGEST_COMMIT" ] && YOUNGEST_COMMIT=$AGE
   done
-  if [ "$RECENT_COMMITS" -gt 0 ] && [ $WAITED -gt 30 ]; then
-    # Had commits but stopped — might be done
-    LAST_AGES=""
-    for CHECK_DIR in "$SWARM_DIR/.." "$SANDBOX_DIR"; do
-      [ -z "$CHECK_DIR" ] && continue
-      [ -d "$CHECK_DIR/.git" ] || continue
-      AGE=$(( $(date +%s) - $(cd "$CHECK_DIR" && git log -1 --format=%ct 2>/dev/null || echo "0") ))
-      LAST_AGES="$LAST_AGES $AGE"
-    done
-    LAST_COMMIT_AGE=$(echo $LAST_AGES | tr ' ' '\n' | sort -n | head -1)
-    if [ "$LAST_COMMIT_AGE" -gt 60 ]; then
-      log "📝 No new commits for ${LAST_COMMIT_AGE}s — assuming done"
-      break
-    fi
+  
+  # If a commit exists within last 5 minutes AND we've waited 30s+ AND no new commit in 30s → done
+  if [ "$YOUNGEST_COMMIT" -lt 300 ] && [ $WAITED -gt 30 ] && [ "$YOUNGEST_COMMIT" -gt 30 ]; then
+    log "📝 Recent commit (${YOUNGEST_COMMIT}s ago), no new activity — assuming done"
+    break
   fi
   
   log "⏳ Waiting... (${WAITED}s / ${WAIT_MAX}s)"

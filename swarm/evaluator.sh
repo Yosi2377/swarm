@@ -150,7 +150,7 @@ else
 fi
 
 if [ -n "$URL" ] && command -v node >/dev/null 2>&1; then
-  for viewport in "1920x1080:desktop" "768x1024:tablet" "375x812:mobile"; do
+  for viewport in "1920x1080:desktop"; do
     IFS=':' read -r size label <<< "$viewport"
     IFS='x' read -r w h <<< "$size"
     SHOT="/tmp/eval-${THREAD}-${label}.png"

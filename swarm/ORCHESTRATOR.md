@@ -280,3 +280,30 @@ nohup swarm/auto-flow.sh <agent> <thread> <project> "description" &
 - 3 כישלונות → מתריע ליוסי
 
 **יוסי לא צריך לשאול "מה קורה?"** — המערכת מדווחת לו אוטומטית.
+
+## 🚨 MANDATORY TASK FLOW (ENFORCED)
+
+You MUST use task.sh for every task. No exceptions.
+
+```bash
+# 1. Create topic (returns thread_id)
+THREAD=$(task.sh start "description")
+
+# 2. Delegate to agent via sessions_send/sessions_spawn
+#    Agent works in SANDBOX ONLY
+
+# 3. Agent takes verified screenshot
+task.sh screenshot $THREAD http://localhost:9089 [css_selector]
+task.sh verify $THREAD http://localhost:9089 "text that should appear"
+
+# 4. Request deploy (dry run + screenshot required)
+task.sh request-deploy $THREAD betting
+
+# 5. Send to Yossi for approval (with screenshot)
+
+# 6. After approval only:
+task.sh deploy $THREAD betting
+```
+
+NEVER skip steps. NEVER work directly — delegate to agents.
+NEVER deploy without verified screenshots.

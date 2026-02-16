@@ -690,6 +690,16 @@
       "lesson": "comment A",
       "timestamp": "2026-02-16T05:38:38Z",
       "applied": 0
+    },
+    {
+      "id": "89156a8d",
+      "agent": "worker",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "success #3303",
+      "lesson": "comment B",
+      "timestamp": "2026-02-16T05:38:38Z",
+      "applied": 0
     }
   ]
 }

@@ -30,11 +30,11 @@
       "streak": 0
     },
     "worker": {
-      "tasks": 0,
-      "success": 0,
+      "tasks": 1,
+      "success": 1,
       "fail": 0,
-      "score": 50,
-      "streak": 0
+      "score": 100,
+      "streak": 1
     },
     "researcher": {
       "tasks": 0,

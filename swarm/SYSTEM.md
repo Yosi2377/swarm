@@ -406,3 +406,22 @@ swarm/episode.sh save <task_id>
 # חיפוש משימות דומות מהעבר:
 swarm/episode.sh find "<keyword>"
 ```
+
+## 🚫 PRODUCTION DEPLOYMENT — HARD BLOCK
+
+Production directories are **physically locked** (read-only). You CANNOT:
+- `cp` files to production
+- `echo >` to production files  
+- `rsync` directly to production
+
+The ONLY way to deploy is:
+```bash
+# Step 1: Review (dry run)
+deploy.sh <project>
+# Step 2: Deploy (after Yossi approves)
+deploy.sh <project> --approved
+```
+
+Projects: `betting`, `poker`, `blackjack`, `dashboard`
+
+If you try to write directly → you get "Operation not permitted". This is by design.

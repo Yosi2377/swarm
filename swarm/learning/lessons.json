@@ -740,6 +740,16 @@
       "lesson": "bet365 redesign",
       "timestamp": "2026-02-16T06:09:14Z",
       "applied": 1
+    },
+    {
+      "id": "dc0461fe",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "eval fail #3418 attempt 1",
+      "lesson": "🔍 Evaluating thread 3418 for agent koder...\n📝 Auto-committing 5 workspace files...\n[master 4577025] #3418: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 5 files changed, 147 insertions(+), 70 deletions(-)\n create mode 100644 swarm/assets/bet365-redesign/banner2-live.png\n create mode 100644 swarm/assets/bet365-redesign/banner3-bonus.png\n create mode 100644 swarm/assets/bet365-redesign/banner4-sports.png\n create mode 100644 swarm/tasks/3418.md\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n  🔑 Logging in to http://95.111.247.22:9089 as zozo\n  ✅ Page loads\n  ✅ Screenshot saved: /tmp/eval-browser-betting.png\n\nPASS: 2/2 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089/admin.html\n  🔑 Auto-login to http://95.111.247.22:9089\n  ❌ יש כפתורי odds — selector \".oc\" not found\n\nFAIL: 0/1 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/admin.html\n   📄 Page title: \"ZozoBet — פנל מנהל\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \" פנל מנהל ← חזרה לאתר 📅 טווח תאריכים: עד 🔍 סנן ✖ נקה תקופה נוכחית 🔄 איפוס כללי 10 משתמשים 33 הימורים 5 הימורים פתוחים 21455₪ סה״כ volume 36275₪ חשיפה 👥 משתמשים 🎫 הימורים 💳 תנועות ⚽ אירועים 📊 רו\"\n   📊 Elements on page: {\"tr\":145,\"td\":1077,\"div\":71,\"button\":93,\"table\":6,\"form\":0,\"a\":1,\"img\":1,\"modal\":12}\n      ❌ \"יש כפתורי odds\": selector \".oc\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Selector \".oc\" not found. Check: is the element rendered? Is the ID/class name correct? Is it hidden (display:none)?\n🔑 Logged in as zozo\n\n❌ EVALUATION FAILED",
+      "timestamp": "2026-02-16T06:19:30Z",
+      "applied": 0
     }
   ]
 }

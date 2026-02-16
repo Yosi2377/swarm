@@ -11,6 +11,17 @@
       "startedAt": "2026-02-15T13:05:29+01:00",
       "updatedAt": "2026-02-15T13:05:29+01:00",
       "allowedPaths": []
+    },
+    {
+      "id": 6,
+      "agent": "koder",
+      "thread": 3822,
+      "title": "תיקון ליין רץ — משחקים גמורים + זמנים שגויים + popup בלי שעון",
+      "priority": "normal",
+      "status": "active",
+      "startedAt": "2026-02-16T21:05:35+01:00",
+      "updatedAt": "2026-02-16T21:05:35+01:00",
+      "allowedPaths": []
     }
   ],
   "completed": [
@@ -63,5 +74,5 @@
       "completedAt": "2026-02-12T03:02:18+01:00"
     }
   ],
-  "nextId": 6
+  "nextId": 7
 }

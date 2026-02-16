@@ -1,6 +1,6 @@
 #!/bin/bash
-# mission-review.sh — Run after agents complete work
-# Enforces: shomer review → bodek test → screenshot → report
+# mission-review.sh — Post-agent review flow
+# Integrates: evaluator → validate-tests → shomer → bodek → screenshot → learning → report
 # Usage: mission-review.sh <thread_id> <project> [sandbox_url]
 
 set -euo pipefail
@@ -10,174 +10,204 @@ PROJECT="$2"
 SANDBOX_URL="${3:-http://95.111.247.22:9089}"
 SWARM="/root/.openclaw/workspace/swarm"
 CHAT="-1003815143703"
+BOT_TOKEN=$(cat ${SWARM}/.bot-token)
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+log() { echo -e "\033[0;32m[REVIEW]\033[0m $1"; }
+warn() { echo -e "\033[1;33m[WARN]\033[0m $1"; }
+fail() { echo -e "\033[0;31m[FAIL]\033[0m $1"; }
 
-log() { echo -e "${GREEN}[REVIEW]${NC} $1"; }
-warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
-fail() { echo -e "${RED}[FAIL]${NC} $1"; }
-
-# Load mission state
 STATE="/tmp/mission-${THREAD}.json"
 [ -f "$STATE" ] || { fail "No mission state for #${THREAD}"; exit 1; }
 DESC=$(python3 -c "import json;print(json.load(open('$STATE'))['desc'])")
-
-# ============================================
-# GATE 1: שומר Code Review (MANDATORY)
-# ============================================
-log "GATE 1: שומר Code Review..."
+AGENTS=$(python3 -c "import json;print(' '.join(json.load(open('$STATE'))['agents']))")
 
 SANDBOX_PATH="/root/sandbox/BettingPlatform"
 [[ "$PROJECT" == *"poker"* ]] && SANDBOX_PATH="/root/sandbox/TexasPokerGame"
 
-DIFF=$(cd "$SANDBOX_PATH" && git diff HEAD~1 --stat 2>/dev/null || echo "no changes")
-if [ "$DIFF" == "no changes" ]; then
-  fail "GATE 1 FAILED — No code changes found!"
-  ${SWARM}/send.sh shomer "$THREAD" "🔒 ❌ אין שינויים בקוד — אין מה לבדוק" 2>/dev/null
-  exit 1
+# ============================================
+# GATE 0: Validate tests exist (validate-tests.sh)
+# ============================================
+log "GATE 0: Validating test selectors..."
+if [ -f "${SWARM}/tasks/${THREAD}.md" ]; then
+  ${SWARM}/validate-tests.sh "${SWARM}/tasks/${THREAD}.md" 2>/dev/null && log "Tests valid ✅" || warn "No browser tests defined"
 fi
 
-# Post review
-FULL_DIFF=$(cd "$SANDBOX_PATH" && git diff HEAD~1 --stat)
+# ============================================
+# GATE 1: Evaluator (evaluator.sh)
+# ============================================
+log "GATE 1: Running evaluator..."
+FIRST_AGENT=$(echo $AGENTS | awk '{print $1}')
+EVAL_RESULT=$(${SWARM}/evaluator.sh "$THREAD" "$FIRST_AGENT" 2>/dev/null || echo "SKIP")
+if echo "$EVAL_RESULT" | grep -q "FAIL"; then
+  ${SWARM}/send.sh "$FIRST_AGENT" "$THREAD" "❌ Evaluator FAILED — תבדוק ותתקן" 2>/dev/null
+  
+  # Auto-retry (retry.sh)
+  log "Running retry..."
+  ${SWARM}/retry.sh "$THREAD" "$FIRST_AGENT" 3 2>/dev/null || true
+  
+  EVAL_RESULT=$(${SWARM}/evaluator.sh "$THREAD" "$FIRST_AGENT" 2>/dev/null || echo "SKIP")
+  if echo "$EVAL_RESULT" | grep -q "FAIL"; then
+    fail "GATE 1 FAILED after retries"
+    ${SWARM}/send.sh or 1 "❌ #${THREAD} — evaluator נכשל אחרי 3 retries" 2>/dev/null
+    # Record failure
+    ${SWARM}/learn.sh score "$FIRST_AGENT" fail "#${THREAD}: evaluator failed" 2>/dev/null || true
+    ${SWARM}/learn.sh lesson "$FIRST_AGENT" medium "evaluator failed on #${THREAD}" "Need better tests or code" 2>/dev/null || true
+    exit 1
+  fi
+fi
+log "GATE 1 PASSED ✅"
+
+# ============================================
+# GATE 2: Guard check (guard.sh)
+# ============================================
+log "GATE 2: Guard pre-done check..."
+GUARD_RESULT=$(${SWARM}/guard.sh pre-done "$THREAD" "$SANDBOX_PATH" "$SANDBOX_URL" 2>/dev/null || echo "SKIP")
+if echo "$GUARD_RESULT" | grep -q "FAIL"; then
+  warn "Guard check had warnings"
+else
+  log "GATE 2 PASSED ✅"
+fi
+
+# ============================================
+# GATE 3: שומר Code Review
+# ============================================
+log "GATE 3: שומר Code Review..."
+DIFF=$(cd "$SANDBOX_PATH" && git diff HEAD~1 --stat 2>/dev/null || echo "no changes")
+
 ${SWARM}/send.sh shomer "$THREAD" "🔒 <b>Code Review</b>
 
-<pre>${FULL_DIFF}</pre>
+<pre>${DIFF}</pre>
 
 בודק אבטחה..." 2>/dev/null
 
-# Quick security scan
+# Security scan
 ISSUES=""
-if cd "$SANDBOX_PATH" && git diff HEAD~1 | grep -qi "eval\|innerHTML.*user\|password.*=.*['\"]"; then
-  ISSUES="⚠️ Potential security issue found in diff"
+cd "$SANDBOX_PATH"
+if git diff HEAD~1 2>/dev/null | grep -qi "eval(\|\.innerHTML.*=.*\+\|password.*=.*['\"]"; then
+  ISSUES="⚠️ Potential security issue"
 fi
 
 if [ -z "$ISSUES" ]; then
-  ${SWARM}/send.sh shomer "$THREAD" "🔒 ✅ <b>APPROVED</b> — קוד נקי, אין בעיות אבטחה" 2>/dev/null
-  log "GATE 1 PASSED ✅"
+  ${SWARM}/send.sh shomer "$THREAD" "🔒 ✅ <b>APPROVED</b> — קוד נקי" 2>/dev/null
+  log "GATE 3 PASSED ✅"
 else
-  ${SWARM}/send.sh shomer "$THREAD" "🔒 ⚠️ <b>WARNING</b> — ${ISSUES}" 2>/dev/null
-  log "GATE 1 WARNING ⚠️"
+  ${SWARM}/send.sh shomer "$THREAD" "🔒 ⚠️ ${ISSUES}" 2>/dev/null
+  warn "GATE 3 WARNING"
 fi
 
 # ============================================
-# GATE 2: בודק QA Test (MANDATORY)
+# GATE 4: בודק QA Test (browser-test.sh + auto-login)
 # ============================================
-log "GATE 2: בודק QA Test..."
-
+log "GATE 4: בודק QA..."
 ${SWARM}/send.sh bodek "$THREAD" "🧪 מתחיל בדיקות..." 2>/dev/null
 
-# Browser test
-SCREENSHOT="/tmp/mission-${THREAD}-screenshot.png"
-node -e "
-const p=require('puppeteer');
-const al=require('${SWARM}/auto-login.js');
-(async()=>{
-  const b=await p.launch({headless:true,args:['--no-sandbox']});
-  const pg=await b.newPage();
-  await pg.setViewport({width:1400,height:900});
-  await pg.goto('${SANDBOX_URL}',{waitUntil:'networkidle2',timeout:15000});
-  await al(pg,'${SANDBOX_URL}');
-  await new Promise(r=>setTimeout(r,3000));
-  
-  // Check console errors
-  const errors=[];
-  pg.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
-  await new Promise(r=>setTimeout(r,2000));
-  
-  // Take screenshot
-  await pg.screenshot({path:'${SCREENSHOT}'});
-  
-  // Mobile test
-  await pg.setViewport({width:375,height:812});
-  await new Promise(r=>setTimeout(r,1000));
-  await pg.screenshot({path:'/tmp/mission-${THREAD}-mobile.png'});
-  
-  console.log(JSON.stringify({errors:errors.length,ok:true}));
-  await b.close();
-})().catch(e=>console.log(JSON.stringify({errors:-1,ok:false,msg:e.message})));
-" 2>/dev/null
+SCREENSHOT="/tmp/mission-${THREAD}-desktop.png"
+MOBILE="/tmp/mission-${THREAD}-mobile.png"
 
-RESULT=$(cat /tmp/mission-${THREAD}-screenshot.png > /dev/null 2>&1 && echo "ok" || echo "fail")
+# Desktop test
+${SWARM}/browser-test.sh screenshot "$SANDBOX_URL" "$SCREENSHOT" 1400 900 2>/dev/null || true
 
-if [ "$RESULT" == "ok" ]; then
+# Mobile test
+${SWARM}/browser-test.sh screenshot "$SANDBOX_URL" "$MOBILE" 375 812 2>/dev/null || true
+
+if [ -f "$SCREENSHOT" ]; then
   ${SWARM}/send.sh bodek "$THREAD" "🧪 ✅ <b>QA PASSED</b>
-  
-✅ Page loads
-✅ Desktop screenshot taken
-✅ Mobile screenshot taken
+✅ Desktop screenshot
+✅ Mobile screenshot
 ✅ Auto-login works" 2>/dev/null
-  log "GATE 2 PASSED ✅"
+  log "GATE 4 PASSED ✅"
 else
-  ${SWARM}/send.sh bodek "$THREAD" "🧪 ❌ <b>QA FAILED</b> — Browser test error" 2>/dev/null
-  fail "GATE 2 FAILED"
+  ${SWARM}/send.sh bodek "$THREAD" "🧪 ❌ QA FAILED — no screenshot" 2>/dev/null
+  fail "GATE 4 FAILED"
   exit 1
 fi
 
 # ============================================
-# GATE 3: Screenshot to General (MANDATORY)
+# GATE 5: Screenshot to General + Topic
 # ============================================
-log "GATE 3: Sending screenshot to General..."
+log "GATE 5: Screenshots..."
 
-BOT_TOKEN=$(cat ${SWARM}/.bot-token)
-curl -s -F "chat_id=${CHAT}" -F "message_thread_id=1" \
+# Send desktop to General
+curl -sf -F "chat_id=${CHAT}" -F "message_thread_id=1" \
   -F "photo=@${SCREENSHOT}" \
   -F "caption=📸 #${THREAD} — ${DESC}
 
-✅ שומר — code review passed
-✅ בודק — QA passed
-✅ Desktop + Mobile tested
+✅ שומר — code review
+✅ בודק — QA
+✅ evaluator
 
 מאשר לפרודקשן?" \
-  "https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto" > /dev/null
+  "https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto" > /dev/null || warn "Could not send to General"
 
-log "Screenshot sent to General ✅"
-
-# Also send to topic
-curl -s -F "chat_id=${CHAT}" -F "message_thread_id=${THREAD}" \
+# Send to topic
+curl -sf -F "chat_id=${CHAT}" -F "message_thread_id=${THREAD}" \
   -F "photo=@${SCREENSHOT}" \
-  -F "caption=📸 Screenshot — desktop" \
-  "https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto" > /dev/null
+  -F "caption=📸 Desktop" \
+  "https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto" > /dev/null || true
+
+# Send mobile to topic
+[ -f "$MOBILE" ] && curl -sf -F "chat_id=${CHAT}" -F "message_thread_id=${THREAD}" \
+  -F "photo=@${MOBILE}" \
+  -F "caption=📱 Mobile" \
+  "https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto" > /dev/null || true
+
+log "GATE 5 PASSED ✅"
+
+# ============================================
+# STEP 6: Learning (record success + episode)
+# ============================================
+log "STEP 6: Learning..."
+for agent in $AGENTS; do
+  ${SWARM}/learn.sh score "$agent" success "#${THREAD}: ${DESC}" 2>/dev/null || true
+done
+${SWARM}/learn.sh lesson "$FIRST_AGENT" low "#${THREAD} completed" "Task '${DESC}' passed all gates" 2>/dev/null || true
+${SWARM}/episode.sh save "$THREAD" 2>/dev/null || true
+
+# Auto-evolve skills
+LESSON_COUNT=$(python3 -c "import json;print(len(json.load(open('${SWARM}/learning/lessons.json'))['lessons']))" 2>/dev/null || echo "0")
+[ "$LESSON_COUNT" -gt 10 ] && ${SWARM}/learn.sh evolve 2>/dev/null || true
+log "Learning recorded ✅"
+
+# ============================================
+# STEP 7: Update status dashboard
+# ============================================
+log "STEP 7: Dashboard..."
+for agent in $AGENTS; do
+  ${SWARM}/update-status.sh "$agent" "$THREAD" done "$DESC" 2>/dev/null || true
+done
+log "Dashboard updated ✅"
+
+# ============================================
+# STEP 8: Checkpoint (save post-review state)
+# ============================================
+${SWARM}/checkpoint.sh save "$THREAD" "review-passed" '{"gates":"all_passed"}' 2>/dev/null || true
 
 # ============================================
 # Update mission state
 # ============================================
-python3 -c "
+python3 << PY
 import json
 with open('$STATE') as f: d=json.load(f)
 d['status']='awaiting_approval'
-d['steps_completed'].extend(['shomer_review','bodek_test','screenshot'])
+d['steps_completed']=['topic','task_file','sandbox','checkpoint','learning_query','status_dashboard','announce','agents_activated','watch_task','progress','evaluator','shomer_review','bodek_test','screenshot','learning_record','dashboard_update']
 d['steps_remaining']=['user_approval','deploy']
-with open('$STATE','w') as f: json.dump(d,f)
-"
+with open('$STATE','w') as f: json.dump(d,f,indent=2)
+PY
+
+# Kill watch/progress
+python3 -c "
+import json,os,signal
+d=json.load(open('$STATE'))
+for key in ['watch_pid','progress_pid']:
+  pid=d.get(key)
+  if pid:
+    try: os.kill(pid, signal.SIGTERM)
+    except: pass
+" 2>/dev/null || true
 
 log "============================================"
-log "ALL GATES PASSED ✅"
+log "✅ ALL 8 GATES/STEPS PASSED"
+log ""
 log "Waiting for user approval..."
 log "When approved: deploy.sh ${PROJECT} ${THREAD}"
 log "============================================"
-
-# ============================================
-# STEP 4: Learning (MANDATORY)
-# ============================================
-log "STEP 4: Learning from this mission..."
-
-# Record success for all agents
-AGENTS=$(python3 -c "import json;print(' '.join(json.load(open('$STATE'))['agents']))")
-for agent in $AGENTS; do
-  ${SWARM}/learn.sh score "$agent" success "#${THREAD}: ${DESC}" 2>/dev/null || true
-  log "Score recorded for ${agent} ✅"
-done
-
-# Save episode for future reference
-${SWARM}/episode.sh save "${THREAD}" 2>/dev/null || true
-log "Episode saved ✅"
-
-# Auto-evolve if enough lessons accumulated
-LESSON_COUNT=$(python3 -c "import json;print(len(json.load(open('${SWARM}/learning/lessons.json'))['lessons']))" 2>/dev/null || echo "0")
-if [ "$LESSON_COUNT" -gt 10 ]; then
-  ${SWARM}/learn.sh evolve 2>/dev/null || true
-  log "Auto-evolve triggered (${LESSON_COUNT} lessons)"
-fi

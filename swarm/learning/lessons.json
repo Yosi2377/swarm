@@ -720,6 +720,16 @@
       "lesson": "ZozoBet headers good except missing CSP and server version exposed. SSL valid 87 days. Backend on localhost only. Rate limiter active at 200/window.",
       "timestamp": "2026-02-16T05:53:30Z",
       "applied": 0
+    },
+    {
+      "id": "6903e4b9",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "success #3364",
+      "lesson": "header blue",
+      "timestamp": "2026-02-16T05:55:07Z",
+      "applied": 0
     }
   ]
 }

@@ -94,7 +94,7 @@ while [ $WAITED -lt $WAIT_MAX ]; do
     RC=$(cd "$CHECK_DIR" && git log --since="$((WAITED))seconds ago" --oneline 2>/dev/null | wc -l || true)
     RECENT_COMMITS=$((RECENT_COMMITS + RC))
   done
-  if [ "$RECENT_COMMITS" -gt 0 ] && [ $WAITED -gt 120 ]; then
+  if [ "$RECENT_COMMITS" -gt 0 ] && [ $WAITED -gt 30 ]; then
     # Had commits but stopped — might be done
     LAST_AGES=""
     for CHECK_DIR in "$SWARM_DIR/.." "$SANDBOX_DIR"; do

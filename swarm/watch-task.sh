@@ -7,6 +7,7 @@ LABEL="$1"
 THREAD="$2"
 PROJECT="$3"
 DESC="${4:-task}"
+AGENT="${5:-koder}"
 SEND="/root/.openclaw/workspace/swarm/send.sh"
 SANDBOX_URL="http://95.111.247.22:9089"
 BROWSER_TEST="/root/.openclaw/workspace/swarm/browser-test.sh"
@@ -32,9 +33,27 @@ while [ $elapsed -lt $MAX_WAIT ]; do
       # Fresh commit detected
       $SEND or 1 "✅ #${THREAD} — סוכן סיים (commit ${LAST_COMMIT_AGE}). בודק + צילום מסך..."
       
-      # Step 3: Take screenshot
+      # Step 3: Run evaluator
       systemctl restart sandbox-betting-backend 2>/dev/null
       sleep 3
+      
+      EVAL_RESULT=$(/root/.openclaw/workspace/swarm/evaluator.sh "$THREAD" "$AGENT" 2>&1)
+      EVAL_EXIT=$?
+      
+      if [ $EVAL_EXIT -ne 0 ]; then
+        $SEND or 1 "❌ #${THREAD} — evaluator נכשל. שולח feedback לסוכן..."
+        # Let auto-flow handle retry
+        exit 1
+      fi
+      
+      $SEND or 1 "✅ #${THREAD} — evaluator עבר! שומר בודק code review..."
+      
+      # Step 4: Shomer code review
+      DIFF=$(cd "/root/sandbox/${PROJECT}" && git diff HEAD~1 --stat 2>/dev/null)
+      $SEND shomer "$THREAD" "🔒 Code Review:
+$(cd "/root/sandbox/${PROJECT}" && git diff HEAD~1 2>/dev/null | head -100)"
+      
+      # Step 5: Take screenshot
       $BROWSER_TEST screenshot "$SANDBOX_URL" "/tmp/watch-${THREAD}.png" 1400 900 2>/dev/null
       
       if [ -f "/tmp/watch-${THREAD}.png" ]; then

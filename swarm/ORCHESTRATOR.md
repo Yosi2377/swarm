@@ -53,11 +53,13 @@ sessions_spawn(
 send.sh or 1 "🐝 <b>משימה חדשה:</b> EMOJI task → agent (thread X)"
 
 # IMMEDIATELY launch watch-task in background!
-nohup swarm/watch-task.sh "task-THREAD" THREAD PROJECT "description" > /tmp/watch-THREAD.log 2>&1 &
+nohup swarm/watch-task.sh "task-THREAD" THREAD PROJECT "description" AGENT > /tmp/watch-THREAD.log 2>&1 &
 ```
 ⛔ **watch-task.sh חובה!** הוא מדווח אוטומטית:
 - "⏳ סוכן עובד..." (כל 60 שניות)
 - "✅ סוכן סיים, בודק..." (כשמזהה commit)
+- "✅ evaluator עבר!" (מריץ evaluator אוטומטית)
+- "🔒 שומר בודק code review" (שולח diff לשומר)
 - "📸 screenshot נשלח" (עם תמונה ל-General)
 - "⚠️ timeout" (אם תקוע)
 

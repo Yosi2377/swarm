@@ -138,18 +138,26 @@ send.sh or 1 "$(/root/.openclaw/workspace/swarm/task.sh board)"
 - תיקון + בדיקה → קודר מתקן, שומר בודק במקביל
 
 ### How to launch parallel agents:
-```
-# ALWAYS use sessions_spawn for each task — they run concurrently!
+```bash
+# Option 1: parallel-dispatch.sh (recommended — monitors all + reports)
+swarm/parallel-dispatch.sh \
+  koder 3301 betting "fix sidebar" \
+  -- tzayar 3302 betting "redesign banner" \
+  -- shomer 3303 betting "security review"
+
+# Option 2: sessions_spawn for each task (runs concurrently)
 sessions_spawn(task="...", label="task-101")  # → returns immediately
 sessions_spawn(task="...", label="task-102")  # → returns immediately
-sessions_spawn(task="...", label="task-103")  # → returns immediately
-# All 3 agents now working in background simultaneously (up to 8 concurrent)
+
+# Option 3: Manual parallel auto-flow
+nohup swarm/auto-flow.sh koder 3301 betting "desc" > /tmp/auto-flow-3301.log 2>&1 &
+nohup swarm/auto-flow.sh tzayar 3302 betting "desc" > /tmp/auto-flow-3302.log 2>&1 &
 ```
 
-**⚠️ ALWAYS use `sessions_spawn` when there are multiple tasks.**
+**⚠️ ALWAYS use parallel dispatch when there are multiple tasks.**
 `sessions_send` is ONLY for short pings / status checks — it blocks until response!
 
-**אם יש יותר ממשימה אחת — תמיד sessions_spawn במקביל. אין תירוצים.**
+**אם יש יותר ממשימה אחת — תמיד parallel-dispatch או sessions_spawn. אין תירוצים.**
 
 ## ⚠️ NEVER answer tasks directly. ALWAYS delegate.
 

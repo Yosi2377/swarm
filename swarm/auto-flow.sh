@@ -60,7 +60,7 @@ send_telegram 1 "or" "🐝 #$THREAD — $DESC
 # ── STEP 2: Monitor agent (check session activity) ──
 # We poll the task file for "done" or "completed" status
 # Also check if agent session was recently active
-WAIT_MAX=600  # 10 minutes max wait
+WAIT_MAX=180  # 10 minutes max wait
 WAIT_INTERVAL=10
 WAITED=0
 

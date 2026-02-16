@@ -48,10 +48,20 @@ sessions_spawn(
 > - `sessions_spawn` = **מקבילי**, רץ ברקע, לא חוסם — **תמיד לעבודה!**
 > - `sessions_send` = **סדרתי**, חוסם — **רק לפינגים קצרים / בדיקת סטטוס**
 
-### 4. Acknowledge in General
+### 4. Acknowledge in General + AUTO-WATCH (חובה!)
 ```bash
 send.sh or 1 "🐝 <b>משימה חדשה:</b> EMOJI task → agent (thread X)"
+
+# IMMEDIATELY launch watch-task in background!
+nohup swarm/watch-task.sh "task-THREAD" THREAD PROJECT "description" > /tmp/watch-THREAD.log 2>&1 &
 ```
+⛔ **watch-task.sh חובה!** הוא מדווח אוטומטית:
+- "⏳ סוכן עובד..." (כל 60 שניות)
+- "✅ סוכן סיים, בודק..." (כשמזהה commit)
+- "📸 screenshot נשלח" (עם תמונה ל-General)
+- "⚠️ timeout" (אם תקוע)
+
+**בלי watch-task.sh → יוסי ישאל "נו?" → אתה נכשלת.**
 
 ### 5. Quality Gates — ENFORCED CHAIN
 

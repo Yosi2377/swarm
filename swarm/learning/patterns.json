@@ -31,6 +31,1692 @@
       "theme": "before",
       "lessonCount": 3,
       "path": "/root/.openclaw/workspace/swarm/skills/auto-2f444175.md"
+    },
+    {
+      "id": "62c92ba5",
+      "theme": "screenshot",
+      "lessonCount": 27,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-62c92ba5.md"
+    },
+    {
+      "id": "b33aed8f",
+      "theme": "agent",
+      "lessonCount": 44,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-b33aed8f.md"
+    },
+    {
+      "id": "0ba4439e",
+      "theme": "check",
+      "lessonCount": 34,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-0ba4439e.md"
+    },
+    {
+      "id": "78cdeac4",
+      "theme": "using",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-78cdeac4.md"
+    },
+    {
+      "id": "9c46408a",
+      "theme": "route",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-9c46408a.md"
+    },
+    {
+      "id": "ad65d91b",
+      "theme": "endpoint",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ad65d91b.md"
+    },
+    {
+      "id": "9acb4454",
+      "theme": "status",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-9acb4454.md"
+    },
+    {
+      "id": "e4e6fa90",
+      "theme": "auto-commit",
+      "lessonCount": 32,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e4e6fa90.md"
+    },
+    {
+      "id": "fffca4d6",
+      "theme": "commit",
+      "lessonCount": 45,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-fffca4d6.md"
+    },
+    {
+      "id": "9472cc4c",
+      "theme": "evaluating",
+      "lessonCount": 43,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-9472cc4c.md"
+    },
+    {
+      "id": "dc127f5d",
+      "theme": "thread",
+      "lessonCount": 43,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-dc127f5d.md"
+    },
+    {
+      "id": "6b4e2857",
+      "theme": "koder...",
+      "lessonCount": 43,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6b4e2857.md"
+    },
+    {
+      "id": "24305031",
+      "theme": "fail:",
+      "lessonCount": 41,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-24305031.md"
+    },
+    {
+      "id": "7d31dc34",
+      "theme": "uncommitted",
+      "lessonCount": 12,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-7d31dc34.md"
+    },
+    {
+      "id": "5a9d18bb",
+      "theme": "changes",
+      "lessonCount": 43,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-5a9d18bb.md"
+    },
+    {
+      "id": "6a8d8a1e",
+      "theme": "workspace:",
+      "lessonCount": 12,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6a8d8a1e.md"
+    },
+    {
+      "id": "45b96339",
+      "theme": "files",
+      "lessonCount": 45,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-45b96339.md"
+    },
+    {
+      "id": "1629dee4",
+      "theme": "workspace",
+      "lessonCount": 43,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1629dee4.md"
+    },
+    {
+      "id": "c5aecaa3",
+      "theme": "errors:",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c5aecaa3.md"
+    },
+    {
+      "id": "07213a01",
+      "theme": "errors",
+      "lessonCount": 26,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-07213a01.md"
+    },
+    {
+      "id": "cb5e100e",
+      "theme": "error",
+      "lessonCount": 26,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-cb5e100e.md"
+    },
+    {
+      "id": "fbb44b44",
+      "theme": "total",
+      "lessonCount": 9,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-fbb44b44.md"
+    },
+    {
+      "id": "f31fb46f",
+      "theme": "retries",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f31fb46f.md"
+    },
+    {
+      "id": "e349d735",
+      "theme": "exhausted",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e349d735.md"
+    },
+    {
+      "id": "7cc1bed4",
+      "theme": "auto-committing",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-7cc1bed4.md"
+    },
+    {
+      "id": "181b1e4c",
+      "theme": "files...",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-181b1e4c.md"
+    },
+    {
+      "id": "c372567f",
+      "theme": "[master",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c372567f.md"
+    },
+    {
+      "id": "42e2539b",
+      "theme": "#2656:",
+      "lessonCount": 9,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-42e2539b.md"
+    },
+    {
+      "id": "71358c11",
+      "theme": "(evaluator)",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-71358c11.md"
+    },
+    {
+      "id": "eeb80d5e",
+      "theme": "committer:",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-eeb80d5e.md"
+    },
+    {
+      "id": "e65efde5",
+      "theme": "<root@vmi3057963.contaboserver.net>",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e65efde5.md"
+    },
+    {
+      "id": "0c83f57c",
+      "theme": "email",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-0c83f57c.md"
+    },
+    {
+      "id": "884d9804",
+      "theme": "address",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-884d9804.md"
+    },
+    {
+      "id": "48e54afc",
+      "theme": "configured",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-48e54afc.md"
+    },
+    {
+      "id": "b789f36b",
+      "theme": "automatically",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-b789f36b.md"
+    },
+    {
+      "id": "a66db021",
+      "theme": "based",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a66db021.md"
+    },
+    {
+      "id": "14c4b06b",
+      "theme": "username",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-14c4b06b.md"
+    },
+    {
+      "id": "c078b4cf",
+      "theme": "hostname.",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c078b4cf.md"
+    },
+    {
+      "id": "6050ce63",
+      "theme": "please",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6050ce63.md"
+    },
+    {
+      "id": "15f4e14f",
+      "theme": "accurate.",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-15f4e14f.md"
+    },
+    {
+      "id": "674408fa",
+      "theme": "suppress",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-674408fa.md"
+    },
+    {
+      "id": "78e73102",
+      "theme": "message",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-78e73102.md"
+    },
+    {
+      "id": "7dc22b2c",
+      "theme": "setting",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-7dc22b2c.md"
+    },
+    {
+      "id": "6c81b5ff",
+      "theme": "explicitly.",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6c81b5ff.md"
+    },
+    {
+      "id": "2511fc6c",
+      "theme": "following",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2511fc6c.md"
+    },
+    {
+      "id": "1dccadfe",
+      "theme": "command",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1dccadfe.md"
+    },
+    {
+      "id": "a4010945",
+      "theme": "follow",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a4010945.md"
+    },
+    {
+      "id": "cbde2df6",
+      "theme": "instructions",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-cbde2df6.md"
+    },
+    {
+      "id": "5aee9dbd",
+      "theme": "editor",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-5aee9dbd.md"
+    },
+    {
+      "id": "ccd10663",
+      "theme": "configuration",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ccd10663.md"
+    },
+    {
+      "id": "1ec3bfec",
+      "theme": "file:",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1ec3bfec.md"
+    },
+    {
+      "id": "22450232",
+      "theme": "config",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-22450232.md"
+    },
+    {
+      "id": "4f8586dc",
+      "theme": "--global",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-4f8586dc.md"
+    },
+    {
+      "id": "ef755fe9",
+      "theme": "--edit",
+      "lessonCount": 31,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ef755fe9.md"
+    },
+    {
+      "id": "632a2406",
+      "theme": "after",
+      "lessonCount": 32,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-632a2406.md"
+    },
+    {
+      "id": "562a5db5",
+      "theme": "doing",
+      "lessonCount": 32,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-562a5db5.md"
+    },
+    {
+      "id": "8d583d0b",
+      "theme": "this,",
+      "lessonCount": 32,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-8d583d0b.md"
+    },
+    {
+      "id": "ff483d1f",
+      "theme": "identity",
+      "lessonCount": 32,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ff483d1f.md"
+    },
+    {
+      "id": "73dcdba7",
+      "theme": "with:",
+      "lessonCount": 32,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-73dcdba7.md"
+    },
+    {
+      "id": "53cdb367",
+      "theme": "--amend",
+      "lessonCount": 32,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-53cdb367.md"
+    },
+    {
+      "id": "6df2eaeb",
+      "theme": "--reset-author",
+      "lessonCount": 32,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6df2eaeb.md"
+    },
+    {
+      "id": "2d483177",
+      "theme": "changed,",
+      "lessonCount": 33,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2d483177.md"
+    },
+    {
+      "id": "6fe14957",
+      "theme": "insertions(+),",
+      "lessonCount": 33,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6fe14957.md"
+    },
+    {
+      "id": "17795a6c",
+      "theme": "deletions(-)",
+      "lessonCount": 33,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-17795a6c.md"
+    },
+    {
+      "id": "75101dcd",
+      "theme": "running",
+      "lessonCount": 34,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-75101dcd.md"
+    },
+    {
+      "id": "b61a6d54",
+      "theme": "tests",
+      "lessonCount": 35,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-b61a6d54.md"
+    },
+    {
+      "id": "3f32c47a",
+      "theme": "(project:",
+      "lessonCount": 33,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-3f32c47a.md"
+    },
+    {
+      "id": "cb5cf955",
+      "theme": "betting)...",
+      "lessonCount": 33,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-cb5cf955.md"
+    },
+    {
+      "id": "c0002460",
+      "theme": "pass:",
+      "lessonCount": 34,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c0002460.md"
+    },
+    {
+      "id": "9849f97a",
+      "theme": "passed",
+      "lessonCount": 37,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-9849f97a.md"
+    },
+    {
+      "id": "8e3f1bbb",
+      "theme": "browser",
+      "lessonCount": 35,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-8e3f1bbb.md"
+    },
+    {
+      "id": "9c87409f",
+      "theme": "tests...",
+      "lessonCount": 34,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-9c87409f.md"
+    },
+    {
+      "id": "4ac257c5",
+      "theme": "loads",
+      "lessonCount": 19,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-4ac257c5.md"
+    },
+    {
+      "id": "d56b6998",
+      "theme": "login",
+      "lessonCount": 26,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d56b6998.md"
+    },
+    {
+      "id": "e087923e",
+      "theme": "exists",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e087923e.md"
+    },
+    {
+      "id": "bfafd813",
+      "theme": "console",
+      "lessonCount": 15,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-bfafd813.md"
+    },
+    {
+      "id": "501c5738",
+      "theme": "saved:",
+      "lessonCount": 19,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-501c5738.md"
+    },
+    {
+      "id": "de502ad2",
+      "theme": "/tmp/eval-browser-betting.png",
+      "lessonCount": 19,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-de502ad2.md"
+    },
+    {
+      "id": "64086ea1",
+      "theme": "feature-specific",
+      "lessonCount": 34,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-64086ea1.md"
+    },
+    {
+      "id": "f5661263",
+      "theme": "פירוט",
+      "lessonCount": 11,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f5661263.md"
+    },
+    {
+      "id": "1a052e5e",
+      "theme": "רווח/הפסד",
+      "lessonCount": 11,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1a052e5e.md"
+    },
+    {
+      "id": "5b3c3200",
+      "theme": "selector",
+      "lessonCount": 23,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-5b3c3200.md"
+    },
+    {
+      "id": "0acc8f14",
+      "theme": "\"#modalpnldetail\"",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-0acc8f14.md"
+    },
+    {
+      "id": "6cfe6169",
+      "theme": "found",
+      "lessonCount": 30,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6cfe6169.md"
+    },
+    {
+      "id": "2b795e99",
+      "theme": "לחיצה",
+      "lessonCount": 18,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2b795e99.md"
+    },
+    {
+      "id": "8bc3788c",
+      "theme": "פותחת",
+      "lessonCount": 18,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-8bc3788c.md"
+    },
+    {
+      "id": "ce50a093",
+      "theme": "button",
+      "lessonCount": 20,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ce50a093.md"
+    },
+    {
+      "id": "4327700f",
+      "theme": "\"td[onclick*=\"showpnldetail\"]\"",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-4327700f.md"
+    },
+    {
+      "id": "94ed8b67",
+      "theme": "שורות",
+      "lessonCount": 11,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-94ed8b67.md"
+    },
+    {
+      "id": "27969312",
+      "theme": "פירוט\"",
+      "lessonCount": 11,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-27969312.md"
+    },
+    {
+      "id": "1b826224",
+      "theme": "(needs",
+      "lessonCount": 11,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1b826224.md"
+    },
+    {
+      "id": "0c0958f8",
+      "theme": "data)",
+      "lessonCount": 11,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-0c0958f8.md"
+    },
+    {
+      "id": "cd26d9e1",
+      "theme": "expected",
+      "lessonCount": 23,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-cd26d9e1.md"
+    },
+    {
+      "id": "f3bab23b",
+      "theme": "error:",
+      "lessonCount": 16,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f3bab23b.md"
+    },
+    {
+      "id": "26934eb3",
+      "theme": "failed",
+      "lessonCount": 36,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-26934eb3.md"
+    },
+    {
+      "id": "8e2dcfd7",
+      "theme": "element",
+      "lessonCount": 20,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-8e2dcfd7.md"
+    },
+    {
+      "id": "f7a03cca",
+      "theme": "matching",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f7a03cca.md"
+    },
+    {
+      "id": "e9e33fb7",
+      "theme": "\"#pnldetailsummary\"",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e9e33fb7.md"
+    },
+    {
+      "id": "5a89b023",
+      "theme": "קיימת",
+      "lessonCount": 11,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-5a89b023.md"
+    },
+    {
+      "id": "1cde53f4",
+      "theme": "\"#pnldetailbody\"",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1cde53f4.md"
+    },
+    {
+      "id": "d0718225",
+      "theme": "evaluation",
+      "lessonCount": 36,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d0718225.md"
+    },
+    {
+      "id": "cf1e8c14",
+      "theme": "server",
+      "lessonCount": 32,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-cf1e8c14.md"
+    },
+    {
+      "id": "5b609a45",
+      "theme": "betting",
+      "lessonCount": 36,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-5b609a45.md"
+    },
+    {
+      "id": "608ece08",
+      "theme": "modal",
+      "lessonCount": 22,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-608ece08.md"
+    },
+    {
+      "id": "ae2b1fca",
+      "theme": "testing",
+      "lessonCount": 28,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ae2b1fca.md"
+    },
+    {
+      "id": "f2cd6e3a",
+      "theme": "http://95.111.247.22:9089/admin.html",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f2cd6e3a.md"
+    },
+    {
+      "id": "aff476a7",
+      "theme": "auto-login",
+      "lessonCount": 21,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-aff476a7.md"
+    },
+    {
+      "id": "9551ecbe",
+      "theme": "http://95.111.247.22:9089",
+      "lessonCount": 30,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-9551ecbe.md"
+    },
+    {
+      "id": "d8a87d9b",
+      "theme": "http:/",
+      "lessonCount": 30,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d8a87d9b.md"
+    },
+    {
+      "id": "a8dcb5fb",
+      "theme": "http://95.111.247.22:9089/",
+      "lessonCount": 19,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a8dcb5fb.md"
+    },
+    {
+      "id": "2f49c97f",
+      "theme": "#2809:",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2f49c97f.md"
+    },
+    {
+      "id": "bbaf0d2c",
+      "theme": "אירועים",
+      "lessonCount": 15,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-bbaf0d2c.md"
+    },
+    {
+      "id": "e072d0c3",
+      "theme": "מופיעים",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e072d0c3.md"
+    },
+    {
+      "id": "2b859d1b",
+      "theme": "\".event-row,",
+      "lessonCount": 8,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2b859d1b.md"
+    },
+    {
+      "id": "3abde5c8",
+      "theme": "שנגמרו",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-3abde5c8.md"
+    },
+    {
+      "id": "24d69758",
+      "theme": "בטבלה",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-24d69758.md"
+    },
+    {
+      "id": "8bcbe95a",
+      "theme": "undefined,",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-8bcbe95a.md"
+    },
+    {
+      "id": "5e543256",
+      "theme": "undefined",
+      "lessonCount": 21,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-5e543256.md"
+    },
+    {
+      "id": "7238ac6d",
+      "theme": "defined",
+      "lessonCount": 21,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-7238ac6d.md"
+    },
+    {
+      "id": "ad8a2265",
+      "theme": "logging",
+      "lessonCount": 18,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ad8a2265.md"
+    },
+    {
+      "id": "c4ba1f0d",
+      "theme": "/root/node_modules/puppeteer-core/lib/cjs/puppeteer/common/callbackregistry.js:103",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c4ba1f0d.md"
+    },
+    {
+      "id": "2126b64c",
+      "theme": "#error",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2126b64c.md"
+    },
+    {
+      "id": "26f1cd2c",
+      "theme": "errors_js_1.protocolerror();",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-26f1cd2c.md"
+    },
+    {
+      "id": "a69f18ca",
+      "theme": "protocolerror:",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a69f18ca.md"
+    },
+    {
+      "id": "81788ba0",
+      "theme": "protocol",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-81788ba0.md"
+    },
+    {
+      "id": "5dbc6a0a",
+      "theme": "(page.navigate):",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-5dbc6a0a.md"
+    },
+    {
+      "id": "fedb2d84",
+      "theme": "invalid",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-fedb2d84.md"
+    },
+    {
+      "id": "166e64f6",
+      "theme": "parameters",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-166e64f6.md"
+    },
+    {
+      "id": "95f98046",
+      "theme": "deserialize",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-95f98046.md"
+    },
+    {
+      "id": "1b0f9a9a",
+      "theme": "params.url",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1b0f9a9a.md"
+    },
+    {
+      "id": "56941911",
+      "theme": "bindings:",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-56941911.md"
+    },
+    {
+      "id": "c5e3b967",
+      "theme": "mandatory",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c5e3b967.md"
+    },
+    {
+      "id": "06e3d36f",
+      "theme": "field",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-06e3d36f.md"
+    },
+    {
+      "id": "ea21841d",
+      "theme": "missing",
+      "lessonCount": 11,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ea21841d.md"
+    },
+    {
+      "id": "4757fe07",
+      "theme": "position",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-4757fe07.md"
+    },
+    {
+      "id": "7dc1c28a",
+      "theme": "<instance_members_initializer>",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-7dc1c28a.md"
+    },
+    {
+      "id": "2d71b908",
+      "theme": "(/root/node_modules/puppeteer-core/lib/cjs/puppeteer/common/callbackregistry.js:103:14)",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2d71b908.md"
+    },
+    {
+      "id": "924a8cee",
+      "theme": "callback",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-924a8cee.md"
+    },
+    {
+      "id": "d3d87c17",
+      "theme": "(/root/node_modules/puppeteer-core/lib/cjs/puppeteer/common/callbackregistry.js:107:16)",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d3d87c17.md"
+    },
+    {
+      "id": "f36a7edd",
+      "theme": "callbackregistry.create",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f36a7edd.md"
+    },
+    {
+      "id": "ec58cd33",
+      "theme": "(/root/node_modules/puppeteer-core/lib/cjs/puppeteer/common/callbackregistry.js:25:26)",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ec58cd33.md"
+    },
+    {
+      "id": "04dda497",
+      "theme": "connection._rawsend",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-04dda497.md"
+    },
+    {
+      "id": "d9a2bb55",
+      "theme": "(/root/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/connection.js:108:26)",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d9a2bb55.md"
+    },
+    {
+      "id": "4c8f51cb",
+      "theme": "cdpcdpsession.send",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-4c8f51cb.md"
+    },
+    {
+      "id": "839bbe6d",
+      "theme": "(/root/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/cdpsession.js:74:33)",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-839bbe6d.md"
+    },
+    {
+      "id": "d3427c30",
+      "theme": "navigate",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d3427c30.md"
+    },
+    {
+      "id": "63b5d8bc",
+      "theme": "(/root/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/frame.js:173:51)",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-63b5d8bc.md"
+    },
+    {
+      "id": "6ad0eb8f",
+      "theme": "cdpframe.goto",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6ad0eb8f.md"
+    },
+    {
+      "id": "5879d972",
+      "theme": "(/root/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/frame.js:151:17)",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-5879d972.md"
+    },
+    {
+      "id": "d2620ac1",
+      "theme": "cdpframe.<anonymous>",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d2620ac1.md"
+    },
+    {
+      "id": "e40103c8",
+      "theme": "(/root/node_modules/puppeteer-core/lib/cjs/puppeteer/util/decorators.js:109:27)",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e40103c8.md"
+    },
+    {
+      "id": "b38a4826",
+      "theme": "cdppage.goto",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-b38a4826.md"
+    },
+    {
+      "id": "eaba9991",
+      "theme": "(/root/node_modules/puppeteer-core/lib/cjs/puppeteer/api/page.js:580:43)",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-eaba9991.md"
+    },
+    {
+      "id": "747a0737",
+      "theme": "dologin",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-747a0737.md"
+    },
+    {
+      "id": "fea3b9db",
+      "theme": "(/root/.openclaw/workspace/swarm/browser-eval.js:85:14)",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-fea3b9db.md"
+    },
+    {
+      "id": "28a3689b",
+      "theme": "node.js",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-28a3689b.md"
+    },
+    {
+      "id": "bf09b858",
+      "theme": "v22.22.0",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-bf09b858.md"
+    },
+    {
+      "id": "76ea0beb",
+      "theme": "create",
+      "lessonCount": 13,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-76ea0beb.md"
+    },
+    {
+      "id": "21d6f40c",
+      "theme": "session",
+      "lessonCount": 11,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-21d6f40c.md"
+    },
+    {
+      "id": "fd93115d",
+      "theme": "100644",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-fd93115d.md"
+    },
+    {
+      "id": "1fd3fc31",
+      "theme": "==========",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1fd3fc31.md"
+    },
+    {
+      "id": "9d4052e7",
+      "theme": "investigation",
+      "lessonCount": 13,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-9d4052e7.md"
+    },
+    {
+      "id": "41bf665a",
+      "theme": "cross-origin-opener-policy",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-41bf665a.md"
+    },
+    {
+      "id": "099fb995",
+      "theme": "header",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-099fb995.md"
+    },
+    {
+      "id": "51f28c38",
+      "theme": "ignored,",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-51f28c38.md"
+    },
+    {
+      "id": "cc70865f",
+      "theme": "because",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-cc70865f.md"
+    },
+    {
+      "id": "2c8bc62e",
+      "theme": "url's",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2c8bc62e.md"
+    },
+    {
+      "id": "7c49b153",
+      "theme": "origin",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-7c49b153.md"
+    },
+    {
+      "id": "f3a8299f",
+      "theme": "untrustworthy.",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f3a8299f.md"
+    },
+    {
+      "id": "1852fbae",
+      "theme": "either",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1852fbae.md"
+    },
+    {
+      "id": "2a1585a8",
+      "theme": "final",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2a1585a8.md"
+    },
+    {
+      "id": "d1fc8eaf",
+      "theme": "response",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d1fc8eaf.md"
+    },
+    {
+      "id": "a47c00e5",
+      "theme": "redirect.",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a47c00e5.md"
+    },
+    {
+      "id": "45a69146",
+      "theme": "deliver",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-45a69146.md"
+    },
+    {
+      "id": "af6e3fc9",
+      "theme": "resource:",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-af6e3fc9.md"
+    },
+    {
+      "id": "c73f9961",
+      "theme": "responded",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c73f9961.md"
+    },
+    {
+      "id": "8911afda",
+      "theme": "(unauthorized)",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-8911afda.md"
+    },
+    {
+      "id": "89af944e",
+      "theme": "found)",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-89af944e.md"
+    },
+    {
+      "id": "91e02cd2",
+      "theme": "network",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-91e02cd2.md"
+    },
+    {
+      "id": "4bcc5e3b",
+      "theme": "failures",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-4bcc5e3b.md"
+    },
+    {
+      "id": "91868f7f",
+      "theme": "/api/auth/me",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-91868f7f.md"
+    },
+    {
+      "id": "f1e4d6e8",
+      "theme": "diagnosis:",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f1e4d6e8.md"
+    },
+    {
+      "id": "43b5c917",
+      "theme": "current",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-43b5c917.md"
+    },
+    {
+      "id": "63913622",
+      "theme": "title:",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-63913622.md"
+    },
+    {
+      "id": "9c6cccf3",
+      "theme": "\"zozobet",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-9c6cccf3.md"
+    },
+    {
+      "id": "a2881958",
+      "theme": "premium",
+      "lessonCount": 13,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a2881958.md"
+    },
+    {
+      "id": "088495f3",
+      "theme": "sports",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-088495f3.md"
+    },
+    {
+      "id": "246ba208",
+      "theme": "betting\"",
+      "lessonCount": 13,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-246ba208.md"
+    },
+    {
+      "id": "5a3b5982",
+      "theme": "shows",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-5a3b5982.md"
+    },
+    {
+      "id": "6fa691d2",
+      "theme": "authentication",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6fa691d2.md"
+    },
+    {
+      "id": "3e7efb65",
+      "theme": "expired!",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-3e7efb65.md"
+    },
+    {
+      "id": "d3ed68f7",
+      "theme": "credentials",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d3ed68f7.md"
+    },
+    {
+      "id": "671173d9",
+      "theme": "correct,",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-671173d9.md"
+    },
+    {
+      "id": "55e7dd30",
+      "theme": "cookies",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-55e7dd30.md"
+    },
+    {
+      "id": "3f4cede6",
+      "theme": "being",
+      "lessonCount": 12,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-3f4cede6.md"
+    },
+    {
+      "id": "a4e3fe46",
+      "theme": "properly",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a4e3fe46.md"
+    },
+    {
+      "id": "39b4ce21",
+      "theme": "mostly",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-39b4ce21.md"
+    },
+    {
+      "id": "a2e4822a",
+      "theme": "empty",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a2e4822a.md"
+    },
+    {
+      "id": "9a0364b9",
+      "theme": "content",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-9a0364b9.md"
+    },
+    {
+      "id": "a14fa216",
+      "theme": "loading",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a14fa216.md"
+    },
+    {
+      "id": "3d04518a",
+      "theme": "(first",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-3d04518a.md"
+    },
+    {
+      "id": "d8def422",
+      "theme": "chars):",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d8def422.md"
+    },
+    {
+      "id": "d414064a",
+      "theme": "\"premium",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d414064a.md"
+    },
+    {
+      "id": "45f985d2",
+      "theme": "כניסה\"",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-45f985d2.md"
+    },
+    {
+      "id": "6a7f2458",
+      "theme": "elements",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6a7f2458.md"
+    },
+    {
+      "id": "6160fc43",
+      "theme": "page:",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-6160fc43.md"
+    },
+    {
+      "id": "3cf7b59c",
+      "theme": "{\"tr\":0,\"td\":0,\"div\":43,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-3cf7b59c.md"
+    },
+    {
+      "id": "cbcfb4bd",
+      "theme": "\"אירועים",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-cbcfb4bd.md"
+    },
+    {
+      "id": "1a8c73f0",
+      "theme": "מופיעים\":",
+      "lessonCount": 3,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1a8c73f0.md"
+    },
+    {
+      "id": "1eb4a85c",
+      "theme": "screenshot:",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1eb4a85c.md"
+    },
+    {
+      "id": "16f1dded",
+      "theme": "/tmp/eval-diagnosis.png",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-16f1dded.md"
+    },
+    {
+      "id": "c30635cc",
+      "theme": "suggested",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c30635cc.md"
+    },
+    {
+      "id": "bd7b9100",
+      "theme": "fixes",
+      "lessonCount": 14,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-bd7b9100.md"
+    },
+    {
+      "id": "167a7793",
+      "theme": "returning",
+      "lessonCount": 12,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-167a7793.md"
+    },
+    {
+      "id": "563873d3",
+      "theme": "registration",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-563873d3.md"
+    },
+    {
+      "id": "e1811a0b",
+      "theme": "paths.",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e1811a0b.md"
+    },
+    {
+      "id": "2ba7e790",
+      "theme": "calls.",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2ba7e790.md"
+    },
+    {
+      "id": "f73ff63f",
+      "theme": "token/cookie",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f73ff63f.md"
+    },
+    {
+      "id": "324165ee",
+      "theme": "passing.",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-324165ee.md"
+    },
+    {
+      "id": "5c16fc2a",
+      "theme": "found.",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-5c16fc2a.md"
+    },
+    {
+      "id": "1058af7b",
+      "theme": "check:",
+      "lessonCount": 12,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-1058af7b.md"
+    },
+    {
+      "id": "f8d8a4f7",
+      "theme": "rendered?",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f8d8a4f7.md"
+    },
+    {
+      "id": "ded7695b",
+      "theme": "id/class",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ded7695b.md"
+    },
+    {
+      "id": "b4173b19",
+      "theme": "correct?",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-b4173b19.md"
+    },
+    {
+      "id": "662f707d",
+      "theme": "hidden",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-662f707d.md"
+    },
+    {
+      "id": "74d02f42",
+      "theme": "(display:none)?",
+      "lessonCount": 5,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-74d02f42.md"
+    },
+    {
+      "id": "7402ff96",
+      "theme": "(6569)",
+      "lessonCount": 4,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-7402ff96.md"
+    },
+    {
+      "id": "27ce8523",
+      "theme": "שגיאות",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-27ce8523.md"
+    },
+    {
+      "id": "e854a697",
+      "theme": "קריטיות",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e854a697.md"
+    },
+    {
+      "id": "c3961b71",
+      "theme": "gateway)",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c3961b71.md"
+    },
+    {
+      "id": "c3d9aed1",
+      "theme": "ספורט",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c3d9aed1.md"
+    },
+    {
+      "id": "3d727fbc",
+      "theme": "ההימורים",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-3d727fbc.md"
+    },
+    {
+      "id": "7ccc961f",
+      "theme": "תוצאות",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-7ccc961f.md"
+    },
+    {
+      "id": "a7dc4a35",
+      "theme": "סטטיסטיקה",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a7dc4a35.md"
+    },
+    {
+      "id": "c28ded70",
+      "theme": "ניהול",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c28ded70.md"
+    },
+    {
+      "id": "504d356a",
+      "theme": "5102.02₪",
+      "lessonCount": 9,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-504d356a.md"
+    },
+    {
+      "id": "b019aaf3",
+      "theme": "15.2,",
+      "lessonCount": 9,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-b019aaf3.md"
+    },
+    {
+      "id": "20465392",
+      "theme": "en/he",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-20465392.md"
+    },
+    {
+      "id": "650f05cc",
+      "theme": "יציאה",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-650f05cc.md"
+    },
+    {
+      "id": "3c40d285",
+      "theme": "dubai",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-3c40d285.md"
+    },
+    {
+      "id": "8c7c9b11",
+      "theme": "barbados",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-8c7c9b11.md"
+    },
+    {
+      "id": "7168f84a",
+      "theme": "premier",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-7168f84a.md"
+    },
+    {
+      "id": "517b08da",
+      "theme": "league",
+      "lessonCount": 10,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-517b08da.md"
+    },
+    {
+      "id": "e540be49",
+      "theme": "setka",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e540be49.md"
+    },
+    {
+      "id": "656239a5",
+      "theme": "{\"tr\":0,\"td\":0,\"div\":6569,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-656239a5.md"
+    },
+    {
+      "id": "a1547962",
+      "theme": "הימורים",
+      "lessonCount": 11,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a1547962.md"
+    },
+    {
+      "id": "fd83a0fb",
+      "theme": "(6570)",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-fd83a0fb.md"
+    },
+    {
+      "id": "921725cb",
+      "theme": "סינון",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-921725cb.md"
+    },
+    {
+      "id": "fe3224df",
+      "theme": "#3009:",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-fe3224df.md"
+    },
+    {
+      "id": "d49b4292",
+      "theme": "\".match-row\"",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d49b4292.md"
+    },
+    {
+      "id": "39e12db1",
+      "theme": "min:2",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-39e12db1.md"
+    },
+    {
+      "id": "95a01ba9",
+      "theme": "max:undefined",
+      "lessonCount": 6,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-95a01ba9.md"
+    },
+    {
+      "id": "d688c4cc",
+      "theme": "logged",
+      "lessonCount": 9,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d688c4cc.md"
+    },
+    {
+      "id": "2bf76f87",
+      "theme": "challenger",
+      "lessonCount": 8,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-2bf76f87.md"
+    },
+    {
+      "id": "76597d97",
+      "theme": "delhi",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-76597d97.md"
+    },
+    {
+      "id": "f48861ca",
+      "theme": "england",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f48861ca.md"
+    },
+    {
+      "id": "66a872b7",
+      "theme": "{\"tr\":0,\"td\":0,\"div\":3635,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-66a872b7.md"
+    },
+    {
+      "id": "10faae55",
+      "theme": "similar",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-10faae55.md"
+    },
+    {
+      "id": "e0bda819",
+      "theme": "classes",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-e0bda819.md"
+    },
+    {
+      "id": "f5c66711",
+      "theme": "found:",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f5c66711.md"
+    },
+    {
+      "id": "3530cdd1",
+      "theme": "c-match",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-3530cdd1.md"
+    },
+    {
+      "id": "8a9fab9f",
+      "theme": "\"לחיצה",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-8a9fab9f.md"
+    },
+    {
+      "id": "681e682d",
+      "theme": "מודל\":",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-681e682d.md"
+    },
+    {
+      "id": "d65115ed",
+      "theme": "אחד\":",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d65115ed.md"
+    },
+    {
+      "id": "27197627",
+      "theme": "\".totals-line,",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-27197627.md"
+    },
+    {
+      "id": "fd8f1c89",
+      "theme": ".total-row\"",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-fd8f1c89.md"
+    },
+    {
+      "id": "c055d97f",
+      "theme": "fewer.",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-c055d97f.md"
+    },
+    {
+      "id": "94a44669",
+      "theme": "loading?",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-94a44669.md"
+    },
+    {
+      "id": "edc1d322",
+      "theme": "results?",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-edc1d322.md"
+    },
+    {
+      "id": "f922bf0e",
+      "theme": "populated?",
+      "lessonCount": 7,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f922bf0e.md"
+    },
+    {
+      "id": "0bf4f3cd",
+      "theme": "19:01:56",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-0bf4f3cd.md"
+    },
+    {
+      "id": "f80e6ad2",
+      "theme": "{\"tr\":0,\"td\":0,\"div\":3022,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-f80e6ad2.md"
+    },
+    {
+      "id": "ba6afb47",
+      "theme": "{\"tr\":0,\"td\":0,\"div\":3064,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-ba6afb47.md"
+    },
+    {
+      "id": "8fb3f43c",
+      "theme": "קווים",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-8fb3f43c.md"
+    },
+    {
+      "id": "90ce6520",
+      "theme": "מרובים",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-90ce6520.md"
+    },
+    {
+      "id": "06d4cd63",
+      "theme": "comment",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-06d4cd63.md"
+    },
+    {
+      "id": "a3ae4426",
+      "theme": "כפתורי",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-a3ae4426.md"
+    },
+    {
+      "id": "cab78875",
+      "theme": "odds\":",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-cab78875.md"
+    },
+    {
+      "id": "cbe821d7",
+      "theme": "'תיקון",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-cbe821d7.md"
+    },
+    {
+      "id": "d007d24b",
+      "theme": "זמנים",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-d007d24b.md"
+    },
+    {
+      "id": "88d2c32b",
+      "theme": "gates",
+      "lessonCount": 2,
+      "path": "/root/.openclaw/workspace/swarm/skills/auto-88d2c32b.md"
     }
   ]
 }

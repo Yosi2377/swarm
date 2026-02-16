@@ -760,6 +760,16 @@
       "lesson": "Task 'תיקון ליין רץ — זמנים + משחקים גמורים' passed all gates",
       "timestamp": "2026-02-16T20:13:50Z",
       "applied": 0
+    },
+    {
+      "id": "970072bb",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "#3822 completed",
+      "lesson": "Task 'תיקון זמנים + modal + stale' passed all gates",
+      "timestamp": "2026-02-16T20:36:03Z",
+      "applied": 0
     }
   ]
 }

@@ -158,3 +158,26 @@ log "ALL GATES PASSED ✅"
 log "Waiting for user approval..."
 log "When approved: deploy.sh ${PROJECT} ${THREAD}"
 log "============================================"
+
+# ============================================
+# STEP 4: Learning (MANDATORY)
+# ============================================
+log "STEP 4: Learning from this mission..."
+
+# Record success for all agents
+AGENTS=$(python3 -c "import json;print(' '.join(json.load(open('$STATE'))['agents']))")
+for agent in $AGENTS; do
+  ${SWARM}/learn.sh score "$agent" success "#${THREAD}: ${DESC}" 2>/dev/null || true
+  log "Score recorded for ${agent} ✅"
+done
+
+# Save episode for future reference
+${SWARM}/episode.sh save "${THREAD}" 2>/dev/null || true
+log "Episode saved ✅"
+
+# Auto-evolve if enough lessons accumulated
+LESSON_COUNT=$(python3 -c "import json;print(len(json.load(open('${SWARM}/learning/lessons.json'))['lessons']))" 2>/dev/null || echo "0")
+if [ "$LESSON_COUNT" -gt 10 ]; then
+  ${SWARM}/learn.sh evolve 2>/dev/null || true
+  log "Auto-evolve triggered (${LESSON_COUNT} lessons)"
+fi

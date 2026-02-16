@@ -48,25 +48,29 @@ while [ $elapsed -lt $MAX_WAIT ]; do
       
       $SEND or 1 "✅ #${THREAD} — evaluator עבר! שומר בודק code review..."
       
-      # Step 4: Shomer code review
-      DIFF=$(cd "/root/sandbox/${PROJECT}" && git diff HEAD~1 --stat 2>/dev/null)
+      # Step 4: Shomer code review (stat only, no HTML in diff)
+      DIFF_STAT=$(cd "/root/sandbox/${PROJECT}" && git diff HEAD~1 --stat 2>/dev/null)
       $SEND shomer "$THREAD" "🔒 Code Review:
-$(cd "/root/sandbox/${PROJECT}" && git diff HEAD~1 2>/dev/null | head -100)"
+${DIFF_STAT}"
       
       # Step 5: Take screenshot
       $BROWSER_TEST screenshot "$SANDBOX_URL" "/tmp/watch-${THREAD}.png" 1400 900 2>/dev/null
       
       if [ -f "/tmp/watch-${THREAD}.png" ]; then
-        # Send screenshot to General
+        # Send screenshot as PHOTO to General
         TOKEN=$(cat /root/.openclaw/workspace/swarm/.bot-token)
-        curl -s -F "chat_id=-1003815143703" -F "message_thread_id=1" \
+        PHOTO_RESULT=$(curl -s -F "chat_id=-1003815143703" -F "message_thread_id=1" \
           -F "photo=@/tmp/watch-${THREAD}.png" \
           -F "caption=📸 SANDBOX #${THREAD} — ${DESC}
 
+✅ evaluator עבר
+🔒 שומר בדק code review
+📸 screenshot מוכן
+
 מאשר לפרודקשן?" \
-          "https://api.telegram.org/bot${TOKEN}/sendPhoto" >/dev/null 2>&1
+          "https://api.telegram.org/bot${TOKEN}/sendPhoto" 2>&1)
         
-        $SEND or 1 "📸 #${THREAD} — screenshot נשלח. ממתין לאישור יוסי."
+        echo "$PHOTO_RESULT"
       else
         $SEND or 1 "⚠️ #${THREAD} — סוכן סיים אבל screenshot נכשל. בודק ידנית..."
       fi

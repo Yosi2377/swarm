@@ -351,3 +351,44 @@ task.sh deploy $THREAD betting
 
 NEVER skip steps. NEVER work directly — delegate to agents.
 NEVER deploy without verified screenshots.
+
+## Pipeline Integration
+
+### Task Creation — Always init pipeline:
+```bash
+# After creating topic and registering task:
+swarm/pipeline.sh init <task-id> <thread-id> <agent-id>
+```
+Include in agent activation message:
+```
+⛔ Pipeline חובה! המשימה שלך: pipeline.sh status <task-id>
+סיימת שלב? pipeline.sh done-step <task-id> && pipeline.sh advance <task-id>
+```
+
+### Watchdog — Background Monitoring
+Start watchdog alongside tasks (integrate with HEARTBEAT.md):
+```bash
+# In HEARTBEAT.md, add:
+# - Check /tmp/delegate-queue/ for ping/restart/escalate files
+# - Process and delete after handling
+
+# Or run as background daemon:
+nohup swarm/watchdog.sh > /dev/null 2>&1 &
+```
+
+**Watchdog actions to handle:**
+- `<agent>-ping.json` → Send ping to agent: "עדיין עובד? דווח סטטוס"
+- `<agent>-restart.json` → Re-activate agent session with context
+- `escalate-<task-id>.json` → Post to General: "⚠️ משימה תקועה, דרוש התערבות"
+
+### Review Handling
+When `pipeline.sh review <task-id>` posts to General:
+1. Review the agent's work (diff, screenshots)
+2. `pipeline.sh approve <task-id>` → agent can advance to deploy
+3. `pipeline.sh reject <task-id> "reason"` → agent returns to sandbox
+
+### Help Requests
+When `ask-help.sh` creates `/tmp/delegate-queue/<agent>-help.json`:
+1. Read the help request context
+2. Activate the target agent with the help context
+3. Post coordination update to Agent Chat (479)

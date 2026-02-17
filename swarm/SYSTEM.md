@@ -514,3 +514,40 @@ deploy.sh <project> --approved
 Projects: `betting`, `poker`, `blackjack`, `dashboard`
 
 If you try to write directly → you get "Operation not permitted". This is by design.
+
+## Pipeline Rules
+
+### ⛔ NEVER deploy to production without pipeline!
+Every task MUST go through the pipeline:
+`sandbox` → `verify_sandbox` → `review` → `deploy` → `verify_prod` → `done`
+
+### How to use:
+```bash
+# Check your task status
+swarm/pipeline.sh status <task-id>
+
+# When sandbox work is done, mark step done and advance:
+swarm/pipeline.sh done-step <task-id>
+swarm/pipeline.sh advance <task-id>
+
+# Run verification (for verify_sandbox / verify_prod steps):
+swarm/pipeline.sh verify <task-id> <url>
+
+# Request review (at review step):
+swarm/pipeline.sh review <task-id>
+```
+
+### Rules:
+1. **ALWAYS** run `pipeline.sh verify` before reporting "done" — verify MUST pass
+2. **NEVER** skip steps — the pipeline enforces order
+3. **Review step requires human approval** — wait for `approve`
+4. **All work starts in sandbox** — no exceptions
+5. **If stuck 5+ minutes** — use `ask-help.sh`:
+   ```bash
+   swarm/ask-help.sh <your-agent> <target-agent> <thread-id> "description"
+   ```
+6. Verify scripts available in `swarm/verify/`:
+   - `verify-frontend.sh <url> [text]` — HTTP 200 + body check
+   - `verify-backend.sh <url> [endpoint]` — API health
+   - `verify-service.sh <service>` — systemctl check
+   - `verify-deploy.sh <service> <url>` — combined check

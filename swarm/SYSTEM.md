@@ -88,10 +88,8 @@ cd /root/.openclaw/workspace && git add -A && git commit -m "#THREAD: תיאור
 
 ### 1. SANDBOX — עבוד רק על /root/sandbox/
 ```bash
-# BEFORE any code change:
-/root/.openclaw/workspace/swarm/enforce.sh pre-work /path/to/project <thread_id>
-# This creates sandbox + git checkpoint. Then work ONLY in /root/sandbox/<project>.
-# NEVER edit production files directly. enforce.sh check-sandbox verifies this.
+# Work ONLY in /root/sandbox/<project>.
+# NEVER edit production files directly.
 ```
 
 ### 2. PROOF — שלח screenshots לטלגרם לפני done
@@ -129,8 +127,8 @@ PROGRESS_PID=$!
 2. **Work** → In sandbox ONLY → Update topic each step via send.sh
 2b. **FEEDBACK LOOP** → כתוב → הרץ → תקן → חזור! (ראה סקשן מפורט למטה)
 3. **Self-Test** → ⛔ חובה! פתח browser, היכנס לאתר, בדוק שהכל עובד בפועל (ראה שלב 3 למטה)
-4. **Done?** → Run `screenshot.sh <url> <thread> <agent>` (3 viewports) → Run `guard.sh pre-done <thread> [sandbox] [url]` → Must PASS → Then `enforce.sh post-work`
-5. **Report done** → Run `swarm/auto-update.sh <agent> <thread> "summary"` → Send screenshots + summary to orchestrator → STOP HERE
+4. **Done?** → Run `screenshot.sh <url> <thread> <agent>` (3 viewports) → `pipeline.sh done-step <task-id>` → `pipeline.sh verify <task-id> <url>` → Must PASS
+5. **Report done** → Send screenshots + summary via send.sh → STOP HERE
 6. **Orchestrator** shows user screenshots + sandbox link → Asks "לדחוף ל-production?"
 7. **User approves** → `sandbox.sh apply` → Commit production → שומר reviews → Done
 7. **Rejected** → Fix in sandbox → Re-run from step 3 (max 3 attempts → rollback)
@@ -309,7 +307,7 @@ curl -s -X POST http://95.111.247.22:9089/api/bets -H "Content-Type: application
 swarm/reflect.sh <agent_id> <thread_id>
 ```
 
-## ⛔ STEP 4: PRE-DONE GATE — guard.sh חובה!
+## ⛔ STEP 4: PRE-DONE GATE — pipeline verify חובה!
 
 **לפני** שאתה מדווח "✅ הושלם", חובה להריץ:
 
@@ -317,19 +315,13 @@ swarm/reflect.sh <agent_id> <thread_id>
 # 1. צלם screenshots (3 viewports — desktop, tablet, mobile)
 swarm/screenshot.sh <sandbox_url> <thread_id> <agent_id> [label]
 
-# 2. הרץ pre-done check
-swarm/guard.sh pre-done <thread_id> [sandbox_path] [sandbox_url]
+# 2. סמן שלב כ-done ו-verify:
+swarm/pipeline.sh done-step <task-id>
+swarm/pipeline.sh verify <task-id> <sandbox-url>
 ```
 
-**guard.sh pre-done** בודק:
-- ✅ יש screenshots שנוצרו ב-10 הדקות האחרונות
-- ✅ ה-sandbox קיים ורץ
-- ✅ יש git diff (עבדת באמת)
-- ✅ ה-URL מחזיר 200
-- ✅ production לא נגעו
-
 **FAIL = אסור לדווח done!** תתקן את הבעיות ותנסה שוב.
-**PASS = מותר להמשיך** → enforce.sh post-work → דיווח done.
+**PASS = מותר להמשיך** → דיווח done via send.sh.
 
 ## Task State
 Save progress to `swarm/memory/task-<thread_id>.md` after EACH step.
@@ -478,7 +470,7 @@ swarm/checkpoint.sh resume <task_id>
 ### Guardrails — בדיקות לפני שליחה
 ```bash
 # הרץ לפני דיווח "done":
-swarm/guard.sh full <thread_id> <sandbox_path>
+swarm/pipeline.sh verify <task-id> <sandbox-url>
 ```
 
 ### Quality Score — ציון איכות
@@ -515,39 +507,36 @@ Projects: `betting`, `poker`, `blackjack`, `dashboard`
 
 If you try to write directly → you get "Operation not permitted". This is by design.
 
-## Pipeline Rules
+## ⛔ Pipeline — חובה לכל משימה!
 
-### ⛔ NEVER deploy to production without pipeline!
-Every task MUST go through the pipeline:
-`sandbox` → `verify_sandbox` → `review` → `deploy` → `verify_prod` → `done`
+**Flow:** `sandbox` → `verify_sandbox` → `review` → `deploy` → `verify_prod` → `done`
 
-### How to use:
+### פקודות חיוניות:
 ```bash
-# Check your task status
+# בדוק סטטוס
 swarm/pipeline.sh status <task-id>
 
-# When sandbox work is done, mark step done and advance:
+# סיימת עבודה ב-sandbox:
 swarm/pipeline.sh done-step <task-id>
-swarm/pipeline.sh advance <task-id>
 
-# Run verification (for verify_sandbox / verify_prod steps):
-swarm/pipeline.sh verify <task-id> <url>
-
-# Request review (at review step):
-swarm/pipeline.sh review <task-id>
+# ⛔ לפני דיווח "סיימתי" — חובה verify:
+swarm/pipeline.sh verify <task-id> <sandbox-url>
+# MUST PASS! אם נכשל — תקן ונסה שוב
 ```
 
-### Rules:
-1. **ALWAYS** run `pipeline.sh verify` before reporting "done" — verify MUST pass
-2. **NEVER** skip steps — the pipeline enforces order
-3. **Review step requires human approval** — wait for `approve`
-4. **All work starts in sandbox** — no exceptions
-5. **If stuck 5+ minutes** — use `ask-help.sh`:
+### כללים:
+1. **לפני "סיימתי"** → `pipeline.sh done-step` + `pipeline.sh verify` — חייב PASS
+2. **אסור לדלג שלבים** — ה-pipeline אוכף סדר
+3. **review דורש אישור יוסי** — חכה ל-approve
+4. **כל עבודה מתחילה ב-sandbox** — אין חריגים
+5. **אסור deploy ישיר** — רק דרך pipeline אחרי approve
+6. **תקוע 5+ דקות?** השתמש ב-ask-help:
    ```bash
    swarm/ask-help.sh <your-agent> <target-agent> <thread-id> "description"
    ```
-6. Verify scripts available in `swarm/verify/`:
-   - `verify-frontend.sh <url> [text]` — HTTP 200 + body check
-   - `verify-backend.sh <url> [endpoint]` — API health
-   - `verify-service.sh <service>` — systemctl check
-   - `verify-deploy.sh <service> <url>` — combined check
+
+### Verify scripts (בתיקיית `swarm/verify/`):
+- `verify-frontend.sh <url> [text]` — HTTP 200 + body check
+- `verify-backend.sh <url> [endpoint]` — API health
+- `verify-service.sh <service>` — systemctl check
+- `verify-deploy.sh <service> <url>` — combined check

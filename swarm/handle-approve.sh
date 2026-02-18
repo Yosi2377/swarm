@@ -31,15 +31,18 @@ done
 systemctl restart betting-backend
 sleep 5
 
-# 4. Verify
+# 4. Verify (HTTP + content check)
 HTTP=$(curl -s -o /dev/null -w '%{http_code}' http://95.111.247.22:8089)
-if [ "$HTTP" = "200" ]; then
-  "$SCRIPT_DIR/send.sh" or 1 "✅ PR #${TASK_ID} deployed! HTTP: $HTTP"
+CONTENT=$(curl -s http://95.111.247.22:8089 | grep -c "ZozoBet")
+if [ "$HTTP" = "200" ] && [ "$CONTENT" -gt 0 ]; then
+  "$SCRIPT_DIR/send.sh" or 1 "✅ PR #${TASK_ID} deployed! HTTP: $HTTP, Content: ✅"
   echo "✅ Deploy successful"
 else
   # AUTO ROLLBACK
+  echo "🔴 Verify failed (HTTP: $HTTP, Content: $CONTENT) — rolling back!"
+  cd "$SCRIPT_DIR/.."
   bash swarm/snapshot.sh restore "pre-deploy-${TASK_ID}"
-  "$SCRIPT_DIR/send.sh" or 1 "🔴 PR #${TASK_ID} FAILED (HTTP: $HTTP) — AUTO ROLLBACK!"
+  "$SCRIPT_DIR/send.sh" or 1 "🔴 PR #${TASK_ID} FAILED (HTTP: $HTTP, Content: $CONTENT) — AUTO ROLLBACK!"
   echo "🔴 Deploy failed — rolled back"
   exit 1
 fi

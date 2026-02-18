@@ -80,6 +80,8 @@ case "$CMD" in
 EOJSON
     echo "✅ Pipeline initialized for task $TASK_ID (thread $THREAD_ID, agent $AGENT_ID)"
     echo "Current step: sandbox (active)"
+    # Create/switch to task branch
+    "$SWARM_DIR/branch-task.sh" "$TASK_ID" "$AGENT_ID" 2>&1 || echo "⚠️ Branch creation skipped"
     ;;
 
   status)
@@ -114,6 +116,10 @@ EOJSON
     set_field "$TF" "current_status" "'done'"
     set_field "$TF" "updated_at" "'$(date -Is)'"
     echo "✅ Step '$STEP' marked as done for task $TASK_ID"
+    # If final step (done), merge branch back to master
+    if [ "$STEP" = "done" ]; then
+      "$SWARM_DIR/merge-task.sh" "$TASK_ID" 2>&1 || echo "⚠️ Merge skipped or failed"
+    fi
     # Remind agent to log lessons
     AGENT=$(get_field "$TF" "agent")
     echo "📝 REMINDER: Run learn.sh lesson and learn.sh score before finishing!"

@@ -492,6 +492,12 @@ swarm/episode.sh save <task_id>
 swarm/episode.sh find "<keyword>"
 ```
 
+### Self-Healing — עטוף פקודות קריטיות
+```bash
+swarm/self-heal.sh 3 git push
+swarm/self-heal.sh 3 systemctl restart SERVICE
+```
+
 ## 🚫 PRODUCTION DEPLOYMENT — HARD BLOCK
 
 Production directories are **physically locked** (read-only). You CANNOT:

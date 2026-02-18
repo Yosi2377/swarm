@@ -1,0 +1,217 @@
+{
+    "tests": [
+        {
+            "type": "exists",
+            "selector": "body",
+            "desc": "Page loads"
+        },
+        {
+            "type": "exists",
+            "selector": ".actions",
+            "desc": "actions exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".agent",
+            "desc": "agent exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".badge",
+            "desc": "badge exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".btn",
+            "desc": "btn exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".btn-g",
+            "desc": "btn-g exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".btn-o",
+            "desc": "btn-o exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".btn-r",
+            "desc": "btn-r exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".btn-s",
+            "desc": "btn-s exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".field",
+            "desc": "field exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".gold",
+            "desc": "gold exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".l",
+            "desc": "l exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".modal",
+            "desc": "modal exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".modal-actions",
+            "desc": "modal-actions exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".modal-bg",
+            "desc": "modal-bg exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".modal-hd",
+            "desc": "modal-hd exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".modal-x",
+            "desc": "modal-x exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".n",
+            "desc": "n exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".on",
+            "desc": "on exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".panel",
+            "desc": "panel exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".pnl-ag-body",
+            "desc": "pnl-ag-body exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#betsBody",
+            "desc": "betsBody exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#creditAmt",
+            "desc": "creditAmt exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#creditNote",
+            "desc": "creditNote exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#creditTitle",
+            "desc": "creditTitle exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#dateFrom",
+            "desc": "dateFrom exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#dateTo",
+            "desc": "dateTo exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#evCount",
+            "desc": "evCount exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#eventsBody",
+            "desc": "eventsBody exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#historyBody",
+            "desc": "historyBody exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#historyPages",
+            "desc": "historyPages exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#historySummary",
+            "desc": "historySummary exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#historyTitle",
+            "desc": "historyTitle exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#modalCreate",
+            "desc": "modalCreate exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#modalCredit",
+            "desc": "modalCredit exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#modalHistory",
+            "desc": "modalHistory exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#modalPnlDetail",
+            "desc": "modalPnlDetail exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#newPass",
+            "desc": "newPass exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#newRole",
+            "desc": "newRole exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#newUser",
+            "desc": "newUser exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#nextResetDate",
+            "desc": "nextResetDate exists"
+        },
+        {
+            "type": "noErrors",
+            "desc": "No JS errors"
+        },
+        {
+            "type": "screenshot",
+            "path": "/tmp/test-9998.png"
+        }
+    ]
+}

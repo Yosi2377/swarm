@@ -1100,6 +1100,16 @@
       "lesson": "Must filter template literals (${...}) from grep results — they are JS expressions not valid CSS selectors",
       "timestamp": "2026-02-18T05:15:14Z",
       "applied": 0
+    },
+    {
+      "id": "1efc02cf",
+      "agent": "or",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "self-heal failed: ls /root/.openclaw/workspace",
+      "lesson": "Command failed 2 times. Log: /tmp/heal-20260218-062055.log",
+      "timestamp": "2026-02-18T05:20:55Z",
+      "applied": 0
     }
   ]
 }

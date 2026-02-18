@@ -2,7 +2,7 @@
 # self-heal.sh — Self-healing wrapper for critical commands
 # Usage: self-heal.sh MAX_RETRIES COMMAND...
 
-set -euo pipefail
+set -uo pipefail
 
 if [ $# -lt 2 ]; then
   echo "Usage: self-heal.sh MAX_RETRIES COMMAND..."
@@ -18,12 +18,16 @@ attempt=0
 while [ "$attempt" -lt "$MAX_RETRIES" ]; do
   attempt=$((attempt + 1))
   echo "⚙️ Attempt $attempt/$MAX_RETRIES: ${COMMAND[*]}"
-  if "${COMMAND[@]}"; then
+  rc=0
+  "${COMMAND[@]}" || rc=$?
+  if [ "$rc" -eq 0 ]; then
     echo "✅ Success on attempt $attempt"
     exit 0
   fi
-  echo "❌ Failed attempt $attempt/$MAX_RETRIES"
-  [ "$attempt" -lt "$MAX_RETRIES" ] && sleep 5
+  echo "❌ Failed attempt $attempt/$MAX_RETRIES (exit code: $rc)"
+  if [ "$attempt" -lt "$MAX_RETRIES" ]; then
+    sleep 5
+  fi
 done
 
 # All retries exhausted

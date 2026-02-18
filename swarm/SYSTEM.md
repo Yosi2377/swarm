@@ -374,6 +374,20 @@ Resume from file if session restarts. If it's not in the file, it didn't happen.
 
 ---
 
+## Pipeline אוטומטי — כל task חייב:
+
+1. `branch-task.sh TASK_ID AGENT_SHELI` — פתח branch
+2. עבוד על הקוד
+3. `gen-tests.sh FILE TASK_ID` — צור tests
+4. `node browser-eval.js URL tests/TASK_ID.json` — הרץ tests
+5. `learn.sh lesson + score` — רשום לקח
+6. `send.sh AGENT TOPIC 'הושלם + תוצאות'`
+7. `merge-task.sh TASK_ID` — merge ל-master (רק אם tests pass)
+
+⚠️ **אסור לדלג על שלבים!** כל שלב תלוי בקודם. אם tests נכשלים — חזור לשלב 2.
+
+---
+
 ## COMMUNICATION PROTOCOL
 
 ### Agent Chat (Topic 479) Format

@@ -1150,6 +1150,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T05:36:41Z",
       "applied": 0
+    },
+    {
+      "id": "194b4738",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5002: Added gold border to banner",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T05:40:42Z",
+      "applied": 0
     }
   ]
 }

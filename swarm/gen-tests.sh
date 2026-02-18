@@ -17,8 +17,8 @@ if [[ ! -f "$FILE_PATH" ]]; then
 fi
 
 # Extract classes and IDs
-CLASSES=$(grep -oP 'class="[^"]+"' "$FILE_PATH" | sed 's/class="//;s/"//' | tr ' ' '\n' | sort -u | head -20)
-IDS=$(grep -oP 'id="[^"]+"' "$FILE_PATH" | sed 's/id="//;s/"//' | sort -u | head -20)
+CLASSES=$(grep -oP 'class="[^"]+"' "$FILE_PATH" | sed 's/class="//;s/"//' | tr ' ' '\n' | grep -v '[${}()+'"'"']' | grep -v '^\s*$' | sort -u | head -20)
+IDS=$(grep -oP 'id="[^"]+"' "$FILE_PATH" | sed 's/id="//;s/"//' | grep -v '[${}()+'"'"']' | grep -v '^\s*$' | sort -u | head -20)
 
 # Git diff — new lines (ignore errors if not in git)
 DIFF_CLASSES=""

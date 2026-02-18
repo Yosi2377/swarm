@@ -1060,6 +1060,16 @@
       "lesson": "Command failed 3 times. Log: /tmp/heal-20260218-061106.log",
       "timestamp": "2026-02-18T05:11:06Z",
       "applied": 0
+    },
+    {
+      "id": "8e6e9bea",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Created delegate.sh and check-delegations.sh",
+      "lesson": "Keep delegation scripts simple - JSON queue in /tmp with send.sh notification works well",
+      "timestamp": "2026-02-18T05:14:37Z",
+      "applied": 0
     }
   ]
 }

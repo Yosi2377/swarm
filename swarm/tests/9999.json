@@ -1,0 +1,217 @@
+{
+    "tests": [
+        {
+            "type": "exists",
+            "selector": "body",
+            "desc": "Page loads"
+        },
+        {
+            "type": "exists",
+            "selector": ".${!AS?'on':''}",
+            "desc": "${!AS?'on':''} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${AS===x._id?'on':''}",
+            "desc": "${AS===x._id?'on':''} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${collapsed?'collapsed':''}",
+            "desc": "${collapsed?'collapsed':''} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${fin?'fin':'prog'}",
+            "desc": "${fin?'fin':'prog'} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${isLive?'live-row':''}",
+            "desc": "${isLive?'live-row':''} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${isSel('Draw_h2h')?'sel':''}",
+            "desc": "${isSel('Draw_h2h')?'sel':''} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${isSel('O_'+eid)?'sel':''}",
+            "desc": "${isSel('O_'+eid)?'sel':''} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${isSel(at+'_h2h')?'sel':''}",
+            "desc": "${isSel(at+'_h2h')?'sel':''} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${isSel(ht+'_h2h')?'sel':''}",
+            "desc": "${isSel(ht+'_h2h')?'sel':''} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${isSel(ht+'_sp')?'sel':''}",
+            "desc": "${isSel(ht+'_sp')?'sel':''} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${oddsClass(eid,'h2h_1',o.home)}",
+            "desc": "${oddsClass(eid,'h2h_1',o.home)} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${oddsClass(eid,'h2h_2',o.away)}",
+            "desc": "${oddsClass(eid,'h2h_2',o.away)} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${oddsClass(eid,'h2h_x',o.draw)}",
+            "desc": "${oddsClass(eid,'h2h_x',o.draw)} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${profit>=0?'':'red'}",
+            "desc": "${profit>=0?'':'red'} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${sel}",
+            "desc": "${sel} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".${statusCls[b.status]||''}",
+            "desc": "${statusCls[b.status]||''} exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".active",
+            "desc": "active exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".arr",
+            "desc": "arr exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".auth-bg",
+            "desc": "auth-bg exists"
+        },
+        {
+            "type": "exists",
+            "selector": ".auth-btn",
+            "desc": "auth-btn exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#${eid}",
+            "desc": "${eid} exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#'+ne.eventId+'",
+            "desc": "'+ne.eventId+' exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#adminLink",
+            "desc": "adminLink exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#agentLink",
+            "desc": "agentLink exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#app",
+            "desc": "app exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#authO",
+            "desc": "authO exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#backToAdmin",
+            "desc": "backToAdmin exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#balE",
+            "desc": "balE exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#clockE",
+            "desc": "clockE exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#editBetStakeIn",
+            "desc": "editBetStakeIn exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#editBetStatusSel",
+            "desc": "editBetStatusSel exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#evCount",
+            "desc": "evCount exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#filterBar",
+            "desc": "filterBar exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#goBtn",
+            "desc": "goBtn exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#langBtn",
+            "desc": "langBtn exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#lastUpd",
+            "desc": "lastUpd exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#lerr",
+            "desc": "lerr exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#liveBadge",
+            "desc": "liveBadge exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#liveBanner",
+            "desc": "liveBanner exists"
+        },
+        {
+            "type": "exists",
+            "selector": "#liveCountE",
+            "desc": "liveCountE exists"
+        },
+        {
+            "type": "noErrors",
+            "desc": "No JS errors"
+        },
+        {
+            "type": "screenshot",
+            "path": "/tmp/test-9999.png"
+        }
+    ]
+}

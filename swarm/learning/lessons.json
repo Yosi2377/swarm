@@ -1070,6 +1070,16 @@
       "lesson": "Auto-recorded by pipeline. Fix: investigate tests-partial pattern.",
       "timestamp": "2026-02-18T07:30:04Z",
       "applied": 0
+    },
+    {
+      "id": "5a07138d",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5400: הוספת 9 שווקים חסרים: alt_totals, result_totals, btts_h1/h2, dc_h1, cs_h1, result_btts, ten_min, specials",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T07:47:47Z",
+      "applied": 0
     }
   ]
 }

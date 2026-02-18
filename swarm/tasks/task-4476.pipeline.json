@@ -1,0 +1,19 @@
+{
+  "task_id": "task-4476",
+  "thread_id": "4476",
+  "agent_id": "koder",
+  "current_step": "sandbox",
+  "current_status": "active",
+  "created_at": "2026-02-18T04:51:42+01:00",
+  "updated_at": "2026-02-18T04:51:42+01:00",
+  "restarts": 0,
+  "steps": {
+    "sandbox": "active",
+    "verify_sandbox": "pending",
+    "review": "pending",
+    "deploy": "pending",
+    "verify_prod": "pending",
+    "done": "pending"
+  },
+  "history": ["2026-02-18T04:51:42+01:00 — init: sandbox active"]
+}

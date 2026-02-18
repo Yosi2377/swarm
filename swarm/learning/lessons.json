@@ -910,6 +910,26 @@
       "lesson": "Updated admin.html reset UI: tooltip, next-Tuesday display, confirm dialogs with 30-day message",
       "timestamp": "2026-02-18T03:12:02Z",
       "applied": 0
+    },
+    {
+      "id": "422669c1",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "history reset keeps 30 days",
+      "lesson": "Changed DELETE /users/:id/bets and POST /periods/reset to only delete bets older than 30 days. Added Tuesday auto-reset cron in index.js and GET /api/admin/next-reset endpoint.",
+      "timestamp": "2026-02-18T03:12:21Z",
+      "applied": 0
+    },
+    {
+      "id": "4513a190",
+      "agent": "bodek",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "reset deletes only old bets",
+      "lesson": "Period reset API correctly deletes bets older than 30 days and preserves recent ones. deletedOldBets count in response is accurate.",
+      "timestamp": "2026-02-18T03:25:58Z",
+      "applied": 0
     }
   ]
 }

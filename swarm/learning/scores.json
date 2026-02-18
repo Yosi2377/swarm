@@ -2,18 +2,18 @@
   "version": 1,
   "agents": {
     "or": {
-      "tasks": 4,
+      "tasks": 1,
       "success": 1,
-      "fail": 3,
-      "score": 25,
-      "streak": -1
+      "fail": 0,
+      "score": 100,
+      "streak": 1
     },
     "koder": {
-      "tasks": 60,
-      "success": 18,
-      "fail": 42,
-      "score": 30,
-      "streak": 4
+      "tasks": 11,
+      "success": 11,
+      "fail": 0,
+      "score": 100,
+      "streak": 11
     },
     "shomer": {
       "tasks": 2,
@@ -42,6 +42,13 @@
       "fail": 0,
       "score": 50,
       "streak": 0
+    },
+    "bodek": {
+      "tasks": 4,
+      "success": 4,
+      "fail": 0,
+      "score": 100,
+      "streak": 4
     }
   },
   "tools": {},

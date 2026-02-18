@@ -1,11 +1,16 @@
 const express = require('express');
+const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const chokidar = require('chokidar');
+const { Server } = require('socket.io');
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: '*' } });
 const PORT = 8090;
+const START_TIME = Date.now();
 const SWARM = path.join(__dirname, '..');
 const TASKS_FILE = path.join(SWARM, 'tasks.json');
 const TASKS_DIR = path.join(SWARM, 'tasks');
@@ -18,16 +23,27 @@ const ACTIVE_CONTEXT = path.join(SWARM, 'memory', 'shared', 'active-context.md')
 // SSE clients
 let sseClients = [];
 
-// Watch for changes with debounce
+// Socket.io connections
+io.on('connection', (socket) => {
+  socket.emit('update', { type: 'connected', ts: Date.now() });
+});
+
+// Watch for changes with debounce — notify SSE + socket.io
 let notifyTimeout = null;
 function notifyClients(eventType) {
   if (notifyTimeout) return;
   notifyTimeout = setTimeout(() => {
     notifyTimeout = null;
-    const data = JSON.stringify({ type: eventType || 'update', ts: Date.now() });
+    const data = { type: eventType || 'update', ts: Date.now() };
+    const dataStr = JSON.stringify(data);
+    // SSE
     sseClients.forEach(res => {
-      try { res.write(`data: ${data}\n\n`); } catch(e) {}
+      try { res.write(`data: ${dataStr}\n\n`); } catch(e) {}
     });
+    // Socket.io — emit specific event + generic update
+    io.emit('update', data);
+    const eventMap = { tasks: 'taskUpdate', agents: 'agentUpdate', scores: 'scoreUpdate', lessons: 'lessonUpdate', live: 'agentUpdate', timeline: 'taskUpdate' };
+    if (eventMap[eventType]) io.emit(eventMap[eventType], data);
   }, 300);
 }
 
@@ -382,9 +398,10 @@ app.get('/api/timeline', (req, res) => {
       }
     } catch (e) {}
 
-    // Sort by time desc, return last 200
+    // Sort by time desc, return with limit
     events.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
-    res.json(events.slice(0, 200));
+    const limit = Math.min(parseInt(req.query.limit) || 200, 500);
+    res.json(events.slice(0, limit));
   } catch (e) { res.json([]); }
 });
 
@@ -487,6 +504,63 @@ app.get('/api/task-files', (req, res) => {
   } catch (e) { res.json([]); }
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Swarm Dashboard running on port ${PORT}`);
+// API: agent history — task history for specific agent
+app.get('/api/agents/:id/history', (req, res) => {
+  try {
+    const agentId = req.params.id;
+    let jsonData = { tasks: [], completed: [] };
+    try { jsonData = JSON.parse(fs.readFileSync(TASKS_FILE, 'utf8')); } catch {}
+    const all = [...(jsonData.tasks || []), ...(jsonData.completed || [])];
+    const history = all.filter(t => t.agent === agentId).map(t => ({
+      id: t.id || t.thread,
+      title: t.title || `Task ${t.id || t.thread}`,
+      status: t.status || (jsonData.completed.includes(t) ? 'done' : 'active'),
+      thread: t.thread,
+      completedAt: t.completedAt || null,
+      createdAt: t.createdAt || null
+    }));
+    res.json(history);
+  } catch (e) { res.json([]); }
+});
+
+// API: stats summary
+app.get('/api/stats/summary', (req, res) => {
+  try {
+    let jsonData = { tasks: [], completed: [] };
+    try { jsonData = JSON.parse(fs.readFileSync(TASKS_FILE, 'utf8')); } catch {}
+    let lessonsData = { lessons: [] };
+    try { lessonsData = JSON.parse(fs.readFileSync(LESSONS_FILE, 'utf8')); } catch {}
+    let scoresData = { agents: {} };
+    try { scoresData = JSON.parse(fs.readFileSync(SCORES_FILE, 'utf8')); } catch {}
+
+    const activeTasks = (jsonData.tasks || []).length;
+    const completedTasks = (jsonData.completed || []).length;
+    const totalTasks = activeTasks + completedTasks;
+
+    // Calculate success rate from scores
+    let totalSuccess = 0, totalFail = 0;
+    for (const a of Object.values(scoresData.agents || {})) {
+      totalSuccess += (a.success || 0);
+      totalFail += (a.fail || 0);
+    }
+    const successRate = (totalSuccess + totalFail) > 0 ? Math.round((totalSuccess / (totalSuccess + totalFail)) * 100) : 0;
+
+    res.json({
+      totalTasks,
+      activeTasks,
+      completedTasks,
+      successRate,
+      totalLessons: (lessonsData.lessons || []).length,
+      uptime: Math.floor((Date.now() - START_TIME) / 1000)
+    });
+  } catch (e) { res.json({ totalTasks: 0, activeTasks: 0, successRate: 0, totalLessons: 0, uptime: 0 }); }
+});
+
+// API: health
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', uptime: Math.floor((Date.now() - START_TIME) / 1000), version: '2.0' });
+});
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Swarm Dashboard v2.0 running on port ${PORT} (HTTP + WebSocket)`);
 });

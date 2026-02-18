@@ -12,6 +12,13 @@
     5. Add label to swarm/memory/reported-spawns.json
   - This prevents Yossi from asking "מה קורה?" — we report automatically!
 
+## Auto-Approve Handler
+- If ANY recent message in General matches pattern `approve_XXXX`:
+  - Run: `bash /root/.openclaw/workspace/swarm/handle-approve.sh XXXX`
+  - This deploys sandbox → production with snapshot + verify + rollback
+- If pattern `reject_XXXX`:
+  - Run: `send.sh or 1 "❌ PR #XXXX rejected"`
+
 ## Delegation Queue
 - Check /tmp/delegate-queue/ for pending .json files
 - For each pending file: activate the target agent session via sessions_send

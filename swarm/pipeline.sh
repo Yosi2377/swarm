@@ -204,13 +204,16 @@ else
   ERRORS+=("merge-fallback")
 fi
 
+# === Log completion ===
+echo "{\"task\":\"$TASK_ID\",\"agent\":\"$AGENT\",\"desc\":\"$DESC\",\"pass\":$PASS,\"total\":8,\"errors\":\"${ERRORS[*]:-none}\",\"thread\":\"$THREAD_ID\",\"screenshot\":\"$SCREENSHOT\",\"ts\":\"$(date -Iseconds)\"}" >> /tmp/pipeline-completed.jsonl
+
 # === Summary ===
 echo ""
 echo "═══════════════════════════════════"
 echo "📊 Pipeline Complete: ${PASS}/8 steps"
 echo "═══════════════════════════════════"
 if [ ${#ERRORS[@]} -eq 0 ]; then
-  echo "🎉 PERFECT RUN — Level 4 confirmed!"
+  echo "🎉 PERFECT RUN!"
 else
   echo "⚠️ Issues: ${ERRORS[*]}"
 fi

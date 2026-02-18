@@ -1110,6 +1110,26 @@
       "lesson": "Command failed 2 times. Log: /tmp/heal-20260218-062055.log",
       "timestamp": "2026-02-18T05:20:55Z",
       "applied": 0
+    },
+    {
+      "id": "2fd859d1",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "fixed self-heal.sh, gen-tests.sh, added pipeline to SYSTEM.md",
+      "lesson": "self-heal: removed set -e, capture exit code explicitly with rc=0; cmd || rc=$?. gen-tests: route admin files to admin.html, limit 15 tests with priority selectors. Pipeline section added to SYSTEM.md.",
+      "timestamp": "2026-02-18T05:24:38Z",
+      "applied": 0
+    },
+    {
+      "id": "0c939fe4",
+      "agent": "or",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "self-heal failed: echo hello_world",
+      "lesson": "Command failed 3 times. Log: /tmp/heal-20260218-062638.log",
+      "timestamp": "2026-02-18T05:26:38Z",
+      "applied": 0
     }
   ]
 }

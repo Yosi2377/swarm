@@ -1160,6 +1160,26 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T05:40:42Z",
       "applied": 0
+    },
+    {
+      "id": "6b62d032",
+      "agent": "bodek",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "Audit test",
+      "lesson": "All tools verified",
+      "timestamp": "2026-02-18T05:45:37Z",
+      "applied": 0
+    },
+    {
+      "id": "57ff3e76",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5003: Added pulse animation to live badge",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T05:45:47Z",
+      "applied": 0
     }
   ]
 }

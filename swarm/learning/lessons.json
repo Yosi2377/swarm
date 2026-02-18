@@ -1260,6 +1260,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T06:29:49Z",
       "applied": 0
+    },
+    {
+      "id": "e89f0b3f",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5100: Proactive bug scanner — Level 5.5",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T06:53:51Z",
+      "applied": 0
     }
   ]
 }

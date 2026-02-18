@@ -1,0 +1,34 @@
+{
+  "projects": {
+    "betting": {
+      "name": "ZozoBet",
+      "path": "/root/BettingPlatform",
+      "sandbox": "/root/sandbox/BettingPlatform",
+      "url": "http://95.111.247.22:8089",
+      "sandboxUrl": "http://95.111.247.22:9089",
+      "services": ["betting-backend", "betting-aggregator"],
+      "sandboxServices": ["sandbox-betting-backend"],
+      "port": 8089,
+      "db": "betting",
+      "publicDir": "backend/public"
+    },
+    "poker": {
+      "name": "Texas Poker",
+      "path": "/root/TexasPokerGame",
+      "url": "http://zozopoker.duckdns.org",
+      "services": ["texas-poker", "poker-client", "poker-admin"],
+      "port": 8088,
+      "db": "poker",
+      "publicDir": "client/public"
+    },
+    "blackjack": {
+      "name": "Blackjack",
+      "path": "/root/Blackjack-Game-Multiplayer",
+      "url": "http://95.111.247.22:3000",
+      "services": ["blackjack"],
+      "port": 3000,
+      "db": "blackjack",
+      "publicDir": "public"
+    }
+  }
+}

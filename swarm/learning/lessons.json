@@ -1000,6 +1000,16 @@
       "lesson": "or",
       "timestamp": "2026-02-18T04:29:55Z",
       "applied": 0
+    },
+    {
+      "id": "dbbd1b08",
+      "agent": "critical",
+      "severity": "Dont stop on errors - fix and continue",
+      "impact": 0.3,
+      "what": "When git push or any command returns an error, fix it immediately and continue. Never stop and report the error to Yossi - just handle it. The error is your problem to solve, not his.",
+      "lesson": "or",
+      "timestamp": "2026-02-18T04:51:01Z",
+      "applied": 0
     }
   ]
 }

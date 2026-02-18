@@ -12,6 +12,14 @@
     "screenshot": {
       "version": "1.0.0",
       "installedAt": 1771389372593
+    },
+    "pencil-to-code": {
+      "version": "0.1.0",
+      "installedAt": 1771415416251
+    },
+    "pencil-renderer": {
+      "version": "0.1.2",
+      "installedAt": 1771415418176
     }
   }
 }

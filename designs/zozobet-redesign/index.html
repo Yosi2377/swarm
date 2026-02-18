@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZozoBet — Sports Betting Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Utility Bar -->
+  <div class="utility-bar">
+    <div class="utility-right">
+      <span class="greeting">שלום, <strong class="gold">Yossi</strong></span>
+      <span class="divider">|</span>
+      <span class="balance">💰 יתרה: <strong class="gold">₪1,250</strong></span>
+      <span class="divider">|</span>
+      <a href="#" class="logout">התנתק</a>
+    </div>
+    <div class="utility-left">
+      <span class="support"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> תמיכה</span>
+      <span class="divider">|</span>
+      <span class="time" id="clock">12:58</span>
+      <span class="divider">|</span>
+      <span class="date" id="date">18/02/2026</span>
+    </div>
+  </div>
+
+  <!-- Main Navigation -->
+  <nav class="main-nav">
+    <div class="nav-right">
+      <a href="#" class="nav-link active">🏠 בית</a>
+      <a href="#" class="nav-link">⭐ מיוחדים</a>
+      <a href="#" class="nav-link">📋 סידורים</a>
+      <a href="#" class="nav-link casino-link">🎰 CASINO</a>
+    </div>
+    <div class="nav-logo">
+      <span class="logo-zozo">ZOZO</span><span class="logo-bet">BET</span>
+    </div>
+    <div class="nav-left">
+      <a href="#" class="nav-link">📊 תוצאות</a>
+      <a href="#" class="nav-link">🌐 שפות</a>
+      <a href="#" class="nav-link live-link"><span class="live-dot"></span> LIVE</a>
+      <a href="#" class="nav-link">👤 החשבון שלי</a>
+    </div>
+  </nav>
+
+  <!-- Content Wrapper -->
+  <div class="content-wrapper">
+    <!-- Right Sidebar -->
+    <aside class="sidebar-right">
+      <!-- Live Running -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <span class="gold">🔴 לייב רץ</span>
+          <span class="dots">⋯</span>
+        </div>
+        <div class="live-matches">
+          <div class="live-match">
+            <div class="live-teams">
+              <span>ברצלונה</span>
+              <span class="live-score gold">2 - 1</span>
+              <span>ריאל מדריד</span>
+            </div>
+            <div class="live-time">⏱ 67'</div>
+          </div>
+          <div class="live-match">
+            <div class="live-teams">
+              <span>ליברפול</span>
+              <span class="live-score gold">0 - 0</span>
+              <span>מנצ'סטר סיטי</span>
+            </div>
+            <div class="live-time">⏱ 23'</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bet Slip -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <span class="gold">🎫 רשימת הימורים</span>
+          <span class="badge">2</span>
+        </div>
+        <div class="bet-slip">
+          <div class="bet-item">
+            <div class="bet-match">ברצלונה vs ריאל מדריד</div>
+            <div class="bet-selection">1 (ניצחון ברצלונה)</div>
+            <div class="bet-odds gold">2.10</div>
+          </div>
+          <div class="bet-item">
+            <div class="bet-match">ליברפול vs מנצ'סטר סיטי</div>
+            <div class="bet-selection">מעל 2.5</div>
+            <div class="bet-odds gold">1.85</div>
+          </div>
+          <div class="bet-total">
+            <div class="bet-total-row">
+              <span>יחס כולל:</span>
+              <strong class="gold">3.89</strong>
+            </div>
+            <input type="number" class="stake-input" placeholder="סכום הימור..." value="100">
+            <div class="bet-total-row">
+              <span>רווח פוטנציאלי:</span>
+              <strong class="gold">₪389</strong>
+            </div>
+            <button class="place-bet-btn">הנח הימור 🎯</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sports Menu -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <span class="gold">📋 תפריט ספורט</span>
+        </div>
+        <div class="sports-menu">
+          <a href="#football" class="sport-btn active">
+            <span class="sport-icon">⚽</span>
+            <span>כדורגל</span>
+            <span class="sport-count">124</span>
+          </a>
+          <a href="#basketball" class="sport-btn">
+            <span class="sport-icon">🏀</span>
+            <span>כדורסל</span>
+            <span class="sport-count">67</span>
+          </a>
+          <a href="#tennis" class="sport-btn">
+            <span class="sport-icon">🎾</span>
+            <span>טניס</span>
+            <span class="sport-count">89</span>
+          </a>
+          <a href="#football-us" class="sport-btn">
+            <span class="sport-icon">🏈</span>
+            <span>פוטבול</span>
+            <span class="sport-count">23</span>
+          </a>
+          <a href="#hockey" class="sport-btn">
+            <span class="sport-icon">🏒</span>
+            <span>הוקי קרח</span>
+            <span class="sport-count">31</span>
+          </a>
+          <a href="#volleyball" class="sport-btn">
+            <span class="sport-icon">🏐</span>
+            <span>כדורעף</span>
+            <span class="sport-count">18</span>
+          </a>
+          <a href="#mma" class="sport-btn">
+            <span class="sport-icon">🥊</span>
+            <span>MMA</span>
+            <span class="sport-count">12</span>
+          </a>
+          <a href="#esports" class="sport-btn">
+            <span class="sport-icon">🎮</span>
+            <span>E-Sports</span>
+            <span class="sport-count">45</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Live Stream Button -->
+      <a href="#" class="livestream-btn">📺 Live Stream</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Banner Slider -->
+      <div class="banner-slider">
+        <div class="banner-track">
+          <div class="banner-slide active">
+            <div class="banner-bg banner-bg-1"></div>
+            <div class="banner-content">
+              <div class="banner-text">
+                <span class="banner-badge">🔥 חם עכשיו</span>
+                <h2>אל קלאסיקו</h2>
+                <p>ברצלונה vs ריאל מדריד — יחסים מוגברים!</p>
+                <button class="banner-cta">הימר עכשיו →</button>
+              </div>
+              <div class="banner-odds">
+                <div class="banner-odd"><span>1</span><strong>2.10</strong></div>
+                <div class="banner-odd"><span>X</span><strong>3.25</strong></div>
+                <div class="banner-odd"><span>2</span><strong>3.40</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="banner-slide">
+            <div class="banner-bg banner-bg-2"></div>
+            <div class="banner-content">
+              <div class="banner-text">
+                <span class="banner-badge">🏀 NBA</span>
+                <h2>לייקרס vs סלטיקס</h2>
+                <p>המשחק הגדול של הלילה — שווקים מיוחדים!</p>
+                <button class="banner-cta">צפה בשווקים →</button>
+              </div>
+              <div class="banner-odds">
+                <div class="banner-odd"><span>1</span><strong>1.75</strong></div>
+                <div class="banner-odd"><span>2</span><strong>2.05</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="banner-slide">
+            <div class="banner-bg banner-bg-3"></div>
+            <div class="banner-content">
+              <div class="banner-text">
+                <span class="banner-badge">🎰 CASINO</span>
+                <h2>בונוס הצטרפות 100%</h2>
+                <p>עד ₪500 על ההפקדה הראשונה!</p>
+                <button class="banner-cta casino-cta">שחק עכשיו →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="banner-dots">
+          <button class="banner-dot active" onclick="goSlide(0)"></button>
+          <button class="banner-dot" onclick="goSlide(1)"></button>
+          <button class="banner-dot" onclick="goSlide(2)"></button>
+        </div>
+        <button class="banner-arrow arrow-right" onclick="nextSlide()">‹</button>
+        <button class="banner-arrow arrow-left" onclick="prevSlide()">›</button>
+      </div>
+
+      <!-- Quick Stats Bar -->
+      <div class="quick-stats">
+        <div class="quick-stat">
+          <span class="qs-number">1,247</span>
+          <span class="qs-label">אירועים חיים</span>
+        </div>
+        <div class="quick-stat">
+          <span class="qs-number">50+</span>
+          <span class="qs-label">ענפי ספורט</span>
+        </div>
+        <div class="quick-stat">
+          <span class="qs-number">24/7</span>
+          <span class="qs-label">תמיכה</span>
+        </div>
+        <div class="quick-stat">
+          <span class="qs-number">3.2K</span>
+          <span class="qs-label">שווקים פתוחים</span>
+        </div>
+      </div>
+
+      <!-- Football Section -->
+      <section class="sport-section" id="football">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="section-icon">⚽</span>
+            <h2>כדורגל</h2>
+            <span class="section-count">124 משחקים</span>
+          </div>
+          <a href="#" class="section-link">משחקי היום ←</a>
+        </div>
+
+        <!-- Featured Match -->
+        <div class="featured-match">
+          <div class="match-league">
+            <img src="https://flagcdn.com/16x12/es.png" alt="Spain"> ספרד — לה ליגה
+          </div>
+          <div class="match-content">
+            <div class="match-team">
+              <span class="team-name">ברצלונה</span>
+            </div>
+            <div class="match-odds-group">
+              <button class="odd-btn">
+                <span class="odd-label">1</span>
+                <span class="odd-value">2.10</span>
+              </button>
+              <button class="odd-btn">
+                <span class="odd-label">X</span>
+                <span class="odd-value">3.25</span>
+              </button>
+              <button class="odd-btn">
+                <span class="odd-label">2</span>
+                <span class="odd-value">3.40</span>
+              </button>
+            </div>
+            <div class="match-team">
+              <span class="team-name">ריאל מדריד</span>
+            </div>
+          </div>
+          <div class="match-meta">
+            <span class="match-time">🔴 LIVE — 67'</span>
+            <span class="match-markets">+142 שווקים</span>
+          </div>
+        </div>
+
+        <!-- League Grid -->
+        <div class="league-grid">
+          <div class="league-column">
+            <div class="league-item"><img src="https://flagcdn.com/16x12/gb-eng.png" alt=""> אנגליה — פרמיירליג</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/es.png" alt=""> ספרד — לה ליגה</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/de.png" alt=""> גרמניה — בונדסליגה</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/it.png" alt=""> איטליה — סריה A</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/fr.png" alt=""> צרפת — ליג 1</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/il.png" alt=""> ישראל — ליגת העל</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/nl.png" alt=""> הולנד — ארדיוויזי</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/pt.png" alt=""> פורטוגל — פרימיירה ליגה</div>
+          </div>
+          <div class="league-column">
+            <div class="league-item"><img src="https://flagcdn.com/16x12/br.png" alt=""> ברזיל — סריה A</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/ar.png" alt=""> ארגנטינה — ליגה ראשונה</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/sa.png" alt=""> סעודיה — ליגת העל</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/tr.png" alt=""> טורקיה — סופר ליג</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/at.png" alt=""> אוסטריה — בונדסליגה</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/be.png" alt=""> בלגיה — פרו ליג</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/se.png" alt=""> שוודיה — אלסוונסקן</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/dk.png" alt=""> דנמרק — סופרליגה</div>
+          </div>
+          <div class="league-column">
+            <div class="league-item"><img src="https://flagcdn.com/16x12/us.png" alt=""> ארה"ב — MLS</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/mx.png" alt=""> מקסיקו — ליגה MX</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/jp.png" alt=""> יפן — J-League</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/kr.png" alt=""> דרום קוריאה — K-League</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/au.png" alt=""> אוסטרליה — A-League</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/cn.png" alt=""> סין — סופר ליג</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/ru.png" alt=""> רוסיה — פרמיירליגה</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/gr.png" alt=""> יוון — סופר ליג</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Basketball Section -->
+      <section class="sport-section" id="basketball">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="section-icon">🏀</span>
+            <h2>כדורסל</h2>
+            <span class="section-count">67 משחקים</span>
+          </div>
+          <a href="#" class="section-link">משחקי היום ←</a>
+        </div>
+
+        <!-- Featured Match -->
+        <div class="featured-match">
+          <div class="match-league">
+            <img src="https://flagcdn.com/16x12/us.png" alt="USA"> NBA
+          </div>
+          <div class="match-content">
+            <div class="match-team">
+              <span class="team-name">לוס אנג'לס לייקרס</span>
+            </div>
+            <div class="match-odds-group">
+              <button class="odd-btn">
+                <span class="odd-label">1</span>
+                <span class="odd-value">1.75</span>
+              </button>
+              <button class="odd-btn">
+                <span class="odd-label">2</span>
+                <span class="odd-value">2.05</span>
+              </button>
+            </div>
+            <div class="match-team">
+              <span class="team-name">בוסטון סלטיקס</span>
+            </div>
+          </div>
+          <div class="match-meta">
+            <span class="match-time">🕐 22:30</span>
+            <span class="match-markets">+98 שווקים</span>
+          </div>
+        </div>
+
+        <div class="league-grid">
+          <div class="league-column">
+            <div class="league-item"><img src="https://flagcdn.com/16x12/us.png" alt=""> NBA</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/il.png" alt=""> ישראל — ווינר ליג</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/es.png" alt=""> ספרד — ACB</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/tr.png" alt=""> טורקיה — BSL</div>
+          </div>
+          <div class="league-column">
+            <div class="league-item"><img src="https://flagcdn.com/16x12/de.png" alt=""> גרמניה — בונדסליגה</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/it.png" alt=""> איטליה — סריה A</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/fr.png" alt=""> צרפת — Pro A</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/gr.png" alt=""> יוון — A1</div>
+          </div>
+          <div class="league-column">
+            <div class="league-item"><img src="https://flagcdn.com/16x12/au.png" alt=""> אוסטרליה — NBL</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/lt.png" alt=""> ליטא — LKL</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/rs.png" alt=""> סרביה — KLS</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/us.png" alt=""> NCAA</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tennis Section -->
+      <section class="sport-section" id="tennis">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="section-icon">🎾</span>
+            <h2>טניס</h2>
+            <span class="section-count">89 משחקים</span>
+          </div>
+          <a href="#" class="section-link">משחקי היום ←</a>
+        </div>
+
+        <div class="league-grid">
+          <div class="league-column">
+            <div class="league-item"><img src="https://flagcdn.com/16x12/fr.png" alt=""> ATP — מונפלייה</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/qa.png" alt=""> ATP — דוחה</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/br.png" alt=""> ATP — ריו דה ז'נרו</div>
+          </div>
+          <div class="league-column">
+            <div class="league-item"><img src="https://flagcdn.com/16x12/ae.png" alt=""> WTA — דובאי</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/pt.png" alt=""> WTA — אואיירש</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/us.png" alt=""> WTA — מידלנד</div>
+          </div>
+          <div class="league-column">
+            <div class="league-item"><img src="https://flagcdn.com/16x12/it.png" alt=""> ITF — טרנטו</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/nl.png" alt=""> ITF — האג</div>
+            <div class="league-item"><img src="https://flagcdn.com/16x12/de.png" alt=""> ITF — אלטנקירכן</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Left Sidebar (Promo) -->
+    <aside class="sidebar-left">
+      <div class="promo-banner casino-promo">
+        <div class="promo-text">
+          <span class="promo-title gold">CASINO</span>
+          <span class="promo-sub">🎰 סלוטים • רולטה • בלאקג'ק</span>
+          <button class="promo-btn">שחק עכשיו →</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <span>© 2026 ZozoBet — כל הזכויות שמורות</span>
+      <span class="divider">|</span>
+      <a href="#">תנאי שימוש</a>
+      <span class="divider">|</span>
+      <a href="#">הימורים אחראיים</a>
+      <span class="divider">|</span>
+      <a href="#">פרטיות</a>
+    </div>
+  </footer>
+
+  <script>
+    // Live clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').textContent = 
+        now.toLocaleTimeString('he-IL', {hour:'2-digit', minute:'2-digit'});
+      document.getElementById('date').textContent = 
+        now.toLocaleDateString('he-IL', {day:'2-digit', month:'2-digit', year:'numeric'});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Odds click handler
+    document.querySelectorAll('.odd-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('selected');
+      });
+    });
+
+    // Sport menu click
+    document.querySelectorAll('.sport-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Banner Slider
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.banner-slide');
+    const dots = document.querySelectorAll('.banner-dot');
+    
+    function goSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      currentSlide = (n + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+    function nextSlide() { goSlide(currentSlide + 1); }
+    function prevSlide() { goSlide(currentSlide - 1); }
+    setInterval(nextSlide, 5000);
+  </script>
+</body>
+</html>

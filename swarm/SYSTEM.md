@@ -580,3 +580,4 @@ swarm/pipeline.sh verify <task-id> <sandbox-url>
 - `verify-deploy.sh <service> <url>` — combined check
 | optimizer | ⚡ | performance | @TeamOptimizer_Bot |
 | translator | 🌍 | i18n | @TeamTranslator_Bot |
+| tester | 🧪 | testing | @TeamTester_Bot |

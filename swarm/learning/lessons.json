@@ -940,6 +940,16 @@
       "lesson": "Added socket.io WebSocket + 4 new API endpoints to dashboard server.js. Key: use http.createServer + Server(io) pattern, keep SSE for backward compat",
       "timestamp": "2026-02-18T03:55:00Z",
       "applied": 0
+    },
+    {
+      "id": "5491d5aa",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "Dashboard cyberpunk redesign",
+      "lesson": "Matrix rain canvas + CSS animations + glassmorphism work well together. Key: preserve all API fetch logic, only change presentation layer.",
+      "timestamp": "2026-02-18T03:56:20Z",
+      "applied": 0
     }
   ]
 }

@@ -89,17 +89,27 @@ const p=require('puppeteer');(async()=>{
 if [ "${ERRORS:-0}" -gt 0 ]; then
   # Found real JS errors → wake AI to investigate
   "$SEND" or 1 "🐛 $ERRORS JS errors found on sandbox — waking AI to fix" 2>/dev/null
-  # Write delegation file for orchestrator heartbeat
   echo "{\"type\":\"js_errors\",\"count\":$ERRORS,\"ts\":\"$(date -Iseconds)\"}" > /tmp/watchdog-alert.json
+  # Wake AI via OpenClaw cron wake
+  curl -s -X POST "http://127.0.0.1:18789/api/cron/wake" \
+    -H "Authorization: Bearer a70b2c01b30494f2a6edf62a7d86f148c8e5b5572eb838de" \
+    -H "Content-Type: application/json" \
+    -d "{\"text\":\"🐛 Watchdog: $ERRORS JS errors on sandbox. Read /tmp/watchdog-alert.json and spawn koder to fix.\",\"mode\":\"now\"}" 2>/dev/null
   ALERT=1
 fi
 
 # 8. 404 check on key assets
-for ASSET in /favicon.png /js/client.js /css/style.css; do
+# Only check assets that are referenced in index.html
+ASSETS=$(grep -oP 'href="(/[^"]*\.(?:css|js|png|ico))"' /root/BettingPlatform/backend/public/index.html 2>/dev/null | grep -oP '"/[^"]*"' | tr -d '"' | head -5)
+for ASSET in $ASSETS; do
   HTTP=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 "http://95.111.247.22:9089${ASSET}" 2>/dev/null)
   if [ "$HTTP" = "404" ]; then
     "$SEND" or 1 "🐛 404: $ASSET — waking AI to fix" 2>/dev/null
     echo "{\"type\":\"404\",\"asset\":\"$ASSET\",\"ts\":\"$(date -Iseconds)\"}" > /tmp/watchdog-alert.json
+    curl -s -X POST "http://127.0.0.1:18789/api/cron/wake" \
+      -H "Authorization: Bearer a70b2c01b30494f2a6edf62a7d86f148c8e5b5572eb838de" \
+      -H "Content-Type: application/json" \
+      -d "{\"text\":\"🐛 Watchdog: 404 on $ASSET. Read /tmp/watchdog-alert.json and spawn koder to fix on sandbox.\",\"mode\":\"now\"}" 2>/dev/null
     ALERT=1
     break  # One alert is enough
   fi

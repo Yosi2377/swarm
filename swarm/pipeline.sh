@@ -163,6 +163,8 @@ ${ERRORS[*]:+❌ Issues: ${ERRORS[*]}}
 🧪 Tests: ${TEST_FILE}"
 
 "$SCRIPT_DIR/send.sh" "$AGENT" 1 "$REPORT" --photo "$SCREENSHOT" 2>/dev/null
+# Also send PR for approval
+bash "$SCRIPT_DIR/pr-review.sh" "$TASK_ID" "$DESC" 2>/dev/null || true
 PASS=$((PASS+1))
 echo "  ✅ Report sent"
 

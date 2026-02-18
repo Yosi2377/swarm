@@ -1,0 +1,18 @@
+{
+  "url": "http://95.111.247.22:8089",
+  "tests": [
+    {
+      "type": "exists",
+      "selector": "body",
+      "desc": "Page loads"
+    },
+    {
+      "type": "noErrors",
+      "desc": "No JS errors"
+    },
+    {
+      "type": "screenshot",
+      "path": "/tmp/test-5010.png"
+    }
+  ]
+}

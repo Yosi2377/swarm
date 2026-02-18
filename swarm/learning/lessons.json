@@ -1070,6 +1070,16 @@
       "lesson": "Keep delegation scripts simple - JSON queue in /tmp with send.sh notification works well",
       "timestamp": "2026-02-18T05:14:37Z",
       "applied": 0
+    },
+    {
+      "id": "84f861bf",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Created pr-review.sh for PR workflow",
+      "lesson": "Script takes TASK_ID BRANCH_NAME SUMMARY, gets diff, screenshots, sends to General with approve/reject buttons",
+      "timestamp": "2026-02-18T05:14:55Z",
+      "applied": 0
     }
   ]
 }

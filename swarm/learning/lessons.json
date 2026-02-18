@@ -1050,6 +1050,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T07:11:22Z",
       "applied": 0
+    },
+    {
+      "id": "f5b311d6",
+      "agent": "seo",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5300: SEO: structured data schema.org",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T07:30:00Z",
+      "applied": 0
     }
   ]
 }

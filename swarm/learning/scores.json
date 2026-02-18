@@ -49,6 +49,13 @@
       "fail": 0,
       "score": 100,
       "streak": 4
+    },
+    "seo": {
+      "tasks": 1,
+      "success": 0,
+      "fail": 1,
+      "score": 0,
+      "streak": -1
     }
   },
   "tools": {},

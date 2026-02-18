@@ -1180,6 +1180,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T05:45:47Z",
       "applied": 0
+    },
+    {
+      "id": "94943573",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5011: Proactive issue detection script",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T05:50:48Z",
+      "applied": 0
     }
   ]
 }

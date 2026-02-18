@@ -1270,6 +1270,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T06:53:51Z",
       "applied": 0
+    },
+    {
+      "id": "7d1ae894",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5101: Multi-project router — Level 6.0",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T06:53:54Z",
+      "applied": 0
     }
   ]
 }

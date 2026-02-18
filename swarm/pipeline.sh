@@ -114,6 +114,11 @@ EOJSON
     set_field "$TF" "current_status" "'done'"
     set_field "$TF" "updated_at" "'$(date -Is)'"
     echo "✅ Step '$STEP' marked as done for task $TASK_ID"
+    # Remind agent to log lessons
+    AGENT=$(get_field "$TF" "agent")
+    echo "📝 REMINDER: Run learn.sh lesson and learn.sh score before finishing!"
+    echo "   swarm/learn.sh lesson $AGENT <severity> \"title\" \"description\""
+    echo "   swarm/learn.sh score $AGENT success"
     ;;
 
   advance)

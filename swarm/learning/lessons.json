@@ -870,6 +870,46 @@
       "lesson": "or",
       "timestamp": "2026-02-18T02:12:02Z",
       "applied": 0
+    },
+    {
+      "id": "6f590906",
+      "agent": "critical",
+      "severity": "DC odds overwritten by prematch in live",
+      "impact": 0.3,
+      "what": "syncBasicOdds protected only h2h but overwrote double_chance, draw_no_bet, btts with stale prematch values during live play. Fix: add liveProtectedMarkets array + syncLiveEventOdds function.",
+      "lesson": "koder",
+      "timestamp": "2026-02-18T02:36:26Z",
+      "applied": 0
+    },
+    {
+      "id": "d37e621f",
+      "agent": "critical",
+      "severity": "Tennis 2-way h2h parsed as 3-way",
+      "impact": 0.3,
+      "what": "parseInplayOdds always put PA[1] in odds.draw. Tennis has only 2 PAs (home/away), so away went to draw and away stayed empty. Fix: check _h2hPaCount to distinguish 2-way vs 3-way markets.",
+      "lesson": "koder",
+      "timestamp": "2026-02-18T02:36:26Z",
+      "applied": 0
+    },
+    {
+      "id": "082406e8",
+      "agent": "medium",
+      "severity": "Tennis/Basketball show draw odds in main list",
+      "impact": 0.3,
+      "what": "Main event list showed X (draw) column value for tennis and basketball even though these sports have no draw. Fix: show dash instead. Popup was already correct.",
+      "lesson": "koder",
+      "timestamp": "2026-02-18T03:02:38Z",
+      "applied": 0
+    },
+    {
+      "id": "b16b679a",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "admin-reset-ui-tuesday",
+      "lesson": "Updated admin.html reset UI: tooltip, next-Tuesday display, confirm dialogs with 30-day message",
+      "timestamp": "2026-02-18T03:12:02Z",
+      "applied": 0
     }
   ]
 }

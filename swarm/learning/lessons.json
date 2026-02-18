@@ -1230,6 +1230,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T06:05:47Z",
       "applied": 0
+    },
+    {
+      "id": "be7107cf",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5050: הוסף favicon לZozoBet",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T06:15:13Z",
+      "applied": 0
     }
   ]
 }

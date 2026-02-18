@@ -578,3 +578,5 @@ swarm/pipeline.sh verify <task-id> <sandbox-url>
 - `verify-backend.sh <url> [endpoint]` — API health
 - `verify-service.sh <service>` — systemctl check
 - `verify-deploy.sh <service> <url>` — combined check
+| optimizer | ⚡ | performance | @TeamOptimizer_Bot |
+| translator | 🌍 | i18n | @TeamTranslator_Bot |

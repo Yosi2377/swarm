@@ -1190,6 +1190,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T05:50:48Z",
       "applied": 0
+    },
+    {
+      "id": "1fb108ae",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5012: Full autonomy task dispatcher",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T05:50:57Z",
+      "applied": 0
     }
   ]
 }

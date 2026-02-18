@@ -1270,6 +1270,26 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T06:53:51Z",
       "applied": 0
+    },
+    {
+      "id": "9b338b4a",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5102: Self-improving evolution — Level 6.5",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T06:54:13Z",
+      "applied": 0
+    },
+    {
+      "id": "42c29ada",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5103: Meta-agent spawner — Level 7.0",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T06:54:32Z",
+      "applied": 0
     }
   ]
 }

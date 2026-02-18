@@ -45,6 +45,14 @@ TOPIC_RESULT=$(curl -s "https://api.telegram.org/bot${OR_TOKEN}/createForumTopic
 THREAD_ID=$(echo "$TOPIC_RESULT" | jq -r '.result.message_thread_id // "1"')
 echo "📌 Topic created: #${THREAD_ID}"
 
+# Post task details inside the topic
+"$SCRIPT_DIR/send.sh" "$AGENT" "$THREAD_ID" "📋 Task #${TASK_ID}
+👤 Agent: $AGENT
+📁 File: $TARGET_FILE
+📝 $DESC
+
+⏳ עובד..." 2>/dev/null
+
 # === Step 0.5: Auto-inject lessons ===
 log 0 "Querying relevant lessons"
 LESSONS=$(bash "$SCRIPT_DIR/learn.sh" query "$DESC" 2>&1 | head -5)
@@ -104,6 +112,9 @@ else
   echo "  ⚠️ Could not restart $SERVICE"
   ERRORS+=("service-restart")
 fi
+
+# Progress update in topic
+"$SCRIPT_DIR/send.sh" "$AGENT" "$THREAD_ID" "✅ Steps 1-3 done (branch, edit, service). Running tests..." 2>/dev/null
 
 # === Step 4: Generate + run tests ===
 log 4 "Generating and running tests"
@@ -166,6 +177,8 @@ const p=require('puppeteer');
 if [ -f "$SCREENSHOT" ]; then
   PASS=$((PASS+1))
   echo "  ✅ Screenshot saved: $SCREENSHOT"
+  # Post screenshot in topic
+  "$SCRIPT_DIR/send.sh" "$AGENT" "$THREAD_ID" "📸 Screenshot:" --photo "$SCREENSHOT" 2>/dev/null
 else
   echo "  ❌ Screenshot failed"
   ERRORS+=("screenshot")

@@ -45,6 +45,22 @@ TOPIC_RESULT=$(curl -s "https://api.telegram.org/bot${OR_TOKEN}/createForumTopic
 THREAD_ID=$(echo "$TOPIC_RESULT" | jq -r '.result.message_thread_id // "1"')
 echo "📌 Topic created: #${THREAD_ID}"
 
+# === Step 0.5: Auto-inject lessons ===
+log 0 "Querying relevant lessons"
+LESSONS=$(bash "$SCRIPT_DIR/learn.sh" query "$DESC" 2>&1 | head -5)
+if [ -n "$LESSONS" ] && ! echo "$LESSONS" | grep -q "0 lessons"; then
+  echo "$LESSONS"
+  echo "  📚 Lessons injected automatically"
+fi
+
+# === Step 0.6: Check feedback for this error pattern ===
+if [ -f /tmp/feedback-loop.jsonl ]; then
+  RECENT_FIXES=$(tail -3 /tmp/feedback-loop.jsonl 2>/dev/null)
+  if [ -n "$RECENT_FIXES" ]; then
+    echo "  🧠 Recent system fixes applied"
+  fi
+fi
+
 # === Step 1: Branch ===
 log 1 "Creating branch task-${TASK_ID}-${AGENT}"
 cd "$SCRIPT_DIR/.."
@@ -204,8 +220,15 @@ else
   ERRORS+=("merge-fallback")
 fi
 
-# === Log completion ===
+# === Log completion with failure context ===
 echo "{\"task\":\"$TASK_ID\",\"agent\":\"$AGENT\",\"desc\":\"$DESC\",\"pass\":$PASS,\"total\":8,\"errors\":\"${ERRORS[*]:-none}\",\"thread\":\"$THREAD_ID\",\"screenshot\":\"$SCREENSHOT\",\"ts\":\"$(date -Iseconds)\"}" >> /tmp/pipeline-completed.jsonl
+
+# === Auto-learn from failures ===
+if [ ${#ERRORS[@]} -gt 0 ]; then
+  for ERR in "${ERRORS[@]}"; do
+    bash "$SCRIPT_DIR/learn.sh" lesson "$AGENT" medium "Pipeline error: $ERR in task $TASK_ID" "Auto-recorded by pipeline. Fix: investigate $ERR pattern." 2>/dev/null
+  done
+fi
 
 # === Summary ===
 echo ""

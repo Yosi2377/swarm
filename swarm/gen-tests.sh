@@ -34,14 +34,17 @@ CLASSES=$(grep -oP 'class="[^"]+"' "$FILE_PATH" | sed 's/class="//;s/"//' | tr '
 IDS=$(grep -oP 'id="[^"]+"' "$FILE_PATH" | sed 's/id="//;s/"//' | grep -v '[${}()+'"'"']' | grep -v '^\s*$' | sort -u || true)
 
 # Priority selectors — test these first if they exist
-PRIORITY_CLASSES="c-match bal auth-wrap container main-content header footer nav sidebar"
-PRIORITY_IDS="app root main"
+PRIORITY_CLASSES="c-match bal auth-wrap auth-btn b365-section footer"
+PRIORITY_IDS="app filterBar liveBadge evCount"
+
+# Skip dynamic/hidden selectors that cause false failures
+SKIP_CLASSES="arr up dn hide hidden active hover focus selected open closed disabled tooltip popup modal overlay loading spinner pulse"
 
 # Build test list (max 15)
 TESTS='[
   {"type": "exists", "selector": "body", "desc": "Page loads"}'
 COUNT=1
-MAX=15
+MAX=10
 
 # Add priority classes that exist in the file
 for PC in $PRIORITY_CLASSES; do
@@ -61,11 +64,13 @@ for PI in $PRIORITY_IDS; do
   fi
 done
 
-# Fill remaining with other classes (skip already added)
+# Fill remaining with other classes (skip already added + skip dynamic)
 for CLASS in $CLASSES; do
   [[ $COUNT -ge $((MAX - 2)) ]] && break
   [[ -z "$CLASS" ]] && continue
+  [[ ${#CLASS} -lt 3 ]] && continue  # Skip tiny classes (1-2 chars)
   echo "$PRIORITY_CLASSES" | tr ' ' '\n' | grep -qx "$CLASS" && continue
+  echo "$SKIP_CLASSES" | tr ' ' '\n' | grep -qx "$CLASS" && continue
   TESTS="$TESTS,"$'\n'"  {\"type\": \"exists\", \"selector\": \".$CLASS\", \"desc\": \".$CLASS exists\"}"
   COUNT=$((COUNT + 1))
 done

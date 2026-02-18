@@ -5,155 +5,199 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🐝 Swarm Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0a0e17;--bg2:#0f1320;--card:rgba(17,22,38,0.85);--card-hover:rgba(22,28,48,0.95);
-  --border:rgba(255,255,255,0.06);--border-hover:rgba(255,255,255,0.12);
-  --text:#e8edf5;--dim:#6b7a90;--accent:#4ea4f6;--accent2:#7c6cf0;
-  --green:#34d399;--red:#f87171;--orange:#fbbf24;--purple:#a78bfa;--pink:#f472b6;
-  --glass:rgba(255,255,255,0.03);--shadow:0 8px 32px rgba(0,0,0,0.3);
-  --radius:14px;
+  --bg:#0a0a0f;--bg2:#0d0d14;--card:rgba(13,13,20,0.85);--card-hover:rgba(18,18,28,0.95);
+  --border:rgba(0,255,65,0.08);--border-hover:rgba(0,255,65,0.25);
+  --text:#c8ffc8;--dim:#3a7a4a;--accent:#00ff41;--accent2:#0099ff;
+  --green:#00ff41;--red:#ff3333;--orange:#fbbf24;--purple:#9b59b6;--blue:#0099ff;
+  --glass:rgba(0,255,65,0.02);--shadow:0 0 30px rgba(0,255,65,0.1);
+  --radius:6px;--glow-green:0 0 10px rgba(0,255,65,0.3),0 0 40px rgba(0,255,65,0.1);
+  --glow-blue:0 0 10px rgba(0,153,255,0.3),0 0 40px rgba(0,153,255,0.1);
+  --glow-purple:0 0 10px rgba(155,89,182,0.3),0 0 40px rgba(155,89,182,0.1);
+  --glow-red:0 0 10px rgba(255,51,51,0.3),0 0 40px rgba(255,51,51,0.1);
 }
-body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;direction:rtl;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(78,164,246,0.04),transparent 50%),radial-gradient(circle at 70% 80%,rgba(124,108,240,0.04),transparent 50%);pointer-events:none;z-index:0}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani','Fira Code',monospace;direction:rtl;min-height:100vh;overflow-x:hidden}
+
+/* Matrix Rain Canvas */
+#matrix-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.15;pointer-events:none}
+
+/* Scanline overlay */
+body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:9999}
 
 /* Header */
-.header{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(10,14,23,0.8);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.header-right{display:flex;align-items:center;gap:12px}
-.logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}
-.logo span{-webkit-text-fill-color:initial;font-size:1.4rem}
-.live-badge{font-size:.65rem;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px}
-.live-badge::before{content:'';width:6px;height:6px;border-radius:50%;animation:pulse 2s infinite}
-.live-badge.connected{background:rgba(52,211,153,0.15);color:var(--green)}
-.live-badge.connected::before{background:var(--green)}
-.live-badge.reconnecting{background:rgba(251,191,36,0.15);color:var(--orange)}
-.live-badge.reconnecting::before{background:var(--orange)}
-.live-badge.disconnected{background:rgba(248,113,113,0.15);color:var(--red)}
-.live-badge.disconnected::before{background:var(--red)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-#clock{color:var(--dim);font-size:.82rem;font-weight:500;font-variant-numeric:tabular-nums}
+.header{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(10,10,15,0.9);border-bottom:1px solid var(--border);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),var(--blue),var(--purple),transparent);opacity:0.5}
+.header-right{display:flex;align-items:center;gap:14px}
+.logo{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:800;color:var(--accent);display:flex;align-items:center;gap:10px;text-shadow:var(--glow-green);letter-spacing:2px}
+.logo span{font-size:1.3rem;filter:drop-shadow(0 0 8px rgba(0,255,65,0.5))}
+#header-title{overflow:hidden;white-space:nowrap;border-left:2px solid var(--accent);animation:blink-caret 0.8s step-end infinite}
+@keyframes blink-caret{50%{border-color:transparent}}
+.header-left{display:flex;align-items:center;gap:14px}
+.live-badge{font-family:'Fira Code',monospace;font-size:.6rem;font-weight:700;letter-spacing:2px;padding:4px 12px;border-radius:3px;display:flex;align-items:center;gap:6px;text-transform:uppercase;border:1px solid}
+.live-badge::before{content:'';width:8px;height:8px;border-radius:50%}
+.live-badge.connected{background:rgba(0,255,65,0.08);color:var(--green);border-color:rgba(0,255,65,0.3)}
+.live-badge.connected::before{background:var(--green);box-shadow:0 0 12px var(--green);animation:pulse-live 1.5s infinite}
+.live-badge.reconnecting{background:rgba(251,191,36,0.08);color:var(--orange);border-color:rgba(251,191,36,0.3)}
+.live-badge.reconnecting::before{background:var(--orange);box-shadow:0 0 8px var(--orange);animation:pulse-live 1s infinite}
+.live-badge.disconnected{background:rgba(255,51,51,0.08);color:var(--red);border-color:rgba(255,51,51,0.3)}
+.live-badge.disconnected::before{background:var(--red);box-shadow:0 0 8px var(--red)}
+@keyframes pulse-live{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.8)}}
+#clock{color:var(--blue);font-family:'Fira Code',monospace;font-size:.78rem;font-weight:500;font-variant-numeric:tabular-nums;text-shadow:0 0 8px rgba(0,153,255,0.3)}
+#date-display{color:var(--dim);font-family:'Fira Code',monospace;font-size:.68rem}
 
 /* Stats */
-.stats-bar{display:flex;gap:10px;padding:16px 28px;overflow-x:auto;position:relative;z-index:1}
-.stat{flex:1;min-width:110px;text-align:center;padding:16px 12px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);backdrop-filter:blur(10px);transition:all .25s}
-.stat:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:var(--shadow)}
-.stat .num{font-size:1.8rem;font-weight:800;line-height:1}
-.stat .label{font-size:.68rem;color:var(--dim);margin-top:6px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.stats-bar{display:flex;gap:12px;padding:18px 28px;overflow-x:auto;position:relative;z-index:1}
+.stat{flex:1;min-width:120px;text-align:center;padding:18px 14px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);backdrop-filter:blur(10px);transition:all .3s;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0}
+.stat:hover{border-color:var(--border-hover);box-shadow:var(--glow-green);transform:translateY(-3px)}
+.stat:hover::before{opacity:1}
+.stat .icon{font-size:1.2rem;margin-bottom:6px;filter:drop-shadow(0 0 6px currentColor)}
+.stat .num{font-family:'Orbitron',monospace;font-size:2rem;font-weight:800;line-height:1;text-shadow:0 0 20px currentColor}
+.stat .label{font-family:'Fira Code',monospace;font-size:.6rem;color:var(--dim);margin-top:8px;text-transform:uppercase;letter-spacing:1.5px;font-weight:500}
 
 /* Grid */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 28px 28px;max-width:1500px;margin:0 auto;position:relative;z-index:1}
 @media(max-width:960px){.grid{grid-template-columns:1fr}.stats-bar{flex-wrap:wrap}}
 
 /* Panels */
-.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;backdrop-filter:blur(10px);transition:border-color .2s}
-.panel:hover{border-color:var(--border-hover)}
-.panel-head{padding:14px 18px;border-bottom:1px solid var(--border);font-weight:700;font-size:.88rem;display:flex;align-items:center;gap:8px;color:var(--text)}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;backdrop-filter:blur(10px);transition:all .3s;position:relative}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.3}
+.panel:hover{border-color:var(--border-hover);box-shadow:0 0 20px rgba(0,255,65,0.05)}
+.panel-head{padding:14px 18px;border-bottom:1px solid var(--border);font-family:'Orbitron',monospace;font-weight:600;font-size:.75rem;display:flex;align-items:center;gap:8px;color:var(--accent);letter-spacing:1px;text-transform:uppercase;text-shadow:0 0 10px rgba(0,255,65,0.2)}
 .panel-body{padding:10px;max-height:420px;overflow-y:auto}
-.panel-body::-webkit-scrollbar{width:4px}
+.panel-body::-webkit-scrollbar{width:3px}
 .panel-body::-webkit-scrollbar-track{background:transparent}
-.panel-body::-webkit-scrollbar-thumb{background:var(--border-hover);border-radius:2px}
+.panel-body::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px;opacity:0.3}
 .full-width{grid-column:1/-1}
 
 /* Agent cards */
-.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-.agent-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;transition:all .25s;cursor:default;position:relative;overflow:hidden}
-.agent-card:hover{border-color:var(--border-hover);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.2)}
-.agent-card .emoji{font-size:2.2rem;margin-bottom:4px}
-.agent-card .name{font-weight:700;font-size:.9rem;margin:2px 0}
-.agent-card .role{font-size:.7rem;color:var(--dim);font-weight:500}
-.agent-card .current-task{font-size:.65rem;color:var(--accent);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;margin-inline:auto}
-.agent-card .status{font-size:.65rem;margin-top:8px;padding:3px 10px;border-radius:10px;display:inline-block;font-weight:600;letter-spacing:.3px}
-.status-idle{background:rgba(107,122,144,0.15);color:var(--dim)}
-.status-active{background:rgba(52,211,153,0.12);color:var(--green);animation:glow-green 2s infinite}
-.status-stuck{background:rgba(248,113,113,0.12);color:var(--red)}
-@keyframes glow-green{0%,100%{box-shadow:0 0 0 rgba(52,211,153,0)}50%{box-shadow:0 0 12px rgba(52,211,153,0.15)}}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.agent-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 12px;text-align:center;transition:all .3s;cursor:default;position:relative;overflow:hidden}
+.agent-card::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(0,255,65,0.03),transparent 70%);opacity:0;transition:opacity .3s}
+.agent-card:hover{border-color:var(--border-hover);box-shadow:var(--glow-green);transform:translateY(-2px)}
+.agent-card:hover::after{opacity:1}
+.agent-card .avatar-wrap{width:48px;height:48px;margin:0 auto 8px;border-radius:50%;border:2px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:border-color .3s,box-shadow .3s}
+.agent-card:hover .avatar-wrap{border-color:var(--accent);box-shadow:var(--glow-green)}
+.agent-card .avatar-wrap img{width:100%;height:100%;object-fit:cover}
+.agent-card .avatar-wrap .emoji-fallback{font-size:1.8rem}
+.agent-card .name{font-family:'Orbitron',monospace;font-weight:700;font-size:.78rem;margin:4px 0;color:var(--text);letter-spacing:1px}
+.agent-card .role{font-family:'Fira Code',monospace;font-size:.62rem;color:var(--dim);font-weight:400}
+.agent-card .current-task{font-family:'Fira Code',monospace;font-size:.58rem;color:var(--blue);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;margin-inline:auto}
+.agent-card .status{font-family:'Fira Code',monospace;font-size:.58rem;margin-top:8px;padding:3px 10px;border-radius:3px;display:inline-block;font-weight:600;letter-spacing:.5px;border:1px solid}
+.status-idle{background:rgba(58,122,74,0.1);color:var(--dim);border-color:rgba(58,122,74,0.3)}
+.status-active{background:rgba(0,255,65,0.08);color:var(--green);border-color:rgba(0,255,65,0.3);animation:glow-pulse 2s infinite}
+.status-stuck{background:rgba(255,51,51,0.08);color:var(--red);border-color:rgba(255,51,51,0.3)}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 0 rgba(0,255,65,0)}50%{box-shadow:0 0 15px rgba(0,255,65,0.2)}}
 
 /* Score bars */
-.score-bar{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:4px;background:var(--bg2);border-radius:10px;font-size:.82rem}
-.score-bar .agent-name{min-width:90px;font-weight:600;display:flex;align-items:center;gap:4px}
-.score-bar .bar-wrap{flex:1;height:20px;background:rgba(255,255,255,0.04);border-radius:10px;overflow:hidden;position:relative}
-.score-bar .bar-fill{height:100%;border-radius:10px;transition:width .6s cubic-bezier(.4,0,.2,1);position:relative}
-.score-bar .bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1));border-radius:10px}
-.score-bar .bar-text{position:absolute;right:8px;top:0;line-height:20px;font-size:.7rem;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,0.3)}
-.score-bar .score-stats{font-size:.68rem;color:var(--dim);min-width:100px;text-align:left;font-variant-numeric:tabular-nums}
+.score-bar{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:4px;background:var(--bg2);border-radius:var(--radius);font-size:.78rem;border:1px solid transparent;transition:border-color .2s}
+.score-bar:hover{border-color:var(--border)}
+.score-bar .agent-name{min-width:90px;font-family:'Fira Code',monospace;font-weight:600;display:flex;align-items:center;gap:4px;font-size:.75rem}
+.score-bar .bar-wrap{flex:1;height:22px;background:rgba(0,255,65,0.03);border-radius:3px;overflow:hidden;position:relative;border:1px solid var(--border)}
+.score-bar .bar-fill{height:100%;border-radius:2px;transition:width 1s cubic-bezier(.4,0,.2,1);position:relative}
+.score-bar .bar-fill::after{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:white;opacity:0.4;filter:blur(2px);animation:glow-trail 2s infinite}
+@keyframes glow-trail{0%,100%{opacity:0.4}50%{opacity:0.8}}
+.score-bar .bar-text{position:absolute;right:8px;top:0;line-height:22px;font-family:'Orbitron',monospace;font-size:.62rem;font-weight:800;text-shadow:0 0 8px rgba(0,0,0,0.8)}
+.score-bar .score-stats{font-family:'Fira Code',monospace;font-size:.62rem;color:var(--dim);min-width:100px;text-align:left;font-variant-numeric:tabular-nums}
 
 /* Task rows */
-.task-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;margin-bottom:3px;background:var(--bg2);font-size:.82rem;transition:background .15s;cursor:default}
-.task-row:hover{background:rgba(78,164,246,0.06)}
-.task-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px currentColor}
-.task-dot.active{color:var(--green);background:var(--green)}
-.task-dot.stuck{color:var(--red);background:var(--red)}
-.task-dot.done{color:var(--dim);background:var(--dim);box-shadow:none}
-.task-priority{font-size:.6rem;padding:2px 7px;border-radius:6px;font-weight:700;flex-shrink:0;text-transform:uppercase;letter-spacing:.5px}
-.priority-urgent{background:rgba(248,113,113,0.15);color:var(--red)}
-.priority-normal{background:rgba(78,164,246,0.12);color:var(--accent)}
-.priority-low{background:rgba(107,122,144,0.12);color:var(--dim)}
-.task-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
-.task-agent{color:var(--purple);font-size:.72rem;flex-shrink:0;font-weight:600}
-.task-time{color:var(--dim);font-size:.68rem;flex-shrink:0;font-variant-numeric:tabular-nums}
+.task-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius);margin-bottom:3px;background:var(--bg2);font-size:.78rem;transition:all .3s;cursor:default;border:1px solid transparent;transform:translateX(0);opacity:1}
+.task-row.slide-in{animation:slideInRight 0.4s ease-out}
+@keyframes slideInRight{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+.task-row:hover{background:rgba(0,255,65,0.04);border-color:var(--border)}
+.task-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.task-dot.active{background:var(--green);box-shadow:0 0 8px var(--green)}
+.task-dot.stuck{background:var(--red);box-shadow:0 0 8px var(--red)}
+.task-dot.done{background:var(--dim)}
+.task-priority{font-family:'Fira Code',monospace;font-size:.55rem;padding:2px 7px;border-radius:3px;font-weight:700;flex-shrink:0;text-transform:uppercase;letter-spacing:.5px;border:1px solid}
+.priority-urgent{background:rgba(255,51,51,0.1);color:var(--red);border-color:rgba(255,51,51,0.3)}
+.priority-normal{background:rgba(0,153,255,0.08);color:var(--blue);border-color:rgba(0,153,255,0.3)}
+.priority-low{background:rgba(58,122,74,0.1);color:var(--dim);border-color:rgba(58,122,74,0.3)}
+.task-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Rajdhani',sans-serif;font-weight:600}
+.task-agent{color:var(--purple);font-family:'Fira Code',monospace;font-size:.68rem;flex-shrink:0;font-weight:600;text-shadow:0 0 6px rgba(155,89,182,0.3)}
+.task-time{color:var(--dim);font-family:'Fira Code',monospace;font-size:.62rem;flex-shrink:0;font-variant-numeric:tabular-nums}
 
 /* Lessons */
-.lesson-card{padding:10px 12px;margin-bottom:4px;background:var(--bg2);border-radius:10px;border-right:3px solid var(--dim);font-size:.8rem;transition:background .15s}
-.lesson-card:hover{background:rgba(78,164,246,0.04)}
-.lesson-card.critical{border-right-color:var(--red)}
-.lesson-card.medium{border-right-color:var(--orange)}
-.lesson-card.low{border-right-color:var(--accent)}
+.lesson-card{padding:10px 12px;margin-bottom:4px;background:var(--bg2);border-radius:var(--radius);border-right:3px solid var(--dim);font-size:.78rem;transition:all .2s;border:1px solid transparent}
+.lesson-card:hover{border-color:var(--border);background:rgba(0,255,65,0.02)}
+.lesson-card.critical{border-right-color:var(--red);box-shadow:inset -2px 0 10px rgba(255,51,51,0.05)}
+.lesson-card.medium{border-right-color:var(--orange);box-shadow:inset -2px 0 10px rgba(251,191,36,0.05)}
+.lesson-card.low{border-right-color:var(--green);box-shadow:inset -2px 0 10px rgba(0,255,65,0.05)}
 .lesson-card .lesson-head{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.lesson-card .lesson-sev{font-size:.6rem;padding:2px 7px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.sev-critical{background:rgba(248,113,113,0.15);color:var(--red)}
-.sev-medium{background:rgba(251,191,36,0.15);color:var(--orange)}
-.sev-low{background:rgba(78,164,246,0.12);color:var(--accent)}
-.lesson-card .lesson-what{color:var(--dim);font-size:.7rem;font-weight:500}
-.lesson-card .lesson-text{margin-top:3px;line-height:1.5}
+.lesson-card .lesson-sev{font-family:'Fira Code',monospace;font-size:.55rem;padding:2px 7px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border:1px solid}
+.sev-critical{background:rgba(255,51,51,0.1);color:var(--red);border-color:rgba(255,51,51,0.3)}
+.sev-medium{background:rgba(251,191,36,0.1);color:var(--orange);border-color:rgba(251,191,36,0.3)}
+.sev-low{background:rgba(0,255,65,0.08);color:var(--green);border-color:rgba(0,255,65,0.3)}
+.lesson-card .lesson-what{color:var(--dim);font-family:'Fira Code',monospace;font-size:.65rem;font-weight:400}
+.lesson-card .lesson-text{margin-top:3px;line-height:1.5;font-family:'Rajdhani',sans-serif}
 
 /* Timeline */
-.timeline{position:relative;padding-right:20px}
-.timeline::before{content:'';position:absolute;right:7px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--accent2),transparent);border-radius:1px}
-.tl-item{position:relative;padding:8px 24px 8px 8px;margin-bottom:2px;font-size:.78rem}
-.tl-item::before{content:'';position:absolute;right:-1px;top:12px;width:10px;height:10px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);z-index:1}
-.tl-item.tl-done::before{background:var(--green);border-color:var(--green)}
-.tl-item.tl-lesson::before{background:var(--orange);border-color:var(--orange)}
-.tl-item.tl-stuck::before{background:var(--red);border-color:var(--red)}
-.tl-time{color:var(--dim);font-size:.68rem;font-variant-numeric:tabular-nums}
-.tl-text{color:var(--text);margin-top:2px}
-.tl-agent{color:var(--purple);font-weight:600}
+.timeline{position:relative;padding-right:24px}
+.timeline::before{content:'';position:absolute;right:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--blue),var(--purple),transparent);border-radius:1px;box-shadow:0 0 8px rgba(0,255,65,0.2)}
+.tl-item{position:relative;padding:10px 28px 10px 8px;margin-bottom:2px;font-size:.75rem;opacity:0;transform:translateY(20px);transition:all 0.5s ease-out}
+.tl-item.visible{opacity:1;transform:translateY(0)}
+.tl-item::before{content:'';position:absolute;right:1px;top:14px;width:12px;height:12px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);z-index:1;transition:all .3s;box-shadow:0 0 6px rgba(0,255,65,0.2)}
+.tl-item.tl-done::before{background:var(--green);border-color:var(--green);box-shadow:0 0 10px var(--green)}
+.tl-item.tl-lesson::before{background:var(--orange);border-color:var(--orange);box-shadow:0 0 10px var(--orange)}
+.tl-item.tl-stuck::before{background:var(--red);border-color:var(--red);box-shadow:0 0 10px var(--red)}
+.tl-time{color:var(--dim);font-family:'Fira Code',monospace;font-size:.62rem;font-variant-numeric:tabular-nums}
+.tl-text{color:var(--text);margin-top:2px;font-family:'Rajdhani',sans-serif}
+.tl-agent{color:var(--purple);font-family:'Fira Code',monospace;font-weight:600;text-shadow:0 0 6px rgba(155,89,182,0.3)}
 
-/* Logs */
-.log-entry{padding:6px 10px;border-radius:8px;margin-bottom:2px;font-size:.78rem;background:var(--bg2);line-height:1.5;display:flex;gap:8px;align-items:baseline}
-.log-entry:hover{background:rgba(78,164,246,0.04)}
-.log-time{color:var(--dim);font-size:.68rem;flex-shrink:0;font-variant-numeric:tabular-nums;min-width:60px}
-.log-agent{font-weight:700;flex-shrink:0;min-width:30px}
+/* Agent Chat — terminal style */
+#agent-chat-panel .panel-body{background:rgba(0,0,0,0.3);font-family:'Fira Code',monospace;padding:0}
+.chat-terminal{padding:8px 12px}
+.chat-terminal::before{content:'> swarm_chat --live --tail 25';display:block;color:var(--dim);font-size:.6rem;padding:4px 0 8px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.log-entry{padding:4px 8px;border-radius:3px;margin-bottom:2px;font-family:'Fira Code',monospace;font-size:.72rem;background:transparent;line-height:1.6;display:flex;gap:8px;align-items:baseline;transition:background .15s}
+.log-entry:hover{background:rgba(0,255,65,0.03)}
+.log-time{color:var(--dim);font-size:.6rem;flex-shrink:0;font-variant-numeric:tabular-nums;min-width:60px}
+.log-agent{font-weight:700;flex-shrink:0;min-width:30px;filter:drop-shadow(0 0 4px currentColor)}
 .log-msg{color:var(--text);word-break:break-word;flex:1}
 
 /* Live session cards */
-.live-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;transition:all .25s;position:relative;overflow:hidden;min-width:150px}
-.live-card:hover{border-color:var(--border-hover);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.2)}
-.live-card .emoji{font-size:2rem;margin-bottom:4px}
-.live-card .name{font-weight:700;font-size:.85rem;margin:2px 0}
-.live-card .meta{font-size:.65rem;color:var(--dim);margin-top:2px}
-.live-card .current-task{font-size:.65rem;color:var(--accent);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;margin-inline:auto}
+.live-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-align:center;transition:all .3s;position:relative;overflow:hidden;min-width:150px}
+.live-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0;transition:opacity .3s}
+.live-card:hover{border-color:rgba(0,153,255,0.3);box-shadow:var(--glow-blue);transform:translateY(-2px)}
+.live-card:hover::after{opacity:1}
+.live-card .emoji{font-size:1.8rem;margin-bottom:4px;filter:drop-shadow(0 0 8px rgba(0,153,255,0.3))}
+.live-card .name{font-family:'Orbitron',monospace;font-weight:700;font-size:.75rem;margin:2px 0;letter-spacing:1px}
+.live-card .meta{font-family:'Fira Code',monospace;font-size:.58rem;color:var(--dim);margin-top:2px}
+.live-card .current-task{font-family:'Fira Code',monospace;font-size:.58rem;color:var(--blue);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;margin-inline:auto}
 .live-card .status-dot{width:10px;height:10px;border-radius:50%;position:absolute;top:10px;left:10px}
-.live-card .status-dot.active{background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
-.live-card .status-dot.recent{background:var(--orange);box-shadow:0 0 6px var(--orange)}
+.live-card .status-dot.active{background:var(--green);box-shadow:0 0 12px var(--green);animation:pulse-live 1.5s infinite}
+.live-card .status-dot.recent{background:var(--orange);box-shadow:0 0 8px var(--orange)}
 .live-card .status-dot.idle{background:var(--dim)}
-.live-card.subagent{border-color:rgba(167,139,250,0.2);background:rgba(167,139,250,0.04)}
-.live-card.subagent:hover{border-color:rgba(167,139,250,0.4)}
+.live-card.subagent{border-color:rgba(155,89,182,0.15);background:rgba(155,89,182,0.03)}
+.live-card.subagent:hover{border-color:rgba(155,89,182,0.4);box-shadow:var(--glow-purple)}
 
-.empty{text-align:center;padding:30px;color:var(--dim);font-size:.82rem}
-.date-select{background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:.78rem;margin-right:auto;font-family:inherit;cursor:pointer}
-.date-select:focus{outline:none;border-color:var(--accent)}
+/* Logs panel */
+.logs-panel .panel-body{background:rgba(0,0,0,0.2);font-family:'Fira Code',monospace}
+
+.empty{text-align:center;padding:30px;color:var(--dim);font-family:'Fira Code',monospace;font-size:.75rem}
+.date-select{background:var(--bg2);color:var(--accent);border:1px solid var(--border);border-radius:3px;padding:4px 10px;font-family:'Fira Code',monospace;font-size:.7rem;margin-right:auto;cursor:pointer}
+.date-select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 8px rgba(0,255,65,0.2)}
+
+/* CountUp animation */
+@keyframes countUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.count-up{animation:countUp 0.6s ease-out}
 </style>
 </head>
 <body>
 
+<canvas id="matrix-canvas"></canvas>
+
 <div class="header">
   <div class="header-right">
-    <div class="logo"><span>🐝</span> Swarm Dashboard</div>
+    <div class="logo"><span>🐝</span> <span id="header-title"></span></div>
     <div class="live-badge disconnected" id="live-badge">CONNECTING</div>
   </div>
-  <div id="clock"></div>
+  <div class="header-left">
+    <div id="date-display"></div>
+    <div id="clock"></div>
+  </div>
 </div>
 
 <div class="stats-bar" id="stats"></div>
@@ -161,56 +205,56 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 <div class="grid">
   <!-- Live Sessions -->
   <div class="panel full-width">
-    <div class="panel-head">🟢 סשנים חיים — סוכנים ו-sub-agents</div>
+    <div class="panel-head">🟢 LIVE SESSIONS — AGENTS & SUB-AGENTS</div>
     <div class="panel-body"><div class="agent-grid" id="live-agents"></div></div>
   </div>
 
   <!-- Agents -->
   <div class="panel">
-    <div class="panel-head">👥 סוכנים</div>
+    <div class="panel-head">👥 AGENTS</div>
     <div class="panel-body"><div class="agent-grid" id="agents"></div></div>
   </div>
 
   <!-- Scores -->
   <div class="panel">
-    <div class="panel-head">📊 ציוני סוכנים</div>
+    <div class="panel-head">📊 AGENT SCORES</div>
     <div class="panel-body" id="scores"></div>
   </div>
 
   <!-- Active Tasks -->
   <div class="panel">
-    <div class="panel-head">📋 משימות פעילות</div>
+    <div class="panel-head">📋 ACTIVE TASKS</div>
     <div class="panel-body" id="active-tasks"></div>
   </div>
 
   <!-- Task Files -->
   <div class="panel">
-    <div class="panel-head">📂 קבצי משימות</div>
+    <div class="panel-head">📂 TASK FILES</div>
     <div class="panel-body" id="task-files"></div>
   </div>
 
   <!-- Lessons -->
   <div class="panel">
-    <div class="panel-head">📖 לקחים נלמדים</div>
+    <div class="panel-head">📖 LESSONS LEARNED</div>
     <div class="panel-body" id="lessons"></div>
   </div>
 
   <!-- Timeline -->
   <div class="panel">
-    <div class="panel-head">⏱️ Timeline</div>
+    <div class="panel-head">⏱️ TIMELINE</div>
     <div class="panel-body" id="timeline"></div>
   </div>
 
   <!-- Agent Chat -->
-  <div class="panel">
-    <div class="panel-head">💬 Agent Chat</div>
-    <div class="panel-body" id="agent-chat"></div>
+  <div class="panel" id="agent-chat-panel">
+    <div class="panel-head">💬 AGENT CHAT</div>
+    <div class="panel-body"><div class="chat-terminal" id="agent-chat"></div></div>
   </div>
 
   <!-- Live Logs -->
-  <div class="panel full-width">
+  <div class="panel full-width logs-panel">
     <div class="panel-head">
-      📡 לוגים חיים
+      📡 LIVE LOGS
       <select class="date-select" id="log-date"></select>
     </div>
     <div class="panel-body" id="logs" style="max-height:500px"></div>
@@ -218,6 +262,65 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 </div>
 
 <script>
+// ===== MATRIX RAIN =====
+(function(){
+  const canvas=document.getElementById('matrix-canvas');
+  const ctx=canvas.getContext('2d');
+  let w,h,columns,drops;
+  const chars='アカサタナハマヤラワ0123456789ABCDEF{}[]<>/\\|@#$%^&*';
+  function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;columns=Math.floor(w/14);drops=new Array(columns).fill(1)}
+  resize();window.addEventListener('resize',resize);
+  function draw(){
+    ctx.fillStyle='rgba(10,10,15,0.05)';ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#00ff41';ctx.font='12px Fira Code,monospace';
+    for(let i=0;i<drops.length;i++){
+      const t=chars[Math.floor(Math.random()*chars.length)];
+      ctx.globalAlpha=Math.random()*0.5+0.1;
+      ctx.fillText(t,i*14,drops[i]*14);
+      if(drops[i]*14>h&&Math.random()>0.975)drops[i]=0;
+      drops[i]++;
+    }
+    ctx.globalAlpha=1;
+  }
+  setInterval(draw,50);
+})();
+
+// ===== TYPING EFFECT =====
+(function(){
+  const el=document.getElementById('header-title');
+  const text='SWARM DASHBOARD';
+  let i=0;
+  function type(){if(i<=text.length){el.textContent=text.slice(0,i);i++;setTimeout(type,80)}else{el.style.borderLeft='2px solid var(--accent)'}}
+  setTimeout(type,500);
+})();
+
+// ===== INTERSECTION OBSERVER for Timeline =====
+const timelineObserver=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.1});
+
+// ===== COUNTUP ANIMATION =====
+function animateCount(el,target,duration=1000){
+  const start=0;const startTime=performance.now();
+  function update(now){
+    const elapsed=now-startTime;const progress=Math.min(elapsed/duration,1);
+    const eased=1-Math.pow(1-progress,3);
+    el.textContent=Math.floor(eased*target);
+    if(progress<1)requestAnimationFrame(update);
+    else el.textContent=target;
+  }
+  requestAnimationFrame(update);
+}
+
+// ===== AVATAR HELPER =====
+const AGENT_AVATARS={shomer:'assets/shomer.png',koder:'assets/koder.png',tzayar:'assets/tzayar.png',worker:'assets/worker.png',researcher:'assets/researcher.png',bodek:'assets/bodek.png'};
+function avatarHtml(id,emoji){
+  const src=AGENT_AVATARS[id];
+  if(!src) return `<span class="emoji-fallback">${emoji||'🤖'}</span>`;
+  return `<img src="${src}" onerror="this.parentNode.innerHTML='<span class=\\'emoji-fallback\\'>${emoji||'🤖'}</span>'" alt="${id}">`;
+}
+
+// ===== ORIGINAL API LOGIC (preserved) =====
 const AGENT_EMOJIS={}, AGENT_NAMES={};
 let agentTasks={};
 
@@ -234,7 +337,7 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 async function loadLiveSessions(){
   const sessions=await fetch('/api/agents/live').then(r=>r.json());
   const el=document.getElementById('live-agents');
-  if(!sessions.length){el.innerHTML='<div class="empty">אין סשנים פעילים</div>';return;}
+  if(!sessions.length){el.innerHTML='<div class="empty">> no active sessions_</div>';return;}
   el.innerHTML=sessions.map(s=>{
     const statusHe=s.status==='active'?'🟢 פעיל':s.status==='recent'?'🟡 לאחרונה':'⚫ סרק';
     const isSubagent=s.type==='subagent';
@@ -244,7 +347,7 @@ async function loadLiveSessions(){
       <div class="name">${esc(s.name)}</div>
       <div class="meta">${isSubagent?'sub-agent':'agent'} · ${s.ageMinutes}ד'${s.tokens?` · ${(s.tokens/1000).toFixed(1)}k tok`:''}</div>
       ${s.currentTask?`<div class="current-task">${esc(s.currentTask)}</div>`:''}
-      <div class="status ${s.status==='active'?'status-active':s.status==='recent'?'status-stuck':'status-idle'}" style="font-size:.6rem;margin-top:6px;padding:2px 8px;border-radius:8px;display:inline-block">${statusHe}</div>
+      <div class="status ${s.status==='active'?'status-active':s.status==='recent'?'status-stuck':'status-idle'}" style="font-size:.55rem;margin-top:6px;padding:2px 8px;border-radius:3px;display:inline-block">${statusHe}</div>
     </div>`;
   }).join('');
 }
@@ -256,10 +359,10 @@ async function loadAgents(){
   for(const[id,a]of Object.entries(agents)){
     AGENT_EMOJIS[id]=a.emoji; AGENT_NAMES[id]=a.name;
     const statusClass=a.status==='active'?'status-active':a.status==='stuck'?'status-stuck':'status-idle';
-    const statusText=a.status==='active'?'פעיל':a.status==='stuck'?'תקוע':'ממתין';
-    const scoreHtml=a.score!==null?`<div class="agent-score" style="font-size:.65rem;color:${a.score>=70?'var(--green)':a.score>=40?'var(--orange)':'var(--red)'};margin-top:4px;font-weight:700">${a.score}% | ${a.success}✅ ${a.fail}❌</div>`:'';
+    const statusText=a.status==='active'?'ACTIVE':a.status==='stuck'?'STUCK':'IDLE';
+    const scoreHtml=a.score!==null?`<div style="font-family:'Fira Code',monospace;font-size:.58rem;color:${a.score>=70?'var(--green)':a.score>=40?'var(--orange)':'var(--red)'};margin-top:4px;font-weight:700">${a.score}% | ${a.success}✅ ${a.fail}❌</div>`:'';
     html+=`<div class="agent-card" id="acard-${id}">
-      <div class="emoji">${a.emoji||'🤖'}</div>
+      <div class="avatar-wrap">${avatarHtml(id,a.emoji)}</div>
       <div class="name">${a.name||id}</div>
       <div class="role">${a.role||''}</div>
       <div class="current-task" id="atask-${id}">${a.task||''}</div>
@@ -274,7 +377,6 @@ async function loadTasks(){
   const data=await fetch('/api/tasks').then(r=>r.json());
   const tasks=data.tasks||[], completed=data.completed||[];
 
-  // Refresh agent cards with latest status from /api/agents
   try{
     const agentsData=await fetch('/api/agents').then(r=>r.json());
     for(const[id,a]of Object.entries(agentsData)){
@@ -282,17 +384,16 @@ async function loadTasks(){
       const tEl=document.getElementById(`atask-${id}`);
       if(!sEl)continue;
       const statusClass=a.status==='active'?'status-active':a.status==='stuck'?'status-stuck':'status-idle';
-      const statusText=a.status==='active'?'פעיל':a.status==='stuck'?'תקוע':'ממתין';
+      const statusText=a.status==='active'?'ACTIVE':a.status==='stuck'?'STUCK':'IDLE';
       sEl.className='status '+statusClass;
       sEl.textContent=statusText;
       if(tEl) tEl.textContent=a.task||'';
     }
   }catch(e){}
 
-  // Active tasks panel
   const ael=document.getElementById('active-tasks');
-  if(!tasks.length){ael.innerHTML='<div class="empty">אין משימות פעילות</div>';}
-  else{ael.innerHTML=tasks.map(t=>`<div class="task-row">
+  if(!tasks.length){ael.innerHTML='<div class="empty">> no active tasks_</div>';}
+  else{ael.innerHTML=tasks.map((t,i)=>`<div class="task-row slide-in" style="animation-delay:${i*0.05}s">
     <span class="task-dot ${t.status}"></span>
     <span class="task-priority priority-${t.priority||'normal'}">${t.priority||'normal'}</span>
     <span class="task-title">#${t.thread||''} ${esc(t.title)}</span>
@@ -300,27 +401,36 @@ async function loadTasks(){
     <span class="task-time">${t.updatedAt?timeAgo(t.updatedAt):''}</span>
   </div>`).join('');}
 
-  // Stats
   const todayStr=new Date().toISOString().slice(0,10);
   const todayDone=completed.filter(t=>(t.completedAt||'').startsWith(todayStr));
   const stuck=tasks.filter(t=>t.status==='stuck').length;
   const activeCount=tasks.filter(t=>t.status==='active').length;
-  // Calculate success rate from scores.json
   let scoreTotalTasks=0,scoreTotalSuccess=0;
   try{const sc=await fetch('/api/scores').then(r=>r.json());for(const s of Object.values(sc)){scoreTotalTasks+=(s.tasks||0);scoreTotalSuccess+=(s.success||0);}}catch(e){}
   const total=scoreTotalTasks||(tasks.length+todayDone.length);
   const rate=scoreTotalTasks?Math.round(scoreTotalSuccess/scoreTotalTasks*100):(todayDone.length?Math.round(todayDone.length/(tasks.length+todayDone.length)*100):0);
 
-  document.getElementById('stats').innerHTML=`
-    <div class="stat"><div class="num" style="color:var(--accent)">${activeCount}</div><div class="label">פעילות</div></div>
-    <div class="stat"><div class="num" style="color:var(--green)">${todayDone.length}</div><div class="label">הושלמו היום</div></div>
-    <div class="stat"><div class="num" style="color:var(--red)">${stuck}</div><div class="label">תקועות</div></div>
-    <div class="stat"><div class="num">${total}</div><div class="label">סה"כ היום</div></div>
-    <div class="stat"><div class="num" style="color:var(--green)">${rate}%</div><div class="label">הצלחה</div></div>
-    <div class="stat"><div class="num" style="color:var(--purple)">${Object.keys(AGENT_NAMES).length}</div><div class="label">סוכנים</div></div>
-  `;
+  const statsData=[
+    {icon:'⚡',num:activeCount,label:'ACTIVE',color:'var(--blue)'},
+    {icon:'✅',num:todayDone.length,label:'DONE TODAY',color:'var(--green)'},
+    {icon:'🔴',num:stuck,label:'STUCK',color:'var(--red)'},
+    {icon:'📊',num:total,label:'TOTAL',color:'var(--text)'},
+    {icon:'🎯',num:rate,label:'SUCCESS %',color:'var(--green)',suffix:'%'},
+    {icon:'🤖',num:Object.keys(AGENT_NAMES).length,label:'AGENTS',color:'var(--purple)'},
+  ];
+  document.getElementById('stats').innerHTML=statsData.map(s=>
+    `<div class="stat"><div class="icon">${s.icon}</div><div class="num count-up" style="color:${s.color}" data-target="${s.num}">${s.num}${s.suffix||''}</div><div class="label">${s.label}</div></div>`
+  ).join('');
 
-  // Timeline from completed + active
+  // Animate countUp
+  document.querySelectorAll('.count-up').forEach(el=>{
+    const target=parseInt(el.dataset.target);
+    const suffix=el.textContent.includes('%')?'%':'';
+    el.textContent='0'+suffix;
+    animateCount(el,target);
+    if(suffix)el._suffix=suffix;
+  });
+
   buildTimeline(tasks, completed);
 }
 
@@ -331,36 +441,46 @@ function buildTimeline(tasks, completed){
   tasks.filter(t=>t.status==='stuck').forEach(t=>items.push({time:t.updatedAt,type:'stuck',text:`${esc(t.title)}`,agent:t.agent}));
   tasks.filter(t=>t.status==='active').forEach(t=>items.push({time:t.updatedAt||t.createdAt,type:'active',text:`${esc(t.title)}`,agent:t.agent}));
   items.sort((a,b)=>new Date(b.time)-new Date(a.time));
-  if(!items.length){el.innerHTML='<div class="empty">אין אירועים</div>';return;}
+  if(!items.length){el.innerHTML='<div class="empty">> no events_</div>';return;}
   el.innerHTML='<div class="timeline">'+items.slice(0,20).map(i=>`<div class="tl-item tl-${i.type}">
     <div class="tl-time">${i.time?formatTime(i.time):''}</div>
     <div class="tl-text"><span class="tl-agent">${AGENT_EMOJIS[i.agent]||''} ${AGENT_NAMES[i.agent]||i.agent}</span> — ${i.text}</div>
   </div>`).join('')+'</div>';
+
+  // Observe timeline items for fade-in
+  document.querySelectorAll('.tl-item').forEach(item=>timelineObserver.observe(item));
 }
 
 async function loadScores(){
   const scores=await fetch('/api/scores').then(r=>r.json());
   const el=document.getElementById('scores');
-  if(!Object.keys(scores).length){el.innerHTML='<div class="empty">אין ציונים</div>';return;}
+  if(!Object.keys(scores).length){el.innerHTML='<div class="empty">> no scores_</div>';return;}
   el.innerHTML=Object.entries(scores).sort((a,b)=>b[1].score-a[1].score).map(([id,s])=>{
     const c=s.score>=70?'var(--green)':s.score>=40?'var(--orange)':'var(--red)';
     return `<div class="score-bar">
       <span class="agent-name">${AGENT_EMOJIS[id]||'🤖'} ${AGENT_NAMES[id]||id}</span>
-      <div class="bar-wrap"><div class="bar-fill" style="width:${s.score}%;background:${c}"></div><span class="bar-text">${s.score}%</span></div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:0%;background:${c}" data-width="${s.score}"></div><span class="bar-text">${s.score}%</span></div>
       <span class="score-stats">${s.success}✅ ${s.fail}❌ streak:${s.streak}</span>
     </div>`;
   }).join('');
+
+  // Animate bars
+  setTimeout(()=>{
+    document.querySelectorAll('.bar-fill[data-width]').forEach(bar=>{
+      bar.style.width=bar.dataset.width+'%';
+    });
+  },100);
 }
 
 async function loadLessons(){
   const lessons=await fetch('/api/lessons').then(r=>r.json());
   const el=document.getElementById('lessons');
-  if(!lessons.length){el.innerHTML='<div class="empty">אין לקחים</div>';return;}
+  if(!lessons.length){el.innerHTML='<div class="empty">> no lessons_</div>';return;}
   el.innerHTML=lessons.slice().reverse().slice(0,25).map(l=>`<div class="lesson-card ${l.severity}">
     <div class="lesson-head">
       <span class="lesson-sev sev-${l.severity}">${l.severity}</span>
       <span>${AGENT_EMOJIS[l.agent]||''} ${AGENT_NAMES[l.agent]||l.agent}</span>
-      <span style="margin-right:auto;color:var(--dim);font-size:.65rem">${l.date||''}</span>
+      <span style="margin-right:auto;color:var(--dim);font-family:'Fira Code',monospace;font-size:.58rem">${l.date||''}</span>
     </div>
     <div class="lesson-what">${esc(l.what)}</div>
     <div class="lesson-text">${esc(l.lesson)}</div>
@@ -370,7 +490,7 @@ async function loadLessons(){
 async function loadTaskFiles(){
   const tasks=await fetch('/api/task-files').then(r=>r.json());
   const el=document.getElementById('task-files');
-  if(!tasks.length){el.innerHTML='<div class="empty">אין קבצי משימות</div>';return;}
+  if(!tasks.length){el.innerHTML='<div class="empty">> no task files_</div>';return;}
   el.innerHTML=tasks.sort((a,b)=>b.mtime.localeCompare(a.mtime)).map(t=>{
     const sc=t.status==='done'?'done':t.status==='stuck'?'stuck':'active';
     return `<div class="task-row">
@@ -398,7 +518,7 @@ async function loadLogs(){
   const el=document.getElementById('logs');
   const chatEl=document.getElementById('agent-chat');
 
-  if(!logs.length){el.innerHTML='<div class="empty">אין לוגים</div>';}
+  if(!logs.length){el.innerHTML='<div class="empty">> no logs_</div>';}
   else{
     el.innerHTML=logs.slice().reverse().map(l=>`<div class="log-entry">
       <span class="log-time">${formatTime(l.timestamp)}</span>
@@ -408,7 +528,7 @@ async function loadLogs(){
   }
 
   const chat=logs.filter(l=>l.thread===479).slice().reverse().slice(0,25);
-  if(!chat.length){chatEl.innerHTML='<div class="empty">אין הודעות</div>';}
+  if(!chat.length){chatEl.innerHTML='<div class="empty">> awaiting transmissions_</div>';}
   else{
     chatEl.innerHTML=chat.map(l=>`<div class="log-entry">
       <span class="log-time">${formatTime(l.timestamp)}</span>
@@ -423,7 +543,7 @@ let sse=null;
 function updateBadge(s){
   const b=document.getElementById('live-badge');
   b.className='live-badge '+s;
-  b.textContent=s==='connected'?'LIVE':s==='reconnecting'?'RECONNECTING':'OFFLINE';
+  b.textContent=s==='connected'?'◉ LIVE':s==='reconnecting'?'◎ RECONNECTING':'○ OFFLINE';
 }
 function connectSSE(){
   if(sse)sse.close();
@@ -439,7 +559,11 @@ function connectSSE(){
 }
 
 // Clock
-function tick(){document.getElementById('clock').textContent=new Date().toLocaleString('he-IL',{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+function tick(){
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('date-display').textContent=now.toLocaleDateString('he-IL',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+}
 
 // Init
 (async()=>{

@@ -930,6 +930,16 @@
       "lesson": "Period reset API correctly deletes bets older than 30 days and preserves recent ones. deletedOldBets count in response is accurate.",
       "timestamp": "2026-02-18T03:25:58Z",
       "applied": 0
+    },
+    {
+      "id": "8fa9fcab",
+      "agent": "koder",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "socket.io backend upgrade",
+      "lesson": "Added socket.io WebSocket + 4 new API endpoints to dashboard server.js. Key: use http.createServer + Server(io) pattern, keep SSE for backward compat",
+      "timestamp": "2026-02-18T03:55:00Z",
+      "applied": 0
     }
   ]
 }

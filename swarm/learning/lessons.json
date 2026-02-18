@@ -1010,6 +1010,16 @@
       "lesson": "or",
       "timestamp": "2026-02-18T04:51:01Z",
       "applied": 0
+    },
+    {
+      "id": "2e122e16",
+      "agent": "or",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "self-heal failed: false",
+      "lesson": "Command failed 3 times. Log: /tmp/heal-20260218-060328.log",
+      "timestamp": "2026-02-18T05:03:29Z",
+      "applied": 0
     }
   ]
 }

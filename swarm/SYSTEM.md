@@ -420,6 +420,13 @@ send.sh <agent_id> 479 "EMOJI→TARGET_EMOJI request"
 ## Cancel ("ביטול") → Stop + rollback + report.
 
 ## Files: agents.json, tasks.json, task.sh, memory/, memory/vault/, memory/shared/
+
+### delegate.sh — האצלת משימות בין סוכנים
+```bash
+swarm/delegate.sh <AGENT_SHELI> <TARGET> "DESCRIPTION"
+# שולח בקשת delegation ל-/tmp/delegate-queue/ + מודיע ב-Agent Chat (479)
+swarm/check-delegations.sh  # הצגת בקשות pending
+```
 ## HTML formatting: <b>bold</b> <i>italic</i> <code>code</code> <pre>block</pre>
 
 ## Skills System

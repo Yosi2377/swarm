@@ -32,6 +32,11 @@
 - If task stuck after reactivation → try to unblock or split
 - Post status update to General if tasks changed
 
+## Web Monitor
+- Run: `cd skills/web-monitor && uv run --with beautifulsoup4 python scripts/monitor.py check`
+- If 🔔 CHANGED or ❌ Error → alert Yossi: `send.sh or 1 "⚠️ ZozoBet שינוי/תקלה: ..."`
+- If ✅ No changes → silent
+
 ## Learning Evolution
 - Run `swarm/learn.sh evolve` to check for pattern-based skill generation
 - Run `swarm/learn.sh report` to check agent scores

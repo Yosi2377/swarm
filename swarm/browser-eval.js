@@ -81,7 +81,7 @@ async function runTests(page, tests, jsErrors) {
 }
 
 async function doLogin(page, login) {
-  const loginUrl = login.url || login.base;
+  const loginUrl = login.url || login.base || login.loginUrl;
   console.log(`  🔑 Logging in to ${loginUrl} as ${login.user}`);
   await page.goto(loginUrl, {waitUntil: 'networkidle2', timeout: 15000});
   await new Promise(r => setTimeout(r, 2000));
@@ -157,9 +157,17 @@ async function doLogin(page, login) {
         process.exit(0);
       }
       tests = parsed;
-    } else {
+    } else if (process.argv[3]) {
       const testConfig = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
       tests = testConfig.tests || [];
+    } else {
+      // No test file — run default sanity checks
+      tests = [
+        {type: 'exists', selector: 'body', desc: 'Page loads'},
+        {type: 'count', selector: '.c-match', min: 1, desc: 'Match rows visible'},
+        {type: 'exists', selector: '.bal', desc: 'Balance element visible (logged in)'},
+        {type: 'noErrors', desc: 'No JS errors'}
+      ];
     }
 
     // Auto-login for known ports

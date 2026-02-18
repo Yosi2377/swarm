@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "football-automated-value-betting": {
+      "version": "1.0.0",
+      "installedAt": 1771389357040
+    },
+    "web-monitor": {
+      "version": "1.0.0",
+      "installedAt": 1771389370995
+    },
+    "screenshot": {
+      "version": "1.0.0",
+      "installedAt": 1771389372593
+    }
+  }
+}

@@ -191,6 +191,10 @@ swarm/ask-help.sh <from-agent> <to-agent> <thread-id> "description"
 5. **משימה אחת לסוכן** — פצל multi-domain למשימות נפרדות
 6. **דיווח ב-General** — כל שלב משמעותי
 7. **Watchdog תמיד רץ** — `pgrep -f watchdog.sh || nohup swarm/watchdog.sh &`
+8. **screenshot אוטומטי** — ברגע שסוכן מסיים: בדוק → צלם → שלח screenshot + סיכום → אז דווח. לעולם לא לדווח בלי screenshot!
+9. **learn.sh חובה** — כל task שמסתיים → learn.sh lesson + learn.sh score
+10. **פיצול מקבילי** — כל מה שאפשר לפצל בלי חפיפת קבצים → sessions_spawn במקביל
+11. **הזרקת לקחים** — לפני שליחת task, הרץ `learn.sh query "keywords"` וצרף לקחים רלוונטיים ישירות בהוראות ה-task. הסוכנים לא מריצים query בעצמם!
 
 ## עבודה מקבילית
 

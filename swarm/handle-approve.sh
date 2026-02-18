@@ -18,6 +18,7 @@ bash swarm/snapshot.sh create "pre-deploy-${TASK_ID}" 2>&1
 SANDBOX="/root/sandbox/BettingPlatform/backend/public"
 PROD="/root/BettingPlatform/backend/public"
 
+# Deploy HTML files
 for f in index.html admin.html agent.html; do
   if [ -f "$SANDBOX/$f" ]; then
     chattr -i "$PROD/$f" 2>/dev/null
@@ -26,6 +27,17 @@ for f in index.html admin.html agent.html; do
     echo "✅ Deployed $f"
   fi
 done
+
+# Deploy new/changed assets (png, ico, css, js in public root)
+chattr -i "$PROD" 2>/dev/null
+for f in $(find "$SANDBOX" -maxdepth 1 -newer /tmp/task-${TASK_ID}-pipeline.png -name "*.png" -o -name "*.ico" -o -name "*.svg" -o -name "*.css" 2>/dev/null); do
+  NAME=$(basename "$f")
+  chattr -i "$PROD/$NAME" 2>/dev/null
+  cp "$f" "$PROD/$NAME"
+  chattr +i "$PROD/$NAME" 2>/dev/null
+  echo "✅ Deployed asset: $NAME"
+done
+chattr +i "$PROD" 2>/dev/null
 
 # 3. Restart production
 systemctl restart betting-backend

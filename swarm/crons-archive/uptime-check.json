@@ -1,0 +1,1 @@
+{"name":"🌐 ZozoBet Uptime Check","schedule":{"kind":"every","everyMs":300000},"sessionTarget":"isolated","payload":{"kind":"agentTurn","message":"בדוק HTTP 200 על production ו-sandbox. שלח התראה אם לא 200.","timeoutSeconds":30},"delivery":{"mode":"none"}}

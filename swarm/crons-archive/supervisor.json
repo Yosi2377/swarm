@@ -1,0 +1,1 @@
+{"name":"🔍 Supervisor — מפקח סוכנים","schedule":{"kind":"every","everyMs":60000},"sessionTarget":"isolated","payload":{"kind":"agentTurn","message":"אתה Supervisor. בצע: cat /tmp/pipeline-completed.jsonl, cat /tmp/supervisor-reported.txt, דווח על tasks חדשים, בדוק services.","timeoutSeconds":30},"delivery":{"mode":"none"}}

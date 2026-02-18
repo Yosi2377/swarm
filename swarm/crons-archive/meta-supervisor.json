@@ -1,0 +1,1 @@
+{"name":"👁️ Meta-Supervisor — מפקח על אור","schedule":{"kind":"every","everyMs":120000},"sessionTarget":"isolated","payload":{"kind":"agentTurn","message":"בדוק sessions_history של הסשן הראשי, חפש שגיאות לא מטופלות, דיווחים בלי screenshot, tasks בלי lesson injection.","timeoutSeconds":45},"delivery":{"mode":"none"}}

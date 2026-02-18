@@ -1,0 +1,1 @@
+{"name":"health-check","schedule":{"kind":"every","everyMs":300000},"sessionTarget":"isolated","payload":{"kind":"agentTurn","message":"הרץ health-check: /root/.openclaw/workspace/swarm/health-check.sh --notify --fix","timeoutSeconds":60},"delivery":{"mode":"none"}}

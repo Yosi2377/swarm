@@ -1,0 +1,1 @@
+{"name":"🧠 Feedback Loop — Self-Learning","schedule":{"kind":"cron","expr":"0 6 * * *","tz":"Europe/Berlin"},"sessionTarget":"isolated","payload":{"kind":"agentTurn","message":"הרץ: bash /root/.openclaw/workspace/swarm/feedback-loop.sh","timeoutSeconds":30},"delivery":{"mode":"none"}}

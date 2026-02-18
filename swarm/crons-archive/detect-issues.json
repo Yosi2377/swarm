@@ -1,0 +1,1 @@
+{"name":"🔍 Proactive Issue Detection","schedule":{"kind":"every","everyMs":300000},"sessionTarget":"isolated","payload":{"kind":"agentTurn","message":"הרץ: bash /root/.openclaw/workspace/swarm/detect-issues.sh","timeoutSeconds":30},"delivery":{"mode":"none"}}

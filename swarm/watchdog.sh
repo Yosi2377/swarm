@@ -1,118 +1,66 @@
 #!/bin/bash
-# Watchdog — Monitor active tasks for stalls
-# Runs continuously, checks every 2 minutes
-# Usage: watchdog.sh [--once]  (--once for single check, no loop)
+# watchdog.sh — Pure bash monitoring. NO AI tokens. Runs via systemd timer.
+# Only sends alerts when something is WRONG.
 
-SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
-TASKS_DIR="$SWARM_DIR/tasks"
-LOG_DIR="$SWARM_DIR/logs"
-QUEUE_DIR="/tmp/delegate-queue"
-MEMORY_DIR="$SWARM_DIR/memory"
-LOG_FILE="$LOG_DIR/watchdog.log"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SEND="$SCRIPT_DIR/send.sh"
+ALERT=0
 
-mkdir -p "$LOG_DIR" "$QUEUE_DIR"
-
-ONCE=false
-[ "$1" = "--once" ] && ONCE=true
-
-log() { echo "$(date -Is) $1" >> "$LOG_FILE"; }
-
-get_field() { python3 -c "import json;d=json.load(open('$1'));print(d.get('$2',''))" 2>/dev/null; }
-set_field() {
-  python3 -c "
-import json
-f='$1'
-d=json.load(open(f))
-d['$2']=$3
-json.dump(d,open(f,'w'),indent=2)
-" 2>/dev/null
-}
-
-check_task() {
-  local TF="$1"
-  local TASK_ID=$(get_field "$TF" "task_id")
-  local AGENT=$(get_field "$TF" "agent_id")
-  local STEP=$(get_field "$TF" "current_step")
-  local STATUS=$(get_field "$TF" "current_status")
-  local THREAD=$(get_field "$TF" "thread_id")
-  local RESTARTS=$(get_field "$TF" "restarts")
-
-  # Only check active tasks not in done/review
-  [ "$STEP" = "done" ] && return
-  [ "$STATUS" != "active" ] && return
-
-  # Find last activity: check memory dir mtime, log file, task file
-  local NOW=$(date +%s)
-  local LAST_ACTIVITY=0
-
-  # Check agent memory dir
-  if [ -d "$MEMORY_DIR/$AGENT" ]; then
-    local MEM_TIME=$(find "$MEMORY_DIR/$AGENT" -type f -printf '%T@\n' 2>/dev/null | sort -rn | head -1 | cut -d. -f1)
-    [ -n "$MEM_TIME" ] && [ "$MEM_TIME" -gt "$LAST_ACTIVITY" ] && LAST_ACTIVITY=$MEM_TIME
-  fi
-
-  # Check task file mtime
-  local TF_TIME=$(stat -c %Y "$TF" 2>/dev/null)
-  [ -n "$TF_TIME" ] && [ "$TF_TIME" -gt "$LAST_ACTIVITY" ] && LAST_ACTIVITY=$TF_TIME
-
-  # Check today's log
-  local TODAY=$(date +%Y-%m-%d)
-  local LOG="$LOG_DIR/$TODAY.jsonl"
-  if [ -f "$LOG" ]; then
-    local LOG_TIME=$(stat -c %Y "$LOG" 2>/dev/null)
-    [ -n "$LOG_TIME" ] && [ "$LOG_TIME" -gt "$LAST_ACTIVITY" ] && LAST_ACTIVITY=$LOG_TIME
-  fi
-
-  [ "$LAST_ACTIVITY" -eq 0 ] && LAST_ACTIVITY=$(stat -c %Y "$TF" 2>/dev/null)
-  local IDLE=$((NOW - LAST_ACTIVITY))
-  local IDLE_MIN=$((IDLE / 60))
-
-  # 5 min → ping
-  if [ $IDLE_MIN -ge 5 ] && [ $IDLE_MIN -lt 10 ]; then
-    if [ ! -f "$QUEUE_DIR/${AGENT}-ping.json" ]; then
-      cat > "$QUEUE_DIR/${AGENT}-ping.json" <<EOF
-{"type":"ping","agent":"$AGENT","task_id":"$TASK_ID","thread_id":"$THREAD","idle_min":$IDLE_MIN,"ts":"$(date -Is)"}
-EOF
-      log "PING: $AGENT idle ${IDLE_MIN}m on task $TASK_ID"
+# 1. Services alive?
+for SVC in betting-backend betting-aggregator; do
+  if ! systemctl is-active --quiet "$SVC" 2>/dev/null; then
+    systemctl restart "$SVC" 2>/dev/null
+    sleep 3
+    if systemctl is-active --quiet "$SVC"; then
+      "$SEND" or 1 "⚠️ $SVC was down — auto-restarted ✅" 2>/dev/null
+    else
+      "$SEND" or 1 "🔴 $SVC DOWN — restart failed!" 2>/dev/null
     fi
+    ALERT=1
   fi
+done
 
-  # 10 min → restart
-  if [ $IDLE_MIN -ge 10 ]; then
-    rm -f "$QUEUE_DIR/${AGENT}-ping.json"
-    if [ ! -f "$QUEUE_DIR/${AGENT}-restart.json" ]; then
-      cat > "$QUEUE_DIR/${AGENT}-restart.json" <<EOF
-{"type":"restart","agent":"$AGENT","task_id":"$TASK_ID","thread_id":"$THREAD","idle_min":$IDLE_MIN,"ts":"$(date -Is)"}
-EOF
-      RESTARTS=${RESTARTS:-0}
-      set_field "$TF" "restarts" "$((RESTARTS + 1))"
-      log "RESTART: $AGENT idle ${IDLE_MIN}m on task $TASK_ID (restart #$((RESTARTS + 1)))"
-
-      # 3 restarts → escalate
-      if [ $((RESTARTS + 1)) -ge 3 ]; then
-        cat > "$QUEUE_DIR/escalate-${TASK_ID}.json" <<EOF
-{"type":"escalate","agent":"$AGENT","task_id":"$TASK_ID","thread_id":"$THREAD","restarts":$((RESTARTS+1)),"ts":"$(date -Is)"}
-EOF
-        log "ESCALATE: task $TASK_ID after $((RESTARTS+1)) restarts"
-      fi
-    fi
+# 2. HTTP check
+for URL in "http://95.111.247.22:8089|Production" "http://95.111.247.22:9089|Sandbox"; do
+  ADDR="${URL%%|*}"
+  NAME="${URL##*|}"
+  HTTP=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$ADDR" 2>/dev/null)
+  if [ "$HTTP" != "200" ]; then
+    "$SEND" or 1 "🔴 $NAME HTTP $HTTP (expected 200)" 2>/dev/null
+    ALERT=1
   fi
-}
+done
 
-check_all() {
-  for TF in "$TASKS_DIR"/*.pipeline.json; do
-    [ -f "$TF" ] && check_task "$TF"
-  done
-}
-
-log "Watchdog started"
-
-if $ONCE; then
-  check_all
-  echo "Watchdog check complete. See $LOG_FILE"
-else
-  while true; do
-    check_all
-    sleep 120
-  done
+# 3. Disk space
+DISK_PCT=$(df / | awk 'NR==2{print $5}' | tr -d '%')
+if [ "$DISK_PCT" -gt 85 ]; then
+  "$SEND" or 1 "⚠️ Disk ${DISK_PCT}% — cleanup needed" 2>/dev/null
+  # Auto-clean
+  journalctl --vacuum-time=3d 2>/dev/null
+  ALERT=1
 fi
+
+# 4. MongoDB alive
+if ! mongosh --quiet --eval "db.runCommand({ping:1})" betting >/dev/null 2>&1; then
+  "$SEND" or 1 "🔴 MongoDB not responding!" 2>/dev/null
+  ALERT=1
+fi
+
+# 5. Pipeline completions (supervisor role)
+if [ -f /tmp/pipeline-completed.jsonl ] && [ -f /tmp/supervisor-reported.txt ]; then
+  while IFS= read -r LINE; do
+    TASK=$(echo "$LINE" | python3 -c "import json,sys;print(json.loads(sys.stdin.read())['task'])" 2>/dev/null)
+    if [ -n "$TASK" ] && ! grep -q "task-$TASK" /tmp/supervisor-reported.txt 2>/dev/null; then
+      DESC=$(echo "$LINE" | python3 -c "import json,sys;d=json.loads(sys.stdin.read());print(d.get('desc','?'))" 2>/dev/null)
+      AGENT=$(echo "$LINE" | python3 -c "import json,sys;d=json.loads(sys.stdin.read());print(d.get('agent','?'))" 2>/dev/null)
+      PASS=$(echo "$LINE" | python3 -c "import json,sys;d=json.loads(sys.stdin.read());print(d.get('pass','?'))" 2>/dev/null)
+      "$SEND" or 1 "✅ Task $TASK ($AGENT): $DESC — $PASS/8" 2>/dev/null
+      echo "task-$TASK" >> /tmp/supervisor-reported.txt
+    fi
+  done < /tmp/pipeline-completed.jsonl
+elif [ -f /tmp/pipeline-completed.jsonl ]; then
+  touch /tmp/supervisor-reported.txt
+fi
+
+# Silent if no issues
+exit 0

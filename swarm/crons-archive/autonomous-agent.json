@@ -1,0 +1,1 @@
+{"name":"🤖 Autonomous Agent — Scan + Fix (sandbox)","schedule":{"kind":"every","everyMs":3600000},"sessionTarget":"isolated","payload":{"kind":"agentTurn","message":"הרץ: bash /root/.openclaw/workspace/swarm/autonomous.sh","timeoutSeconds":60},"delivery":{"mode":"none"}}

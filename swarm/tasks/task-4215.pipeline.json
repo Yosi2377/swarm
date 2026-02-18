@@ -2,18 +2,20 @@
   "task_id": "task-4215",
   "thread_id": "4215",
   "agent_id": "koder",
-  "current_step": "sandbox",
+  "current_step": "review",
   "current_status": "active",
   "created_at": "2026-02-17T22:49:52+01:00",
-  "updated_at": "2026-02-17T22:49:52+01:00",
+  "updated_at": "2026-02-17T22:56:42+01:00",
   "restarts": 0,
   "steps": {
-    "sandbox": "active",
-    "verify_sandbox": "pending",
-    "review": "pending",
+    "sandbox": "done",
+    "verify_sandbox": "done",
+    "review": "active",
     "deploy": "pending",
     "verify_prod": "pending",
     "done": "pending"
   },
-  "history": ["2026-02-17T22:49:52+01:00 — init: sandbox active"]
+  "history": [
+    "2026-02-17T22:49:52+01:00 \u2014 init: sandbox active"
+  ]
 }

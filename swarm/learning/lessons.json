@@ -770,6 +770,106 @@
       "lesson": "Task 'תיקון זמנים + modal + stale' passed all gates",
       "timestamp": "2026-02-16T20:36:03Z",
       "applied": 0
+    },
+    {
+      "id": "ea47efb9",
+      "agent": "critical",
+      "severity": "inplay-parser: prematch overwrites live h2h",
+      "impact": 0.3,
+      "what": "syncBasicOdds AND /full-odds endpoint both fetched prematch API and overwrote live h2h every 5-15s. Fix: skip h2h for live events in both places.",
+      "lesson": "koder",
+      "timestamp": "2026-02-18T01:48:37Z",
+      "applied": 0
+    },
+    {
+      "id": "20c159d6",
+      "agent": "high",
+      "severity": "BetsAPI event endpoint structure",
+      "impact": 0.3,
+      "what": "MG (Market Group) contains sub-MAs with PAs. Structure varies: some have point labels in first MA, odds in named MAs (Over/Under/team names). Multi Scorers has player names in first MA, odds in '2 or More'/'3 or More' MAs.",
+      "lesson": "koder",
+      "timestamp": "2026-02-18T01:48:37Z",
+      "applied": 0
+    },
+    {
+      "id": "0309c0b2",
+      "agent": "high",
+      "severity": "Corners market 3-way structure",
+      "impact": 0.3,
+      "what": "Match Corners uses Over/Exactly/Under sub-MAs with point labels. Corners Race uses point labels + team name MAs + Neither MA.",
+      "lesson": "koder",
+      "timestamp": "2026-02-18T01:48:37Z",
+      "applied": 0
+    },
+    {
+      "id": "18a7e5a6",
+      "agent": "high",
+      "severity": "Tennis markets from BetsAPI /event endpoint",
+      "impact": 0.3,
+      "what": "40 MGs available: To Win, Total Games in Match, Match Handicap, Match Result+Total Games, Games Odd/Even, Ace Totals, Double Fault Totals, Breaks, Tiebreaks, Player Games Won, per-set markets (Set N Score/Handicap/Race to/Game Winner/Total Games).",
+      "lesson": "koder",
+      "timestamp": "2026-02-18T01:48:37Z",
+      "applied": 0
+    },
+    {
+      "id": "0aec2121",
+      "agent": "high",
+      "severity": "Basketball markets from BetsAPI",
+      "impact": 0.3,
+      "what": "Game Lines combines spread+ML+total in one MG (3 sub-MAs: points, home, away with 3 PAs each). Also: 2nd Half Lines, Nth Quarter Lines, Team Totals, Match Result+Total, Highest Scoring Half, Tied at Regulation, Odd/Even, Quarter-specific (Race to, BTTS, Margin).",
+      "lesson": "koder",
+      "timestamp": "2026-02-18T01:48:37Z",
+      "applied": 0
+    },
+    {
+      "id": "d4802fc8",
+      "agent": "critical",
+      "severity": "Orchestrator must NOT code directly",
+      "impact": 0.3,
+      "what": "Or (orchestrator) coded directly for entire BettingPlatform session instead of delegating to koder. Must ALWAYS delegate through swarm pipeline even for urgent tasks. Log to learn.sh regardless.",
+      "lesson": "or",
+      "timestamp": "2026-02-18T01:48:37Z",
+      "applied": 0
+    },
+    {
+      "id": "814e09da",
+      "agent": "high",
+      "severity": "bet365 accessible without login",
+      "impact": 0.3,
+      "what": "Full match page with all markets accessible without login. Only 'Log in to watch' (streaming) requires account. Don't assume login needed.",
+      "lesson": "or",
+      "timestamp": "2026-02-18T01:48:47Z",
+      "applied": 0
+    },
+    {
+      "id": "fbf30a2b",
+      "agent": "medium",
+      "severity": "Redis cache 5s TTL for near-realtime",
+      "impact": 0.3,
+      "what": "Changed from 30s to 5s TTL for event cache. Combined with 15s aggregator sync = good balance of freshness vs API credits.",
+      "lesson": "koder",
+      "timestamp": "2026-02-18T01:48:47Z",
+      "applied": 0
+    },
+    {
+      "id": "f5829c2f",
+      "agent": "medium",
+      "severity": "API odds vs bet365 screen delay",
+      "impact": 0.3,
+      "what": "BetsAPI odds lag ~5-10 seconds behind bet365 live screen. Normal and acceptable. Odds values themselves are identical when synced.",
+      "lesson": "koder",
+      "timestamp": "2026-02-18T01:48:47Z",
+      "applied": 0
+    },
+    {
+      "id": "6cc14a7c",
+      "agent": "critical",
+      "severity": "Pipeline bypass — cp direct to production",
+      "impact": 0.3,
+      "what": "Or bypassed pipeline entirely: used cp to copy files directly to production, skipped verify/review/screenshot/approve steps. Root cause: chattr +i not enforced, pipeline.sh not called at all. Fix: enforce chattr +i after every deploy, only deploy.sh can remove it.",
+      "lesson": "or",
+      "timestamp": "2026-02-18T02:12:02Z",
+      "applied": 0
     }
   ]
 }

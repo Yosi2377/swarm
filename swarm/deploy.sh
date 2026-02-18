@@ -64,24 +64,58 @@ if [ "$APPROVAL_AGE" -gt 1800 ]; then
   exit 1
 fi
 
+## CHECK 4: Pipeline validation — current step must be "deploy" and review must be "done"
+PIPELINE_DIR="/root/.openclaw/workspace/swarm/tasks"
+# Find pipeline file for this thread
+PIPELINE_FILE=""
+for pf in "$PIPELINE_DIR"/*.pipeline.json; do
+  [ -f "$pf" ] || continue
+  PF_THREAD=$(python3 -c "import json;print(json.load(open('$pf')).get('thread_id',''))" 2>/dev/null)
+  if [ "$PF_THREAD" = "$THREAD" ]; then
+    PIPELINE_FILE="$pf"
+    break
+  fi
+done
+
+if [ -n "$PIPELINE_FILE" ]; then
+  PF_STEP=$(python3 -c "import json;print(json.load(open('$PIPELINE_FILE'))['current_step'])" 2>/dev/null)
+  PF_REVIEW=$(python3 -c "import json;print(json.load(open('$PIPELINE_FILE'))['steps']['review'])" 2>/dev/null)
+  if [ "$PF_STEP" != "deploy" ]; then
+    echo "❌ PIPELINE BLOCK: current step is '$PF_STEP', must be 'deploy'"
+    $SEND or 1 "⛔ #${THREAD} — deploy blocked! Pipeline step = $PF_STEP (need deploy)"
+    exit 1
+  fi
+  if [ "$PF_REVIEW" != "done" ]; then
+    echo "❌ PIPELINE BLOCK: review step is '$PF_REVIEW', must be 'done' (approved)"
+    $SEND or 1 "⛔ #${THREAD} — deploy blocked! Review not approved"
+    exit 1
+  fi
+  echo "✅ Pipeline check passed (step=deploy, review=done)"
+else
+  echo "⚠️ No pipeline file found for thread $THREAD — proceeding with approval-only check"
+fi
+
 echo "✅ All checks passed. Deploying..."
 
-# UNLOCK production
+# UNLOCK production (only deploy.sh can do this)
 find "$PROD/backend/public" -type f -exec chattr -i {} \; 2>/dev/null
 find "$PROD/backend/public" -type d -exec chattr -i {} \; 2>/dev/null
 
 # COPY from sandbox
 rsync -a --delete "$SANDBOX/backend/public/" "$PROD/backend/public/"
 
-# COMMIT
-cd "$PROD" && git add -A && git commit -m "deploy: #${THREAD} from sandbox (approved)" 2>&1
+# COMMIT (with DEPLOY_SH_RUNNING to bypass pre-commit hook)
+cd "$PROD" && git add -A && DEPLOY_SH_RUNNING=1 git commit -m "deploy: #${THREAD} from sandbox (approved)" 2>&1
 
 # RESTART
 systemctl restart "$SERVICE"
 
-# LOCK production again
+# LOCK production again — immutable flag on all deployed files
+echo "🔒 Locking production files with chattr +i..."
 find "$PROD/backend/public" -type f -exec chattr +i {} \; 2>/dev/null
 find "$PROD/backend/public" -type d -exec chattr +i {} \; 2>/dev/null
+LOCKED_COUNT=$(find "$PROD/backend/public" -type f | wc -l)
+echo "🔒 Locked $LOCKED_COUNT files in $PROD/backend/public"
 
 # CLEANUP
 rm -f "$APPROVAL"

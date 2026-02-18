@@ -139,7 +139,12 @@ query)
     exit 1
   fi
   
-  python3 -c "
+  SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+  if python3 "$SCRIPT_DIR/semantic-search.py" "$KEYWORD" 2>/dev/null; then
+    : # semantic search succeeded
+  else
+    # Fallback to grep
+    python3 -c "
 import json
 with open('$LESSONS') as f: data = json.load(f)
 matches = [l for l in data['lessons'] if '$KEYWORD'.lower() in l['what'].lower() or '$KEYWORD'.lower() in l['lesson'].lower()]
@@ -150,9 +155,8 @@ else:
     for l in sorted(matches, key=lambda x: x['impact'], reverse=True):
         sev = {'critical':'🔴','medium':'🟡','low':'🟢'}.get(l['severity'],'⚪')
         print(f\"  {sev} [{l['agent']}] {l['lesson']}\")
-        l['applied'] += 1
-    with open('$LESSONS', 'w') as f: json.dump(data, f, indent=2, ensure_ascii=False)
 "
+  fi
   ;;
 
 # ===== REPORT =====

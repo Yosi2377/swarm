@@ -1020,6 +1020,46 @@
       "lesson": "Command failed 3 times. Log: /tmp/heal-20260218-060328.log",
       "timestamp": "2026-02-18T05:03:29Z",
       "applied": 0
+    },
+    {
+      "id": "6b8399da",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "created self-heal.sh",
+      "lesson": "Retry wrapper with alert+logging on exhaustion. Added to SYSTEM.md tools section.",
+      "timestamp": "2026-02-18T05:03:38Z",
+      "applied": 0
+    },
+    {
+      "id": "66a139c6",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Git Branch Per Task",
+      "lesson": "Created branch-task.sh and merge-task.sh scripts. Integrated into pipeline.sh init→branch, done→merge. Key: always use --no-ff for merge history, abort on conflicts.",
+      "timestamp": "2026-02-18T05:03:42Z",
+      "applied": 0
+    },
+    {
+      "id": "81caa2c8",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "keyword search was too rigid",
+      "lesson": "Semantic TF-IDF search with severity weighting finds relevant lessons even without exact keyword match. Handle messy data formats with normalize functions.",
+      "timestamp": "2026-02-18T05:04:24Z",
+      "applied": 0
+    },
+    {
+      "id": "f7e159d4",
+      "agent": "or",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "self-heal failed: false",
+      "lesson": "Command failed 3 times. Log: /tmp/heal-20260218-061106.log",
+      "timestamp": "2026-02-18T05:11:06Z",
+      "applied": 0
     }
   ]
 }

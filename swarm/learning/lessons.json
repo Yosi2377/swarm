@@ -1250,6 +1250,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T06:24:02Z",
       "applied": 0
+    },
+    {
+      "id": "afa48a0a",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5060: הוספת Open Graph tags לתצוגה מקדימה ברשתות חברתיות",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T06:29:49Z",
+      "applied": 0
     }
   ]
 }

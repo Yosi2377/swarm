@@ -1,0 +1,73 @@
+{
+  "url": "http://95.111.247.22:9089/",
+  "tests": [
+    {
+      "type": "exists",
+      "selector": "body",
+      "desc": "Page loads"
+    },
+    {
+      "type": "exists",
+      "selector": ".c-match",
+      "desc": ".c-match exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".bal",
+      "desc": ".bal exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".auth-wrap",
+      "desc": ".auth-wrap exists"
+    },
+    {
+      "type": "exists",
+      "selector": "#app",
+      "desc": "#app exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".active",
+      "desc": ".active exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".auth-bg",
+      "desc": ".auth-bg exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".auth-btn",
+      "desc": ".auth-btn exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".auth-card",
+      "desc": ".auth-card exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".auth-err",
+      "desc": ".auth-err exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".auth-logo",
+      "desc": ".auth-logo exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".auth-sub",
+      "desc": ".auth-sub exists"
+    },
+    {
+      "type": "noErrors",
+      "desc": "No JS errors"
+    },
+    {
+      "type": "screenshot",
+      "path": "/tmp/test-5000.png"
+    }
+  ]
+}

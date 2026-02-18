@@ -1130,6 +1130,26 @@
       "lesson": "Command failed 3 times. Log: /tmp/heal-20260218-062638.log",
       "timestamp": "2026-02-18T05:26:38Z",
       "applied": 0
+    },
+    {
+      "id": "941d225a",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Added version to footer via pipeline",
+      "lesson": "Full pipeline: branch→code→restart→gen-tests→screenshot→merge. Task 5000.",
+      "timestamp": "2026-02-18T05:30:43Z",
+      "applied": 0
+    },
+    {
+      "id": "c8d83dc2",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5001: Added tooltip to login button",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T05:36:41Z",
+      "applied": 0
     }
   ]
 }

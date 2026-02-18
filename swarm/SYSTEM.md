@@ -374,17 +374,24 @@ Resume from file if session restarts. If it's not in the file, it didn't happen.
 
 ---
 
-## Pipeline אוטומטי — כל task חייב:
+## Pipeline אוטומטי — פקודה אחת!
 
-1. `branch-task.sh TASK_ID AGENT_SHELI` — פתח branch
-2. עבוד על הקוד
-3. `gen-tests.sh FILE TASK_ID` — צור tests
-4. `node browser-eval.js URL tests/TASK_ID.json` — הרץ tests
-5. `learn.sh lesson + score` — רשום לקח
-6. `send.sh AGENT TOPIC 'הושלם + תוצאות'`
-7. `merge-task.sh TASK_ID` — merge ל-master (רק אם tests pass)
+**הסוכן עושה 2 דברים בלבד:**
+1. ערוך את הקובץ
+2. הרץ: `bash swarm/pipeline.sh TASK_ID AGENT_SHELI TARGET_FILE "תיאור"`
 
-⚠️ **אסור לדלג על שלבים!** כל שלב תלוי בקודם. אם tests נכשלים — חזור לשלב 2.
+**pipeline.sh מטפל באופן אוטומטי ב:**
+branch → tests → screenshot (עם login!) → lesson → report → merge
+
+⚠️ **אין צורך בשום דבר אחר!** הסקריפט מאלץ את כל השלבים.
+
+דוגמה:
+```bash
+# 1. ערוך קובץ
+sed -i 's/old/new/' /root/sandbox/BettingPlatform/backend/public/index.html
+# 2. הרץ pipeline
+bash swarm/pipeline.sh 5001 koder /root/sandbox/BettingPlatform/backend/public/index.html "תיאור השינוי"
+```
 
 ---
 

@@ -1290,6 +1290,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T06:54:32Z",
       "applied": 0
+    },
+    {
+      "id": "63517efc",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5200: Auto-fix: created missing favicon.png (was 404)",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T07:11:22Z",
+      "applied": 0
     }
   ]
 }

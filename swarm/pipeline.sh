@@ -35,6 +35,16 @@ SCREENSHOT="/tmp/task-${TASK_ID}-pipeline.png"
 
 log() { echo "📋 [$1/8] $2"; }
 
+# === Step 0: Create topic ===
+TOPIC_NAME="${AGENT} — Task ${TASK_ID}: ${DESC}"
+TOPIC_NAME=$(echo "$TOPIC_NAME" | cut -c1-60)
+OR_TOKEN=$(cat "$SCRIPT_DIR/.bot-token")
+TOPIC_RESULT=$(curl -s "https://api.telegram.org/bot${OR_TOKEN}/createForumTopic" \
+  -H "Content-Type: application/json" \
+  -d "{\"chat_id\":\"-1003815143703\",\"name\":$(echo "$TOPIC_NAME" | jq -Rs .)}" 2>/dev/null)
+THREAD_ID=$(echo "$TOPIC_RESULT" | jq -r '.result.message_thread_id // "1"')
+echo "📌 Topic created: #${THREAD_ID}"
+
 # === Step 1: Branch ===
 log 1 "Creating branch task-${TASK_ID}-${AGENT}"
 cd "$SCRIPT_DIR/.."
@@ -162,10 +172,14 @@ ${ERRORS[*]:+❌ Issues: ${ERRORS[*]}}
 📸 Screenshot: ${SCREENSHOT}
 🧪 Tests: ${TEST_FILE}"
 
-"$SCRIPT_DIR/send.sh" "$AGENT" 1 "$REPORT" --photo "$SCREENSHOT" 2>/dev/null
+# Send to task topic
+"$SCRIPT_DIR/send.sh" "$AGENT" "$THREAD_ID" "$REPORT" --photo "$SCREENSHOT" 2>/dev/null
 
-# Auto-send PR with approve/reject buttons
+# Send summary to General with PR buttons
 bash "$SCRIPT_DIR/pr-review.sh" "$TASK_ID" "$DESC" 2>/dev/null || true
+
+# Also send short notification to General
+"$SCRIPT_DIR/send.sh" "$AGENT" 1 "📋 Task #${TASK_ID} done → topic #${THREAD_ID}. PR sent for approval." 2>/dev/null
 PASS=$((PASS+1))
 echo "  ✅ Report sent"
 

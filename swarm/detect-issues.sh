@@ -59,12 +59,26 @@ if [ "$STALE" -gt 10 ]; then
   ISSUES+=("⚠️ ${STALE} live events stale 30+ min")
 fi
 
-# Report
+# Report + Auto-create fix task
 if [ ${#ISSUES[@]} -gt 0 ]; then
   MSG="🔍 Issues Detected:
 $(printf '%s\n' "${ISSUES[@]}")"
   "$SCRIPT_DIR/send.sh" or 1 "$MSG" 2>/dev/null
   echo "$MSG"
+  
+  # Auto-create task for code-fixable issues
+  for ISSUE in "${ISSUES[@]}"; do
+    if echo "$ISSUE" | grep -q "stale.*events"; then
+      # Create delegation to fix stale odds
+      bash "$SCRIPT_DIR/delegate.sh" or koder "Fix stale odds: restart aggregator sync cycle" 2>/dev/null
+      systemctl restart betting-aggregator 2>/dev/null
+      echo "🔧 Auto-fix: restarted aggregator for stale odds"
+    fi
+    if echo "$ISSUE" | grep -q "DOWN.*FAILED"; then
+      # Critical: alert immediately
+      "$SCRIPT_DIR/send.sh" or 1 "🚨 CRITICAL: Service down and auto-restart failed! Manual intervention needed." 2>/dev/null
+    fi
+  done
   exit 1
 else
   echo "✅ No issues"

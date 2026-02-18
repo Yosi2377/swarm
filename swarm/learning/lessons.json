@@ -1080,6 +1080,16 @@
       "lesson": "Script takes TASK_ID BRANCH_NAME SUMMARY, gets diff, screenshots, sends to General with approve/reject buttons",
       "timestamp": "2026-02-18T05:14:55Z",
       "applied": 0
+    },
+    {
+      "id": "3f21609e",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Created snapshot.sh for auto rollback",
+      "lesson": "Use chattr -i before restore and +i after to handle immutable production files. Always mongodump for DB backup.",
+      "timestamp": "2026-02-18T05:15:05Z",
+      "applied": 0
     }
   ]
 }

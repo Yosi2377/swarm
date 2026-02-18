@@ -1090,6 +1090,16 @@
       "lesson": "Use chattr -i before restore and +i after to handle immutable production files. Always mongodump for DB backup.",
       "timestamp": "2026-02-18T05:15:05Z",
       "applied": 0
+    },
+    {
+      "id": "2d69e025",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "gen-tests.sh extracts classes/IDs from HTML",
+      "lesson": "Must filter template literals (${...}) from grep results — they are JS expressions not valid CSS selectors",
+      "timestamp": "2026-02-18T05:15:14Z",
+      "applied": 0
     }
   ]
 }

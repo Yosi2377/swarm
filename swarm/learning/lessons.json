@@ -1090,6 +1090,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: none",
       "timestamp": "2026-02-18T07:59:54Z",
       "applied": 0
+    },
+    {
+      "id": "5d11f9c4",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5600: נעילת רבעים/סטים שעברו — כדורסל וטניס",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-18T08:36:53Z",
+      "applied": 0
     }
   ]
 }

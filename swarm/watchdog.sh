@@ -62,5 +62,48 @@ elif [ -f /tmp/pipeline-completed.jsonl ]; then
   touch /tmp/supervisor-reported.txt
 fi
 
+# 6. Stale odds (aggregator stuck)
+STALE=$(mongosh --quiet betting --eval "print(db.events.countDocuments({completed:false,'scores.home':{\$ne:null},oddsUpdatedAt:{\$lt:new Date(Date.now()-30*60*1000)}}))" 2>/dev/null || echo 0)
+if [ "$STALE" -gt 20 ]; then
+  systemctl restart betting-aggregator 2>/dev/null
+  "$SEND" or 1 "⚠️ $STALE stale events — aggregator restarted" 2>/dev/null
+  ALERT=1
+fi
+
+# 7. JS errors / 404s → delegate to AI agent (only if found)
+CHROME="/root/.cache/puppeteer/chrome/linux-145.0.7632.46/chrome-linux64/chrome"
+ERRORS=$(node -e "
+const p=require('puppeteer');(async()=>{
+  const b=await p.launch({headless:true,executablePath:'$CHROME',args:['--no-sandbox']});
+  const pg=await b.newPage();
+  const errs=[];
+  pg.on('pageerror',e=>errs.push(e.message));
+  await pg.goto('http://95.111.247.22:9089',{waitUntil:'networkidle2',timeout:10000}).catch(()=>{});
+  await new Promise(r=>setTimeout(r,3000));
+  const real=errs.filter(e=>!e.includes('Cross-Origin'));
+  console.log(real.length);
+  await b.close();
+})().catch(()=>console.log(0));
+" 2>/dev/null)
+
+if [ "${ERRORS:-0}" -gt 0 ]; then
+  # Found real JS errors → wake AI to investigate
+  "$SEND" or 1 "🐛 $ERRORS JS errors found on sandbox — waking AI to fix" 2>/dev/null
+  # Write delegation file for orchestrator heartbeat
+  echo "{\"type\":\"js_errors\",\"count\":$ERRORS,\"ts\":\"$(date -Iseconds)\"}" > /tmp/watchdog-alert.json
+  ALERT=1
+fi
+
+# 8. 404 check on key assets
+for ASSET in /favicon.png /js/client.js /css/style.css; do
+  HTTP=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 "http://95.111.247.22:9089${ASSET}" 2>/dev/null)
+  if [ "$HTTP" = "404" ]; then
+    "$SEND" or 1 "🐛 404: $ASSET — waking AI to fix" 2>/dev/null
+    echo "{\"type\":\"404\",\"asset\":\"$ASSET\",\"ts\":\"$(date -Iseconds)\"}" > /tmp/watchdog-alert.json
+    ALERT=1
+    break  # One alert is enough
+  fi
+done
+
 # Silent if no issues
 exit 0

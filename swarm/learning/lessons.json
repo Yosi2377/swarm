@@ -1080,6 +1080,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-18T07:47:47Z",
       "applied": 0
+    },
+    {
+      "id": "4ebd89a9",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task 5500: Backend: 6 market groups — cards, player shots, BetBoost, goals range, corners, minutes",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: none",
+      "timestamp": "2026-02-18T07:59:54Z",
+      "applied": 0
     }
   ]
 }

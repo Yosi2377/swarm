@@ -1,0 +1,63 @@
+{
+  "url": "http://95.111.247.22:9089",
+  "tests": [
+    {
+      "type": "exists",
+      "selector": "body",
+      "desc": "Page loads"
+    },
+    {
+      "type": "exists",
+      "selector": ".c-match",
+      "desc": ".c-match exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".bal",
+      "desc": ".bal exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".auth-wrap",
+      "desc": ".auth-wrap exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".auth-btn",
+      "desc": ".auth-btn exists"
+    },
+    {
+      "type": "exists",
+      "selector": ".b365-section",
+      "desc": ".b365-section exists"
+    },
+    {
+      "type": "exists",
+      "selector": "#app",
+      "desc": "#app exists"
+    },
+    {
+      "type": "exists",
+      "selector": "#filterBar",
+      "desc": "#filterBar exists"
+    },
+    {
+      "type": "exists",
+      "selector": "#liveBadge",
+      "desc": "#liveBadge exists"
+    },
+    {
+      "type": "exists",
+      "selector": "#evCount",
+      "desc": "#evCount exists"
+    },
+    {
+      "type": "noErrors",
+      "desc": "No JS errors"
+    },
+    {
+      "type": "screenshot",
+      "path": "/tmp/test-5501.png"
+    }
+  ]
+}

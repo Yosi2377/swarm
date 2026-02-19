@@ -1120,6 +1120,46 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-19T09:07:29Z",
       "applied": 0
+    },
+    {
+      "id": "01dc067f",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Pipeline error: tests-partial in task task-5348",
+      "lesson": "Auto-recorded by pipeline. Fix: investigate tests-partial pattern.",
+      "timestamp": "2026-02-19T09:07:33Z",
+      "applied": 0
+    },
+    {
+      "id": "d810b85e",
+      "agent": "koder",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "Koder reported 'fixed' 3 times while bug was still visible in screenshots",
+      "lesson": "Must LOOK at screenshots before reporting done. Compare BEFORE vs AFTER. If they look the same — not fixed.",
+      "timestamp": "2026-02-19T09:16:14Z",
+      "applied": 0
+    },
+    {
+      "id": "719f827f",
+      "agent": "or",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "Orchestrator waits for Yossi to ask 'what happened' instead of proactively updating",
+      "lesson": "After spawning an agent: set a reminder/check after 3-5 min and proactively report to General. NEVER wait for user to ask for status.",
+      "timestamp": "2026-02-19T09:20:53Z",
+      "applied": 0
+    },
+    {
+      "id": "339dc55b",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task task-5366: סינון שוקים לפי ספורט + תקופת משחק",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-19T09:21:17Z",
+      "applied": 0
     }
   ]
 }

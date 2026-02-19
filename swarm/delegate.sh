@@ -1,27 +1,67 @@
 #!/bin/bash
-# delegate.sh — Agent-to-Agent Delegation Queue
-# Usage: delegate.sh FROM_AGENT TO_AGENT "TASK_DESCRIPTION"
+# delegate.sh — Full delegation wrapper with auto-lessons + auto-score
+# Usage: delegate.sh <agent> <task_description> [project_keywords]
+# 
+# What it does:
+#   1. Queries relevant lessons from learning system
+#   2. Queries relevant skills from swarm/skills/
+#   3. Outputs a COMPLETE task prompt ready for sessions_spawn
+#
+# Example:
+#   PROMPT=$(swarm/delegate.sh koder "Fix basketball spreads" "basketball spread inplay")
+#   Then use $PROMPT in sessions_spawn task parameter
 
-FROM="$1"
-TO="$2"
-DESC="$3"
+DIR="$(cd "$(dirname "$0")" && pwd)"
+AGENT="$1"
+TASK="$2"
+KEYWORDS="${3:-$2}"
 
-if [ -z "$FROM" ] || [ -z "$TO" ] || [ -z "$DESC" ]; then
-  echo "Usage: delegate.sh FROM_AGENT TO_AGENT \"TASK_DESCRIPTION\""
+if [ -z "$AGENT" ] || [ -z "$TASK" ]; then
+  echo "Usage: delegate.sh <agent> <task_description> [keywords]"
   exit 1
 fi
 
-mkdir -p /tmp/delegate-queue
+# 1. Get relevant lessons
+LESSONS=$(bash "$DIR/inject-lessons.sh" "$KEYWORDS" 2>/dev/null)
 
-TIMESTAMP=$(date +%s%N | cut -c1-13)
-ISO=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-FILE="/tmp/delegate-queue/REQ-${TIMESTAMP}.json"
+# 2. Get relevant skill file content (if exists)
+SKILL_FILE=""
+for f in "$DIR/skills/"*.md; do
+  [ -f "$f" ] || continue
+  BASENAME=$(basename "$f")
+  # Check if any keyword matches the skill filename
+  for kw in $KEYWORDS; do
+    if echo "$BASENAME" | grep -qi "$kw"; then
+      SKILL_FILE="$f"
+      break 2
+    fi
+  done
+done
 
-cat > "$FILE" <<EOF
-{"from":"${FROM}","to":"${TO}","task":"${DESC}","status":"pending","created":"${ISO}"}
-EOF
+SKILL_CONTENT=""
+if [ -n "$SKILL_FILE" ]; then
+  SKILL_CONTENT="
 
-echo "✅ Delegation saved: $FILE"
+📖 Relevant skill knowledge ($(basename "$SKILL_FILE")):
+$(head -100 "$SKILL_FILE")"
+fi
 
-# Notify Agent Chat (topic 479)
-/root/.openclaw/workspace/swarm/send.sh "$FROM" 479 "🔄 ${FROM} מבקש עזרה מ-${TO}: ${DESC}"
+# 3. Build the complete prompt
+cat <<PROMPT
+$TASK
+
+קרא את swarm/SYSTEM.md. אתה $AGENT.
+
+$LESSONS
+$SKILL_CONTENT
+
+⛔ כללים:
+- עבוד ב-sandbox בלבד
+- אל תעשה deploy לפרודקשן
+- צלם screenshot של התוצאה
+- דווח כשסיימת
+
+📋 בסיום המשימה, הרץ:
+  bash /root/.openclaw/workspace/swarm/learn.sh score $AGENT success "תיאור קצר של מה שעשית"
+  (או fail אם נכשלת)
+PROMPT

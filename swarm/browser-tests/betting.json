@@ -1,6 +1,18 @@
 {
+  "login": {"url": "http://95.111.247.22:8089", "user": "Tohar", "pass": "1234"},
+  "sandbox": {"url": "http://95.111.247.22:9089", "user": "zozo", "pass": "123456"},
   "tests": [
     {"type": "exists", "selector": "body", "desc": "Page loads"},
+    {"type": "exists", "selector": ".featured-match, .live-match", "desc": "Events visible"},
+    {"type": "exists", "selector": ".sidebar-left", "desc": "Sidebar leagues"},
+    {"type": "count", "selector": ".featured-match, .live-match", "min": 1, "desc": "At least 1 match"},
     {"type": "screenshot", "path": "/tmp/eval-browser-betting.png"}
+  ],
+  "popup_tests": [
+    {"type": "click", "selector": ".featured-match, .live-match", "desc": "Click first match"},
+    {"type": "wait", "ms": 1500},
+    {"type": "exists", "selector": ".b365-section, .match-markets", "desc": "Markets section opens"},
+    {"type": "exists", "selector": ".odd-btn, .b365-btn", "desc": "Odds buttons visible"},
+    {"type": "screenshot", "path": "/tmp/eval-browser-popup.png"}
   ]
 }

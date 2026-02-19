@@ -122,16 +122,6 @@
       "applied": 29
     },
     {
-      "id": "1e36a270",
-      "agent": "koder",
-      "severity": "low",
-      "impact": 0.3,
-      "what": "test lesson",
-      "lesson": "test",
-      "timestamp": "2026-02-15T13:20:11Z",
-      "applied": 28
-    },
-    {
       "id": "f706aebd",
       "agent": "koder",
       "severity": "low",
@@ -152,36 +142,6 @@
       "applied": 26
     },
     {
-      "id": "5c40f734",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #2592 attempt 1",
-      "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 5 files",
-      "timestamp": "2026-02-15T13:40:58Z",
-      "applied": 25
-    },
-    {
-      "id": "2f55afd1",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #2592 attempt 2",
-      "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
-      "timestamp": "2026-02-15T13:42:59Z",
-      "applied": 25
-    },
-    {
-      "id": "e5698bae",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #2592 attempt 3",
-      "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
-      "timestamp": "2026-02-15T13:45:01Z",
-      "applied": 25
-    },
-    {
       "id": "01a8a26d",
       "agent": "koder",
       "severity": "high",
@@ -189,36 +149,6 @@
       "what": "Failed 3 times on #2592",
       "lesson": "Errors: 🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 5 files\n🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files\n🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
       "timestamp": "2026-02-15T13:45:01Z",
-      "applied": 25
-    },
-    {
-      "id": "3ba97ffa",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Phase 2 eval fail #2592 attempt 1",
-      "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
-      "timestamp": "2026-02-15T13:47:32Z",
-      "applied": 25
-    },
-    {
-      "id": "277ca068",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Phase 2 eval fail #2592 attempt 2",
-      "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
-      "timestamp": "2026-02-15T13:49:33Z",
-      "applied": 25
-    },
-    {
-      "id": "c278a011",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Phase 2 eval fail #2592 attempt 3",
-      "lesson": "🔍 Evaluating thread 2592 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 4 files",
-      "timestamp": "2026-02-15T13:51:34Z",
       "applied": 25
     },
     {
@@ -232,36 +162,6 @@
       "applied": 25
     },
     {
-      "id": "244331e8",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #2656 attempt 1",
-      "lesson": "🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 2 files",
-      "timestamp": "2026-02-15T14:16:45Z",
-      "applied": 24
-    },
-    {
-      "id": "c818464b",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #2656 attempt 2",
-      "lesson": "🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 3 files",
-      "timestamp": "2026-02-15T14:18:46Z",
-      "applied": 24
-    },
-    {
-      "id": "7a5b1a29",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #2656 attempt 3",
-      "lesson": "🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 3 files",
-      "timestamp": "2026-02-15T14:20:47Z",
-      "applied": 24
-    },
-    {
       "id": "a5ce7a55",
       "agent": "koder",
       "severity": "high",
@@ -272,46 +172,6 @@
       "applied": 24
     },
     {
-      "id": "acac1daf",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Phase 2 eval fail #2656 attempt 1",
-      "lesson": "🔍 Evaluating thread 2656 for agent koder...\n❌ FAIL: Uncommitted changes in workspace: 3 files",
-      "timestamp": "2026-02-15T14:21:18Z",
-      "applied": 24
-    },
-    {
-      "id": "f62c27dd",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #2809 attempt 1",
-      "lesson": "🔍 Evaluating thread 2809 for agent koder...\n📝 Auto-committing 1 workspace files...\n[master edb95a2] #2809: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 1 file changed, 37 insertions(+), 37 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n\nPASS: 0/0 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  ❌ אירועים מופיעים — selector \".event-row, tr\" not found\n  ❌ אין אירועים שנגמרו בטבלה — expected min undefined, found 0\n\nFAIL: 0/2 browser tests passed\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-15T15:19:57Z",
-      "applied": 20
-    },
-    {
-      "id": "9462b47e",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #2809 attempt 2",
-      "lesson": "🔍 Evaluating thread 2809 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master 5c470da] #2809: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 22 insertions(+), 4 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n\nPASS: 0/0 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  ❌ אירועים מופיעים — selector \".event-row, tr\" not found\n  ❌ אין אירועים שנגמרו בטבלה — expected min undefined, found 0\n\nFAIL: 0/2 browser tests passed\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-15T15:22:19Z",
-      "applied": 20
-    },
-    {
-      "id": "99e30c54",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #2809 attempt 3",
-      "lesson": "🔍 Evaluating thread 2809 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master ae481f7] #2809: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 22 insertions(+), 4 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n\nPASS: 0/0 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  ❌ אירועים מופיעים — selector \".event-row, tr\" not found\n  ❌ אין אירועים שנגמרו בטבלה — expected min undefined, found 0\n\nFAIL: 0/2 browser tests passed\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-15T15:24:41Z",
-      "applied": 20
-    },
-    {
       "id": "e995175c",
       "agent": "koder",
       "severity": "high",
@@ -319,16 +179,6 @@
       "what": "Failed 3 times on #2809",
       "lesson": "Errors: \nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 22 insertions(+), 4 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n\nPASS: 0/0 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  ❌ אירועים מופיעים — selector \".event-row, tr\" not found\n  ❌ אין אירועים שנגמרו בטבלה — expected min undefined, found 0\n\nFAIL: 0/2 browser tests passed\n\n❌ EVALUATION FAILED",
       "timestamp": "2026-02-15T15:24:41Z",
-      "applied": 20
-    },
-    {
-      "id": "150d3b18",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Phase 2 eval fail #2809 attempt 1",
-      "lesson": "🔍 Evaluating thread 2809 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master 328d55f] #2809: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 32 insertions(+), 4 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n\nPASS: 0/0 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  ❌ אירועים מופיעים — selector \".event-row, tr\" not found\n  ❌ אין אירועים שנגמרו בטבלה — expected min undefined, found 0\n\nFAIL: 0/2 browser tests passed\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-15T15:25:35Z",
       "applied": 20
     },
     {
@@ -342,36 +192,6 @@
       "applied": 15
     },
     {
-      "id": "f02de4b1",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #3009 attempt 1",
-      "lesson": "🔍 Evaluating thread 3009 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master 2b3069a] #3009: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 185 insertions(+), 54 deletions(-)\n create mode 100644 memory/2026-02-15-d.md\n create mode 100644 swarm/tasks/3009.md\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n  🔑 Logging in to http://95.111.247.22:9089 as zozo\n  ✅ Page loads\n  ✅ Screenshot saved: /tmp/eval-browser-betting.png\n\nPASS: 2/2 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  🔑 Auto-login to http://95.111.247.22:9089\n  ❌ לחיצה על משחק פותחת מודל — button \".match-row\" not found\n  ❌ יש יותר מקו אחד — found 0, expected min:2 max:undefined\n\nFAIL: 0/2 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/\n   📄 Page title: \"ZozoBet - Premium Sports Betting\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \"⚽ ספורט 🔴 ליין רץ 209 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 5102.02₪ 15.2, 18:56:46 EN/HE יציאה ענפי ספורט 🏆 הכל 637 🎾 Challenger New Delhi 266 ⚽ England Premier League 44 ⚽ \"\n   📊 Elements on page: {\"tr\":0,\"td\":0,\"div\":3635,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}\n      🔎 Similar classes found: c-match\n      ❌ \"לחיצה על משחק פותחת מודל\": selector \".match-row\" not found\n      ❌ \"יש יותר מקו אחד\": selector \".totals-line, .total-row\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Expected 2+ elements but found fewer. Check: is data loading? Is the API returning results? Is the DOM being populated?\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-15T17:57:00Z",
-      "applied": 15
-    },
-    {
-      "id": "3192d3f6",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #3009 attempt 2",
-      "lesson": "🔍 Evaluating thread 3009 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master 8f26cba] #3009: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 38 insertions(+), 3 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n  🔑 Logging in to http://95.111.247.22:9089 as zozo\n  ✅ Page loads\n  ✅ Screenshot saved: /tmp/eval-browser-betting.png\n\nPASS: 2/2 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  🔑 Auto-login to http://95.111.247.22:9089\n  ❌ לחיצה על משחק פותחת מודל — button \".match-row\" not found\n  ❌ יש יותר מקו אחד — found 0, expected min:2 max:undefined\n\nFAIL: 0/2 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/\n   📄 Page title: \"ZozoBet - Premium Sports Betting\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \"⚽ ספורט 🔴 ליין רץ 211 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 5102.02₪ 15.2, 18:59:21 EN/HE יציאה ענפי ספורט 🏆 הכל 637 🎾 Challenger New Delhi 266 ⚽ England Premier League 44 ⚽ \"\n   📊 Elements on page: {\"tr\":0,\"td\":0,\"div\":3635,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}\n      🔎 Similar classes found: c-match\n      ❌ \"לחיצה על משחק פותחת מודל\": selector \".match-row\" not found\n      ❌ \"יש יותר מקו אחד\": selector \".totals-line, .total-row\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Expected 2+ elements but found fewer. Check: is data loading? Is the API returning results? Is the DOM being populated?\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-15T17:59:35Z",
-      "applied": 15
-    },
-    {
-      "id": "2fd5d563",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #3009 attempt 3",
-      "lesson": "🔍 Evaluating thread 3009 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master 0babbf3] #3009: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 39 insertions(+), 4 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n  🔑 Logging in to http://95.111.247.22:9089 as zozo\n  ✅ Page loads\n  ✅ Screenshot saved: /tmp/eval-browser-betting.png\n\nPASS: 2/2 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  🔑 Auto-login to http://95.111.247.22:9089\n  ❌ לחיצה על משחק פותחת מודל — button \".match-row\" not found\n  ❌ יש יותר מקו אחד — found 0, expected min:2 max:undefined\n\nFAIL: 0/2 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/\n   📄 Page title: \"ZozoBet - Premium Sports Betting\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \"⚽ ספורט 🔴 ליין רץ 162 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 5102.02₪ 15.2, 19:01:56 EN/HE יציאה ענפי ספורט 🏆 הכל 637 🎾 Challenger New Delhi 266 ⚽ England Premier League 44 ⚽ \"\n   📊 Elements on page: {\"tr\":0,\"td\":0,\"div\":3022,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}\n      🔎 Similar classes found: c-match\n      ❌ \"לחיצה על משחק פותחת מודל\": selector \".match-row\" not found\n      ❌ \"יש יותר מקו אחד\": selector \".totals-line, .total-row\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Expected 2+ elements but found fewer. Check: is data loading? Is the API returning results? Is the DOM being populated?\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-15T18:02:10Z",
-      "applied": 15
-    },
-    {
       "id": "e844ecef",
       "agent": "koder",
       "severity": "high",
@@ -380,46 +200,6 @@
       "lesson": "Errors: \nFAIL: 0/2 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/\n   📄 Page title: \"ZozoBet - Premium Sports Betting\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \"⚽ ספורט 🔴 ליין רץ 162 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 5102.02₪ 15.2, 19:01:56 EN/HE יציאה ענפי ספורט 🏆 הכל 637 🎾 Challenger New Delhi 266 ⚽ England Premier League 44 ⚽ \"\n   📊 Elements on page: {\"tr\":0,\"td\":0,\"div\":3022,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}\n      🔎 Similar classes found: c-match\n      ❌ \"לחיצה על משחק פותחת מודל\": selector \".match-row\" not found\n      ❌ \"יש יותר מקו אחד\": selector \".totals-line, .total-row\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Expected 2+ elements but found fewer. Check: is data loading? Is the API returning results? Is the DOM being populated?\n\n❌ EVALUATION FAILED",
       "timestamp": "2026-02-15T18:02:11Z",
       "applied": 15
-    },
-    {
-      "id": "acd062ec",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Phase 2 eval fail #3009 attempt 1",
-      "lesson": "🔍 Evaluating thread 3009 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master 2c8b835] #3009: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 48 insertions(+), 3 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n  🔑 Logging in to http://95.111.247.22:9089 as zozo\n  ✅ Page loads\n  ✅ Screenshot saved: /tmp/eval-browser-betting.png\n\nPASS: 2/2 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  🔑 Auto-login to http://95.111.247.22:9089\n  ❌ לחיצה על משחק פותחת מודל — button \".match-row\" not found\n  ❌ יש יותר מקו אחד — found 0, expected min:2 max:undefined\n\nFAIL: 0/2 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/\n   📄 Page title: \"ZozoBet - Premium Sports Betting\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \"⚽ ספורט 🔴 ליין רץ 162 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 5102.02₪ 15.2, 19:05:02 EN/HE יציאה ענפי ספורט 🏆 הכל 637 🎾 Challenger New Delhi 266 ⚽ England Premier League 44 ⚽ \"\n   📊 Elements on page: {\"tr\":0,\"td\":0,\"div\":3070,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}\n      🔎 Similar classes found: c-match\n      ❌ \"לחיצה על משחק פותחת מודל\": selector \".match-row\" not found\n      ❌ \"יש יותר מקו אחד\": selector \".totals-line, .total-row\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Expected 2+ elements but found fewer. Check: is data loading? Is the API returning results? Is the DOM being populated?\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-15T18:05:16Z",
-      "applied": 15
-    },
-    {
-      "id": "a0b9a838",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Phase 2 eval fail #3009 attempt 2",
-      "lesson": "🔍 Evaluating thread 3009 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master dd55727] #3009: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 38 insertions(+), 3 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n  🔑 Logging in to http://95.111.247.22:9089 as zozo\n  ✅ Page loads\n  ✅ Screenshot saved: /tmp/eval-browser-betting.png\n\nPASS: 2/2 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  🔑 Auto-login to http://95.111.247.22:9089\n  ❌ לחיצה על משחק פותחת מודל — button \".match-row\" not found\n  ❌ יש יותר מקו אחד — found 0, expected min:2 max:undefined\n\nFAIL: 0/2 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/\n   📄 Page title: \"ZozoBet - Premium Sports Betting\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \"⚽ ספורט 🔴 ליין רץ 162 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 5102.02₪ 15.2, 19:07:37 EN/HE יציאה ענפי ספורט 🏆 הכל 619 🎾 Challenger New Delhi 251 ⚽ England Premier League 40 ⚽ \"\n   📊 Elements on page: {\"tr\":0,\"td\":0,\"div\":3064,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}\n      🔎 Similar classes found: c-match\n      ❌ \"לחיצה על משחק פותחת מודל\": selector \".match-row\" not found\n      ❌ \"יש יותר מקו אחד\": selector \".totals-line, .total-row\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Expected 2+ elements but found fewer. Check: is data loading? Is the API returning results? Is the DOM being populated?\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-15T18:07:51Z",
-      "applied": 15
-    },
-    {
-      "id": "5b723599",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Phase 2 eval fail #3009 attempt 3",
-      "lesson": "🔍 Evaluating thread 3009 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master f6dc80b] #3009: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 39 insertions(+), 4 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n  🔑 Logging in to http://95.111.247.22:9089 as zozo\n  ✅ Page loads\n  ✅ Screenshot saved: /tmp/eval-browser-betting.png\n\nPASS: 2/2 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  🔑 Auto-login to http://95.111.247.22:9089\n  ❌ לחיצה על משחק פותחת מודל — button \".match-row\" not found\n  ❌ יש יותר מקו אחד — found 0, expected min:2 max:undefined\n\nFAIL: 0/2 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/\n   📄 Page title: \"ZozoBet - Premium Sports Betting\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \"⚽ ספורט 🔴 ליין רץ 163 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 5102.02₪ 15.2, 19:10:12 EN/HE יציאה ענפי ספורט 🏆 הכל 619 🎾 Challenger New Delhi 251 ⚽ England Premier League 40 ⚽ \"\n   📊 Elements on page: {\"tr\":0,\"td\":0,\"div\":3064,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}\n      🔎 Similar classes found: c-match\n      ❌ \"לחיצה על משחק פותחת מודל\": selector \".match-row\" not found\n      ❌ \"יש יותר מקו אחד\": selector \".totals-line, .total-row\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Expected 2+ elements but found fewer. Check: is data loading? Is the API returning results? Is the DOM being populated?\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-15T18:10:26Z",
-      "applied": 15
-    },
-    {
-      "id": "c83507db",
-      "agent": "koder",
-      "severity": "critical",
-      "impact": 1.0,
-      "what": "Failed both phases on #3009 (קווים מרובים בשווקים)",
-      "lesson": "Total 6 retries exhausted",
-      "timestamp": "2026-02-15T18:15:36Z",
-      "applied": 14
     },
     {
       "id": "857d061f",
@@ -452,36 +232,6 @@
       "applied": 5
     },
     {
-      "id": "e18ed061",
-      "agent": "koder",
-      "severity": "low",
-      "impact": 0.3,
-      "what": "success #3302",
-      "lesson": "comment A",
-      "timestamp": "2026-02-16T05:38:38Z",
-      "applied": 4
-    },
-    {
-      "id": "89156a8d",
-      "agent": "worker",
-      "severity": "low",
-      "impact": 0.3,
-      "what": "success #3303",
-      "lesson": "comment B",
-      "timestamp": "2026-02-16T05:38:38Z",
-      "applied": 0
-    },
-    {
-      "id": "0eac6f5d",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #3338 attempt 1",
-      "lesson": "🔍 Evaluating thread 3338 for agent koder...\n📝 Auto-committing 3 workspace files...\n[master 06ff457] #3338: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 89 insertions(+), 67 deletions(-)\n create mode 100644 swarm/tasks/3338.md\n create mode 100644 swarm/tasks/3339.md\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n  🔑 Logging in to http://95.111.247.22:9089 as zozo\n  ✅ Page loads\n  ✅ Screenshot saved: /tmp/eval-browser-betting.png\n\nPASS: 2/2 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  🔑 Auto-login to http://95.111.247.22:9089\n  ❌ יש כפתורי odds — selector \".ob\" not found\n\nFAIL: 0/1 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/\n   📄 Page title: \"ZozoBet - Premium Sports Betting\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \"⚽ ספורט 🔴 ליין רץ 8 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 6738.02₪ 16.2, 06:48:10 EN/HE יציאה ענפי ספורט 🏆 הכל 793 🎾 Challenger Tigre 246 ⚽ Nigeria Premier League 26 ⚽ Englan\"\n   📊 Elements on page: {\"tr\":0,\"td\":0,\"div\":3476,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}\n      ❌ \"יש כפתורי odds\": selector \".ob\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Selector \".ob\" not found. Check: is the element rendered? Is the ID/class name correct? Is it hidden (display:none)?\n🔑 Logged in as zozo\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-16T05:48:23Z",
-      "applied": 4
-    },
-    {
       "id": "3f517e88",
       "agent": "shomer",
       "severity": "low",
@@ -512,16 +262,6 @@
       "applied": 1
     },
     {
-      "id": "dc0461fe",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "eval fail #3418 attempt 1",
-      "lesson": "🔍 Evaluating thread 3418 for agent koder...\n📝 Auto-committing 5 workspace files...\n[master 4577025] #3418: auto-commit workspace changes (evaluator)\n Committer: root <root@vmi3057963.contaboserver.net>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 5 files changed, 147 insertions(+), 70 deletions(-)\n create mode 100644 swarm/assets/bet365-redesign/banner2-live.png\n create mode 100644 swarm/assets/bet365-redesign/banner3-bonus.png\n create mode 100644 swarm/assets/bet365-redesign/banner4-sports.png\n create mode 100644 swarm/tasks/3418.md\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n  🔑 Logging in to http://95.111.247.22:9089 as zozo\n  ✅ Page loads\n  ✅ Screenshot saved: /tmp/eval-browser-betting.png\n\nPASS: 2/2 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089/admin.html\n  🔑 Auto-login to http://95.111.247.22:9089\n  ❌ יש כפתורי odds — selector \".oc\" not found\n\nFAIL: 0/1 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/admin.html\n   📄 Page title: \"ZozoBet — פנל מנהל\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \" פנל מנהל ← חזרה לאתר 📅 טווח תאריכים: עד 🔍 סנן ✖ נקה תקופה נוכחית 🔄 איפוס כללי 10 משתמשים 33 הימורים 5 הימורים פתוחים 21455₪ סה״כ volume 36275₪ חשיפה 👥 משתמשים 🎫 הימורים 💳 תנועות ⚽ אירועים 📊 רו\"\n   📊 Elements on page: {\"tr\":145,\"td\":1077,\"div\":71,\"button\":93,\"table\":6,\"form\":0,\"a\":1,\"img\":1,\"modal\":12}\n      ❌ \"יש כפתורי odds\": selector \".oc\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Selector \".oc\" not found. Check: is the element rendered? Is the ID/class name correct? Is it hidden (display:none)?\n🔑 Logged in as zozo\n\n❌ EVALUATION FAILED",
-      "timestamp": "2026-02-16T06:19:30Z",
-      "applied": 1
-    },
-    {
       "id": "75a0baa0",
       "agent": "koder",
       "severity": "low",
@@ -529,136 +269,6 @@
       "what": "#3822 completed",
       "lesson": "Task 'תיקון ליין רץ — זמנים + משחקים גמורים' passed all gates",
       "timestamp": "2026-02-16T20:13:50Z",
-      "applied": 0
-    },
-    {
-      "id": "ea47efb9",
-      "agent": "critical",
-      "severity": "inplay-parser: prematch overwrites live h2h",
-      "impact": 0.3,
-      "what": "syncBasicOdds AND /full-odds endpoint both fetched prematch API and overwrote live h2h every 5-15s. Fix: skip h2h for live events in both places.",
-      "lesson": "koder",
-      "timestamp": "2026-02-18T01:48:37Z",
-      "applied": 0
-    },
-    {
-      "id": "20c159d6",
-      "agent": "high",
-      "severity": "BetsAPI event endpoint structure",
-      "impact": 0.3,
-      "what": "MG (Market Group) contains sub-MAs with PAs. Structure varies: some have point labels in first MA, odds in named MAs (Over/Under/team names). Multi Scorers has player names in first MA, odds in '2 or More'/'3 or More' MAs.",
-      "lesson": "koder",
-      "timestamp": "2026-02-18T01:48:37Z",
-      "applied": 0
-    },
-    {
-      "id": "0309c0b2",
-      "agent": "high",
-      "severity": "Corners market 3-way structure",
-      "impact": 0.3,
-      "what": "Match Corners uses Over/Exactly/Under sub-MAs with point labels. Corners Race uses point labels + team name MAs + Neither MA.",
-      "lesson": "koder",
-      "timestamp": "2026-02-18T01:48:37Z",
-      "applied": 0
-    },
-    {
-      "id": "18a7e5a6",
-      "agent": "high",
-      "severity": "Tennis markets from BetsAPI /event endpoint",
-      "impact": 0.3,
-      "what": "40 MGs available: To Win, Total Games in Match, Match Handicap, Match Result+Total Games, Games Odd/Even, Ace Totals, Double Fault Totals, Breaks, Tiebreaks, Player Games Won, per-set markets (Set N Score/Handicap/Race to/Game Winner/Total Games).",
-      "lesson": "koder",
-      "timestamp": "2026-02-18T01:48:37Z",
-      "applied": 0
-    },
-    {
-      "id": "0aec2121",
-      "agent": "high",
-      "severity": "Basketball markets from BetsAPI",
-      "impact": 0.3,
-      "what": "Game Lines combines spread+ML+total in one MG (3 sub-MAs: points, home, away with 3 PAs each). Also: 2nd Half Lines, Nth Quarter Lines, Team Totals, Match Result+Total, Highest Scoring Half, Tied at Regulation, Odd/Even, Quarter-specific (Race to, BTTS, Margin).",
-      "lesson": "koder",
-      "timestamp": "2026-02-18T01:48:37Z",
-      "applied": 0
-    },
-    {
-      "id": "d4802fc8",
-      "agent": "critical",
-      "severity": "Orchestrator must NOT code directly",
-      "impact": 0.3,
-      "what": "Or (orchestrator) coded directly for entire BettingPlatform session instead of delegating to koder. Must ALWAYS delegate through swarm pipeline even for urgent tasks. Log to learn.sh regardless.",
-      "lesson": "or",
-      "timestamp": "2026-02-18T01:48:37Z",
-      "applied": 0
-    },
-    {
-      "id": "814e09da",
-      "agent": "high",
-      "severity": "bet365 accessible without login",
-      "impact": 0.3,
-      "what": "Full match page with all markets accessible without login. Only 'Log in to watch' (streaming) requires account. Don't assume login needed.",
-      "lesson": "or",
-      "timestamp": "2026-02-18T01:48:47Z",
-      "applied": 0
-    },
-    {
-      "id": "fbf30a2b",
-      "agent": "medium",
-      "severity": "Redis cache 5s TTL for near-realtime",
-      "impact": 0.3,
-      "what": "Changed from 30s to 5s TTL for event cache. Combined with 15s aggregator sync = good balance of freshness vs API credits.",
-      "lesson": "koder",
-      "timestamp": "2026-02-18T01:48:47Z",
-      "applied": 0
-    },
-    {
-      "id": "f5829c2f",
-      "agent": "medium",
-      "severity": "API odds vs bet365 screen delay",
-      "impact": 0.3,
-      "what": "BetsAPI odds lag ~5-10 seconds behind bet365 live screen. Normal and acceptable. Odds values themselves are identical when synced.",
-      "lesson": "koder",
-      "timestamp": "2026-02-18T01:48:47Z",
-      "applied": 0
-    },
-    {
-      "id": "6cc14a7c",
-      "agent": "critical",
-      "severity": "Pipeline bypass — cp direct to production",
-      "impact": 0.3,
-      "what": "Or bypassed pipeline entirely: used cp to copy files directly to production, skipped verify/review/screenshot/approve steps. Root cause: chattr +i not enforced, pipeline.sh not called at all. Fix: enforce chattr +i after every deploy, only deploy.sh can remove it.",
-      "lesson": "or",
-      "timestamp": "2026-02-18T02:12:02Z",
-      "applied": 1
-    },
-    {
-      "id": "6f590906",
-      "agent": "critical",
-      "severity": "DC odds overwritten by prematch in live",
-      "impact": 0.3,
-      "what": "syncBasicOdds protected only h2h but overwrote double_chance, draw_no_bet, btts with stale prematch values during live play. Fix: add liveProtectedMarkets array + syncLiveEventOdds function.",
-      "lesson": "koder",
-      "timestamp": "2026-02-18T02:36:26Z",
-      "applied": 0
-    },
-    {
-      "id": "d37e621f",
-      "agent": "critical",
-      "severity": "Tennis 2-way h2h parsed as 3-way",
-      "impact": 0.3,
-      "what": "parseInplayOdds always put PA[1] in odds.draw. Tennis has only 2 PAs (home/away), so away went to draw and away stayed empty. Fix: check _h2hPaCount to distinguish 2-way vs 3-way markets.",
-      "lesson": "koder",
-      "timestamp": "2026-02-18T02:36:26Z",
-      "applied": 0
-    },
-    {
-      "id": "082406e8",
-      "agent": "medium",
-      "severity": "Tennis/Basketball show draw odds in main list",
-      "impact": 0.3,
-      "what": "Main event list showed X (draw) column value for tennis and basketball even though these sports have no draw. Fix: show dash instead. Popup was already correct.",
-      "lesson": "koder",
-      "timestamp": "2026-02-18T03:02:38Z",
       "applied": 0
     },
     {
@@ -722,26 +332,6 @@
       "applied": 0
     },
     {
-      "id": "513f51b8",
-      "agent": "critical",
-      "severity": "Orchestrator must send screenshots automatically",
-      "impact": 0.3,
-      "what": "Or repeatedly reported task completion as text-only without screenshots. Yossi had to ask multiple times. Rule: when agent finishes, ALWAYS: 1) verify result 2) take screenshot 3) send screenshot+summary to General 4) THEN report to Yossi. Never report without visual proof.",
-      "lesson": "or",
-      "timestamp": "2026-02-18T04:03:47Z",
-      "applied": 1
-    },
-    {
-      "id": "e9f4d93b",
-      "agent": "critical",
-      "severity": "Agents skip learn.sh query step",
-      "impact": 0.3,
-      "what": "Checked 3 agent sessions - none ran learn.sh query before starting. 97 lessons unused. Orchestrator must query and inject relevant lessons into task prompts.",
-      "lesson": "or",
-      "timestamp": "2026-02-18T04:10:10Z",
-      "applied": 0
-    },
-    {
       "id": "0c3f99aa",
       "agent": "koder",
       "severity": "medium",
@@ -749,26 +339,6 @@
       "what": "browser-eval selectors were broken",
       "lesson": "browser-eval.js default tests: when run without test file, uses built-in sanity checks (.c-match, .bal, body, noErrors). Selectors: .oc->.c-odds, .match-row->.c-match, .event-row->.c-match, .totals-line/.total-row->.b365-row",
       "timestamp": "2026-02-18T04:22:25Z",
-      "applied": 0
-    },
-    {
-      "id": "5a5e2deb",
-      "agent": "critical",
-      "severity": "Orchestrator STILL not sending screenshots proactively",
-      "impact": 0.3,
-      "what": "Third time Yossi had to ask for screenshots. Writing rules is not enough. Added HARD STOP checklist in AGENTS.md and report-done.sh script. The flow must be: screenshot FIRST then text. Never text without screenshot.",
-      "lesson": "or",
-      "timestamp": "2026-02-18T04:29:55Z",
-      "applied": 0
-    },
-    {
-      "id": "dbbd1b08",
-      "agent": "critical",
-      "severity": "Dont stop on errors - fix and continue",
-      "impact": 0.3,
-      "what": "When git push or any command returns an error, fix it immediately and continue. Never stop and report the error to Yossi - just handle it. The error is your problem to solve, not his.",
-      "lesson": "or",
-      "timestamp": "2026-02-18T04:51:01Z",
       "applied": 0
     },
     {
@@ -902,16 +472,6 @@
       "applied": 0
     },
     {
-      "id": "194b4738",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5002: Added gold border to banner",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T05:40:42Z",
-      "applied": 0
-    },
-    {
       "id": "6b62d032",
       "agent": "bodek",
       "severity": "low",
@@ -919,146 +479,6 @@
       "what": "Audit test",
       "lesson": "All tools verified",
       "timestamp": "2026-02-18T05:45:37Z",
-      "applied": 0
-    },
-    {
-      "id": "57ff3e76",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5003: Added pulse animation to live badge",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T05:45:47Z",
-      "applied": 0
-    },
-    {
-      "id": "94943573",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5011: Proactive issue detection script",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T05:50:48Z",
-      "applied": 0
-    },
-    {
-      "id": "1fb108ae",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5012: Full autonomy task dispatcher",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T05:50:57Z",
-      "applied": 0
-    },
-    {
-      "id": "4047da4c",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5021: Added real-time clock to header",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T05:57:38Z",
-      "applied": 0
-    },
-    {
-      "id": "31094abe",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5030: הוספת אייקון כוכב ⭐ ליד שם הליגה ברשימת המשחקים ובמודאל המשחק",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T06:04:14Z",
-      "applied": 0
-    },
-    {
-      "id": "02048342",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5031: Enhanced footer - multi-section layout with brand, links, live badge, gradient divider, pulse animation",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T06:05:47Z",
-      "applied": 0
-    },
-    {
-      "id": "2d261d71",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5051: הוספת loading spinner כשהדף נטען",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T06:15:32Z",
-      "applied": 0
-    },
-    {
-      "id": "0e800ed5",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5055: Added meta description",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T06:24:02Z",
-      "applied": 0
-    },
-    {
-      "id": "afa48a0a",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5060: הוספת Open Graph tags לתצוגה מקדימה ברשתות חברתיות",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T06:29:49Z",
-      "applied": 0
-    },
-    {
-      "id": "e89f0b3f",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5100: Proactive bug scanner — Level 5.5",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T06:53:51Z",
-      "applied": 0
-    },
-    {
-      "id": "9b338b4a",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5102: Self-improving evolution — Level 6.5",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T06:54:13Z",
-      "applied": 0
-    },
-    {
-      "id": "42c29ada",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5103: Meta-agent spawner — Level 7.0",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T06:54:32Z",
-      "applied": 0
-    },
-    {
-      "id": "63517efc",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5200: Auto-fix: created missing favicon.png (was 404)",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T07:11:22Z",
-      "applied": 0
-    },
-    {
-      "id": "f5b311d6",
-      "agent": "seo",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5300: SEO: structured data schema.org",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T07:30:00Z",
       "applied": 0
     },
     {
@@ -1072,16 +492,6 @@
       "applied": 0
     },
     {
-      "id": "5a07138d",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5400: הוספת 9 שווקים חסרים: alt_totals, result_totals, btts_h1/h2, dc_h1, cs_h1, result_btts, ten_min, specials",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T07:47:47Z",
-      "applied": 0
-    },
-    {
       "id": "4ebd89a9",
       "agent": "koder",
       "severity": "medium",
@@ -1089,46 +499,6 @@
       "what": "Task 5500: Backend: 6 market groups — cards, player shots, BetBoost, goals range, corners, minutes",
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: none",
       "timestamp": "2026-02-18T07:59:54Z",
-      "applied": 0
-    },
-    {
-      "id": "5d11f9c4",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task 5600: נעילת רבעים/סטים שעברו — כדורסל וטניס",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-18T08:36:53Z",
-      "applied": 0
-    },
-    {
-      "id": "db0ad5e5",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Pipeline error: tests-partial in task 5600",
-      "lesson": "Auto-recorded by pipeline. Fix: investigate tests-partial pattern.",
-      "timestamp": "2026-02-18T08:36:56Z",
-      "applied": 0
-    },
-    {
-      "id": "ea07615a",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task task-5348: Fix 4 critical basketball bugs",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-19T09:07:29Z",
-      "applied": 0
-    },
-    {
-      "id": "01dc067f",
-      "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Pipeline error: tests-partial in task task-5348",
-      "lesson": "Auto-recorded by pipeline. Fix: investigate tests-partial pattern.",
-      "timestamp": "2026-02-19T09:07:33Z",
       "applied": 0
     },
     {
@@ -1152,23 +522,53 @@
       "applied": 0
     },
     {
-      "id": "339dc55b",
+      "id": "8c5a93e8",
       "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Task task-5366: סינון שוקים לפי ספורט + תקופת משחק",
-      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
-      "timestamp": "2026-02-19T09:21:17Z",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "Period filtering failed - relied only on matchPeriod",
+      "lesson": "Use multiple fallbacks: matchPeriod + matchMinute + scores estimation",
+      "timestamp": "2026-02-19T12:44:44Z",
       "applied": 0
     },
     {
-      "id": "beda659b",
+      "id": "3e98dd82",
+      "agent": "or",
+      "severity": "important",
+      "impact": 0.3,
+      "what": "Koder succeeds with exact code snippets",
+      "lesson": "Always provide complete code in task prompt, not vague instructions",
+      "timestamp": "2026-02-19T12:44:44Z",
+      "applied": 0
+    },
+    {
+      "id": "e804aa0d",
       "agent": "koder",
-      "severity": "medium",
-      "impact": 0.7,
-      "what": "Pipeline error: tests-partial in task task-5366",
-      "lesson": "Auto-recorded by pipeline. Fix: investigate tests-partial pattern.",
-      "timestamp": "2026-02-19T09:21:20Z",
+      "severity": "important",
+      "impact": 0.3,
+      "what": "BetsAPI basketball missing matchPeriod",
+      "lesson": "Frontend must estimate quarter from total score when period field is empty",
+      "timestamp": "2026-02-19T12:44:44Z",
+      "applied": 0
+    },
+    {
+      "id": "62904fba",
+      "agent": "koder",
+      "severity": "important",
+      "impact": 0.3,
+      "what": "Built bet delay + odds protection",
+      "lesson": "409 odds_changed/odds_stale pattern prevents arbitrage between bet365 and ZozoBet",
+      "timestamp": "2026-02-19T12:44:44Z",
+      "applied": 0
+    },
+    {
+      "id": "737c4ea8",
+      "agent": "koder",
+      "severity": "important",
+      "impact": 0.3,
+      "what": "Built watched events fast polling",
+      "lesson": "Frontend POST /watch + backend in-memory TTL + aggregator 10s sync for watched events only",
+      "timestamp": "2026-02-19T12:44:44Z",
       "applied": 0
     }
   ]

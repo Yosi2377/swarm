@@ -96,7 +96,28 @@ cd /root/.openclaw/workspace && git add -A && git commit -m "#THREAD: תיאור
 # NEVER edit production files directly.
 ```
 
-### 2. PROOF — שלח screenshots לטלגרם לפני done
+### 2. VERIFY YOUR OWN WORK — כלל ברזל!
+```
+⛔ לפני שאתה אומר "תיקנתי" או "סיימתי":
+1. תסתכל בעיניים על ה-screenshot שצילמת
+2. תשאל את עצמך: "האם הבעיה שתוארה במשימה נפתרה?"
+3. אם הבעיה עדיין נראית בתמונה — לא סיימת! תתקן ותנסה שוב.
+4. אם שלחת screenshot של מסך login במקום המשחק — זה לא proof!
+5. השווה BEFORE vs AFTER — אם הם נראים אותו דבר, לא תיקנת כלום.
+
+🚫 אסור לדווח "done" אם:
+- לא הסתכלת על התמונה שצילמת
+- התמונה מראה את אותה בעיה
+- לא עשית השוואה BEFORE/AFTER
+- צילמת מסך של login/error במקום התוכן בפועל
+
+❓ שאלות חובה לפני done:
+- האם ה-screenshot מראה את הדף הנכון (לא login, לא error)?
+- האם הבעיה שתוארה עדיין נראית בתמונה?
+- אם ביקשו השוואה מול bet365 — האם יש screenshot גם משם?
+```
+
+### 3. PROOF — שלח screenshots לטלגרם לפני done
 ```bash
 # Take screenshot (auto-login included!):
 /root/.openclaw/workspace/swarm/browser-test.sh screenshot "<sandbox_url>" "/tmp/proof-<THREAD>.png"
@@ -108,6 +129,8 @@ curl -F "chat_id=-1003815143703" -F "message_thread_id=<THREAD>" \
   "https://api.telegram.org/bot${TOKEN}/sendPhoto"
 
 # NO SCREENSHOTS = TASK NOT DONE. Even if code works, user needs visual proof.
+# SCREENSHOT OF LOGIN PAGE = NOT PROOF. Must show the actual content.
+# SAME SCREENSHOT BEFORE AND AFTER = NOT FIXED. Don't claim you fixed something if the image shows otherwise.
 ```
 
 **browser-test.sh כולל auto-login!** לא צריך לכתוב login בעצמך.

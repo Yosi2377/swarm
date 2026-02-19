@@ -1160,6 +1160,16 @@
       "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
       "timestamp": "2026-02-19T09:21:17Z",
       "applied": 0
+    },
+    {
+      "id": "beda659b",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Pipeline error: tests-partial in task task-5366",
+      "lesson": "Auto-recorded by pipeline. Fix: investigate tests-partial pattern.",
+      "timestamp": "2026-02-19T09:21:20Z",
+      "applied": 0
     }
   ]
 }

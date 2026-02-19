@@ -71,6 +71,16 @@
 - **Gemini API**: configured in openclaw.json under skills.entries.nano-banana-pro.apiKey
 - Used for Imagen 4.0 and Nano Banana Pro image generation
 
+## Level 8 System (Built 2026-02-19)
+- **Status**: Infrastructure ready, pending real-task test
+- **delegate.sh**: Auto-injects lessons + skills into agent prompts before spawning
+- **self-improve.sh**: 5 bash checks (patterns, health, selectors, lessons, sync) — 0 tokens
+- **Cron**: 10:00 + 22:00 daily, bash-only, agent wakes only on alert
+- **Lessons**: 57 cleaned (was 122), inject-lessons.sh does TF-IDF search
+- **Token rule**: NO background token burn. Cron = bash. Agent only when needed.
+- **Next**: Test with real task to validate full flow
+- **Key scripts**: `swarm/delegate.sh`, `swarm/inject-lessons.sh`, `swarm/self-improve.sh`
+
 ## Lessons Learned
 - Unity Hub GUI doesn't work on headless VPS - use Licensing Client CLI
 - `[RuntimeInitializeOnLoadMethod]` is key for procedural scene creation without editor

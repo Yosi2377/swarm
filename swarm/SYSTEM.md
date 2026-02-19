@@ -545,6 +545,25 @@ Projects: `betting`, `poker`, `blackjack`, `dashboard`
 
 If you try to write directly → you get "Operation not permitted". This is by design.
 
+## 🔄 Quality Convergence Loop
+
+The pipeline now runs steps 2-6 in an iterative quality loop (max 3 iterations by default).
+After each iteration, `quality-gate.sh` scores the result across 4 dimensions:
+- **service_running** (30%) — is the service up?
+- **tests_pass** (30%) — do tests pass?
+- **screenshot_valid** (20%) — does screenshot exist and look real?
+- **no_errors** (20%) — does the URL return HTTP 200?
+
+If score < 0.7 (configurable via `PIPELINE_QUALITY_THRESHOLD`), the loop retries with error context.
+Each iteration is logged to `swarm/runs/<task-id>/journal/` as structured JSON events.
+
+**Resumable runs:** If pipeline crashes, resume with `pipeline.sh --resume <task-id>`.
+State is saved in `swarm/runs/<task-id>/state.json` after each step.
+
+Environment variables:
+- `PIPELINE_MAX_ITERATIONS=3` — max retry iterations
+- `PIPELINE_QUALITY_THRESHOLD=0.7` — minimum quality score to pass
+
 ## ⛔ Pipeline — חובה לכל משימה!
 
 **Flow:** `sandbox` → `verify_sandbox` → `review` → `deploy` → `verify_prod` → `done`

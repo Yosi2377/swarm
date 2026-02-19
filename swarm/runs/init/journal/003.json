@@ -1,0 +1,1 @@
+{"seq":3,"event":"TESTS_RUN","task":"init","ts":"2026-02-19T09:14:37+01:00","data":{"iteration":1,"errors":["file-not-found","no-tests"]}}

@@ -182,6 +182,52 @@ swarm/ask-help.sh <from-agent> <to-agent> <thread-id> "description"
 
 ---
 
+## 🐺 Ralph Loop — Koder Tasks
+
+For coding tasks, use Ralph Loop instead of raw sessions_spawn.
+Ralph provides: **planning phase → iterative building → auto-testing → notifications**.
+
+### Setup & Run
+```bash
+# 1. Setup workspace
+swarm/setup-ralph-task.sh "task-5400" "/root/sandbox/BettingPlatform" "Fix spreads" "Description..."
+
+# 2. Edit AGENTS.md in the project with:
+#    - Key files list
+#    - test_command: <how to verify>
+#    - VERIFY_URL: <url to screenshot>
+
+# 3. Run the loop
+swarm/ralph-koder.sh "task-5400" 5400 "/root/sandbox/BettingPlatform" 10
+```
+
+### How it works
+1. **PLANNING** — Agent reads specs, creates IMPLEMENTATION_PLAN.md with numbered tasks
+2. **BUILDING** — Each iteration: implement ONE task → test → commit → next
+3. **Testing** — Auto-runs test_command after each change. Fails → retry
+4. **Notifications** — Agent writes to `.ralph/pending-notification.txt`, OpenClaw picks up via cron:
+   - `DONE` → task complete, notify orchestrator
+   - `ERROR` → tests failing, may need help
+   - `BLOCKED` → needs human decision
+   - `DECISION` → architectural choice needed
+5. **Clean sessions** — Each iteration is fresh context, memory lives in files
+
+### Why this is better
+- Agent can't say "fixed!" without tests passing
+- Planning prevents jumping into wrong solution
+- Each iteration is small and auditable (git commits)
+- Orchestrator gets notified automatically on completion/errors
+- No more 3 failed attempts with "done" reports
+
+### When to use Ralph
+- ✅ Any coding task (koder)
+- ✅ Multi-step changes across files
+- ✅ Bug fixes that need verification
+- ❌ Quick one-line fixes (overkill)
+- ❌ Non-coding tasks (research, design)
+
+---
+
 ## כללי ברזל
 
 1. **אור לא כותב קוד** — רק מתזמר

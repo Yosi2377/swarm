@@ -1110,6 +1110,16 @@
       "lesson": "Auto-recorded by pipeline. Fix: investigate tests-partial pattern.",
       "timestamp": "2026-02-18T08:36:56Z",
       "applied": 0
+    },
+    {
+      "id": "ea07615a",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task task-5348: Fix 4 critical basketball bugs",
+      "lesson": "Pipeline: branch→code→test→screenshot→merge. Errors: tests-partial",
+      "timestamp": "2026-02-19T09:07:29Z",
+      "applied": 0
     }
   ]
 }

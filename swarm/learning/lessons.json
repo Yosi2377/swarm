@@ -1110,6 +1110,26 @@
       "lesson": "Auto-recorded by pipeline. Fix: investigate tests-partial pattern.",
       "timestamp": "2026-02-18T08:36:56Z",
       "applied": 0
+    },
+    {
+      "id": "18cd9061",
+      "agent": "koder",
+      "severity": "critical",
+      "impact": 1.0,
+      "what": "Spread display showing wrong values (absolute instead of signed)",
+      "lesson": "parseSpreadMarket fallback path and parse3WayHandicap were missing homePoint field. Frontend falls back to line.point (always positive) when homePoint is null. Always include homePoint with the signed value in spread objects.",
+      "timestamp": "2026-02-19T08:54:20Z",
+      "applied": 0
+    },
+    {
+      "id": "78d32999",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Task task-5324: Fix spread display bug — add homePoint to parseSpreadMarket fallback + parse3WayHandicap",
+      "lesson": "Pipeline iteration 1. Errors: none",
+      "timestamp": "2026-02-19T08:54:55Z",
+      "applied": 0
     }
   ]
 }

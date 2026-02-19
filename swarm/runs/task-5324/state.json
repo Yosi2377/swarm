@@ -1,0 +1,1 @@
+{"task":"task-5324","agent":"koder","target_file":"/root/sandbox/BettingPlatform/aggregator/src/inplay-parser.js","desc":"Fix spread display bug — add homePoint to parseSpreadMarket fallback + parse3WayHandicap","current_step":"step3","iteration":2,"last_success_step":"step3","ts":"2026-02-19T09:54:58+01:00"}

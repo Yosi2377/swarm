@@ -1,0 +1,18 @@
+{
+  "url": "http://95.111.247.22:9089",
+  "tests": [
+    {
+      "type": "exists",
+      "selector": "body",
+      "desc": "Page loads"
+    },
+    {
+      "type": "noErrors",
+      "desc": "No JS errors"
+    },
+    {
+      "type": "screenshot",
+      "path": "/tmp/test-task-5324.png"
+    }
+  ]
+}

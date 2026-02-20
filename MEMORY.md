@@ -81,6 +81,12 @@
 - **Next**: Test with real task to validate full flow
 - **Key scripts**: `swarm/delegate.sh`, `swarm/inject-lessons.sh`, `swarm/self-improve.sh`
 
+## 🚨 חוק ברזל
+- כל משימה → דרך מערכת הסוכנים (koder/shomer/tzayar/bodek)
+- אסור לי לכתוב קוד בעצמי
+- sandbox בלבד, פרודקשן רק באישור יוסי
+- עקיפה: רק אם יוסי אומר "תעשה אתה"
+
 ## Lessons Learned
 - Unity Hub GUI doesn't work on headless VPS - use Licensing Client CLI
 - `[RuntimeInitializeOnLoadMethod]` is key for procedural scene creation without editor

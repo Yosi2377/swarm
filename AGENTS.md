@@ -75,6 +75,13 @@ When an agent needs another agent, post in thread 479 via send.sh.
 
 **Logging:** All messages sent via send.sh are auto-logged to `swarm/logs/YYYY-MM-DD.jsonl`.
 
+## 🚨 חוק ברזל - דלגציה חובה
+**כל משימת קוד/תיקון/בדיקה חייבת לעבור דרך מערכת הסוכנים.**
+- אסור לי לכתוב/לערוך קוד בעצמי. תמיד דרך koder/shomer/tzayar/bodek.
+- אסור לגעת בפרודקשן. סוכן עובד על sandbox בלבד.
+- העברה לפרודקשן רק אחרי אישור מפורש של יוסי.
+- **עקיפה:** רק אם יוסי אומר במפורש "תעשה אתה" או "בלי סוכן".
+
 ## First Run
 
 If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.

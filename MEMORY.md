@@ -99,3 +99,20 @@
 - NEVER code directly as orchestrator — delegate to koder
 - Agent skills system: swarm/skills/ for project knowledge, swarm/tasks/ for task files
 - Learning system: swarm/learn.sh for lessons, scores, auto-skill evolution
+
+## Claude Code CLI (מ-20/02/2026)
+- **מותקן:** v2.1.44, עובד עם `-p` mode
+- **Flow:** אור → Claude Code CLI → כותב קוד → אור בודק → production
+- **בעיית SIGKILL נפתרה (20/02):**
+  - סיבה 1: הרשאות חסרות ב-`~/.claude/settings.local.json` — הוספנו `Bash(*) Read(*) Write(*) Edit(*)`
+  - סיבה 2: `claude -p` בפורמט text לא מוציא output בזמן עבודה → OpenClaw `noOutputTimeout` הורג אותו
+  - **פתרון:** תמיד להריץ עם `--verbose --output-format stream-json`
+  - דוגמה: `claude -p --verbose --output-format stream-json "task"`
+- **Skill file:** `/usr/lib/node_modules/openclaw/skills/coding-agent/SKILL.md`
+
+## לקחים חשובים (20/02/2026)
+- **לעולם לא לכתוב קוד בעצמי** — תמיד דרך Claude Code CLI או סוכנים
+- **לעולם לא לעבוד על production** — sandbox בלבד
+- **לא להוסיף משימות** שיוסי לא ביקש
+- **לבדוק בעצמי בדפדפן** לפני שאומר "הכל עובד"
+- **לענות מיד** כשיוסי שולח הודעה — לא להיתקע ב-tool calls ארוכים

@@ -580,6 +580,16 @@
       "lesson": "NEVER work on production files directly. Always sandbox first, then copy to production only with user approval. The koder-fix-islive task modified production files — this violates the iron rule.",
       "timestamp": "2026-02-19T19:53:50Z",
       "applied": 0
+    },
+    {
+      "id": "7ef773ab",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Timer desync after tab background",
+      "lesson": "Clear clocks object on visibilitychange to force re-sync from server data",
+      "timestamp": "2026-02-20T10:45:10Z",
+      "applied": 0
     }
   ]
 }

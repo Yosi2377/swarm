@@ -69,7 +69,7 @@ mkdir -p "$LOG_DIR"
 LOG_FILE="$LOG_DIR/$(date +%Y-%m-%d).jsonl"
 MSG_ID=$(echo "$RESULT" | jq -r '.result.message_id // "error"')
 OK=$(echo "$RESULT" | jq -r '.ok')
-jq -n --arg ts "$(date -Iseconds)" --arg agent "$AGENT_ID" --argjson thread "$THREAD_ID" \
+jq -cn --arg ts "$(date -Iseconds)" --arg agent "$AGENT_ID" --argjson thread "$THREAD_ID" \
   --arg msg "$MESSAGE" --arg msg_id "$MSG_ID" --arg ok "$OK" \
   '{timestamp: $ts, agent: $agent, thread: $thread, message: $msg, message_id: $msg_id, ok: $ok}' >> "$LOG_FILE"
 

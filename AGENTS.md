@@ -82,6 +82,14 @@ When an agent needs another agent, post in thread 479 via send.sh.
 - העברה לפרודקשן רק אחרי אישור מפורש של יוסי.
 - **עקיפה:** רק אם יוסי אומר במפורש "תעשה אתה" או "בלי סוכן".
 
+## 🧠 Pieces LTM — Real-Time Memory
+After EVERY reply, save the exchange:
+```bash
+/root/.openclaw/workspace/swarm/pieces-realtime.sh "user:yossi" "summary of what user said"
+/root/.openclaw/workspace/swarm/pieces-realtime.sh "agent:or" "summary of what I replied"
+```
+This runs in background, doesn't block. Keep summaries short.
+
 ## First Run
 
 If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.

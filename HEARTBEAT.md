@@ -19,4 +19,13 @@
 - Run: `bash /root/.openclaw/workspace/swarm/pieces-sync.sh`
 - This syncs daily memory, git commits, agent activity, and MEMORY.md to Pieces
 
+## Pieces Real-Time — MANDATORY on EVERY turn
+- After EVERY reply to the user, save the exchange to Pieces:
+  ```bash
+  /root/.openclaw/workspace/swarm/pieces-realtime.sh "user:yossi" "USER_MESSAGE_SUMMARY"
+  /root/.openclaw/workspace/swarm/pieces-realtime.sh "agent:or" "MY_REPLY_SUMMARY"
+  ```
+- Keep summaries short (1-2 lines), capture the essence
+- This is how Pieces learns about our conversations in real-time
+
 ## Nothing else needed? → HEARTBEAT_OK

@@ -15,4 +15,8 @@
 - If pattern `reject_XXXX`:
   - Run: `send.sh or 1 "❌ PR #XXXX rejected"`
 
+## Pieces LTM Sync (every heartbeat)
+- Run: `bash /root/.openclaw/workspace/swarm/pieces-sync.sh`
+- This syncs daily memory, git commits, agent activity, and MEMORY.md to Pieces
+
 ## Nothing else needed? → HEARTBEAT_OK

@@ -75,7 +75,12 @@ swarm/learn.sh lesson <your_agent_id> <critical|medium|low> "what happened" "wha
 swarm/learn.sh score <your_agent_id> success  # or fail
 ```
 
-**⚠️ זה חובה. כל task חייב להתחיל ב-query ולהסתיים ב-lesson+score.**
+**⚠️ זה חובה. כל task חייב להתחיל ב-query ולהסתיים ב-lesson+score+pieces.**
+
+**אחרי סיום משימה — שמור ל-Pieces LTM:**
+```bash
+swarm/pieces-save.sh <your_agent_id> <thread_id> "תיאור קצר של מה שנעשה"
+```
 
 **🚨 STOP — אם לא הרצת query, עצור עכשיו והרץ אותו!**
 **הפקודה הראשונה שלך חייבת להיות learn.sh query. לא לגעת בקוד לפני שקראת לקחים.**

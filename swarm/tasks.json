@@ -22,6 +22,17 @@
       "startedAt": "2026-02-16T21:05:35+01:00",
       "updatedAt": "2026-02-16T21:05:35+01:00",
       "allowedPaths": []
+    },
+    {
+      "id": 7,
+      "agent": "koder",
+      "thread": 9999,
+      "title": "Test task",
+      "priority": "high",
+      "status": "active",
+      "startedAt": "2026-03-02T04:08:16+01:00",
+      "updatedAt": "2026-03-02T04:08:16+01:00",
+      "allowedPaths": []
     }
   ],
   "completed": [
@@ -74,5 +85,5 @@
       "completedAt": "2026-02-12T03:02:18+01:00"
     }
   ],
-  "nextId": 7
+  "nextId": 8
 }

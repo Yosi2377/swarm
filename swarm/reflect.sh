@@ -1,74 +1,119 @@
 #!/bin/bash
-# reflect.sh <agent_id> <thread_id>
-# Runs reflection checks: past lessons, git diff, sandbox health, outputs report
+# =============================================================================
+# Reflect — Generate structured reflection after a failed attempt
+# Usage: reflect.sh <error_output> <attempt_number> <previous_reflections_file>
+# Output: JSON with what_failed, why, next_strategy, avoid
+# =============================================================================
 
-set -euo pipefail
+set -uo pipefail
 
-AGENT="${1:?Usage: reflect.sh <agent_id> <thread_id>}"
-THREAD="${2:?Usage: reflect.sh <agent_id> <thread_id>}"
-DIR="$(cd "$(dirname "$0")" && pwd)"
-MEMORY_DIR="$DIR/memory"
-REPORT="$MEMORY_DIR/task-${THREAD}.md"
+ERROR_OUTPUT="$1"
+ATTEMPT_NUM="${2:-1}"
+PREV_REFLECTIONS_FILE="${3:-/dev/null}"
 
-mkdir -p "$MEMORY_DIR"
+if [ -z "$ERROR_OUTPUT" ]; then
+  echo '{"what_failed":"unknown","why":"no error output provided","next_strategy":"retry with more context","avoid":"blind retry"}'
+  exit 0
+fi
 
-{
-  echo "# 🪞 Reflection Report — Agent: $AGENT | Thread: $THREAD"
-  echo "**Date:** $(date '+%Y-%m-%d %H:%M:%S')"
-  echo ""
+# ---- Parse error patterns ----
 
-  # 1. Query relevant lessons
-  echo "## 📚 Past Lessons"
-  if [ -f "$DIR/learn.sh" ]; then
-    bash "$DIR/learn.sh" query "$AGENT" 2>/dev/null || echo "_No lessons found._"
-  else
-    echo "_learn.sh not found._"
+# Truncate error to manageable size
+ERROR_TRUNC=$(echo "$ERROR_OUTPUT" | tail -100)
+
+# Detect common error categories
+CATEGORY="unknown"
+WHAT_FAILED=""
+WHY=""
+NEXT_STRATEGY=""
+AVOID=""
+
+if echo "$ERROR_TRUNC" | grep -qi "syntaxerror\|SyntaxError\|unexpected token\|parsing error"; then
+  CATEGORY="syntax"
+  WHAT_FAILED="Syntax error in code"
+  WHY="Invalid syntax — likely a typo, missing bracket, or wrong language construct"
+  NEXT_STRATEGY="Review the exact line mentioned in error, fix syntax carefully"
+  AVOID="Blind editing without reading the error line number"
+
+elif echo "$ERROR_TRUNC" | grep -qi "modulenotfounderror\|cannot find module\|no module named\|import error"; then
+  CATEGORY="import"
+  WHAT_FAILED="Missing module or import error"
+  WHY="Required dependency not installed, or wrong import path"
+  NEXT_STRATEGY="Check if module exists: npm ls / pip list. Install if missing, fix path if wrong"
+  AVOID="Adding code that uses uninstalled packages"
+
+elif echo "$ERROR_TRUNC" | grep -qi "typeerror\|is not a function\|undefined is not\|cannot read prop"; then
+  CATEGORY="type"
+  WHAT_FAILED="Type error — wrong data type or undefined value"
+  WHY="Variable is undefined/null, or calling method on wrong type"
+  NEXT_STRATEGY="Add null checks, verify variable types, trace data flow"
+  AVOID="Assuming variables exist without checking"
+
+elif echo "$ERROR_TRUNC" | grep -qi "assertionerror\|assert\|expected.*to\|toBe\|toEqual"; then
+  CATEGORY="assertion"
+  WHAT_FAILED="Test assertion failed — output doesn't match expected"
+  WHY="Logic error: the code runs but produces wrong result"
+  NEXT_STRATEGY="Compare expected vs actual, trace the logic step by step"
+  AVOID="Changing test expectations instead of fixing the code"
+
+elif echo "$ERROR_TRUNC" | grep -qi "timeout\|timed out\|ETIMEDOUT\|ECONNREFUSED"; then
+  CATEGORY="network"
+  WHAT_FAILED="Network/connection error"
+  WHY="Service not running, wrong port, or network issue"
+  NEXT_STRATEGY="Check if target service is running, verify URLs and ports"
+  AVOID="Retrying without checking service status"
+
+elif echo "$ERROR_TRUNC" | grep -qi "permission denied\|EACCES\|EPERM"; then
+  CATEGORY="permission"
+  WHAT_FAILED="Permission denied"
+  WHY="File/directory permissions block access"
+  NEXT_STRATEGY="Check file ownership and permissions, use appropriate user"
+  AVOID="Using chmod 777 as a fix"
+
+else
+  CATEGORY="unknown"
+  WHAT_FAILED="Test/build failure — see error output"
+  WHY="Could not auto-categorize the error"
+  NEXT_STRATEGY="Read error output carefully, search web if unfamiliar"
+  AVOID="Repeating the same approach without understanding the error"
+fi
+
+# ---- Check previous reflections for patterns ----
+
+PREV_COUNT=0
+REPEATED=false
+if [ -f "$PREV_REFLECTIONS_FILE" ] && [ -s "$PREV_REFLECTIONS_FILE" ]; then
+  PREV_COUNT=$(wc -l < "$PREV_REFLECTIONS_FILE")
+  # Check if same category appeared before
+  if grep -q "\"category\":\"${CATEGORY}\"" "$PREV_REFLECTIONS_FILE" 2>/dev/null; then
+    REPEATED=true
+    NEXT_STRATEGY="DIFFERENT APPROACH NEEDED: Same error category (${CATEGORY}) seen before. Try a fundamentally different solution path."
+    AVOID="Any approach similar to previous attempts — the pattern is failing"
   fi
-  echo ""
+fi
 
-  # 2. Git diff in sandbox
-  echo "## 📊 Git Diff (Sandbox)"
-  SANDBOX="/root/sandbox"
-  if [ -d "$SANDBOX" ]; then
-    # Find first project dir with .git
-    for proj in "$SANDBOX"/*/; do
-      if [ -d "$proj/.git" ]; then
-        echo "**Project:** $(basename "$proj")"
-        (cd "$proj" && git diff --stat 2>/dev/null || echo "_No changes._")
-        echo ""
-      fi
-    done
-  else
-    echo "_No sandbox found._"
-  fi
-  echo ""
+# ---- Output JSON ----
 
-  # 3. Sandbox URL health check
-  echo "## 🌐 Sandbox URL Check"
-  # Try common sandbox ports
-  SANDBOX_OK=false
-  for PORT in 9089 3000 8080 5000; do
-    STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:$PORT" 2>/dev/null || echo "000")
-    if [ "$STATUS" != "000" ]; then
-      echo "- Port $PORT: HTTP $STATUS"
-      [ "$STATUS" = "200" ] && SANDBOX_OK=true
-    fi
-  done
-  $SANDBOX_OK || echo "_No sandbox URL responding with 200._"
-  echo ""
-
-  # 4. Reflection questions
-  echo "## ❓ Reflection Questions (Answer These!)"
-  echo "1. מה יכול להישבר בגלל השינוי שלי?"
-  echo "2. האם בדקתי את כל ה-edge cases?"
-  echo "3. האם המשתמש יראה בדיוק מה שהוא ביקש?"
-  echo "4. האם יש side effects על פיצ'רים אחרים?"
-  echo "5. אם הייתי המשתמש, מה הייתי מתלונן עליו?"
-  echo ""
-  echo "---"
-  echo "_Fill in answers above before reporting done._"
-
-} > "$REPORT"
-
-echo "✅ Reflection report saved to: $REPORT"
-cat "$REPORT"
+jq -n \
+  --arg what_failed "$WHAT_FAILED" \
+  --arg why "$WHY" \
+  --arg next_strategy "$NEXT_STRATEGY" \
+  --arg avoid "$AVOID" \
+  --arg category "$CATEGORY" \
+  --argjson attempt "$ATTEMPT_NUM" \
+  --argjson prev_attempts "$PREV_COUNT" \
+  --argjson repeated "$REPEATED" \
+  --arg error_excerpt "$(echo "$ERROR_TRUNC" | head -10)" \
+  --arg ts "$(date -Iseconds)" \
+  '{
+    what_failed: $what_failed,
+    why: $why,
+    next_strategy: $next_strategy,
+    avoid: $avoid,
+    category: $category,
+    attempt: $attempt,
+    previous_attempts: $prev_attempts,
+    repeated_pattern: $repeated,
+    error_excerpt: $error_excerpt,
+    timestamp: $ts
+  }'

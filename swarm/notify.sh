@@ -14,9 +14,13 @@ MSG="${3:-סוכן סיים}"
 AGENT="${4:-or}"
 ID="$(date +%s)-$$"
 
-cat > "$DONE_DIR/${ID}.json" <<EOF
-{"thread":$THREAD,"status":"$STATUS","message":"$MSG","agent":"$AGENT","ts":"$(date -Iseconds)"}
-EOF
+# Use python3 for safe JSON serialization (handles quotes, special chars)
+python3 -c "
+import json, sys
+data = {'thread': int(sys.argv[1]), 'status': sys.argv[2], 'message': sys.argv[3], 'agent': sys.argv[4], 'ts': sys.argv[5]}
+with open(sys.argv[6], 'w') as f:
+    json.dump(data, f, ensure_ascii=False)
+" "$THREAD" "$STATUS" "$MSG" "$AGENT" "$(date -Iseconds)" "$DONE_DIR/${ID}.json"
 
 echo "📝 Notification queued: $MSG"
 

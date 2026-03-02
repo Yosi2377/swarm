@@ -3,13 +3,15 @@
 # Usage: delegate.sh <agent> <task_description> [project_keywords] [thread_id] [priority]
 # 
 # What it does:
-#   1. Creates structured task JSON (if thread_id provided)
-#   2. Queries relevant lessons from learning system
-#   3. Queries relevant skills from swarm/skills/
-#   4. Updates shared active context
-#   5. Outputs a COMPLETE task prompt ready for sessions_spawn
+#   1. Auto-creates Telegram topic if no thread_id given
+#   2. Creates structured task JSON
+#   3. Queries relevant lessons from learning system
+#   4. Queries relevant skills from swarm/skills/
+#   5. Updates shared active context
+#   6. Outputs a COMPLETE task prompt ready for sessions_spawn
 #
 # Example:
+#   PROMPT=$(swarm/delegate.sh koder "Fix basketball spreads" "basketball spread")
 #   PROMPT=$(swarm/delegate.sh koder "Fix basketball spreads" "basketball spread" 4950 high)
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -35,24 +37,37 @@ case "$AGENT" in
   *)          EMOJI="🤖"; NAME="$AGENT" ;;
 esac
 
-# 1. Create structured task JSON (if thread provided)
+# 1. Auto-create topic if no thread given
+if [ -z "$THREAD" ]; then
+  TOPIC_NAME="${EMOJI} ${TASK}"
+  # Truncate topic name to 128 chars (Telegram limit)
+  TOPIC_NAME=$(echo "$TOPIC_NAME" | cut -c1-128)
+  THREAD=$(bash "$DIR/create-topic.sh" "$TOPIC_NAME" "" "$AGENT" 2>/dev/null)
+  if [ -z "$THREAD" ] || [ "$THREAD" = "None" ]; then
+    echo "ERROR: Failed to create topic" >&2
+    exit 1
+  fi
+  echo "📌 Auto-created topic: $THREAD ($TOPIC_NAME)" >&2
+fi
+
+# 2. Create structured task JSON
 TASK_JSON_INFO=""
 if [ -n "$THREAD" ]; then
-  bash "$DIR/create-task.sh" "$AGENT" "$THREAD" "$TASK" "$TASK" "$PRIORITY" "" "" "" "or" 2>/dev/null
+  bash "$DIR/create-task.sh" "$AGENT" "$THREAD" "$TASK" "$TASK" "$PRIORITY" "" "" "" "or" >/dev/null 2>&1
   TASK_JSON_INFO="
 📋 Task file: swarm/tasks/${THREAD}.json + swarm/tasks/${THREAD}.md
 עדכן progress ב-task file בכל שלב."
 fi
 
-# 2. Update shared active context
+# 3. Update shared active context
 if [ -n "$THREAD" ]; then
-  bash "$DIR/context.sh" update "$EMOJI" "$NAME" "assigned" "$TASK" "$THREAD" 2>/dev/null
+  bash "$DIR/context.sh" update "$EMOJI" "$NAME" "assigned" "$TASK" "$THREAD" >/dev/null 2>&1
 fi
 
-# 3. Get relevant lessons
+# 4. Get relevant lessons
 LESSONS=$(bash "$DIR/inject-lessons.sh" "$KEYWORDS" 2>/dev/null)
 
-# 4. Get relevant skill file content (if exists)
+# 5. Get relevant skill file content (if exists)
 SKILL_FILE=""
 for f in "$DIR/skills/"*.md; do
   [ -f "$f" ] || continue
@@ -73,7 +88,7 @@ if [ -n "$SKILL_FILE" ]; then
 $(head -100 "$SKILL_FILE")"
 fi
 
-# 5. Build the complete prompt
+# 6. Build the complete prompt (thread_id on stderr for caller to capture)
 cat <<PROMPT
 $TASK
 

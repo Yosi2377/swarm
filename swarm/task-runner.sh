@@ -189,10 +189,75 @@ for ((i=1; i<=MAX_ITERATIONS; i++)); do
   log "--- Iteration $i/$MAX_ITERATIONS ---"
   send_status "🔄 ניסיון ${i}/${MAX_ITERATIONS}..."
 
-  # 3a. Agent works on the task
-  # (In real usage, the calling agent executes commands here)
-  # This script provides the framework; the agent fills in the work.
+  # 3a. Agent works on the task via Claude Code CLI
+  log "Running Claude Code CLI (iteration $i)..."
   
+  # Build prompt with context from reflections
+  CLAUDE_PROMPT="You are working in: ${PROJECT_DIR}
+Task: ${TASK_DESC}
+Iteration: ${i}/${MAX_ITERATIONS}
+Branch: ${BRANCH_NAME}
+
+RULES:
+- Work ONLY in this directory
+- Do NOT deploy to production
+- Make minimal, focused changes
+- Run and verify your changes"
+
+  # Add reflection context from previous failures
+  if [ "$i" -gt 1 ] && [ -s "$REFLECTIONS_FILE" ]; then
+    PREV_REFLECTIONS=$(tail -3 "$REFLECTIONS_FILE" 2>/dev/null | jq -r '"Previous attempt failed: \(.what_failed // "unknown"). Avoid: \(.avoid // "same approach"). Strategy: \(.next_strategy // "retry")"' 2>/dev/null || echo "")
+    if [ -n "$PREV_REFLECTIONS" ]; then
+      CLAUDE_PROMPT="${CLAUDE_PROMPT}
+
+⚠️ PREVIOUS FAILURES — do NOT repeat:
+${PREV_REFLECTIONS}"
+    fi
+  fi
+
+  # Add relevant lessons
+  LESSONS=$(bash "${SWARM_DIR}/inject-lessons.sh" "$TASK_DESC" 2>/dev/null || echo "")
+  if [ -n "$LESSONS" ] && [ "$LESSONS" != "(אין לקחים רלוונטיים)" ]; then
+    CLAUDE_PROMPT="${CLAUDE_PROMPT}
+
+${LESSONS}"
+  fi
+
+  # Run Claude Code CLI with stream-json (prevents noOutputTimeout kill)
+  CLAUDE_LOG="/tmp/${TASK_ID}-claude-${i}.log"
+  CLAUDE_EXIT=0
+  
+  timeout 300 claude -p --verbose --output-format stream-json \
+    --allowedTools "Bash(${PROJECT_DIR}:*) Read(${PROJECT_DIR}:*) Write(${PROJECT_DIR}:*) Edit(${PROJECT_DIR}:*)" \
+    "$CLAUDE_PROMPT" \
+    > "$CLAUDE_LOG" 2>&1 || CLAUDE_EXIT=$?
+
+  # Extract result text from stream-json output
+  CLAUDE_RESULT=$(grep '"type":"result"' "$CLAUDE_LOG" 2>/dev/null | tail -1 | jq -r '.result // empty' 2>/dev/null || echo "")
+  
+  if [ "$CLAUDE_EXIT" -ne 0 ] && [ -z "$CLAUDE_RESULT" ]; then
+    log "Claude Code exited with code $CLAUDE_EXIT"
+    send_status "⚠️ Claude Code נכשל (exit $CLAUDE_EXIT) — ניסיון ${i}"
+    # Log last lines for debugging
+    tail -5 "$CLAUDE_LOG" 2>/dev/null | while read -r line; do log "  $line"; done
+  else
+    # Extract summary of what was done
+    CLAUDE_SUMMARY=$(echo "$CLAUDE_RESULT" | head -c 200)
+    log "Claude Code completed: ${CLAUDE_SUMMARY:-no summary}"
+    send_status "🤖 Claude Code עבד (ניסיון ${i})
+${CLAUDE_SUMMARY:+📝 ${CLAUDE_SUMMARY}}"
+  fi
+
+  # Commit any changes
+  cd "$PROJECT_DIR"
+  if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+    git add -A 2>/dev/null
+    git commit -m "[${AGENT_ID}] Iteration ${i}: ${TASK_DESC}" 2>/dev/null || true
+    log "Changes committed"
+  else
+    log "No file changes in iteration $i"
+  fi
+
   # 3b. Run tests
   TEST_RESULT=$(run_tests)
   TEST_STATUS=$(echo "$TEST_RESULT" | jq -r '.status')

@@ -73,4 +73,11 @@ jq -cn --arg ts "$(date -Iseconds)" --arg agent "$AGENT_ID" --argjson thread "$T
   --arg msg "$MESSAGE" --arg msg_id "$MSG_ID" --arg ok "$OK" \
   '{timestamp: $ts, agent: $agent, thread: $thread, message: $msg, message_id: $msg_id, ok: $ok}' >> "$LOG_FILE"
 
+# Create marker for agent-watcher if message contains completion keywords
+if echo "$MESSAGE" | grep -qiE '✅|סיימתי|הושלמה|done|finished|מוכן'; then
+  mkdir -p /tmp/agent-done
+  MARKER_MSG=$(echo "$MESSAGE" | head -1 | cut -c1-120 | sed 's/["\]//g')
+  echo "{\"thread\":$THREAD_ID,\"status\":\"success\",\"message\":\"$MARKER_MSG\",\"agent\":\"$AGENT_ID\"}" > "/tmp/agent-done/$(date +%s)-${AGENT_ID}.json" 2>/dev/null
+fi
+
 echo "$RESULT"

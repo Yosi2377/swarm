@@ -88,6 +88,17 @@
       "startedAt": "2026-03-02T04:38:20+01:00",
       "updatedAt": "2026-03-02T04:38:20+01:00",
       "allowedPaths": []
+    },
+    {
+      "id": 13,
+      "agent": "koder",
+      "thread": 7005,
+      "title": "צור קובץ /tmp/e2e-test.txt עם הטקסט hello world",
+      "priority": "normal",
+      "status": "active",
+      "startedAt": "2026-03-02T04:41:08+01:00",
+      "updatedAt": "2026-03-02T04:41:08+01:00",
+      "allowedPaths": []
     }
   ],
   "completed": [
@@ -140,5 +151,5 @@
       "completedAt": "2026-02-12T03:02:18+01:00"
     }
   ],
-  "nextId": 13
+  "nextId": 14
 }

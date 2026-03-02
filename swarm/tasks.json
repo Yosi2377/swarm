@@ -33,6 +33,17 @@
       "startedAt": "2026-03-02T04:08:16+01:00",
       "updatedAt": "2026-03-02T04:08:16+01:00",
       "allowedPaths": []
+    },
+    {
+      "id": 8,
+      "agent": "koder",
+      "thread": 9998,
+      "title": "טסט flow",
+      "priority": "normal",
+      "status": "active",
+      "startedAt": "2026-03-02T04:11:30+01:00",
+      "updatedAt": "2026-03-02T04:11:30+01:00",
+      "allowedPaths": []
     }
   ],
   "completed": [
@@ -85,5 +96,5 @@
       "completedAt": "2026-02-12T03:02:18+01:00"
     }
   ],
-  "nextId": 8
+  "nextId": 9
 }

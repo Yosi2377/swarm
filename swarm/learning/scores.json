@@ -9,11 +9,11 @@
       "streak": 1
     },
     "koder": {
-      "tasks": 54,
-      "success": 33,
+      "tasks": 55,
+      "success": 34,
       "fail": 21,
-      "score": 61,
-      "streak": 11
+      "score": 62,
+      "streak": 12
     },
     "shomer": {
       "tasks": 2,
@@ -58,12 +58,5 @@
       "streak": -1
     }
   },
-  "tools": {},
-  "koder": {
-    "success": 5,
-    "fail": 0,
-    "total": 5,
-    "score": 100,
-    "consecutive_fails": 0
-  }
+  "tools": {}
 }

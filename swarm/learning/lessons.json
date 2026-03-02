@@ -177,7 +177,7 @@
       "severity": "high",
       "impact": 0.3,
       "what": "Failed 3 times on #2809",
-      "lesson": "Errors: \nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 3 files changed, 22 insertions(+), 4 deletions(-)\n📋 Running tests (project: betting)...\n\nPASS: 5/5 tests passed\n🌐 Running browser tests...\n\nPASS: 0/0 browser tests passed\n🧪 Running feature-specific browser tests...\n  📍 Testing URL: http://95.111.247.22:9089\n  ❌ אירועים מופיעים — selector \".event-row, tr\" not found\n  ❌ אין אירועים שנגמרו בטבלה — expected min undefined, found 0\n\nFAIL: 0/2 browser tests passed\n\n❌ EVALUATION FAILED",
+      "lesson": "",
       "timestamp": "2026-02-15T15:24:41Z",
       "applied": 20
     },
@@ -197,7 +197,7 @@
       "severity": "high",
       "impact": 0.3,
       "what": "Failed 3 times on #3009",
-      "lesson": "Errors: \nFAIL: 0/2 browser tests passed\n\n🔍 ========== INVESTIGATION ==========\n\n🩺 Diagnosis:\n   📍 Current URL: http://95.111.247.22:9089/\n   📄 Page title: \"ZozoBet - Premium Sports Betting\"\n   ✅ User is logged in\n   📝 Page text (first 200 chars): \"⚽ ספורט 🔴 ליין רץ 162 🎫 ההימורים שלי 📊 תוצאות 📈 סטטיסטיקה ⚙️ ניהול 👤 Zozo יתרה 5102.02₪ 15.2, 19:01:56 EN/HE יציאה ענפי ספורט 🏆 הכל 637 🎾 Challenger New Delhi 266 ⚽ England Premier League 44 ⚽ \"\n   📊 Elements on page: {\"tr\":0,\"td\":0,\"div\":3022,\"button\":11,\"table\":0,\"form\":0,\"a\":11,\"img\":2,\"modal\":0}\n      🔎 Similar classes found: c-match\n      ❌ \"לחיצה על משחק פותחת מודל\": selector \".match-row\" not found\n      ❌ \"יש יותר מקו אחד\": selector \".totals-line, .total-row\" not found\n   📸 Screenshot: /tmp/eval-diagnosis.png\n\n💡 ========== SUGGESTED FIXES ==========\n   → Expected 2+ elements but found fewer. Check: is data loading? Is the API returning results? Is the DOM being populated?\n\n❌ EVALUATION FAILED",
+      "lesson": "",
       "timestamp": "2026-02-15T18:02:11Z",
       "applied": 15
     },

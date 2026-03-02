@@ -31,23 +31,34 @@ lesson)
   TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
   ID=$(date +%s%N | md5sum | head -c 8)
   
+  # Sanitize inputs — strip pipeline/git garbage
+  WHAT_CLEAN=$(echo "$WHAT" | head -1 | cut -c1-200)
+  LEARNED_CLEAN=$(echo "$LEARNED" | head -1 | cut -c1-200)
+  
   # Add to lessons.json
   python3 -c "
-import json
+import json, sys
+what = sys.argv[1]
+learned = sys.argv[2]
 with open('$LESSONS') as f: data = json.load(f)
 data['lessons'].append({
     'id': '$ID',
     'agent': '$AGENT',
     'severity': '$SEVERITY',
     'impact': $IMPACT,
-    'what': '''$WHAT''',
-    'lesson': '''$LEARNED''',
+    'what': what,
+    'lesson': learned,
     'timestamp': '$TIMESTAMP',
     'applied': 0
 })
 with open('$LESSONS', 'w') as f: json.dump(data, f, indent=2, ensure_ascii=False)
+# Also append to jsonl
+import os
+jsonl_path = os.path.join(os.path.dirname('$LESSONS'), 'lessons.jsonl')
+with open(jsonl_path, 'a') as jl:
+    jl.write(json.dumps(data['lessons'][-1], ensure_ascii=False) + '\n')
 print('✅ Lesson saved: $ID (impact: $IMPACT)')
-"
+" "$WHAT_CLEAN" "$LEARNED_CLEAN"
   ;;
 
 # ===== SCORE =====

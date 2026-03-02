@@ -1,0 +1,39 @@
+{
+  "schema": "task-schema-v2",
+  "id": 9998,
+  "title": "טסט flow",
+  "agent": "koder",
+  "thread": 9998,
+  "priority": "normal",
+  "status": "active",
+  "inputs": {
+    "description": "משימת דמה לבדיקת ה-flow החדש",
+    "files": [],
+    "context": "",
+    "dependencies": []
+  },
+  "expected_output": {
+    "type": "code",
+    "deliverables": [
+  "הודעת הצלחה"
+],
+    "success_criteria": [
+  "הסקריפט רץ בלי שגיאות"
+]
+  },
+  "constraints": {
+    "sandbox_only": true,
+    "max_retries": 3,
+    "review_required": true,
+    "review_agent": "shomer"
+  },
+  "metadata": {
+    "parent_task": null,
+    "created_by": "or",
+    "created_at": "2026-03-02T04:11:30+01:00",
+    "retry_count": 0,
+    "retry_strategy": "same",
+    "peer_review": null,
+    "quality_score": null
+  }
+}

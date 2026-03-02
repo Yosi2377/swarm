@@ -3,7 +3,7 @@
 # Polls /tmp/agent-done/ every 20s, sends Telegram when agent finishes
 # Usage: agent-watcher.sh [poll_seconds]
 
-POLL="${1:-20}"
+POLL="${1:-5}"
 DONE_DIR="/tmp/agent-done"
 CHAT_ID="-1003815143703"
 TOKEN=$(cat "$(dirname "$0")/.bot-token" 2>/dev/null)

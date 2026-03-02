@@ -9,6 +9,15 @@
   4. Report: "🤖 Watchdog alert → agent dispatched"
 - If NO: skip
 
+## Agent Activity Monitor (SECOND PRIORITY)
+- Run: `tail -5 /root/.openclaw/workspace/swarm/logs/$(date +%Y-%m-%d).jsonl 2>/dev/null`
+- Check for NEW agent messages since last heartbeat (compare timestamps)
+- If an agent reported "סיימתי" / "✅" / "done" / "הושלמה":
+  1. Read the full message
+  2. Report to Yossi in the relevant topic: "⚙️ [agent] סיים: [summary]"
+  3. If peer-review is needed, trigger it
+- Track last checked timestamp in `/tmp/heartbeat-agent-last.txt`
+
 ## Auto-Approve Handler
 - If ANY recent message in General matches pattern `approve_XXXX`:
   - Run: `bash /root/.openclaw/workspace/swarm/handle-approve.sh XXXX`

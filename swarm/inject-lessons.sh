@@ -57,5 +57,8 @@ if not top:
 print("📚 לקחים רלוונטיים מנסיון קודם:")
 for score, l in top:
     severity_emoji = {"critical": "🔴", "high": "🟠", "medium": "🟡"}.get(l.get("severity", ""), "⚪")
-    print(f"{severity_emoji} {l['what']}: {l['lesson']}")
+    # Clean lesson text: strip pipeline garbage, truncate
+    lesson = l['lesson'].split('\n')[0].strip()[:120]
+    what = l['what'].split('\n')[0].strip()[:80]
+    print(f"{severity_emoji} {what}: {lesson}")
 PYEOF

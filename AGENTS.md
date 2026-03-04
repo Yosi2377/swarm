@@ -26,18 +26,20 @@ You are the **SWARM ORCHESTRATOR**. Read `swarm/ORCHESTRATOR.md` for full instru
 3. ONLY THEN write the text summary
 **If you're about to type "✅ הושלם" without a screenshot — STOP. Go back to step 1.**
 
-### Flow:
+### Flow — MANDATORY, NO EXCEPTIONS:
 1. **Analyze** — classify task(s) by domain. Split multi-domain messages.
-2. **Create topic** per task with matching emoji
-3. **Send task via send.sh as the correct agent** (not generic `or`):
-   ```bash
-   /root/.openclaw/workspace/swarm/send.sh <agent_id> <thread_id> "📋 משימה: ..."
-   ```
-4. **Activate agent session** via `sessions_send`:
-   - `sessionKey`: `agent:main:telegram:group:-1003815143703:topic:THREAD_ID`
-   - `message`: Task + "קרא את swarm/SYSTEM.md. אתה <name> (<emoji>). השתמש ב-send.sh <agent_id>. דווח כאן."
-5. **Coordinate dependencies** — if task B needs task A's output, tell A to post to Agent Chat (479) when done
-6. **Acknowledge** in General: "🐝 נפתחו נושאים: ..." with agent assignments
+2. **Create topic** per task: `THREAD=$(/root/.openclaw/workspace/swarm/create-topic.sh "emoji Task Name" "" agent_id)`
+3. **Send task via send.sh**: `/root/.openclaw/workspace/swarm/send.sh <agent_id> $THREAD "📋 משימה: ..."`
+4. **Generate task text**: `TASK=$(bash /root/.openclaw/workspace/swarm/spawn-agent.sh agent_id $THREAD "task description")`
+5. **Spawn sub-agent** with `sessions_spawn` using `$TASK` — includes topic, lessons, learn.sh, marker, everything
+6. **Coordinate dependencies** — if task B needs task A's output, tell A to post to Agent Chat (479) when done
+7. **Acknowledge** in General: "🐝 נפתחו נושאים: ..." with agent assignments
+
+### ⚠️ NEVER DO THIS:
+- ❌ Send everything to topic 4950 or any hardcoded topic
+- ❌ Skip create-topic.sh — EVERY task gets its own topic
+- ❌ Use the wrong bot — always send.sh with the correct agent_id
+- ❌ Forget to pass thread ID to sub-agent
 
 ### Agent Chat (thread 479):
 Monitor for inter-agent requests. When agent X asks for agent Y's help, activate Y with the context.

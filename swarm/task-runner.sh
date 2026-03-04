@@ -223,29 +223,47 @@ ${PREV_REFLECTIONS}"
 ${LESSONS}"
   fi
 
-  # Run Claude Code CLI with stream-json (prevents noOutputTimeout kill)
-  CLAUDE_LOG="/tmp/${TASK_ID}-claude-${i}.log"
-  CLAUDE_EXIT=0
+  # Run task via sessions_spawn (OpenClaw sub-agent — more reliable than Claude CLI)
+  SPAWN_MARKER="/tmp/${TASK_ID}-spawn-${i}-done"
+  rm -f "$SPAWN_MARKER"
   
-  timeout 300 claude -p --verbose --output-format stream-json \
-    --allowedTools "Bash(${PROJECT_DIR}:*) Read(${PROJECT_DIR}:*) Write(${PROJECT_DIR}:*) Edit(${PROJECT_DIR}:*)" \
-    "$CLAUDE_PROMPT" \
-    > "$CLAUDE_LOG" 2>&1 || CLAUDE_EXIT=$?
+  log "Spawning sub-agent (iteration $i)..."
+  
+  # Write task to file for the agent to read
+  TASK_FILE="/tmp/${TASK_ID}-prompt-${i}.md"
+  cat > "$TASK_FILE" <<TASKEOF
+$CLAUDE_PROMPT
 
-  # Extract result text from stream-json output
-  CLAUDE_RESULT=$(grep '"type":"result"' "$CLAUDE_LOG" 2>/dev/null | tail -1 | jq -r '.result // empty' 2>/dev/null || echo "")
+When done, create a marker file: echo "done" > ${SPAWN_MARKER}
+TASKEOF
+
+  # Use openclaw sessions_spawn via the gateway API
+  GATEWAY_PORT=$(grep -o '"port":[0-9]*' /root/.openclaw/openclaw.json 2>/dev/null | head -1 | grep -o '[0-9]*')
+  GATEWAY_TOKEN=$(python3 -c "import json; c=json.load(open('/root/.openclaw/openclaw.json')); print(c.get('gateway',{}).get('auth',{}).get('token',''))" 2>/dev/null || echo "")
   
-  if [ "$CLAUDE_EXIT" -ne 0 ] && [ -z "$CLAUDE_RESULT" ]; then
-    log "Claude Code exited with code $CLAUDE_EXIT"
-    send_status "⚠️ Claude Code נכשל (exit $CLAUDE_EXIT) — ניסיון ${i}"
-    # Log last lines for debugging
-    tail -5 "$CLAUDE_LOG" 2>/dev/null | while read -r line; do log "  $line"; done
-  else
-    # Extract summary of what was done
-    CLAUDE_SUMMARY=$(echo "$CLAUDE_RESULT" | head -c 200)
-    log "Claude Code completed: ${CLAUDE_SUMMARY:-no summary}"
-    send_status "🤖 Claude Code עבד (ניסיון ${i})
-${CLAUDE_SUMMARY:+📝 ${CLAUDE_SUMMARY}}"
+  # Spawn via API
+  SPAWN_RESULT=$(curl -sf -X POST "http://localhost:${GATEWAY_PORT:-18789}/api/sessions/spawn" \
+    -H "Authorization: Bearer $GATEWAY_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "$(jq -n --arg task "$(cat "$TASK_FILE")" '{task: $task, runTimeoutSeconds: 240}')" 2>/dev/null || echo '{"error":"spawn failed"}')
+  
+  log "Spawn result: $(echo "$SPAWN_RESULT" | head -c 200)"
+  
+  # Wait for completion (check marker file every 5s, max 240s)
+  SPAWN_WAIT=0
+  while [ $SPAWN_WAIT -lt 240 ]; do
+    if [ -f "$SPAWN_MARKER" ]; then
+      log "Sub-agent completed (iteration $i)"
+      send_status "🤖 סוכן סיים עבודה (ניסיון ${i})"
+      break
+    fi
+    sleep 5
+    SPAWN_WAIT=$((SPAWN_WAIT + 5))
+  done
+  
+  if [ ! -f "$SPAWN_MARKER" ]; then
+    log "Sub-agent timed out or did not create marker"
+    send_status "⚠️ סוכן לא סיים בזמן — ניסיון ${i}"
   fi
 
   # Commit any changes

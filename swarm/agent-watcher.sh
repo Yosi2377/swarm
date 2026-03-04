@@ -13,7 +13,19 @@ mkdir -p "$DONE_DIR"
 send_tg() {
   local thread="$1"
   local msg="$2"
-  curl -sf "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+  local agent="$3"
+  # Use the agent's own bot token
+  local SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
+  local AGENT_TOKEN=""
+  case "$agent" in
+    koder)   AGENT_TOKEN=$(cat "$SWARM_DIR/.koder-token" 2>/dev/null) ;;
+    shomer)  AGENT_TOKEN=$(cat "$SWARM_DIR/.shomer-token" 2>/dev/null) ;;
+    tzayar)  AGENT_TOKEN=$(cat "$SWARM_DIR/.tzayar-token" 2>/dev/null) ;;
+    worker)  AGENT_TOKEN=$(cat "$SWARM_DIR/.worker-token" 2>/dev/null) ;;
+    *)       AGENT_TOKEN="$TOKEN" ;;
+  esac
+  [ -z "$AGENT_TOKEN" ] && AGENT_TOKEN="$TOKEN"
+  curl -sf "https://api.telegram.org/bot${AGENT_TOKEN}/sendMessage" \
     -H "Content-Type: application/json" \
     -d "{\"chat_id\":\"$CHAT_ID\",\"message_thread_id\":$thread,\"text\":\"$msg\"}" >/dev/null 2>&1
 }
@@ -40,9 +52,16 @@ while true; do
       *)       EMOJI="📢" ;;
     esac
     
-    # Send notification
-    send_tg "$THREAD" "${EMOJI} ${MSG}"
+    # Send notification to Telegram via the agent's own bot
+    send_tg "$THREAD" "${EMOJI} ${MSG}" "$AGENT"
     echo "$(date +%H:%M:%S) → Sent to thread $THREAD: $MSG"
+    
+    # Inject into THIS topic's session so Or replies to Yossi there
+    curl -sf -X POST "http://127.0.0.1:18789/hooks/agent" \
+      -H "Authorization: Bearer agent-watcher-wake-2026" \
+      -H "Content-Type: application/json" \
+      -d "{\"message\":\"[System] סוכן ${AGENT} סיים עבודה (${STATUS}) בנושא ${THREAD}. ההודעה: ${MSG}. עדכן את יוסי בנושא הזה עכשיו.\",\"sessionKey\":\"agent:main:telegram:group:-1003815143703:topic:${THREAD}\"}" >/dev/null 2>&1 || true
+    echo "$(date +%H:%M:%S) → Agent hook sent to topic ${THREAD} session"
     
     # Remove marker
     rm -f "$f"

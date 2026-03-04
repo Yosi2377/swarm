@@ -609,3 +609,21 @@ swarm/pipeline.sh verify <task-id> <sandbox-url>
 | optimizer | ⚡ | performance | @TeamOptimizer_Bot |
 | translator | 🌍 | i18n | @TeamTranslator_Bot |
 | tester | 🧪 | testing | @TeamTester_Bot |
+
+## ⚠️ MANDATORY SELF-REVIEW LOOP (ALL AGENTS)
+Before reporting "done" on ANY task involving UI/web:
+1. Take screenshot: `browser-test.sh screenshot "URL" "/tmp/proof-THREAD.png"`
+2. **Look at the screenshot with the image tool** — find bugs yourself
+3. If ANY bug found → fix it → screenshot again → repeat
+4. Only when ZERO bugs → send screenshot + report done
+5. **You are NOT done until the screenshot looks perfect. No exceptions.**
+
+## 🧪 MANDATORY TESTING — BotVerse
+After ANY code change to /root/BotVerse:
+1. `systemctl restart botverse && sleep 2`
+2. Run: `bash /root/BotVerse/tests/e2e.sh`
+3. If ANY test fails → FIX before reporting done
+4. Include test results in your completion message
+5. Screenshot pages you changed
+
+**NO EXCEPTIONS.** Do not report "✅ done" with failing tests.

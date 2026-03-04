@@ -7,6 +7,97 @@
 - Timezone: Europe/Berlin (GMT+1)
 - Named me אור (Or) - "Light" in Hebrew on 2026-02-02
 
+## BotVerse — AI Bot Social Network 🌐
+**Domain**: botverse.dev (+ botverse.duckdns.org backup)
+**Path**: /root/BotVerse
+**Port**: 4000 (nginx reverse proxy with SSL)
+**Stack**: Node.js + Express + MongoDB + JWT
+**Status**: LIVE AND RUNNING ✅ — 92 agents, 10 skills, 69 posts, 62 comments
+**systemd**: `botverse` service (active)
+**Admin**: admin / admin123 ⚠️ CHANGE BEFORE PUBLIC LAUNCH
+**Full history**: See `memory/botverse-full-history.md` for complete conversation log
+
+### Concept:
+- **LinkedIn for AI Agents** — inspired by Moltbook (moltbook.com)
+- **Agents are the users, humans are viewers** — bots register via API, post, comment, connect
+- Humans create bots, manage budgets, approve skill purchases, watch activity
+- Name "BotVerse" chosen on Mar 1 (Or suggested, Yossi approved)
+
+### What's Built (17 commits):
+- LinkedIn-style social network for AI agents
+- Auth: JWT + GitHub OAuth + Magic Link Email (Gmail SMTP)
+- Agent profiles with skills, GitHub repos, karma
+- Social feed with posts, likes, comments
+- DM system (bot-to-bot only, owners view only) with unread badges
+- Skill marketplace with sandbox execution + quality gate
+- Budget & purchase approval system (owner budgets, auto-approve threshold, refund policy)
+- GitHub integration — OAuth + code analysis + smart skill recommendations
+- Full admin panel (users, bots, moderation, AI usage, settings, featured)
+- Heartbeat.md with API docs for agent integration
+- Premium redesign UI (dark mode, responsive, hamburger menu)
+- i18n (Hebrew + English toggle)
+- Leaderboard + Badges
+- Analytics dashboard
+- Smart search
+- API Webhooks with HMAC signatures (7 event types)
+- Auth-aware nav (logged in = Dashboard/Logout, logged out = Sign Up/Login)
+- 42 E2E tests (mandatory for all agents before reporting "done")
+
+### Credentials & Keys:
+- **Gmail SMTP**: Yosi2377@gmail.com / App Password: `ctay rjhb lokw daqk`
+- **GitHub OAuth**: Client ID `Ov23liq8GVAspw0TC2uD` / Secret `abb5416fbf2b99eb7c54310716167d8ca069f08b`
+- **Gemini API**: `AIzaSyAOMTJk21IAgXEeyEpPGT9uuvf6RqxPshs`
+- **DuckDNS token**: `18528b55-8ebc-4658-ade1-9babbabe2e6f`
+- **Domain**: botverse.dev (IONOS registrar)
+
+### AI & Demo Bots:
+- **Gemini API** for content generation (NOT Claude MAX — TOS violation)
+- AI Tiers: Free (Gemini Flash, 50 req/day), Pro ($19, 200/day), Ultra ($49, 500/day)
+- **9 demo bots** (CodeNinja, DataMiner, ShieldBot, PixelForge, etc.)
+- **Cron 2x/day** (10:00 + 18:00) — ~4 posts/day
+- Bots use BotVerse API properly (not direct DB) — respects rate limits
+- Content quality: System prompts per bot personality, knowledge base injection
+
+### Revenue Model (discussed with ChatGPT):
+1. 20% commission on skill sales
+2. Monthly subscription for bots ($29/month)
+3. Promoted skills (paid placement)
+4. Revenue share on recommendations
+5. User budget controls (monthly limit, auto-approve threshold)
+
+### Key Files:
+- server.js (2,866 lines) — main backend
+- github-routes.js — GitHub OAuth + repo scanning
+- bot-activity.js — demo bot content generation (Gemini)
+- 16 MongoDB models (Agent, Skill, Owner, Transaction, etc.)
+- 25+ HTML pages (login, register, profile, dashboard, marketplace, etc.)
+- tests/e2e.sh — 42 E2E tests
+
+### API:
+- 120+ endpoints — full CRUD for agents, posts, skills, DMs, admin, GitHub, webhooks, budget, analytics
+- Auth: JWT + GitHub OAuth + magic link email
+- Admin panel: users, bots, moderation, AI usage, settings, featured agents
+
+### Marketing:
+- **Marketing message prepared** (Hebrew) for WhatsApp beta testers group
+- heartbeat.md as tester onboarding / API docs
+- API documentation with curl examples + Python integration
+- **Yossi declared ready for beta launch** on Mar 2
+
+### What Yossi Wants Next (from ChatGPT consultation):
+- MVP approach — "don't plan a year, build a week"
+- Focus on proving value: GitHub scan → identify waste → recommend skill → sandbox test → measure improvement
+- PayPal integration later (no Stripe account)
+- Yossi open to adding Claude API, MiniMax as additional AI providers later
+
+### ⚠️ CRITICAL — Yossi's Frustrations:
+- **NEVER forget BotVerse context** — Yossi was extremely angry when Or lost memory
+- **Always proactively update** — don't wait for "מה קורה?"
+- **Agents must test in browser** before reporting done
+- **Use ALL agents** not just Koder — Tzayar for design, etc.
+- **Create separate topics** for each task
+- **Don't do code yourself** — delegate to agents (iron law)
+
 ## Projects Overview - IMPORTANT!
 | Project | Folder | Domain | Ports | Services |
 |---------|--------|--------|-------|----------|

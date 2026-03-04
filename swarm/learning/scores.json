@@ -9,11 +9,11 @@
       "streak": 1
     },
     "koder": {
-      "tasks": 56,
+      "tasks": 74,
       "success": 35,
-      "fail": 21,
-      "score": 62,
-      "streak": 13
+      "fail": 39,
+      "score": 47,
+      "streak": -18
     },
     "shomer": {
       "tasks": 2,
@@ -23,11 +23,11 @@
       "streak": 2
     },
     "tzayar": {
-      "tasks": 1,
+      "tasks": 2,
       "success": 1,
-      "fail": 0,
-      "score": 100,
-      "streak": 1
+      "fail": 1,
+      "score": 50,
+      "streak": -1
     },
     "worker": {
       "tasks": 1,

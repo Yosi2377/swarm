@@ -17,7 +17,32 @@ LESSONS=$(bash "${SWARM_DIR}/inject-lessons.sh" "$TASK_DESC" 2>/dev/null || echo
 cat <<EOF
 You are ${AGENT_ID}. Read /root/.openclaw/workspace/swarm/SYSTEM.md for your instructions.
 
+## 📋 Mandatory Work Process — Follow These Steps IN ORDER:
+
+**STEP 1: Research first.** Use web_search to find current best practices, latest versions, and examples before writing any code. At least 2-3 searches relevant to the task.
+
+**STEP 2: Plan.** Write a brief plan of what you'll change and why. Post it to the topic via send.sh before coding.
+
+**STEP 3: Implement.** Write the code, following what you learned in research.
+
+**STEP 4: Test.** Run tests and verify manually. Use curl, browser snapshots, or E2E tests as appropriate.
+
+**STEP 5: Verify with counts/screenshots — don't just say 'done'.** Provide concrete evidence: DB counts, API responses, screenshots.
+
+⚠️ **Do NOT skip Step 1 (Research).** Even if you think you know the answer, search first. Things change.
+
 **Task:** ${TASK_DESC}
+
+## 🛡️ MANDATORY Safety Rules (DB Operations)
+- **BEFORE any delete/cleanup/drop operation on MongoDB:** run \`bash /root/BotVerse/scripts/pre-agent-backup.sh\`
+- **AFTER any DB modification:** run integrity check:
+  \`\`\`bash
+  node -e "const m=require('mongoose');const{verifyIntegrity}=require('/root/BotVerse/lib/agent-safety');m.connect('mongodb://localhost/botverse').then(async()=>{const r=await verifyIntegrity(m.connection.db);console.log(r);process.exit(0)})"
+  \`\`\`
+- **If integrity check shows warnings (empty collections) → STOP and restore from backup**
+- **NEVER use deleteMany with empty filter on agents, skills, posts, owners**
+- **For cleanup tasks:** use \`safeDeleteMany\` from \`/root/BotVerse/lib/agent-safety.js\` instead of raw \`deleteMany\`
+- **Violation of these rules = immediate task failure**
 
 **Report to topic ${THREAD_ID}** — use send.sh for progress updates:
 \`\`\`bash
@@ -63,9 +88,9 @@ If the task involves a web page or UI, you MUST repeat this loop until PERFECT:
 bash /root/.openclaw/workspace/swarm/learn.sh score ${AGENT_ID} task-${THREAD_ID}-\$(date +%s) pass "Completed: ${TASK_DESC}"
 \`\`\`
 
-3. Create done marker:
+3. Create done marker (MANDATORY — this is how the orchestrator knows you finished):
 \`\`\`bash
-mkdir -p /tmp/agent-done && python3 -c "import json; json.dump({'thread':${THREAD_ID},'status':'success','message':'${TASK_DESC}','agent':'${AGENT_ID}'}, open('/tmp/agent-done/${AGENT_ID}-${THREAD_ID}.json','w'))"
+bash /root/.openclaw/workspace/swarm/done-marker.sh "${AGENT_ID}-${THREAD_ID}" "${THREAD_ID}" "summary of what you did"
 \`\`\`
 
 **If FAILED:**
@@ -73,6 +98,6 @@ mkdir -p /tmp/agent-done && python3 -c "import json; json.dump({'thread':${THREA
 bash /root/.openclaw/workspace/swarm/learn.sh score ${AGENT_ID} task-${THREAD_ID}-\$(date +%s) fail "Failed: <reason>"
 bash /root/.openclaw/workspace/swarm/learn.sh lesson ${AGENT_ID} important 0.8 "Failed: ${TASK_DESC}" "<what went wrong and how to avoid>"
 /root/.openclaw/workspace/swarm/send.sh ${AGENT_ID} ${THREAD_ID} "❌ משימה נכשלה: <reason>"
-mkdir -p /tmp/agent-done && python3 -c "import json; json.dump({'thread':${THREAD_ID},'status':'failed','message':'נכשל: ${TASK_DESC}','agent':'${AGENT_ID}'}, open('/tmp/agent-done/${AGENT_ID}-${THREAD_ID}.json','w'))"
+bash /root/.openclaw/workspace/swarm/done-marker.sh "${AGENT_ID}-${THREAD_ID}" "${THREAD_ID}" "FAILED: <reason>"
 \`\`\`
 EOF

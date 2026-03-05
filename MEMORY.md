@@ -201,7 +201,18 @@
   - דוגמה: `claude -p --verbose --output-format stream-json "task"`
 - **Skill file:** `/usr/lib/node_modules/openclaw/skills/coding-agent/SKILL.md`
 
-## לקחים חשובים (20/02/2026)
+## לקחים חשובים
+
+### DB Cleanup Disaster (05/03/2026)
+- שלחתי קודר ל"clean E2E junk" — הוא מחק הכל כולל demo data
+- **חוק ברזל חדש:** כל cleanup/delete task חייב לכלול:
+  1. רשימה מפורשת של מה למחוק (regex patterns)
+  2. רשימה מפורשת של מה **לא** לגעת (demo agents, real skills)
+  3. `countDocuments()` לפני ואחרי — אם count יורד ביותר מ-50% → עצור ושאל
+- **חוק ברזל חדש:** אחרי כל סוכן שמשנה DB, לבדוק counts: agents, skills, posts — לא רק "tests pass"
+- **חוק ברזל חדש:** ליצור seed-all.js שאפשר תמיד לשחזר ממנו
+
+### 20/02/2026
 - **לעולם לא לכתוב קוד בעצמי** — תמיד דרך Claude Code CLI או סוכנים
 - **לעולם לא לעבוד על production** — sandbox בלבד
 - **לא להוסיף משימות** שיוסי לא ביקש

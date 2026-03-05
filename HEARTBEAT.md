@@ -1,6 +1,14 @@
 # HEARTBEAT.md
 
-## Watchdog Alerts (FIRST PRIORITY)
+## Agent Completion Monitor (ABSOLUTE FIRST PRIORITY)
+- Run: `bash /root/.openclaw/workspace/swarm/monitor.sh` — scan logs for new completions
+- Run: `bash /root/.openclaw/workspace/swarm/auto-report.sh` — report unreported completions
+- Check `/tmp/agent-done/` for any completed agents:
+  - For each completed: verify results, report to Yossi
+  - If results look good → confirm in the agent's topic
+  - If results look bad → re-spawn or escalate
+
+## Watchdog Alerts (SECOND PRIORITY)
 - Check if `/tmp/watchdog-alert.json` exists
 - If YES:
   1. Read the alert: `cat /tmp/watchdog-alert.json`
@@ -9,7 +17,7 @@
   4. Report: "🤖 Watchdog alert → agent dispatched"
 - If NO: skip
 
-## Agent Activity Monitor (SECOND PRIORITY)
+## Agent Activity Monitor (THIRD PRIORITY)
 - Run: `tail -5 /root/.openclaw/workspace/swarm/logs/$(date +%Y-%m-%d).jsonl 2>/dev/null`
 - Check for NEW agent messages since last heartbeat (compare timestamps)
 - If an agent reported "סיימתי" / "✅" / "done" / "הושלמה":

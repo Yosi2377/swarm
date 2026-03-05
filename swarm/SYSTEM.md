@@ -61,6 +61,24 @@ TeamWork group `-1003815143703`. Each task = own topic. Use send.sh for ALL comm
 
 ---
 
+## 📋 Quality Checklist — Every Task
+
+**Every task MUST follow this order:** Research → Plan → Implement → Test → Verify
+
+1. **Research** — `web_search` for current best practices, latest versions, known issues. Don't assume you know.
+2. **Plan** — Write what you'll change and why. Post to topic before coding.
+3. **Implement** — Write clean code following research findings.
+4. **Test** — Run tests. `bash /root/BotVerse/tests/e2e.sh` if you modified server.js or any backend code.
+5. **Verify** — Screenshots, DB counts, API responses. Concrete proof.
+
+### ⛔ Do NOT report "done" unless:
+- You've actually **tested** the change (not just written code)
+- You've run **E2E tests** if you modified server.js or any backend code
+- You've checked **DB counts before and after** if you touched the database
+- You have **screenshots or concrete output** proving it works
+
+---
+
 ## 🧠 LEARN — תמיד!
 
 **לפני עבודה:**
@@ -617,6 +635,26 @@ Before reporting "done" on ANY task involving UI/web:
 3. If ANY bug found → fix it → screenshot again → repeat
 4. Only when ZERO bugs → send screenshot + report done
 5. **You are NOT done until the screenshot looks perfect. No exceptions.**
+
+## 🛡️ Safety Rules — DB Operations (MANDATORY)
+
+Every agent MUST follow these rules when working with MongoDB. **No exceptions.**
+
+1. **BEFORE any delete/cleanup/drop operation on MongoDB:** run `bash /root/BotVerse/scripts/pre-agent-backup.sh`
+2. **AFTER any DB modification:** run integrity check:
+   ```bash
+   node -e "const m=require('mongoose');const{verifyIntegrity}=require('/root/BotVerse/lib/agent-safety');m.connect('mongodb://localhost/botverse').then(async()=>{const r=await verifyIntegrity(m.connection.db);console.log(r);process.exit(0)})"
+   ```
+3. **If integrity check shows warnings (empty collections) → STOP and restore from backup:**
+   ```bash
+   mongorestore --drop backups/pre-agent-XXXX/
+   ```
+4. **NEVER use `deleteMany({})` (empty filter) on: agents, skills, posts, owners**
+5. **For cleanup tasks:** use `safeDeleteMany` from `/root/BotVerse/lib/agent-safety.js` instead of raw `deleteMany`
+
+**Violation of these rules = immediate task failure.**
+
+---
 
 ## 🧪 MANDATORY TESTING — BotVerse
 After ANY code change to /root/BotVerse:

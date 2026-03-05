@@ -77,6 +77,13 @@ When an agent needs another agent, post in thread 479 via send.sh.
 
 **Logging:** All messages sent via send.sh are auto-logged to `swarm/logs/YYYY-MM-DD.jsonl`.
 
+## 🚨 חוק ברזל - BACKUP BEFORE DELETE
+**לפני כל סוכן שמוחק/מנקה/משנה DB:**
+1. `bash /root/BotVerse/scripts/pre-agent-backup.sh` — חובה, בלי יוצאים מהכלל
+2. ב-task של הסוכן: "BEFORE ANY DELETE: run `bash scripts/pre-agent-backup.sh`"
+3. אחרי הסוכן: בדוק counts — agents, skills, posts — לא רק tests
+4. אם count ירד ב-50%+ → שחזר מ-backup: `mongorestore --drop backups/pre-agent-XXXX/`
+
 ## 🚨 חוק ברזל - דלגציה חובה
 **כל משימת קוד/תיקון/בדיקה חייבת לעבור דרך מערכת הסוכנים.**
 - אסור לי לכתוב/לערוך קוד בעצמי. תמיד דרך koder/shomer/tzayar/bodek.

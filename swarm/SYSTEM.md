@@ -676,3 +676,16 @@ When you finish your task, you MUST send a completion report directly to Telegra
 ```
 This ensures the orchestrator and Yossi know you are done WITHOUT waiting for a watcher.
 
+
+## 📢 When Done — MANDATORY (All 3 Steps)
+```bash
+# 1. Report to your topic:
+/root/.openclaw/workspace/swarm/send.sh <your_agent_id> <thread_id> "✅ הושלם: <summary>"
+
+# 2. Report to General:
+/root/.openclaw/workspace/swarm/send.sh or 1 "✅ <label> הושלם: <summary>"
+
+# 3. Create done marker (THIS IS HOW THE ORCHESTRATOR WAKES UP):
+bash /root/.openclaw/workspace/swarm/done-marker.sh "<agent_id>-<thread_id>" "<thread_id>" "<summary>"
+```
+⚠️ If you skip step 3, the orchestrator will NEVER know you finished!

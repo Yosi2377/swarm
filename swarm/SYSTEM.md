@@ -646,7 +646,7 @@ Every agent MUST follow these rules when working with MongoDB. **No exceptions.*
 1. **BEFORE any delete/cleanup/drop operation on MongoDB:** run `bash $PROJECT_DIR/scripts/pre-agent-backup.sh`
 2. **AFTER any DB modification:** run integrity check:
    ```bash
-   node -e "const m=require('mongoose');const{verifyIntegrity}=require('$PROJECT_DIR/lib/agent-safety');m.connect('mongodb://localhost/botverse').then(async()=>{const r=await verifyIntegrity(m.connection.db);console.log(r);process.exit(0)})"
+   node -e "const m=require('mongoose');const{verifyIntegrity}=require('$PROJECT_DIR/lib/agent-safety');m.connect('mongodb://localhost/$DB_NAME').then(async()=>{const r=await verifyIntegrity(m.connection.db);console.log(r);process.exit(0)})"
    ```
 3. **If integrity check shows warnings (empty collections) → STOP and restore from backup:**
    ```bash

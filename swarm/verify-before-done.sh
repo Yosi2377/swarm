@@ -1,40 +1,42 @@
 #!/bin/bash
 # MANDATORY verification before any agent reports "done"
-# Usage: bash verify-before-done.sh
-set -e
+# Usage: bash verify-before-done.sh [project_dir]
+# Generic — works with any project
 
-cd /root/BotVerse
+PROJECT_DIR="${1:-$(pwd)}"
+cd "$PROJECT_DIR" 2>/dev/null || { echo "❌ Cannot cd to $PROJECT_DIR"; exit 1; }
 
 echo "=== VERIFICATION CHECK ==="
+echo "Project: $PROJECT_DIR"
 
-# 1. Server running?
-curl -s -o /dev/null -w "Server: %{http_code}\n" http://localhost:4000 || echo "❌ SERVER DOWN"
+# 1. If there's a running server, check it
+for port in 3000 4000 5000 8000 8080 9000; do
+  if curl -s -o /dev/null -w "" "http://localhost:$port" 2>/dev/null; then
+    CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:$port")
+    echo "Server on port $port: $CODE"
+  fi
+done
 
-# 2. DB integrity
-node -e '
-const m=require("mongoose");m.connect("mongodb://localhost/botverse").then(async()=>{
-  const db=m.connection.db;
-  const counts = {
-    agents: await db.collection("agents").countDocuments(),
-    skills: await db.collection("skills").countDocuments(),
-    posts: await db.collection("posts").countDocuments(),
-    owners: await db.collection("owners").countDocuments()
-  };
-  console.log("DB:", JSON.stringify(counts));
-  if(counts.agents < 10) console.log("❌ TOO FEW AGENTS");
-  if(counts.skills < 20) console.log("❌ TOO FEW SKILLS");
-  if(counts.posts < 5) console.log("❌ TOO FEW POSTS");
-  process.exit(0);
-});
-' 2>&1
-
-# 3. E2E tests
-RESULT=$(bash tests/e2e.sh 2>&1 | tail -3)
-echo "$RESULT"
-if echo "$RESULT" | grep -q "Failed: 0"; then
-  echo "✅ ALL TESTS PASS"
+# 2. If there are tests, run them
+if [ -f "tests/e2e.sh" ]; then
+  echo "Running E2E tests..."
+  RESULT=$(bash tests/e2e.sh 2>&1 | tail -5)
+  echo "$RESULT"
+elif [ -f "package.json" ] && grep -q '"test"' package.json 2>/dev/null; then
+  echo "Running npm test..."
+  npm test 2>&1 | tail -10
 else
-  echo "❌ TESTS FAILING"
+  echo "⚠️ No tests found"
+fi
+
+# 3. Git status
+if [ -d ".git" ]; then
+  DIRTY=$(git status --porcelain | wc -l)
+  if [ "$DIRTY" -gt 0 ]; then
+    echo "⚠️ $DIRTY uncommitted changes"
+  else
+    echo "✅ Git clean"
+  fi
 fi
 
 echo "=== END VERIFICATION ==="

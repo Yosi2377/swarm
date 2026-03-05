@@ -1,24 +1,34 @@
 #!/bin/bash
-# spawn-task.sh — Full pipeline: spawn agent + smart eval + failure handling
-# Usage: spawn-task.sh <label> <topic> <task_description> <eval_instructions> [timeout_sec]
+# spawn-task.sh — THE orchestrator's main tool
+# Spawns agent + attaches smart-eval pipeline
+# 
+# Usage: source output of this script to get the label/session info
+# spawn-task.sh <label> <topic> <task> <eval> [timeout]
 #
-# This is the ONE script the orchestrator calls for every task.
-# It handles: spawn → monitor → evaluate → report
-# On failure: retry once → if still fails, escalate
+# Example:
+#   bash spawn-task.sh "koder-fix-auth" "8500" \
+#     "Fix auth bugs in /root/myproject" \
+#     "cd /root/myproject && npm test" \
+#     "180"
+#
+# This script ONLY starts the smart-eval background process.
+# The orchestrator must call sessions_spawn SEPARATELY.
+# After calling sessions_spawn, call this to attach monitoring.
 
 LABEL="${1:?Usage: spawn-task.sh <label> <topic> <task> <eval> [timeout]}"
 TOPIC="${2:-4950}"
-TASK="${3:?Task description required}"
-EVAL="${4:-Run tests and verify the work}"
+TASK="${3:-Agent task}"
+EVAL="${4:-Run tests and verify}"
 TIMEOUT="${5:-180}"
 
-CHAT_ID="-1003815143703"
-
-echo "$(date -Iseconds) spawn-task: ${LABEL} → topic ${TOPIC}" >> /tmp/spawn-task.log
-
-# Start smart-eval in background — it will poll and trigger evaluation
+# Start smart-eval pipeline in background
 nohup bash /root/.openclaw/workspace/swarm/smart-eval.sh \
-  "${LABEL}" "${TOPIC}" "${EVAL}" "${TIMEOUT}" \
+  "${LABEL}" \
+  "${TOPIC}" \
+  "${EVAL}" \
+  "${TIMEOUT}" \
+  "${TASK}" \
   > /dev/null 2>&1 &
 
-echo $!
+echo "MONITOR_PID=$!"
+echo "$(date -Iseconds) spawn-task: ${LABEL} → topic ${TOPIC} (timeout ${TIMEOUT}s, monitor PID $!)" >> /tmp/spawn-task.log

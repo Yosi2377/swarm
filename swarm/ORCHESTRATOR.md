@@ -9,6 +9,16 @@
 | עיצוב, UI, תמונות, לוגו | tzayar | 🎨 |
 | מחקר, best practices, השוואה | researcher | 🔍 |
 | בדיקות, QA, טסטים, regression | bodek | 🧪 |
+| דאטא, MongoDB, SQL, migrations, backups | data | 📊 |
+| דיבאג, errors, logs, profiling | debugger | 🐛 |
+| Docker, containers, K8s, DevOps | docker | 🐳 |
+| Frontend, HTML, CSS, JS, responsive | front | 🖥️ |
+| Backend, API, Node.js, Express, server | back | ⚡ |
+| E2E tests, unit tests, integration tests | tester | 🧪 |
+| Refactoring, optimization, tech debt | refactor | ♻️ |
+| Monitoring, alerts, health checks, uptime | monitor | 📡 |
+| Performance, speed, caching | optimizer | 🚀 |
+| APIs, webhooks, third-party integrations | integrator | 🔗 |
 | כל השאר | worker | 🤖 |
 
 Ties → shomer > koder > tzayar > researcher > bodek > worker

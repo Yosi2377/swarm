@@ -13,7 +13,7 @@ PHOTO_PATH="$5"
 
 if [ -z "$AGENT_ID" ] || [ -z "$THREAD_ID" ] || [ -z "$MESSAGE" ]; then
   echo "Usage: $0 <agent_id> <thread_id> <message> [--photo path]"
-  echo "Agents: or, shomer, koder, tzayar, worker, researcher, bodek"
+  echo "Agents: or, shomer, koder, tzayar, worker, researcher, bodek, data, debugger, docker, front, back, tester, refactor, monitor, optimizer, integrator"
   exit 1
 fi
 
@@ -26,6 +26,16 @@ case "$AGENT_ID" in
   worker)     TOKEN_FILE="$SWARM_DIR/.worker-token" ;;
   researcher) TOKEN_FILE="$SWARM_DIR/.researcher-token" ;;
   bodek)      TOKEN_FILE="$SWARM_DIR/.bodek-token" ;;
+  data)       TOKEN_FILE="$SWARM_DIR/.data-token" ;;
+  debugger)   TOKEN_FILE="$SWARM_DIR/.debugger-token" ;;
+  docker)     TOKEN_FILE="$SWARM_DIR/.docker-token" ;;
+  front)      TOKEN_FILE="$SWARM_DIR/.front-token" ;;
+  back)       TOKEN_FILE="$SWARM_DIR/.back-token" ;;
+  tester)     TOKEN_FILE="$SWARM_DIR/.tester-token" ;;
+  refactor)   TOKEN_FILE="$SWARM_DIR/.refactor-token" ;;
+  monitor)    TOKEN_FILE="$SWARM_DIR/.monitor-token" ;;
+  optimizer)  TOKEN_FILE="$SWARM_DIR/.optimizer-token" ;;
+  integrator) TOKEN_FILE="$SWARM_DIR/.integrator-token" ;;
   *)          echo "Unknown agent: $AGENT_ID"; exit 1 ;;
 esac
 

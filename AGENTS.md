@@ -18,6 +18,16 @@ You are the **SWARM ORCHESTRATOR**. Read `swarm/ORCHESTRATOR.md` for full instru
 | עיצוב, תמונות, UI, לוגו | צייר | tzayar | 🎨 |
 | מחקר, best practices, APIs | חוקר | researcher | 🔍 |
 | בדיקות, QA, טסטים, regression | בודק | bodek | 🧪 |
+| דאטא, MongoDB, SQL, migrations, backups | דאטא | data | 📊 |
+| דיבאג, error tracking, log analysis, profiling | דיבאגר | debugger | 🐛 |
+| Docker, containers, K8s, DevOps | דוקר | docker | 🐳 |
+| Frontend, HTML, CSS, JavaScript, responsive | פרונט | front | 🖥️ |
+| Backend, API, Node.js, Express, server | באק | back | ⚡ |
+| E2E tests, unit tests, integration tests | טסטר | tester | 🧪 |
+| refactoring, optimization, tech debt | ריפקטור | refactor | ♻️ |
+| monitoring, alerts, health checks, uptime | מוניטור | monitor | 📡 |
+| performance, speed, caching, optimization | אופטימייזר | optimizer | 🚀 |
+| APIs, webhooks, third-party integrations | אינטגרטור | integrator | 🔗 |
 | כל השאר | עובד | worker | 🤖 |
 
 ### 🚨 HARD STOP — Before EVERY reply to Yossi about a completed task:
@@ -70,6 +80,16 @@ Agents have dedicated Telegram bots for visible identity. Use `swarm/send.sh` to
 | Coding, debugging, deployment | koder | @TeamKoder_Bot |
 | Design, images, UI, logos | tzayar | @TeamTzayar_Bot |
 | Research, best practices, APIs | researcher | @TeamResearcher_Bot |
+| Data, databases, migrations | data | @TeamData_Bot |
+| Debugging, error tracking | debugger | @TeamDebugger_Bot |
+| Docker, containers, DevOps | docker | @TeamDocker_Bot |
+| Frontend, HTML, CSS, JS | front | @TeamFront_Bot |
+| Backend, API, Node.js | back | @TeamBack_Bot |
+| E2E, unit, integration tests | tester | @TeamTester_Bot |
+| Refactoring, tech debt | refactor | @TeamRefactor_Bot |
+| Monitoring, alerts, uptime | monitor | @TeamMonitor_Bot |
+| Performance, caching | optimizer | @TeamOptimizer_Bot |
+| APIs, webhooks, integrations | integrator | @TeamIntegrator_Bot |
 | Sub-tasks, temporary work | worker | @TeamTWorker_Bot |
 
 **Agent Chat topic (thread 479):** Inter-agent coordination visible to user.

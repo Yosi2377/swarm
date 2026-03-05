@@ -1,65 +1,44 @@
 #!/bin/bash
 # spawn-agent.sh — Generate task text for sub-agent
-# Usage: spawn-agent.sh <agent_id> <thread_id> <task_description>
-# Output: prints task text to stdout
-# Generic — works with any project
+# Usage: spawn-agent.sh <agent_id> <thread_id> <task_description> [project_dir]
 
-AGENT_ID="${1:?Usage: spawn-agent.sh <agent_id> <thread_id> <task_description>}"
+AGENT_ID="${1:?Usage: spawn-agent.sh <agent_id> <thread_id> <task_description> [project_dir]}"
 THREAD_ID="${2:?Missing thread_id}"
 TASK_DESC="${3:?Missing task_description}"
+PROJECT_DIR="${4:-}"
 
 SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
 LESSONS=$(bash "${SWARM_DIR}/inject-lessons.sh" "$TASK_DESC" 2>/dev/null || echo "")
 
 cat <<EOF
-You are ${AGENT_ID}. Read /root/.openclaw/workspace/swarm/SYSTEM.md for your instructions.
+You are ${AGENT_ID}. 
 
-## 📋 Work Process — Follow IN ORDER:
+## Task
+${TASK_DESC}
 
-**STEP 1: Research.** Use web_search for current best practices and examples.
-**STEP 2: Plan.** Post your plan to the topic via send.sh before coding.
-**STEP 3: Implement.** Write the code.
-**STEP 4: Test.** Run tests, verify with curl/browser. Don't just say "done".
-**STEP 5: Verify.** Provide concrete proof: test output, API responses, screenshots.
+## Rules
+1. Work step by step. After each change, TEST it immediately (curl, browser, run tests)
+2. If something breaks, fix it before moving on
+3. Do NOT use deleteMany({}) on any collection without explicit filter
+4. Commit your changes: git add -A && git commit -m "#${THREAD_ID}: description"
 
-**Task:** ${TASK_DESC}
-
-**Report to topic ${THREAD_ID}:**
+## Communication
+Report progress to Telegram (your session messages are NOT visible to the user):
 \`\`\`bash
 /root/.openclaw/workspace/swarm/send.sh ${AGENT_ID} ${THREAD_ID} "message"
 \`\`\`
 
-${LESSONS}
+${LESSONS:+## Past Lessons
+$LESSONS}
 
-**SELF-REVIEW before done:**
-1. Take screenshot if UI change
-2. Look at it — is the issue actually fixed?
-3. If ANY bug visible → fix and retry
-4. Only report done when it's PERFECT
-
-**When DONE (ALL steps mandatory):**
-
-1. Verify: \`bash /root/.openclaw/workspace/swarm/verify-before-done.sh\`
-2. Report to topic:
+## When Done
+1. Verify your work: run tests, check with curl, take screenshot if UI
+2. Report:
 \`\`\`bash
 /root/.openclaw/workspace/swarm/send.sh ${AGENT_ID} ${THREAD_ID} "✅ הושלם: <summary>"
-\`\`\`
-3. Report to General:
-\`\`\`bash
 /root/.openclaw/workspace/swarm/send.sh or 1 "✅ ${AGENT_ID}-${THREAD_ID} הושלם: <summary>"
-\`\`\`
-4. Done marker:
-\`\`\`bash
 bash /root/.openclaw/workspace/swarm/done-marker.sh "${AGENT_ID}-${THREAD_ID}" "${THREAD_ID}" "<summary>"
 \`\`\`
-5. Learning:
-\`\`\`bash
-bash /root/.openclaw/workspace/swarm/learn.sh score ${AGENT_ID} task-${THREAD_ID}-\$(date +%s) pass "Completed: ${TASK_DESC}"
-\`\`\`
 
-**If FAILED:**
-\`\`\`bash
-/root/.openclaw/workspace/swarm/send.sh ${AGENT_ID} ${THREAD_ID} "❌ נכשל: <reason>"
-bash /root/.openclaw/workspace/swarm/done-marker.sh "${AGENT_ID}-${THREAD_ID}" "${THREAD_ID}" "FAILED: <reason>"
-\`\`\`
+⚠️ An evaluator will check your work after you report done. If it fails, you'll be asked to fix it.
 EOF

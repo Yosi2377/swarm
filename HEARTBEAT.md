@@ -1,48 +1,37 @@
 # HEARTBEAT.md
 
-## Agent Completion Monitor (ABSOLUTE FIRST PRIORITY)
-- Run: `bash /root/.openclaw/workspace/swarm/monitor.sh` — scan logs for new completions
-- Run: `bash /root/.openclaw/workspace/swarm/auto-report.sh` — report unreported completions
-- Check `/tmp/agent-done/` for any completed agents:
-  - For each completed: verify results, report to Yossi
-  - If results look good → confirm in the agent's topic
-  - If results look bad → re-spawn or escalate
+## 1. Smart-Eval Reports (HIGHEST PRIORITY)
+Check for new evaluation reports and retry requests:
+```bash
+# Check for retry requests — re-spawn failed agents
+for f in /tmp/retry-request-*.json; do
+  [ -f "$f" ] || continue
+  cat "$f"  # Read: label, topic, retry count, issues
+  # Re-spawn the agent with extra context about what failed
+  # Then delete: rm "$f"
+done
 
-## Watchdog Alerts (SECOND PRIORITY)
-- Check if `/tmp/watchdog-alert.json` exists
-- If YES:
-  1. Read the alert: `cat /tmp/watchdog-alert.json`
-  2. Spawn a koder agent to fix the issue on SANDBOX
-  3. Delete the file: `rm /tmp/watchdog-alert.json`
-  4. Report: "🤖 Watchdog alert → agent dispatched"
-- If NO: skip
+# Check recent reports
+bash /root/.openclaw/workspace/swarm/status.sh 10
+```
+- If retry-request exists → re-spawn the agent with issues as context
+- If report says FAIL after max retries → escalate to Yossi
 
-## Agent Activity Monitor (THIRD PRIORITY)
-- Run: `tail -5 /root/.openclaw/workspace/swarm/logs/$(date +%Y-%m-%d).jsonl 2>/dev/null`
-- Check for NEW agent messages since last heartbeat (compare timestamps)
-- If an agent reported "סיימתי" / "✅" / "done" / "הושלמה":
-  1. Read the full message
-  2. Report to Yossi in the relevant topic: "⚙️ [agent] סיים: [summary]"
-  3. If peer-review is needed, trigger it
+## 2. Agent Completion Monitor
+- Run: `bash /root/.openclaw/workspace/swarm/monitor.sh` — scan logs for completions
+- Check `/tmp/agent-done/` for completed agents
+- For each: verify results, report to Yossi
+
+## 3. Watchdog Alerts
+- Check `/tmp/watchdog-alert.json`
+- If exists: spawn koder to fix, delete file, report
+
+## 4. Agent Activity Monitor
+- `tail -5 /root/.openclaw/workspace/swarm/logs/$(date +%Y-%m-%d).jsonl 2>/dev/null`
 - Track last checked timestamp in `/tmp/heartbeat-agent-last.txt`
 
-## Auto-Approve Handler
-- If ANY recent message in General matches pattern `approve_XXXX`:
-  - Run: `bash /root/.openclaw/workspace/swarm/handle-approve.sh XXXX`
-- If pattern `reject_XXXX`:
-  - Run: `send.sh or 1 "❌ PR #XXXX rejected"`
-
-## Pieces LTM Sync (every heartbeat)
-- Run: `bash /root/.openclaw/workspace/swarm/pieces-sync.sh`
-- This syncs daily memory, git commits, agent activity, and MEMORY.md to Pieces
-
-## Pieces Real-Time — MANDATORY on EVERY turn
-- After EVERY reply to the user, save the exchange to Pieces:
-  ```bash
-  /root/.openclaw/workspace/swarm/pieces-realtime.sh "user:yossi" "USER_MESSAGE_SUMMARY"
-  /root/.openclaw/workspace/swarm/pieces-realtime.sh "agent:or" "MY_REPLY_SUMMARY"
-  ```
-- Keep summaries short (1-2 lines), capture the essence
-- This is how Pieces learns about our conversations in real-time
+## 5. Auto-Approve Handler
+- Pattern `approve_XXXX` → `bash swarm/handle-approve.sh XXXX`
+- Pattern `reject_XXXX` → `send.sh or 1 "❌ PR #XXXX rejected"`
 
 ## Nothing else needed? → HEARTBEAT_OK

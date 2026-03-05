@@ -1,39 +1,62 @@
-# ORCHESTRATOR.md — Swarm Orchestrator Protocol
+# ORCHESTRATOR.md — Swarm Orchestrator Protocol v2
 
-## Core Architecture: Evaluator-Optimizer Pattern
+## Core Principle: NEVER TRUST AGENT SELF-REPORTS
 
 Every task follows this flow:
 ```
-Task → Agent works → Evaluator checks → PASS? → Report to Yossi
-                                        → FAIL? → Agent retries (max 3x)
+Task → Create Topic → Spawn Agent → Agent works → Agent reports done
+  → ORCHESTRATOR VERIFIES INDEPENDENTLY → PASS? → Report to Yossi
+                                         → FAIL? → Steer/retry (max 3x)
+                                         → 3 FAILS? → Report failure honestly
 ```
 
 ## Step-by-Step Flow
 
 ### 1. RECEIVE TASK
-- Classify by domain (see routing table below)
+- Classify by domain (see routing table)
 - Create topic: `THREAD=$(bash swarm/create-topic.sh "emoji Task Name" "" agent_id)`
 
 ### 2. DISPATCH AGENT
-- Generate task: `TASK=$(bash swarm/spawn-agent.sh agent_id $THREAD "task description")`
-- Spawn: `sessions_spawn` with task=$TASK, label=agent_id-task-$THREAD
+- Generate task + save metadata:
+  ```bash
+  TASK=$(bash swarm/spawn-agent.sh agent_id $THREAD "task desc" "test_command" "project_dir")
+  ```
+- Spawn with timeout:
+  ```bash
+  sessions_spawn(task=$TASK, label=agent_id-$THREAD, runTimeoutSeconds=600)
+  ```
+- Default timeout: 600s (10 min). Complex tasks: 1800s (30 min).
 
-### 3. WAIT FOR COMPLETION
-- Sub-agent announces when done (auto via sessions_spawn)
-- wake-check.sh sends Telegram notification every 2 min
+### 3. AGENT COMPLETES (or times out)
+- **Success:** Agent announces completion via system message
+- **Timeout:** System reports timeout → treat as failure
 
-### 4. EVALUATE (MANDATORY — never skip!)
-When agent reports done:
+### 4. VERIFY INDEPENDENTLY (MANDATORY — never skip!)
+Run verification BEFORE reporting to Yossi:
 ```bash
-bash swarm/evaluate-agent.sh <agent_id> <thread_id> "task desc" <project_dir>
+bash swarm/verify-task.sh <agent_id> <thread_id>
 ```
-- PASS → proceed to step 5
-- FAIL → steer agent to fix issues (max 3 retries), then re-evaluate
+This:
+- Runs the actual test command
+- Checks for failures in output (not just exit code)
+- Cross-checks agent's self-report vs reality
+- Flags if agent lied about results
 
-### 5. REPORT TO USER
-- Send screenshot/evidence to Yossi
-- Only say "done" after evaluation PASSES
-- Never trust agent's self-report without evaluation
+### 5. REPORT TO YOSSI
+- **PASS:** Report success with evidence
+- **FAIL:** 
+  - Attempt 1-2: Steer agent to fix (`subagents steer` or re-spawn)
+  - Attempt 3: Report failure honestly. Do NOT pretend it works.
+
+## IRON RULES
+
+1. **NEVER report "done" without running verify-task.sh**
+2. **NEVER trust agent's test count** — verify independently
+3. **NEVER let agents touch production**
+4. **NEVER add tasks Yossi didn't ask for**
+5. **ALWAYS respond immediately when Yossi messages**
+6. **ALWAYS set runTimeoutSeconds on sessions_spawn**
+7. **If agent needs info it doesn't have → provide it via send.sh to their topic**
 
 ## Routing Table
 | Domain | Agent | ID |
@@ -55,9 +78,12 @@ bash swarm/evaluate-agent.sh <agent_id> <thread_id> "task desc" <project_dir>
 | Integrations, webhooks | אינטגרטור | integrator |
 | Everything else | עובד | worker |
 
-## IRON RULES
-1. **NEVER report "done" to Yossi without running evaluate-agent.sh**
-2. **NEVER let agents touch production directly**
-3. **NEVER add tasks Yossi didn't ask for**
-4. **ALWAYS respond immediately when Yossi messages**
-5. **If agent fails 3 evaluations → report failure honestly, don't pretend it works**
+## Model Selection (Cost Control)
+| Task Complexity | Model | Examples |
+|----------------|-------|----------|
+| Simple | sonnet | File edits, formatting, status checks |
+| Standard | sonnet | Bug fixes, feature implementation, testing |
+| Complex | opus | Architecture, debugging hard issues, security audit |
+
+Default: sonnet. Use opus only for genuinely complex tasks.
+Pass model parameter: `sessions_spawn(..., model="anthropic/claude-sonnet-4-20250514")`

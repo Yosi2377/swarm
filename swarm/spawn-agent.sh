@@ -21,9 +21,8 @@ You are ${AGENT_ID}. Read /root/.openclaw/workspace/swarm/SYSTEM.md for instruct
 ${LESSONS}
 
 **When DONE:**
-1. Run: \`bash /root/.openclaw/workspace/swarm/verify-before-done.sh\`
-2. If verify fails → fix and retry
-3. Send: \`/root/.openclaw/workspace/swarm/send.sh ${AGENT_ID} ${THREAD_ID} "✅ הושלם: [summary]"\`
-4. Send: \`/root/.openclaw/workspace/swarm/send.sh or 1 "✅ ${AGENT_ID}-${THREAD_ID} הושלם: [summary]"\`
-5. Run: \`bash /root/.openclaw/workspace/swarm/done-marker.sh "${AGENT_ID}-${THREAD_ID}" "${THREAD_ID}" "summary"\`
+1. Verify your work actually works (tests, curl, browser — whatever fits)
+2. Send: \`/root/.openclaw/workspace/swarm/send.sh ${AGENT_ID} ${THREAD_ID} "✅ הושלם: [summary]"\`
+3. Send: \`/root/.openclaw/workspace/swarm/send.sh or 1 "✅ ${AGENT_ID}-${THREAD_ID} הושלם: [summary]"\`
+4. Run: \`bash /root/.openclaw/workspace/swarm/done-marker.sh "${AGENT_ID}-${THREAD_ID}" "${THREAD_ID}" "summary"\`
 EOF

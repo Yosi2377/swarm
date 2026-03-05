@@ -1,62 +1,107 @@
-# ORCHESTRATOR.md — Swarm Orchestrator Protocol v2
+# ORCHESTRATOR.md — Swarm Orchestrator Protocol v3
 
 ## Core Principle: NEVER TRUST AGENT SELF-REPORTS
 
-Every task follows this flow:
+## Architecture Overview
 ```
-Task → Create Topic → Spawn Agent → Agent works → Agent reports done
-  → ORCHESTRATOR VERIFIES INDEPENDENTLY → PASS? → Report to Yossi
-                                         → FAIL? → Steer/retry (max 3x)
-                                         → 3 FAILS? → Report failure honestly
+Yossi → Orchestrator (Or) → Classify → Create Topic → Spawn Agent
+                                                          ↓
+                                          smart-eval.sh (background)
+                                              ↓ polls every 15s
+                                          Agent finishes
+                                              ↓
+                                          Hook Eval Agent (strict reviewer)
+                                              ↓
+                                          JSON Report + Telegram
+                                              ↓
+                                    PASS? → Done  |  FAIL? → Retry (max 2)
+                                                           → Escalate to Yossi
 ```
 
 ## Step-by-Step Flow
 
 ### 1. RECEIVE TASK
-- Classify by domain (see routing table)
+- Classify by domain (see routing table below)
 - Create topic: `THREAD=$(bash swarm/create-topic.sh "emoji Task Name" "" agent_id)`
 
 ### 2. DISPATCH AGENT
-- Generate task + save metadata:
-  ```bash
-  TASK=$(bash swarm/spawn-agent.sh agent_id $THREAD "task desc" "test_command" "project_dir")
-  ```
-- Spawn with timeout:
-  ```bash
-  sessions_spawn(task=$TASK, label=agent_id-$THREAD, runTimeoutSeconds=600)
-  ```
-- Default timeout: 600s (10 min). Complex tasks: 1800s (30 min).
-
-### 3. AGENT COMPLETES (or times out)
-- **Success:** Agent announces completion via system message
-- **Timeout:** System reports timeout → treat as failure
-
-### 4. VERIFY INDEPENDENTLY (MANDATORY — never skip!)
-Run verification BEFORE reporting to Yossi:
 ```bash
-bash swarm/verify-task.sh <agent_id> <thread_id>
-```
-This:
-- Runs the actual test command
-- Checks for failures in output (not just exit code)
-- Cross-checks agent's self-report vs reality
-- Flags if agent lied about results
+# Generate task prompt
+TASK=$(bash swarm/spawn-agent.sh agent_id $THREAD "task desc" "test_command" "project_dir")
 
-### 5. REPORT TO YOSSI
-- **PASS:** Report success with evidence
-- **FAIL:** 
-  - Attempt 1-2: Steer agent to fix (`subagents steer` or re-spawn)
-  - Attempt 3: Report failure honestly. Do NOT pretend it works.
+# Spawn with timeout
+sessions_spawn(task=$TASK, label="agent_id-taskname", runTimeoutSeconds=180)
+
+# Attach smart monitoring pipeline
+bash swarm/spawn-task.sh "agent_id-taskname" "$THREAD" "task desc" "eval instructions" 180
+```
+
+### 3. AUTOMATIC MONITORING (smart-eval.sh)
+smart-eval runs in background:
+- Polls sessions.json every 15 seconds
+- Detects completion when session stops updating (3 checks = 45s stable)
+- On timeout: notifies and evaluates anyway
+- Triggers strict evaluation via /hooks/agent-watcher
+
+### 4. STRICT EVALUATION (eval-prompt.md)
+Hook eval agent does:
+- Runs tests independently (never trusts self-report)
+- Reads actual code changes
+- Checks for hardcoded/fake data
+- Checks for modified test files
+- Writes structured JSON report to /tmp/agent-reports/<label>.json
+- Sends Hebrew report to Telegram topic
+
+### 5. AUTO-RETRY ON FAILURE
+- FAIL/SUSPECT → retry file created at /tmp/retry-request-<label>.json
+- Retry 1: Re-spawn with issues from previous attempt
+- Retry 2: Re-spawn with more context
+- After 2 retries: ESCALATE to Yossi with full details
+
+### 6. PIPELINE CHAINING (multi-step)
+When task needs multiple agents (e.g., koder → shomer → tzayar):
+1. Spawn step 1 with smart-eval
+2. When step 1 report = PASS → spawn step 2
+3. Check /tmp/agent-reports/<label>.json in heartbeat or after notification
+4. Each step gets its own topic + smart-eval
+
+## Scripts Reference
+| Script | Purpose |
+|--------|---------|
+| `create-topic.sh` | Create Telegram topic for task |
+| `spawn-agent.sh` | Generate task prompt with context |
+| `spawn-task.sh` | Attach smart-eval monitoring to spawn |
+| `smart-eval.sh` | Poll → detect done → strict eval → retry |
+| `eval-prompt.md` | Strict reviewer instructions |
+| `send.sh` | Send message as specific bot |
+| `status.sh` | Dashboard: agents, monitors, reports, retries |
+| `verify-before-done.sh` | Manual verification helper |
+| `inject-lessons.sh` | Add relevant past lessons to task |
+
+## Dashboard
+```bash
+bash swarm/status.sh        # Full status
+bash swarm/status.sh 60     # Last 60 minutes
+```
 
 ## IRON RULES
 
-1. **NEVER report "done" without running verify-task.sh**
-2. **NEVER trust agent's test count** — verify independently
+1. **NEVER report "done" without smart-eval verification**
+2. **NEVER trust agent's test count** — eval agent re-runs tests
 3. **NEVER let agents touch production**
 4. **NEVER add tasks Yossi didn't ask for**
 5. **ALWAYS respond immediately when Yossi messages**
-6. **ALWAYS set runTimeoutSeconds on sessions_spawn**
-7. **If agent needs info it doesn't have → provide it via send.sh to their topic**
+6. **ALWAYS set runTimeoutSeconds on sessions_spawn** (default 180)
+7. **ALWAYS attach smart-eval via spawn-task.sh after sessions_spawn**
+8. **If agent needs info → provide via send.sh to their topic**
+
+## Timeouts
+| Task Type | Timeout | Examples |
+|-----------|---------|----------|
+| Simple fix | 120s | Typo, config change |
+| Standard | 180s | Bug fix, feature |
+| Complex | 300s | Architecture, multi-file |
+| Very complex | 600s | Full feature, security audit |
 
 ## Routing Table
 | Domain | Agent | ID |
@@ -77,13 +122,3 @@ This:
 | Performance | אופטימייזר | optimizer |
 | Integrations, webhooks | אינטגרטור | integrator |
 | Everything else | עובד | worker |
-
-## Model Selection (Cost Control)
-| Task Complexity | Model | Examples |
-|----------------|-------|----------|
-| Simple | sonnet | File edits, formatting, status checks |
-| Standard | sonnet | Bug fixes, feature implementation, testing |
-| Complex | opus | Architecture, debugging hard issues, security audit |
-
-Default: sonnet. Use opus only for genuinely complex tasks.
-Pass model parameter: `sessions_spawn(..., model="anthropic/claude-sonnet-4-20250514")`

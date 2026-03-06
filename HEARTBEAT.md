@@ -1,37 +1,63 @@
 # HEARTBEAT.md
 
-## 1. Smart-Eval Reports (HIGHEST PRIORITY)
-Check for new evaluation reports and retry requests:
+## 1. Agent Completion Verification (HIGHEST PRIORITY)
+Check for completed agents that need verification:
 ```bash
-# Check for retry requests — re-spawn failed agents
+# Check for done markers
+for f in /tmp/agent-done/*.json; do
+  [ -f "$f" ] || continue
+  BASENAME=$(basename "$f" .json)
+  AGENT_ID=$(echo "$BASENAME" | rev | cut -d'-' -f2- | rev)
+  THREAD_ID=$(echo "$BASENAME" | rev | cut -d'-' -f1 | rev)
+  
+  # Check if already verified
+  META="/tmp/agent-tasks/${BASENAME}.json"
+  if [ -f "$META" ]; then
+    STATUS=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))" < "$META" 2>/dev/null)
+    [ "$STATUS" = "verified_pass" ] && continue
+    [ "$STATUS" = "verified_fail" ] && continue
+  fi
+  
+  echo "NEEDS VERIFY: $BASENAME"
+done
+```
+- If any need verification → run `bash swarm/on-agent-done.sh <agent_id> <thread_id>`
+- If PASS → report to Yossi in General
+- If FAIL → agent gets retry instructions automatically
+- If ESCALATE (3 fails) → report failure to Yossi honestly
+
+## 2. Agent Chat Monitor (thread 479)
+Check if any agent asked for help:
+```bash
+# Check recent agent-chat messages for help requests
+tail -20 /root/.openclaw/workspace/swarm/logs/$(date +%Y-%m-%d).jsonl 2>/dev/null | grep -i "עזרה\|help\|stuck\|🆘"
+```
+- If agent asked for help → read what they need → provide it via send.sh to their topic
+- Common requests: API tokens, credentials, config values, clarification on task
+
+## 3. Retry Request Handler
+```bash
 for f in /tmp/retry-request-*.json; do
   [ -f "$f" ] || continue
-  cat "$f"  # Read: label, topic, retry count, issues
-  # Re-spawn the agent with extra context about what failed
-  # Then delete: rm "$f"
+  cat "$f"
+  # Re-spawn the agent with issues as context, then delete file
+  # rm "$f"
 done
-
-# Check recent reports
-bash /root/.openclaw/workspace/swarm/status.sh 10
 ```
-- If retry-request exists → re-spawn the agent with issues as context
-- If report says FAIL after max retries → escalate to Yossi
 
-## 2. Agent Completion Monitor
-- Run: `bash /root/.openclaw/workspace/swarm/monitor.sh` — scan logs for completions
-- Check `/tmp/agent-done/` for completed agents
-- For each: verify results, report to Yossi
+## 4. Stuck Agent Detection
+```bash
+# Check for agents running longer than 10 minutes without completion
+for f in /tmp/agent-tasks/*.json; do
+  [ -f "$f" ] || continue
+  STATUS=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))" < "$f" 2>/dev/null)
+  [ "$STATUS" = "running" ] || continue
+  
+  DISPATCHED=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('dispatched_at',''))" < "$f" 2>/dev/null)
+  echo "STILL RUNNING: $(basename $f) since $DISPATCHED"
+done
+```
+- If running > 15 minutes → check subagents list for status
+- If dead/timed out → report to Yossi
 
-## 3. Watchdog Alerts
-- Check `/tmp/watchdog-alert.json`
-- If exists: spawn koder to fix, delete file, report
-
-## 4. Agent Activity Monitor
-- `tail -5 /root/.openclaw/workspace/swarm/logs/$(date +%Y-%m-%d).jsonl 2>/dev/null`
-- Track last checked timestamp in `/tmp/heartbeat-agent-last.txt`
-
-## 5. Auto-Approve Handler
-- Pattern `approve_XXXX` → `bash swarm/handle-approve.sh XXXX`
-- Pattern `reject_XXXX` → `send.sh or 1 "❌ PR #XXXX rejected"`
-
-## Nothing else needed? → HEARTBEAT_OK
+## 5. Nothing needed? → HEARTBEAT_OK

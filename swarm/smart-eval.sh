@@ -319,18 +319,96 @@ HELPEOF
         
         echo "$(date -Iseconds) 🤝 CROSS-AGENT HELP: ${HELPER} called in (PID $!)" >> "$LOG"
       else
-        # Helper also failed → NOW escalate to Yossi
-        curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
-          -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
-          -d "text=🚨 ${LABEL} — גם סוכן עזרה נכשל! דורש התערבות ידנית של יוסי." > /dev/null 2>&1
+        # Helper also failed → Layer 4: Or (orchestrator) intervenes personally
+        OR_INTERVENE_FILE="/tmp/or-intervened-${LABEL}"
         
-        # Also post in General (topic 1) for visibility
-        curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
-          -d "chat_id=${CHAT_ID}" -d "message_thread_id=1" \
-          -d "text=🚨 משימה ${LABEL} (נושא ${TOPIC}) נכשלה אחרי 2 ניסיונות + סוכן עזרה. צריך התערבות!" > /dev/null 2>&1
-        
-        echo "$(date -Iseconds) 🚨 FINAL ESCALATION to Yossi — all agents failed" >> "$LOG"
-        rm -f "$RETRY_FILE" "$HELP_FILE"
+        if [ ! -f "$OR_INTERVENE_FILE" ]; then
+          # Or hasn't tried yet → wake Or to handle it personally
+          touch "$OR_INTERVENE_FILE"
+          
+          # Collect all failure context
+          ALL_ISSUES=$(python3 -c "
+import json, glob, os
+issues = []
+for f in sorted(glob.glob('/tmp/agent-reports/${LABEL}*.json')):
+    try:
+        d = json.load(open(f))
+        label = os.path.basename(f).replace('.json','')
+        status = d.get('status','?')
+        iss = d.get('issues', [])
+        issues.append(f'{label}: {status} — {\";\".join(iss)[:100]}')
+    except: pass
+print('\n'.join(issues)[:500])
+" 2>/dev/null)
+          
+          curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
+            -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
+            -d "text=🧠 סוכנים נכשלו 3 פעמים. אני (אור) מתערב אישית..." > /dev/null 2>&1
+          
+          # Wake Or's main session via hooks to handle this
+          OR_TMPFILE="/tmp/or-intervene-${LABEL}.json"
+          python3 << OREOF
+import json
+all_issues = """${ALL_ISSUES}"""
+original = """${ORIGINAL_TASK}"""
+eval_cmd = """${EVAL}"""
+payload = {
+    "task": f"""ORCHESTRATOR INTERVENTION — I need to handle this myself. Agents failed 3 times.
+
+TASK: {original}
+
+ALL PREVIOUS FAILURES:
+{all_issues}
+
+EVAL COMMAND: {eval_cmd}
+
+MY JOB:
+1. Read the actual code and understand the problem
+2. Analyze WHY agents kept failing
+3. Fix it myself using exec/edit tools
+4. Run the eval command to verify
+5. If I succeed → send PASS report to topic ${TOPIC}
+6. If I truly cannot fix it → escalate to Yossi with honest explanation of what's wrong and why
+
+Write report to /tmp/agent-reports/${LABEL}-or-fix.json
+Send result to Telegram: message tool action=send, channel=telegram, target=${CHAT_ID}, threadId=${TOPIC}""",
+    "sessionKey": "hook:or-intervene:${LABEL}"
+}
+with open("/tmp/or-intervene-${LABEL}.json", "w") as f:
+    json.dump(payload, f, ensure_ascii=False)
+OREOF
+          
+          curl -s -X POST "http://localhost:18789/hooks/agent-watcher" \
+            -H "Authorization: Bearer ${HOOK_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d @"${OR_TMPFILE}" >> "$LOG" 2>&1
+          rm -f "${OR_TMPFILE}"
+          
+          # Monitor Or's attempt — if Or also fails, THEN escalate to Yossi
+          OR_FIX_LABEL="${LABEL}-or-fix"
+          rm -f "/tmp/retry-${OR_FIX_LABEL}.count"
+          rm -f "/tmp/help-requested-${OR_FIX_LABEL}"
+          rm -f "/tmp/or-intervened-${OR_FIX_LABEL}"
+          
+          nohup bash /root/.openclaw/workspace/swarm/smart-eval.sh \
+            "${OR_FIX_LABEL}" "${TOPIC}" "${EVAL}" "${MAX_WAIT}" "${ORIGINAL_TASK}" \
+            "${NEXT_STEP}" > /dev/null 2>&1 &
+          
+          echo "$(date -Iseconds) 🧠 OR INTERVENING personally (PID $!)" >> "$LOG"
+        else
+          # Or also failed → Layer 5: FINAL escalation to Yossi
+          curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
+            -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
+            -d "text=🚨 משימה ${LABEL} — נכשלה בכל 5 השכבות: סוכן (×2), סוכן עזרה, אור. דורש התערבות שלך יוסי!" > /dev/null 2>&1
+          
+          # Post in General for visibility
+          curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
+            -d "chat_id=${CHAT_ID}" -d "message_thread_id=1" \
+            -d "text=🚨 משימה ${LABEL} (נושא ${TOPIC}) — 5 שכבות נכשלו. באמת צריך אותך!" > /dev/null 2>&1
+          
+          echo "$(date -Iseconds) 🚨 FINAL ESCALATION to Yossi — all 5 layers failed" >> "$LOG"
+          rm -f "$RETRY_FILE" "$HELP_FILE" "$OR_INTERVENE_FILE"
+        fi
       fi
     fi
     ;;

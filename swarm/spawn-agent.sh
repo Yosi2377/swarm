@@ -59,15 +59,33 @@ ${SWARM_DIR}/send.sh ${AGENT_ID} 479 "🆘 צריך עזרה: [what you need]"
 ${LESSONS:+## Past Lessons
 $LESSONS}
 
-## ⛔ MANDATORY BEFORE REPORTING DONE — ALL 3 STEPS REQUIRED
+## ⛔ MANDATORY BEFORE REPORTING DONE — ALL 4 STEPS REQUIRED
+## ⚠️ IF YOU SKIP ANY STEP — THE TASK IS NOT DONE. PERIOD.
 
-### Step 1: Git Commit (REQUIRED)
+### Step 1: VERIFY IT ACTUALLY WORKS (MOST IMPORTANT!)
+Before saying "done", you MUST prove it works with REAL evidence:
+\`\`\`bash
+# For web tasks — screenshot the ACTUAL result:
+${SWARM_DIR}/screenshot.sh "<THE_URL_YOU_CHANGED>" ${THREAD_ID} ${AGENT_ID} "proof"
+
+# For API tasks — show the actual curl output:
+curl -s <the_endpoint> | head -20
+
+# For code tasks — run the actual test and show output:
+cd ${PROJECT_DIR:-.} && <test_command>
+\`\`\`
+**LOOK AT YOUR SCREENSHOT/OUTPUT. Does it actually show what was requested?**
+- If the screenshot shows a login page instead of the feature → NOT DONE
+- If the curl returns an error → NOT DONE  
+- If tests fail → NOT DONE
+**DO NOT proceed to Step 2 until you have REAL proof it works.**
+
+### Step 2: Git Commit
 \`\`\`bash
 cd ${PROJECT_DIR:-.} && git add -A && git commit -m "#${THREAD_ID}: brief description"
 \`\`\`
-**If you skip this → verification FAILS automatically.**
 
-### Step 2: Structured Report (REQUIRED)
+### Step 3: Structured Report with EVIDENCE
 \`\`\`bash
 mkdir -p /root/.openclaw/workspace/swarm/agent-reports
 cat > /root/.openclaw/workspace/swarm/agent-reports/${AGENT_ID}-${THREAD_ID}.json <<'DONE'
@@ -77,14 +95,24 @@ cat > /root/.openclaw/workspace/swarm/agent-reports/${AGENT_ID}-${THREAD_ID}.jso
   "files_changed": ["file1.js", "file2.js"],
   "tests_run": true,
   "tests_passed": true,
-  "test_count": {"passed": 0, "failed": 0, "total": 0}
+  "test_count": {"passed": 0, "failed": 0, "total": 0},
+  "proof_screenshot": "/tmp/screenshots/<filename>.png",
+  "proof_description": "Screenshot shows X working correctly"
 }
 DONE
 \`\`\`
-**Update the numbers with REAL test counts. If you skip this → verification FAILS automatically.**
+**proof_screenshot is REQUIRED. No screenshot = automatic FAIL.**
 
-### Step 3: Notify
+### Step 4: Send Screenshot FIRST, Then Summary
 \`\`\`bash
+# FIRST — send screenshot to topic
+PROOF=\$(ls /tmp/screenshots/${AGENT_ID}-${THREAD_ID}*.png 2>/dev/null | tail -1)
+TOKEN=\$(cat ${SWARM_DIR}/.${AGENT_ID}-token)
+curl -s -X POST "https://api.telegram.org/bot\${TOKEN}/sendPhoto" \\
+  -F "chat_id=-1003815143703" -F "message_thread_id=${THREAD_ID}" \\
+  -F "photo=@\${PROOF}" -F "caption=📸 Proof — task completed"
+
+# THEN — text summary
 ${SWARM_DIR}/send.sh ${AGENT_ID} ${THREAD_ID} "✅ הושלם: <summary>"
 ${SWARM_DIR}/send.sh or 1 "✅ ${AGENT_ID}-${THREAD_ID} הושלם: <summary>"
 \`\`\`
@@ -96,4 +124,11 @@ The orchestrator will INDEPENDENTLY run the tests and check for:
 3. All changes are git committed (git status --porcelain must be clean)
 
 **If ANY check fails → you will be asked to fix. Lying about results = failure.**
+
+## 🚨 REMEMBER
+The #1 reason agents fail: they SAY "done" without CHECKING it works.
+- ALWAYS test your own work before reporting
+- ALWAYS take a screenshot as proof
+- ALWAYS look at the screenshot — does it show what was asked?
+- If you're not 100% sure it works — IT DOESN'T. Keep working.
 EOF

@@ -79,3 +79,23 @@ done
 # Log scan summary
 total_files=$(ls "$TASKS_DIR"/*.json 2>/dev/null | wc -l)
 echo "{\"ts\":\"$TIMESTAMP\",\"type\":\"scan\",\"files\":$total_files,\"alerts\":$ALERTS_SENT}" >> "$ALERTS_LOG"
+
+# Dedup: don't re-alert for same agent within 30 minutes
+DEDUP_FILE="/tmp/monitor-last-alert.json"
+should_alert() {
+    local agent="$1"
+    local now=$(date +%s)
+    if [ -f "$DEDUP_FILE" ]; then
+        local last=$(python3 -c "import json; d=json.load(open('$DEDUP_FILE')); print(d.get('$agent',0))" 2>/dev/null)
+        local diff=$((now - last))
+        [ "$diff" -lt 1800 ] && return 1
+    fi
+    python3 -c "
+import json,os
+f='$DEDUP_FILE'
+d=json.load(open(f)) if os.path.exists(f) else {}
+d['$agent']=$(date +%s)
+json.dump(d,open(f,'w'))
+"
+    return 0
+}

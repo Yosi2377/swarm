@@ -14,6 +14,46 @@ echo "================================================"
 echo "🔍 POST-COMPLETION: ${AGENT_ID} task ${THREAD_ID}"
 echo "================================================"
 
+# Check for screenshot proof
+SCREENSHOT_FOUND=0
+REPORT_FILE="${SWARM_DIR}/agent-reports/${AGENT_ID}-${THREAD_ID}.json"
+LOG_FILE="${SWARM_DIR}/logs/$(date +%Y-%m-%d).jsonl"
+
+# Check in agent report JSON
+if [ -f "$REPORT_FILE" ] && grep -qi 'screenshot\|proof.*png\|photo\|📸' "$REPORT_FILE" 2>/dev/null; then
+    SCREENSHOT_FOUND=1
+fi
+
+# Check in today's log for screenshot mentions from this agent+thread
+if [ "$SCREENSHOT_FOUND" -eq 0 ] && [ -f "$LOG_FILE" ]; then
+    if grep "\"thread\":.*${THREAD_ID}" "$LOG_FILE" | grep -qi 'screenshot\|proof.*png\|photo\|📸\|sendPhoto'; then
+        SCREENSHOT_FOUND=1
+    fi
+fi
+
+# Check if screenshot file exists
+if [ "$SCREENSHOT_FOUND" -eq 0 ] && ls /tmp/proof-${THREAD_ID}*.png /tmp/report-${THREAD_ID}*.png /tmp/screenshot-${THREAD_ID}*.png 2>/dev/null | head -1 >/dev/null 2>&1; then
+    SCREENSHOT_FOUND=1
+fi
+
+if [ "$SCREENSHOT_FOUND" -eq 0 ]; then
+    echo ""
+    echo "⚠️ WARNING: No screenshot found for ${AGENT_ID}-${THREAD_ID}"
+    echo "חוק ברזל: לפני דיווח done — חובה screenshot!"
+
+    echo "{\"agent\":\"${AGENT_ID}\",\"thread\":${THREAD_ID},\"result\":\"warning_no_screenshot\",\"time\":\"$(date -Iseconds)\"}" \
+        >> "${SWARM_DIR}/logs/verifications.jsonl"
+
+    bash "${SWARM_DIR}/send.sh" "${AGENT_ID}" "$THREAD_ID" "⚠️ WARNING: לא נמצא screenshot!
+חוק ברזל: לפני דיווח done — חובה screenshot.
+השתמש ב: report-done.sh ${THREAD_ID} \"סיכום\" [url]
+או: browser action=screenshot
+ושלח את התמונה לפני שמדווח done." 2>/dev/null
+
+    echo "RESULT=WARNING_NO_SCREENSHOT"
+    # Continue to verification but mark as warning
+fi
+
 # Run independent verification
 VERIFY_OUTPUT=$(bash "${SWARM_DIR}/verify-task.sh" "$AGENT_ID" "$THREAD_ID" "$TEST_CMD" "$PROJECT_DIR" 2>&1)
 VERIFY_EXIT=$?
@@ -35,6 +75,11 @@ if [ "$VERIFY_EXIT" -eq 0 ]; then
     echo "{\"agent\":\"${AGENT_ID}\",\"thread\":${THREAD_ID},\"result\":\"pass\",\"retries\":${RETRIES},\"time\":\"$(date -Iseconds)\"}" \
         >> "${SWARM_DIR}/logs/verifications.jsonl"
     
+    if [ "$SCREENSHOT_FOUND" -eq 0 ]; then
+        echo "⚠️ PASS with WARNING — no screenshot provided"
+        echo "RESULT=WARNING"
+        exit 0
+    fi
     echo "RESULT=PASS"
     exit 0
 else

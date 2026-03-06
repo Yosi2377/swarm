@@ -114,6 +114,22 @@ cd /root/.openclaw/workspace && git add -A && git commit -m "#THREAD: תיאור
 ```
 אם לא תעשה commit — ה-evaluator ייכשל אוטומטית! (בודק `git status --porcelain`)
 
+## ⛔ חוק ברזל: לפני דיווח done — חובה screenshot!
+
+**אין יוצאים מהכלל.** לפני שאתה שולח "✅ הושלם" או יוצר done marker:
+1. צלם screenshot עם browser tool:
+   ```
+   browser action=screenshot
+   ```
+   או עם report-done.sh:
+   ```bash
+   /root/.openclaw/workspace/swarm/report-done.sh <topic_id> "<summary>" [url]
+   ```
+2. שלח את ה-screenshot ל-topic שלך ול-General
+3. **בלי screenshot = המשימה לא הושלמה.** ה-evaluator יסמן WARNING.
+
+---
+
 ## ⛔ 3 IRON RULES — BREAK THESE = INSTANT ROLLBACK
 
 ### 1. SANDBOX — עבוד רק על /root/sandbox/

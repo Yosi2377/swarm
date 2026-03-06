@@ -1,14 +1,10 @@
 #!/bin/bash
-# report-done.sh — Orchestrator uses this EVERY TIME an agent finishes
+# report-done.sh — Agent helper: screenshot + summary to topic
 # Usage: report-done.sh <topic_id> <summary_text> [url_to_screenshot]
 #
-# This script FORCES the screenshot-first flow:
-# 1. Takes screenshot (if URL provided)
-# 2. Sends screenshot to General topic
-# 3. Sends summary text to General topic
-# 4. ONLY THEN the orchestrator can reply to Yossi
-#
-# If no URL provided, takes screenshot of production site by default
+# 1. Takes screenshot of the relevant page
+# 2. Sends screenshot + summary to the topic
+# 3. Also sends to General (topic 1)
 
 SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
 TOPIC_ID="$1"
@@ -49,17 +45,37 @@ const puppeteer = require('puppeteer');
 })().catch(e => console.error('Screenshot failed:', e.message));
 " 2>&1
 
-if [ ! -f "$SCREENSHOT_PATH" ]; then
+# Step 2: Send screenshot to topic
+if [ -f "$SCREENSHOT_PATH" ]; then
+  echo "✅ Screenshot taken, sending to topic ${TOPIC_ID}..."
+  
+  # Try each bot token to find the right one
+  for AGENT in or koder shomer tzayar worker researcher bodek; do
+    TOKEN_FILE="${SWARM_DIR}/.${AGENT}-token"
+    if [ -f "$TOKEN_FILE" ]; then
+      TOKEN=$(cat "$TOKEN_FILE")
+      break
+    fi
+  done
+  
+  if [ -n "$TOKEN" ]; then
+    # Send to task topic
+    curl -sf -F "chat_id=-1003815143703" -F "message_thread_id=${TOPIC_ID}" \
+      -F "photo=@${SCREENSHOT_PATH}" -F "caption=📸 ${SUMMARY}" \
+      "https://api.telegram.org/bot${TOKEN}/sendPhoto" > /dev/null 2>&1
+    
+    # Send to General (topic 1)
+    curl -sf -F "chat_id=-1003815143703" -F "message_thread_id=1" \
+      -F "photo=@${SCREENSHOT_PATH}" -F "caption=✅ #${TOPIC_ID} הושלם: ${SUMMARY}" \
+      "https://api.telegram.org/bot${TOKEN}/sendPhoto" > /dev/null 2>&1
+    
+    echo "✅ Screenshot sent to topic ${TOPIC_ID} and General"
+  else
+    echo "⚠️ No bot token found, sending text only"
+    "$SWARM_DIR/send.sh" or "$TOPIC_ID" "✅ ${SUMMARY} (screenshot at ${SCREENSHOT_PATH})"
+  fi
+else
   echo "⚠️ Screenshot failed — reporting without image"
-  "$SWARM_DIR/send.sh" or 1 "✅ #${TOPIC_ID} הושלם
-
-${SUMMARY}
-
+  "$SWARM_DIR/send.sh" or "$TOPIC_ID" "✅ ${SUMMARY}
 ⚠️ צילום מסך נכשל"
-  exit 0
 fi
-
-echo "✅ Screenshot taken. Now sending to General..."
-echo "SCREENSHOT_PATH=$SCREENSHOT_PATH"
-echo "SUMMARY=$SUMMARY"
-echo "TOPIC_ID=$TOPIC_ID"

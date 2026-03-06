@@ -241,13 +241,97 @@ RETRYEOF
       
       echo "$(date -Iseconds) 🔄 RETRY ${RETRY_NUM} spawned: ${RETRY_LABEL} (monitor PID $!)" >> "$LOG"
     else
-      # ─── ESCALATE ───
-      curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
-        -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
-        -d "text=🚨 ${LABEL} נכשל סופית אחרי ${RETRIES} ניסיונות! דורש התערבות ידנית." > /dev/null 2>&1
+      # ─── CROSS-AGENT HELP: Ask in Agent Chat (topic 479) ───
+      HELP_FILE="/tmp/help-requested-${LABEL}"
       
-      echo "$(date -Iseconds) 🚨 ESCALATED — max retries" >> "$LOG"
-      rm -f "$RETRY_FILE"
+      if [ ! -f "$HELP_FILE" ]; then
+        # First time hitting max retries → ask other agents for help
+        touch "$HELP_FILE"
+        
+        ISSUES_READABLE=$(python3 -c "
+import json
+try:
+    with open('${REPORT_DIR}/${LABEL}.json') as f:
+        d = json.load(f)
+    print('; '.join(d.get('issues', ['Unknown']))[:300])
+except: print('Unknown issues')
+" 2>/dev/null)
+        
+        # Detect which agent type to ask for help
+        HELPER="worker"
+        echo "$LABEL" | grep -qi "koder\|code\|fix\|bug" && HELPER="debugger"
+        echo "$LABEL" | grep -qi "shomer\|security\|auth" && HELPER="koder"
+        echo "$LABEL" | grep -qi "front\|css\|ui" && HELPER="koder"
+        echo "$LABEL" | grep -qi "data\|mongo\|db" && HELPER="koder"
+        
+        # Post help request in Agent Chat (topic 479)
+        SWARM_DIR="/root/.openclaw/workspace/swarm"
+        bash "${SWARM_DIR}/send.sh" "${HELPER}" 479 \
+          "🆘 צריך עזרה! סוכן ${LABEL} נכשל אחרי 2 ניסיונות בנושא ${TOPIC}. בעיות: ${ISSUES_READABLE}" 2>/dev/null
+        
+        # Notify in the task topic
+        curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
+          -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
+          -d "text=🤝 ${LABEL} נכשל 2 פעמים. ביקשתי עזרה מ-${HELPER} ב-Agent Chat. ממתין..." > /dev/null 2>&1
+        
+        # Spawn helper agent with full context
+        HELPER_LABEL="${LABEL}-help-${HELPER}"
+        HELPER_TMPFILE="/tmp/helper-payload-${HELPER_LABEL}.json"
+        python3 << HELPEOF
+import json
+issues = """${ISSUES_READABLE}"""
+original = """${ORIGINAL_TASK}"""
+payload = {
+    "task": f"""HELP REQUEST — Another agent failed this task twice. You are a different specialist being called in.
+
+ORIGINAL TASK:
+{original}
+
+WHAT WENT WRONG (2 failed attempts):
+{issues}
+
+The previous agent could NOT solve this. Try a DIFFERENT approach:
+- Read the code fresh, don't assume the previous agent's approach was correct
+- Consider if the task itself needs reframing
+- If you also cannot solve it, write status "escalate" in your report
+
+Write report to /tmp/agent-reports/{HELPER_LABEL}.json""",
+    "sessionKey": f"hook:help:{HELPER_LABEL}"
+}
+with open("/tmp/helper-payload-{HELPER_LABEL}.json", "w") as f:
+    json.dump(payload, f, ensure_ascii=False)
+HELPEOF
+        
+        curl -s -X POST "http://localhost:18789/hooks/agent-watcher" \
+          -H "Authorization: Bearer ${HOOK_TOKEN}" \
+          -H "Content-Type: application/json" \
+          -d @"${HELPER_TMPFILE}" >> "$LOG" 2>&1
+        rm -f "${HELPER_TMPFILE}"
+        
+        # Monitor helper — if helper also fails, THEN escalate to Yossi
+        # Reset retry count for helper's evaluation
+        rm -f "/tmp/retry-${HELPER_LABEL}.count"
+        echo "0" > "/tmp/retry-${HELPER_LABEL}.count"
+        
+        nohup bash /root/.openclaw/workspace/swarm/smart-eval.sh \
+          "${HELPER_LABEL}" "${TOPIC}" "${EVAL}" "${MAX_WAIT}" "${ORIGINAL_TASK}" \
+          "${NEXT_STEP}" > /dev/null 2>&1 &
+        
+        echo "$(date -Iseconds) 🤝 CROSS-AGENT HELP: ${HELPER} called in (PID $!)" >> "$LOG"
+      else
+        # Helper also failed → NOW escalate to Yossi
+        curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
+          -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
+          -d "text=🚨 ${LABEL} — גם סוכן עזרה נכשל! דורש התערבות ידנית של יוסי." > /dev/null 2>&1
+        
+        # Also post in General (topic 1) for visibility
+        curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
+          -d "chat_id=${CHAT_ID}" -d "message_thread_id=1" \
+          -d "text=🚨 משימה ${LABEL} (נושא ${TOPIC}) נכשלה אחרי 2 ניסיונות + סוכן עזרה. צריך התערבות!" > /dev/null 2>&1
+        
+        echo "$(date -Iseconds) 🚨 FINAL ESCALATION to Yossi — all agents failed" >> "$LOG"
+        rm -f "$RETRY_FILE" "$HELP_FILE"
+      fi
     fi
     ;;
     

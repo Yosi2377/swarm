@@ -1,0 +1,6 @@
+{
+  "status": "success",
+  "summary": "Wrote SWARMCLAW_OK to /tmp/swarmclaw-test.txt",
+  "url": "file:///tmp/swarmclaw-test.txt",
+  "files_changed": ["/tmp/swarmclaw-test.txt"]
+}

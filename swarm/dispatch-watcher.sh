@@ -226,6 +226,54 @@ json.dump(d, open('$done_file','w'), indent=2)
 done
 
 # ═══════════════════════════════════════════
+# PHASE 2.5: Auto-verify agents spawned >5 min ago without done marker
+# ═══════════════════════════════════════════
+NOW_SEC=$(date +%s)
+for meta_file in "$META_DIR"/*.json; do
+    [ -f "$meta_file" ] || continue
+    
+    STATUS=$(python3 -c "import json; print(json.load(open('$meta_file')).get('status',''))" 2>/dev/null)
+    [ "$STATUS" = "spawning" ] || continue
+    
+    SPAWN_AT=$(python3 -c "import json,datetime; t=json.load(open('$meta_file')).get('spawn_at',''); print(int(datetime.datetime.fromisoformat(t).timestamp()) if t else 0)" 2>/dev/null || echo 0)
+    ELAPSED=$((NOW_SEC - SPAWN_AT))
+    [ "$ELAPSED" -lt 300 ] && continue  # Wait 5 minutes
+    
+    TASK_ID=$(python3 -c "import json; print(json.load(open('$meta_file')).get('task_id',''))" 2>/dev/null)
+    AGENT_ID=$(python3 -c "import json; print(json.load(open('$meta_file')).get('agent_id',''))" 2>/dev/null)
+    THREAD=$(python3 -c "import json; print(json.load(open('$meta_file')).get('thread_id',''))" 2>/dev/null)
+    
+    log "⏰ Auto-verify (no done marker after ${ELAPSED}s): ${TASK_ID}"
+    
+    # Check if report exists (agent did work but forgot done marker)
+    REPORT="${SWARM_DIR}/agent-reports/${TASK_ID}.json"
+    if [ -f "$REPORT" ] || [ "$ELAPSED" -gt 600 ]; then
+        URL=$(python3 -c "import json; print(json.load(open('$meta_file')).get('url',''))" 2>/dev/null)
+        TEST_CMD=$(python3 -c "import json; print(json.load(open('$meta_file')).get('test_cmd',''))" 2>/dev/null)
+        PROJECT_DIR=$(python3 -c "import json; print(json.load(open('$meta_file')).get('project_dir',''))" 2>/dev/null)
+        EXPECT=$(python3 -c "import json; print(json.load(open('$meta_file')).get('expect',''))" 2>/dev/null)
+        
+        VERIFY_ARGS=("$AGENT_ID" "$THREAD")
+        [ -n "$URL" ] && VERIFY_ARGS+=(--url "$URL")
+        [ -n "$TEST_CMD" ] && VERIFY_ARGS+=(--test "$TEST_CMD")
+        [ -n "$PROJECT_DIR" ] && VERIFY_ARGS+=(--project "$PROJECT_DIR")
+        [ -n "$EXPECT" ] && VERIFY_ARGS+=(--expect "$EXPECT")
+        
+        VERIFY_OUTPUT=$(timeout 60 node "${SWARM_DIR}/runner/verify-and-report.js" "${VERIFY_ARGS[@]}" 2>&1) || true
+        
+        if echo "$VERIFY_OUTPUT" | grep -q "RESULT=PASS"; then
+            log "✅ Auto-verified PASS: ${TASK_ID}"
+            python3 -c "import json; m=json.load(open('$meta_file')); m['status']='verified_pass'; json.dump(m,open('$meta_file','w'),indent=2)" 2>/dev/null
+            bash "${SWARM_DIR}/send.sh" or 1 "✅ ${TASK_ID} הושלם ואומת אוטומטית!" >/dev/null 2>&1
+            bash "${SWARM_DIR}/learn.sh" score "$AGENT_ID" success 2>/dev/null
+        else
+            log "❌ Auto-verified FAIL: ${TASK_ID}"
+            python3 -c "import json; m=json.load(open('$meta_file')); m['status']='verified_fail'; json.dump(m,open('$meta_file','w'),indent=2)" 2>/dev/null
+        fi
+    fi
+done
+
+# ═══════════════════════════════════════════
 # PHASE 3: Check for stuck agents (>15 min)
 # ═══════════════════════════════════════════
 NOW=$(date +%s)

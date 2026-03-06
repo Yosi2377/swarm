@@ -97,14 +97,14 @@ ${LESSONS}}
 ## 🧠 LEARNING — MANDATORY
 **BEFORE starting work:**
 ```bash
-/learn.sh query "relevant keywords" 2>/dev/null | head -5
+${SWARM_DIR}/learn.sh query "relevant keywords" 2>/dev/null | head -5
 ```
 Read the lessons. Dont repeat past mistakes.
 
 **AFTER finishing (success or failure):**
 ```bash
-/learn.sh lesson  medium "what happened" "what I learned"
-/learn.sh score  success  # or fail
+${SWARM_DIR}/learn.sh lesson  medium "what happened" "what I learned"
+${SWARM_DIR}/learn.sh score  success  # or fail
 ```
 
 ## ⚠️ Verification

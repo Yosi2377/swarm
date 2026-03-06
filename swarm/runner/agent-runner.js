@@ -30,7 +30,8 @@ const AGENT_TIMEOUT = 300; // 5 minutes per attempt
 
 function takeScreenshot(url, outputPath) {
     try {
-        execSync(`${SWARM_DIR}/browser-test.sh screenshot "${url}" "${outputPath}" 1920 1080`, {
+        // Use screenshot-with-login for authenticated pages
+        execSync(`node ${__dirname}/screenshot-with-login.js "${url}" "${outputPath}"`, {
             timeout: 30000, stdio: 'pipe'
         });
         return fs.existsSync(outputPath) && fs.statSync(outputPath).size > 5000;

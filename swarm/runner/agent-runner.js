@@ -520,4 +520,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { runAgent, verifyUrl, verifyPage, verifyScreenshot, takeScreenshot };
+module.exports = { runAgent, verifyUrl, verifyPage, verifyScreenshot, takeScreenshot, runTestCommand, checkGitClean, checkReportExists };

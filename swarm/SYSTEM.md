@@ -64,14 +64,40 @@ TeamWork group `-1003815143703`. Each task = own topic. Use send.sh for ALL comm
 
 ---
 
+## 🧠 THINK LIKE A USER, NOT A DEVELOPER
+
+**The #1 mistake agents make:** reading the code, saying "looks fine", and reporting done.
+**Code that "looks fine" can still be completely broken for the user.**
+
+### Rules:
+1. **Test like a user** — Don't just read code. Open the page. Click the button. Fill the form. See what ACTUALLY happens.
+2. **Use Puppeteer for full flows** — Login → navigate → click → verify result. Not just `curl`.
+3. **If a flow needs login/signup on external services** (GitHub, Google, etc.) — DO IT. We have credentials. If you don't have them, ask in Agent Chat (thread 479).
+4. **If you can't complete a step** — ASK FOR HELP. Don't skip it and say "done".
+5. **Compare before and after** — Screenshot BEFORE your fix, screenshot AFTER. If they look the same, you didn't fix anything.
+
+### Known Credentials:
+- **BotVerse admin:** username=admin, password=123456
+- **BotVerse owner (Yossi):** email=yosi2377@gmail.com (magic link login)
+- **GitHub:** Yosi2377 (OAuth app: Ov23liq8GVAspw0TC2uD)
+
+### When Stuck:
+```bash
+# Ask for help in Agent Chat:
+/root/.openclaw/workspace/swarm/send.sh <your_id> 479 "🆘 I need help: <describe what you need>"
+```
+**Do NOT skip steps and report done. Do NOT say "looks fine in code". Actually test it.**
+
+---
+
 ## 📋 Quality Checklist — Every Task
 
-**Every task MUST follow this order:** Research → Plan → Implement → Test → Verify
+**Every task MUST follow this order:** Research → Plan → Implement → Test AS USER → Verify
 
 1. **Research** — `web_search` for current best practices, latest versions, known issues. Don't assume you know.
 2. **Plan** — Write what you'll change and why. Post to topic before coding.
 3. **Implement** — Write clean code following research findings.
-4. **Test** — Run tests. `bash $PROJECT_DIR/tests/e2e.sh` if you modified server.js or any backend code.
+4. **Test AS USER** — Use Puppeteer to simulate the FULL user flow. Login, navigate, click, verify. Not just `curl`.
 5. **Verify** — Screenshots, DB counts, API responses. Concrete proof.
 
 ### ⛔ Do NOT report "done" unless:

@@ -91,14 +91,27 @@ function verifyUrl(url) {
 }
 
 function verifyPage(url) {
-    // Use puppeteer to check for error pages, login redirects, blank pages
-    try {
-        const result = execSync(`node -e "
+    // Use puppeteer WITH LOGIN to check pages that require auth
+    const verifyScript = `
 const puppeteer = require('puppeteer');
 (async () => {
     const browser = await puppeteer.launch({headless: true, args:['--no-sandbox']});
     const page = await browser.newPage();
     try {
+        // Step 1: Login first (BotVerse admin)
+        if ('${url}'.includes('botverse')) {
+            await page.goto('https://botverse.dev/admin.html', {waitUntil: 'networkidle2', timeout: 15000});
+            await page.evaluate(async () => {
+                await fetch('/api/v1/admin/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username:'admin', password:'123456'})
+                });
+            });
+            await new Promise(r => setTimeout(r, 2000));
+        }
+        
+        // Step 2: Navigate to target page
         await page.goto('${url}', {waitUntil: 'networkidle2', timeout: 15000});
         const finalUrl = page.url();
         const title = await page.title();
@@ -110,17 +123,27 @@ const puppeteer = require('puppeteer');
         if (bodyText.includes('Cannot GET') || bodyText.includes('Internal Server Error') || bodyText.includes('Bad Gateway')) issues.push('server_error');
         if (bodyText.length < 50) issues.push('blank_page');
         
-        console.log(JSON.stringify({ok: issues.length === 0, finalUrl, title, issues}));
+        console.log(JSON.stringify({ok: issues.length === 0, finalUrl, title, issues, bodyLength: bodyText.length}));
     } catch(e) {
         console.log(JSON.stringify({ok: false, issues:['page_load_failed'], error: e.message}));
     }
     await browser.close();
 })();
-"`, { timeout: 30000, stdio: 'pipe' }).toString().trim();
-        
+`;
+    try {
+        const result = execSync(`node -e "${verifyScript.replace(/"/g, '\\"').replace(/\n/g, '\\n')}"`, 
+            { timeout: 45000, stdio: 'pipe' }).toString().trim();
         return JSON.parse(result);
     } catch (e) {
-        return { ok: false, issues: ['puppeteer_failed'], error: e.message };
+        // Fallback: try with script file
+        try {
+            const tmpScript = '/tmp/runner-verify-page.js';
+            fs.writeFileSync(tmpScript, verifyScript);
+            const result = execSync(`node ${tmpScript}`, { timeout: 45000, stdio: 'pipe' }).toString().trim();
+            return JSON.parse(result);
+        } catch (e2) {
+            return { ok: false, issues: ['puppeteer_failed'], error: e2.message?.substring(0, 200) };
+        }
     }
 }
 

@@ -1,0 +1,11 @@
+{
+  "status": "success",
+  "summary": "Verified BotVerse homepage loads correctly at https://botverse.dev",
+  "files_changed": [],
+  "tests_run": true,
+  "tests_passed": true,
+  "test_count": {"passed": 1, "failed": 0, "total": 1},
+  "proof_screenshot": "/tmp/browser-homepage-proof-desktop-9206.png",
+  "proof_description": "Screenshot confirms BotVerse homepage with hero, stats, features, trending section",
+  "url": "https://botverse.dev"
+}

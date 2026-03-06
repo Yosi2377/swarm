@@ -1,5 +1,5 @@
 #!/bin/bash
-# spawn-agent.sh v3 — Generate task text with strict enforcement
+# spawn-agent.sh v4 — Generate task text. Clear rules, less noise.
 # Usage: spawn-agent.sh <agent_id> <thread_id> <task_description> [test_command] [project_dir]
 
 AGENT_ID="${1:?Usage: spawn-agent.sh <agent_id> <thread_id> <task_description> [test_command] [project_dir]}"
@@ -28,107 +28,75 @@ cat > "${META_DIR}/${AGENT_ID}-${THREAD_ID}.json" <<METAEOF
 METAEOF
 
 cat <<EOF
-You are ${AGENT_ID}. 
+You are agent ${AGENT_ID} working on thread ${THREAD_ID}.
 
 ## Task
 ${TASK_DESC}
 
-## Process (MANDATORY — follow in order)
-1. **Understand** — Read the task. Read relevant code.
-2. **Plan** — Decide what to change. List the files.
-3. **Implement** — One change at a time.
-4. **Test** — After EACH change, run tests immediately.${TEST_CMD:+
-   \`cd ${PROJECT_DIR} && ${TEST_CMD}\`}
-5. **Verify** — ALL tests must pass before reporting done.
+## 🚨 3 IRON RULES — break any = automatic FAIL
 
-## Rules
-- After each change, TEST immediately
-- Do NOT use deleteMany({}) without explicit filter
-- Do NOT fabricate credentials/tokens — ask the orchestrator if needed
-- If STUCK: ask in Agent Chat (thread 479) and WAIT
+### 1. ACTUALLY DO THE WORK
+- Run real commands. Read real files. Make real changes.
+- Do NOT claim you fixed something without actually changing code.
+- After each change: test it immediately (curl, browser, run tests).
+
+### 2. COMMIT YOUR CHANGES
+\`\`\`bash
+cd ${PROJECT_DIR:-.} && git add -A && git commit -m "#${THREAD_ID}: description"
+\`\`\`
+An independent verifier checks \`git log\`. No commit = automatic FAIL.
+
+### 3. PROVE IT WORKS — with real evidence
+Take a screenshot AND include URL in your report:
+\`\`\`bash
+browser action=screenshot
+# or
+${SWARM_DIR}/screenshot.sh "<url>" ${THREAD_ID} ${AGENT_ID}
+\`\`\`
+An independent verifier takes its OWN screenshot of the same URL.
+If the page shows errors → FAIL, regardless of what you claim.
 
 ## Communication
 \`\`\`bash
+# Post updates to your topic:
 ${SWARM_DIR}/send.sh ${AGENT_ID} ${THREAD_ID} "message"
-\`\`\`
-Need help:
-\`\`\`bash
-${SWARM_DIR}/send.sh ${AGENT_ID} 479 "🆘 צריך עזרה: [what you need]"
+# Need help:
+${SWARM_DIR}/send.sh ${AGENT_ID} 479 "🆘 need help: [what]"
 \`\`\`
 
-${LESSONS:+## Past Lessons
-$LESSONS}
-
-## ⛔ MANDATORY BEFORE REPORTING DONE — ALL 4 STEPS REQUIRED
-## ⚠️ IF YOU SKIP ANY STEP — THE TASK IS NOT DONE. PERIOD.
-
-### Step 1: VERIFY IT ACTUALLY WORKS (MOST IMPORTANT!)
-Before saying "done", you MUST prove it works with REAL evidence:
+## When Done — ALL 3 steps required:
 \`\`\`bash
-# For web tasks — screenshot the ACTUAL result:
-${SWARM_DIR}/screenshot.sh "<THE_URL_YOU_CHANGED>" ${THREAD_ID} ${AGENT_ID} "proof"
-
-# For API tasks — show the actual curl output:
-curl -s <the_endpoint> | head -20
-
-# For code tasks — run the actual test and show output:
-cd ${PROJECT_DIR:-.} && <test_command>
-\`\`\`
-**LOOK AT YOUR SCREENSHOT/OUTPUT. Does it actually show what was requested?**
-- If the screenshot shows a login page instead of the feature → NOT DONE
-- If the curl returns an error → NOT DONE  
-- If tests fail → NOT DONE
-**DO NOT proceed to Step 2 until you have REAL proof it works.**
-
-### Step 2: Git Commit
-\`\`\`bash
-cd ${PROJECT_DIR:-.} && git add -A && git commit -m "#${THREAD_ID}: brief description"
-\`\`\`
-
-### Step 3: Structured Report with EVIDENCE
-\`\`\`bash
-mkdir -p /root/.openclaw/workspace/swarm/agent-reports
-cat > /root/.openclaw/workspace/swarm/agent-reports/${AGENT_ID}-${THREAD_ID}.json <<'DONE'
+# 1. Report file (MUST include url field for verification):
+cat > ${SWARM_DIR}/agent-reports/${AGENT_ID}-${THREAD_ID}.json <<'REPORT'
 {
   "status": "success",
-  "summary": "Brief description of what was done",
-  "files_changed": ["file1.js", "file2.js"],
-  "tests_run": true,
-  "tests_passed": true,
-  "test_count": {"passed": 0, "failed": 0, "total": 0},
-  "proof_screenshot": "/tmp/screenshots/<filename>.png",
-  "proof_description": "Screenshot shows X working correctly"
+  "summary": "what you did",
+  "url": "http://the-url-you-changed",
+  "files_changed": ["file1.js"],
+  "proof_screenshot": "/tmp/screenshots/proof.png"
 }
-DONE
+REPORT
+
+# 2. Send summary:
+${SWARM_DIR}/send.sh ${AGENT_ID} ${THREAD_ID} "✅ הושלם: summary"
+
+# 3. Done marker:
+bash ${SWARM_DIR}/done-marker.sh "${AGENT_ID}-${THREAD_ID}" "${THREAD_ID}" "summary"
 \`\`\`
-**proof_screenshot is REQUIRED. No screenshot = automatic FAIL.**
-
-### Step 4: Send Screenshot FIRST, Then Summary
-\`\`\`bash
-# FIRST — send screenshot to topic
-PROOF=\$(ls /tmp/screenshots/${AGENT_ID}-${THREAD_ID}*.png 2>/dev/null | tail -1)
-TOKEN=\$(cat ${SWARM_DIR}/.${AGENT_ID}-token)
-curl -s -X POST "https://api.telegram.org/bot\${TOKEN}/sendPhoto" \\
-  -F "chat_id=-1003815143703" -F "message_thread_id=${THREAD_ID}" \\
-  -F "photo=@\${PROOF}" -F "caption=📸 Proof — task completed"
-
-# THEN — text summary
-${SWARM_DIR}/send.sh ${AGENT_ID} ${THREAD_ID} "✅ הושלם: <summary>"
-${SWARM_DIR}/send.sh or 1 "✅ ${AGENT_ID}-${THREAD_ID} הושלם: <summary>"
-\`\`\`
-
+${TEST_CMD:+
+## Test Command
+\`cd ${PROJECT_DIR} && ${TEST_CMD}\`
+Run this before reporting done. All tests must pass.
+}
+${LESSONS:+
+## Past Lessons (read these!)
+${LESSONS}
+}
 ## ⚠️ WARNING
-The orchestrator will INDEPENDENTLY run the tests and check for:
-1. All tests pass (run independently, not trusting your claim)
-2. Structured report exists at /root/.openclaw/workspace/swarm/agent-reports/${AGENT_ID}-${THREAD_ID}.json
-3. All changes are git committed (git status --porcelain must be clean)
-
-**If ANY check fails → you will be asked to fix. Lying about results = failure.**
-
-## 🚨 REMEMBER
-The #1 reason agents fail: they SAY "done" without CHECKING it works.
-- ALWAYS test your own work before reporting
-- ALWAYS take a screenshot as proof
-- ALWAYS look at the screenshot — does it show what was asked?
-- If you're not 100% sure it works — IT DOESN'T. Keep working.
+An independent verifier will:
+1. Check git log for actual commits
+2. Run tests independently  
+3. Take its own screenshot of your URL
+4. Compare your claims to reality
+Lying = FAIL. Not committing = FAIL. Not testing = FAIL.
 EOF

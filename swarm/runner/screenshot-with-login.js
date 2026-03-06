@@ -9,6 +9,7 @@ const path = require('path');
 
 const url = process.argv[2];
 const output = process.argv[3] || '/tmp/screenshot.png';
+const scrollTo = process.argv[4] || '';  // CSS selector to scroll to
 
 (async () => {
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox']});
@@ -31,8 +32,21 @@ const output = process.argv[3] || '/tmp/screenshot.png';
     await page.goto(url, {waitUntil: 'networkidle2', timeout: 15000});
     await new Promise(r => setTimeout(r, 3000));
     
+    // Scroll to specific element if requested
+    if (scrollTo) {
+        try {
+            await page.evaluate((sel) => {
+                const el = document.querySelector(sel);
+                if (el) el.scrollIntoView({ behavior: 'instant', block: 'center' });
+            }, scrollTo);
+            await new Promise(r => setTimeout(r, 1000));
+        } catch (e) {
+            console.error(`Scroll-to "${scrollTo}" failed: ${e.message}`);
+        }
+    }
+    
     // Take full page screenshot so nothing is missed
-    await page.screenshot({path: output, fullPage: true});
+    await page.screenshot({path: output, fullPage: !scrollTo});
     
     const size = fs.statSync(output).size;
     console.log(`✅ Screenshot: ${output} (${size} bytes)`);

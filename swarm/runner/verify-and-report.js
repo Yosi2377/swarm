@@ -47,11 +47,12 @@ async function main() {
     const threadId = args[1];
     
     // Parse optional args
-    let url = '', testCmd = '', projectDir = '';
+    let url = '', testCmd = '', projectDir = '', expect = '';
     for (let i = 2; i < args.length; i += 2) {
         if (args[i] === '--url') url = args[i + 1];
         if (args[i] === '--test') testCmd = args[i + 1];
         if (args[i] === '--project') projectDir = args[i + 1];
+        if (args[i] === '--expect') expect = args[i + 1];
     }
 
     // Load from meta if not provided
@@ -61,6 +62,7 @@ async function main() {
         if (!url) url = meta.url || '';
         if (!testCmd) testCmd = meta.test_cmd || '';
         if (!projectDir) projectDir = meta.project_dir || '';
+        if (!expect) expect = meta.expect || '';
     }
 
     console.log(`\n🔍 VERIFICATION: ${agentId}-${threadId}`);
@@ -92,6 +94,20 @@ async function main() {
         const page = verifyPage(url);
         console.log(`4. Page: ${page.ok ? '✅' : '❌'} ${page.title || ''} ${page.issues?.join(', ') || ''}`);
         if (!page.ok) issues.push(`Page: ${page.issues?.join(', ')}`);
+    }
+
+    // 4b. Content expectation check
+    if (url && expect) {
+        try {
+            const { execSync } = require('child_process');
+            const pageContent = execSync(`curl -s --max-time 10 "${url}"`, { timeout: 15000, stdio: 'pipe' }).toString();
+            const found = pageContent.toLowerCase().includes(expect.toLowerCase());
+            console.log(`4b. Expect "${expect}": ${found ? '✅' : '❌'}`);
+            if (!found) issues.push(`Expected text not found: "${expect}"`);
+        } catch (e) {
+            console.log(`4b. Expect check failed: ${e.message}`);
+            issues.push(`Expect check error: ${e.message}`);
+        }
     }
 
     // 5. Runner's own screenshot

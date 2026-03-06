@@ -670,6 +670,26 @@
       "lesson": "All 16 tests pass. Agent added .env file loading and restored EXTERNAL_API_TOKEN to fix external API tests. Code is legitimate — no hardcoded fakes, no test modifications.",
       "timestamp": "2026-03-06T01:06:37.030035+00:00",
       "applied": 0
+    },
+    {
+      "id": "727d9b5a",
+      "agent": "back",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "registration_flow_verified",
+      "lesson": "Registration flow works: register→magic_token_in_DB→magic_link_redirect→dashboard_with_cookie. No magic_url returned in API response (by design - sent via email). Frontend handles both cases.",
+      "timestamp": "2026-03-06T09:39:22Z",
+      "applied": 0
+    },
+    {
+      "id": "c0bca5a4",
+      "agent": "shomer",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "BotVerse security audit",
+      "lesson": ".env and .jwt_secret committed to git with all secrets exposed. Always check git ls-files for sensitive files. Also default admin password still active.",
+      "timestamp": "2026-03-06T09:41:13Z",
+      "applied": 0
     }
   ]
 }

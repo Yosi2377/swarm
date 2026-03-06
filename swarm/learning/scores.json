@@ -16,11 +16,11 @@
       "streak": 3
     },
     "shomer": {
-      "tasks": 2,
-      "success": 2,
+      "tasks": 4,
+      "success": 4,
       "fail": 0,
       "score": 100,
-      "streak": 2
+      "streak": 4
     },
     "tzayar": {
       "tasks": 2,
@@ -56,6 +56,27 @@
       "fail": 1,
       "score": 0,
       "streak": -1
+    },
+    "back": {
+      "tasks": 2,
+      "success": 2,
+      "fail": 0,
+      "score": 100,
+      "streak": 2
+    },
+    "front": {
+      "tasks": 2,
+      "success": 2,
+      "fail": 0,
+      "score": 100,
+      "streak": 2
+    },
+    "tester": {
+      "tasks": 1,
+      "success": 1,
+      "fail": 0,
+      "score": 100,
+      "streak": 1
     }
   },
   "tools": {}

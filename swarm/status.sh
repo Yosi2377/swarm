@@ -89,3 +89,46 @@ if [ -f "$LOGFILE" ]; then
 else
   echo "📝 Today's log: (no log)"
 fi
+
+echo ""
+echo "💰 Token Usage (last 60 min):"
+python3 - 60 << 'PYEOF2'
+import json, glob, os, time, sys
+
+sessions_dir = "/root/.openclaw/agents/main/sessions"
+minutes = int(sys.argv[1]) if len(sys.argv) > 1 else 60
+cutoff = time.time() * 1000 - (minutes * 60 * 1000)
+
+sessions = {}
+try:
+    with open(os.path.join(sessions_dir, "sessions.json")) as f:
+        sessions = json.load(f)
+except: pass
+
+total_in = 0
+total_out = 0
+total_cost = 0
+
+for key, val in sessions.items():
+    if 'subagent' not in key or val.get('updatedAt', 0) < cutoff:
+        continue
+    sid = val.get('sessionId', '')
+    for f in glob.glob(os.path.join(sessions_dir, f"{sid}*.jsonl")):
+        try:
+            with open(f) as fh:
+                for line in fh:
+                    try:
+                        msg = json.loads(line).get('message', {})
+                        u = msg.get('usage', {})
+                        if u:
+                            total_in += u.get('input', 0)
+                            total_out += u.get('output', 0)
+                    except: pass
+        except: pass
+
+if total_in or total_out:
+    cost = (total_in * 3 + total_out * 15) / 1_000_000
+    print(f"  In: {total_in:,} | Out: {total_out:,} | Est: ${cost:.3f}")
+else:
+    print("  (no recent data)")
+PYEOF2

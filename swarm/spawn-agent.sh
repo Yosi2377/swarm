@@ -94,6 +94,19 @@ bash ${SWARM_DIR}/done-marker.sh "${AGENT_ID}-${THREAD_ID}" "${THREAD_ID}" "summ
 ${LESSONS:+## Past Lessons
 ${LESSONS}}
 
+## 🧠 LEARNING — MANDATORY
+**BEFORE starting work:**
+```bash
+/learn.sh query "relevant keywords" 2>/dev/null | head -5
+```
+Read the lessons. Dont repeat past mistakes.
+
+**AFTER finishing (success or failure):**
+```bash
+/learn.sh lesson  medium "what happened" "what I learned"
+/learn.sh score  success  # or fail
+```
+
 ## ⚠️ Verification
 An independent SwarmClaw evaluator will check:
 - git log for real commits (code tasks)

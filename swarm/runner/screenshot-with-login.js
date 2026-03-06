@@ -29,9 +29,10 @@ const output = process.argv[3] || '/tmp/screenshot.png';
     }
     
     await page.goto(url, {waitUntil: 'networkidle2', timeout: 15000});
-    await new Promise(r => setTimeout(r, 2000));
+    await new Promise(r => setTimeout(r, 3000));
     
-    await page.screenshot({path: output, fullPage: false});
+    // Take full page screenshot so nothing is missed
+    await page.screenshot({path: output, fullPage: true});
     
     const size = fs.statSync(output).size;
     console.log(`✅ Screenshot: ${output} (${size} bytes)`);

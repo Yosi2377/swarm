@@ -100,20 +100,42 @@ else
 fi
 
 # ═══════════════════════════════════════════
-# CHECK 3: Git commits
+# CHECK 3: Screenshot proof exists
+# ═══════════════════════════════════════════
+SCREENSHOT_FOUND=0
+# Check in report JSON
+if [ -f "$DONE_FILE" ]; then
+    PROOF=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('proof_screenshot',''))" < "$DONE_FILE" 2>/dev/null)
+    if [ -n "$PROOF" ] && [ -f "$PROOF" ]; then
+        SCREENSHOT_FOUND=1
+    fi
+fi
+# Check common screenshot paths
+for pattern in "/tmp/screenshots/${AGENT_ID}-${THREAD_ID}"*.png "/tmp/proof-${THREAD_ID}"*.png "/tmp/report-${THREAD_ID}"*.png; do
+    ls $pattern 2>/dev/null | head -1 >/dev/null 2>&1 && SCREENSHOT_FOUND=1
+done
+if [ "$SCREENSHOT_FOUND" -eq 1 ]; then
+    echo "✅ CHECK 3 PASSED: Screenshot proof found"
+else
+    echo "❌ CHECK 3 FAILED: No screenshot proof! Agent must provide visual evidence."
+    ISSUES=$((ISSUES+1))
+fi
+
+# ═══════════════════════════════════════════
+# CHECK 4: Git commits
 # ═══════════════════════════════════════════
 if [ -n "$PROJECT_DIR" ] && [ -d "${PROJECT_DIR}/.git" ]; then
     cd "$PROJECT_DIR"
     DIRTY=$(git status --porcelain 2>/dev/null | wc -l)
     if [ "$DIRTY" -gt 0 ]; then
-        echo "❌ CHECK 3 FAILED: ${DIRTY} uncommitted changes"
+        echo "❌ CHECK 4 FAILED: uncommitted changes"
         git status --porcelain 2>/dev/null | head -5
         ISSUES=$((ISSUES+1))
     else
-        echo "✅ CHECK 3 PASSED: All changes committed"
+        echo "✅ CHECK 4 PASSED: All changes committed"
     fi
 else
-    echo "⚠️ CHECK 3 SKIPPED: No git repo"
+    echo "⚠️ CHECK 4 SKIPPED: No git repo"
     WARNINGS=$((WARNINGS+1))
 fi
 

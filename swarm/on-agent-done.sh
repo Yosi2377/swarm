@@ -50,8 +50,22 @@ if [ "$SCREENSHOT_FOUND" -eq 0 ]; then
 או: browser action=screenshot
 ושלח את התמונה לפני שמדווח done." 2>/dev/null
 
-    echo "RESULT=WARNING_NO_SCREENSHOT"
-    # Continue to verification but mark as warning
+    echo "RESULT=FAIL_NO_SCREENSHOT"
+    
+    # Update metadata to reflect failure
+    META_FILE="/tmp/agent-tasks/${AGENT_ID}-${THREAD_ID}.json"
+    if [ -f "$META_FILE" ]; then
+        python3 -c "
+import json
+with open('$META_FILE') as f: d=json.load(f)
+d['status']='fail_no_screenshot'
+d['retries']=d.get('retries',0)+1
+with open('$META_FILE','w') as f: json.dump(d,f,indent=2)
+" 2>/dev/null
+    fi
+    
+    # Don't continue — force agent to provide screenshot first
+    exit 1
 fi
 
 # Run independent verification

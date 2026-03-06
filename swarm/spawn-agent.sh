@@ -1,5 +1,5 @@
 #!/bin/bash
-# spawn-agent.sh — Generate task text for sub-agent (v2)
+# spawn-agent.sh v3 — Generate task text with strict enforcement
 # Usage: spawn-agent.sh <agent_id> <thread_id> <task_description> [test_command] [project_dir]
 
 AGENT_ID="${1:?Usage: spawn-agent.sh <agent_id> <thread_id> <task_description> [test_command] [project_dir]}"
@@ -11,9 +11,9 @@ PROJECT_DIR="${5:-}"
 SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
 LESSONS=$(bash "${SWARM_DIR}/inject-lessons.sh" "$TASK_DESC" 2>/dev/null || echo "")
 
-# Save task metadata for verification
+# Save task metadata
 META_DIR="/tmp/agent-tasks"
-mkdir -p "$META_DIR"
+mkdir -p "$META_DIR" /root/.openclaw/workspace/swarm/agent-reports
 cat > "${META_DIR}/${AGENT_ID}-${THREAD_ID}.json" <<METAEOF
 {
     "agent_id": "${AGENT_ID}",
@@ -22,7 +22,8 @@ cat > "${META_DIR}/${AGENT_ID}-${THREAD_ID}.json" <<METAEOF
     "test_cmd": "${TEST_CMD}",
     "project_dir": "${PROJECT_DIR}",
     "dispatched_at": "$(date -Iseconds)",
-    "status": "running"
+    "status": "running",
+    "retries": 0
 }
 METAEOF
 
@@ -33,42 +34,46 @@ You are ${AGENT_ID}.
 ${TASK_DESC}
 
 ## Process (MANDATORY — follow in order)
-1. **Understand** — Read the task. Read relevant code. Understand what's expected.
+1. **Understand** — Read the task. Read relevant code.
 2. **Plan** — Decide what to change. List the files.
-3. **Implement** — Make changes one at a time.
+3. **Implement** — One change at a time.
 4. **Test** — After EACH change, run tests immediately.${TEST_CMD:+
-   Test command: \`${TEST_CMD}\`}${PROJECT_DIR:+
-   Project dir: \`${PROJECT_DIR}\`}
-5. **Verify** — Run ALL tests one final time before reporting done.
+   \`cd ${PROJECT_DIR} && ${TEST_CMD}\`}
+5. **Verify** — ALL tests must pass before reporting done.
 
 ## Rules
-1. After each change, TEST immediately — don't batch changes
-2. Do NOT use deleteMany({}) without explicit filter
-3. Do NOT fabricate credentials/tokens — if you need one, ask the orchestrator
-4. Commit: git add -A && git commit -m "#${THREAD_ID}: description"
+- After each change, TEST immediately
+- Do NOT use deleteMany({}) without explicit filter
+- Do NOT fabricate credentials/tokens — ask the orchestrator if needed
+- If STUCK: ask in Agent Chat (thread 479) and WAIT
 
 ## Communication
-Report to your topic:
 \`\`\`bash
 ${SWARM_DIR}/send.sh ${AGENT_ID} ${THREAD_ID} "message"
 \`\`\`
-
-If you're STUCK or need information you don't have:
+Need help:
 \`\`\`bash
 ${SWARM_DIR}/send.sh ${AGENT_ID} 479 "🆘 צריך עזרה: [what you need]"
 \`\`\`
-Then WAIT for the orchestrator to respond before continuing.
 
 ${LESSONS:+## Past Lessons
 $LESSONS}
 
-## Completion Report (MANDATORY FORMAT)
-When done, create this file FIRST:
+## ⛔ MANDATORY BEFORE REPORTING DONE — ALL 3 STEPS REQUIRED
+
+### Step 1: Git Commit (REQUIRED)
 \`\`\`bash
-cat > /tmp/agent-done/${AGENT_ID}-${THREAD_ID}.json <<'DONE'
+cd ${PROJECT_DIR:-.} && git add -A && git commit -m "#${THREAD_ID}: brief description"
+\`\`\`
+**If you skip this → verification FAILS automatically.**
+
+### Step 2: Structured Report (REQUIRED)
+\`\`\`bash
+mkdir -p /root/.openclaw/workspace/swarm/agent-reports
+cat > /root/.openclaw/workspace/swarm/agent-reports/${AGENT_ID}-${THREAD_ID}.json <<'DONE'
 {
   "status": "success",
-  "summary": "What was done (1-2 sentences)",
+  "summary": "Brief description of what was done",
   "files_changed": ["file1.js", "file2.js"],
   "tests_run": true,
   "tests_passed": true,
@@ -76,13 +81,19 @@ cat > /tmp/agent-done/${AGENT_ID}-${THREAD_ID}.json <<'DONE'
 }
 DONE
 \`\`\`
+**Update the numbers with REAL test counts. If you skip this → verification FAILS automatically.**
 
-Then report:
+### Step 3: Notify
 \`\`\`bash
 ${SWARM_DIR}/send.sh ${AGENT_ID} ${THREAD_ID} "✅ הושלם: <summary>"
 ${SWARM_DIR}/send.sh or 1 "✅ ${AGENT_ID}-${THREAD_ID} הושלם: <summary>"
 \`\`\`
 
-⚠️ The orchestrator will INDEPENDENTLY verify your work after you report done.
-⚠️ If verification fails, you will be asked to fix. Lying about test results = automatic failure.
+## ⚠️ WARNING
+The orchestrator will INDEPENDENTLY run the tests and check for:
+1. All tests pass (run independently, not trusting your claim)
+2. Structured report exists at /root/.openclaw/workspace/swarm/agent-reports/${AGENT_ID}-${THREAD_ID}.json
+3. All changes are git committed (git status --porcelain must be clean)
+
+**If ANY check fails → you will be asked to fix. Lying about results = failure.**
 EOF

@@ -1,12 +1,18 @@
 #!/bin/bash
-# smart-eval.sh v3 — Poll → Detect → STRICT Evaluate → Retry/Escalate
-# Usage: nohup bash smart-eval.sh <label> <topic> <eval> [max_wait] [original_task] &
+# smart-eval.sh v4 — Full autonomous pipeline
+# Poll → Detect done → Strict eval → Auto-retry via hooks → Pipeline chain
+#
+# Usage: nohup bash smart-eval.sh <label> <topic> <eval> [max_wait] [original_task] [next_step_json] &
+#
+# next_step_json format (optional, for pipeline chaining):
+#   {"task":"...","eval":"...","label":"step2-shomer","timeout":120}
 
-LABEL="${1:?Usage: smart-eval.sh <label> <topic> <eval> [max_wait] [original_task]}"
+LABEL="${1:?Usage: smart-eval.sh <label> <topic> <eval> [max_wait] [original_task] [next_step_json]}"
 TOPIC="${2:-4950}"
 EVAL="${3:-Run tests and check the work}"
 MAX_WAIT="${4:-300}"
 ORIGINAL_TASK="${5:-}"
+NEXT_STEP="${6:-}"
 
 HOOK_TOKEN=$(python3 -c "import json;print(json.load(open('/root/.openclaw/openclaw.json')).get('hooks',{}).get('token',''))" 2>/dev/null)
 OR_TOKEN=$(cat /root/.openclaw/workspace/swarm/.bot-token 2>/dev/null)
@@ -15,12 +21,11 @@ SESSIONS_FILE="/root/.openclaw/agents/main/sessions/sessions.json"
 REPORT_DIR="/tmp/agent-reports"
 RETRY_FILE="/tmp/retry-${LABEL}.count"
 LOG="/tmp/smart-eval-${LABEL}.log"
-EVAL_PROMPT=$(cat /root/.openclaw/workspace/swarm/eval-prompt.md 2>/dev/null)
 
 mkdir -p "$REPORT_DIR"
 echo "$(date -Iseconds) START: ${LABEL} (max ${MAX_WAIT}s)" > "$LOG"
 
-# ─── PHASE 1: POLL ───
+# ─── PHASE 1: POLL until agent finishes ───
 sleep 10
 ELAPSED=10
 LAST_UPDATE=0
@@ -59,107 +64,204 @@ STATUS="done"
 [ $ELAPSED -ge $MAX_WAIT ] && STATUS="timeout"
 echo "$(date -Iseconds) STATUS: ${STATUS} (${ELAPSED}s)" >> "$LOG"
 
-# ─── PHASE 2: STRICT EVALUATION ───
+# ─── PHASE 2: STRICT EVALUATION via hook agent ───
 curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
   -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
-  -d "text=🔍 סוכן ${LABEL} ${STATUS} (${ELAPSED}s). בודק בקפדנות..." > /dev/null 2>&1
+  -d "text=🔍 סוכן ${LABEL} ${STATUS} (${ELAPSED}s). מעריך..." > /dev/null 2>&1
 
-# Escape the eval prompt for JSON — write to temp file to avoid shell escaping issues
 EVAL_TMPFILE="/tmp/eval-payload-${LABEL}.json"
-python3 -c "
-import json
-prompt = open('/root/.openclaw/workspace/swarm/eval-prompt.md').read()
-eval_specific = '''${EVAL}'''
+python3 << 'PYEOF' - "${LABEL}" "${STATUS}" "${ELAPSED}" "${EVAL}" "${REPORT_DIR}" "${CHAT_ID}" "${TOPIC}"
+import json, sys
+
+label, status, elapsed, eval_instructions, report_dir, chat_id, topic = sys.argv[1:8]
+
+eval_prompt = open('/root/.openclaw/workspace/swarm/eval-prompt.md').read()
+
 payload = {
-    'task': f'''STRICT CODE REVIEW for agent ${LABEL} (${STATUS}, ${ELAPSED}s).
+    "task": f"""STRICT CODE REVIEW for agent {label} ({status}, {elapsed}s).
 
-{prompt}
+{eval_prompt}
 
-SPECIFIC CHECKS:
-{eval_specific}
+SPECIFIC CHECKS FOR THIS TASK:
+{eval_instructions}
 
-ADDITIONAL MANDATORY CHECKS:
-1. Run the tests yourself
-2. Read ACTUAL code changes — look for hardcoded/fake data that just passes tests
-3. Check: did agent use hardcoded values where real logic is needed?
-4. Check: did agent modify test files when told not to?
-5. Run: git diff or compare file contents
-
-Write verdict to ${REPORT_DIR}/${LABEL}.json:
-{{\"label\":\"${LABEL}\",\"status\":\"pass or fail or suspect\",\"summary\":\"...\",\"tests\":{{\"passed\":N,\"failed\":N,\"total\":N}},\"issues\":[\"...\"],\"verdict_reason\":\"why pass/fail/suspect\"}}
-
-Send Hebrew report to Telegram: message tool action=send, channel=telegram, target=${CHAT_ID}, threadId=${TOPIC}.
-Format: PASS ✅ / FAIL ❌ / SUSPECT ⚠️ — details, issues, red flags.''',
-    'sessionKey': 'hook:eval:${LABEL}-$(date +%s)'
+MANDATORY STEPS:
+1. Run the tests/checks yourself — do NOT trust any prior output
+2. Read the actual code that was changed
+3. Look for: hardcoded values, faked data, modified test files, empty catch blocks
+4. If tests pass but implementation is fake/wrong → verdict SUSPECT
+5. Write verdict to {report_dir}/{label}.json:
+   {{"label":"{label}","status":"pass or fail or suspect","summary":"...","tests":{{"passed":0,"failed":0,"total":0}},"issues":["..."],"verdict_reason":"why"}}
+6. Send Hebrew report to Telegram: use message tool with action=send, channel=telegram, target={chat_id}, threadId={topic}
+   Format: PASS ✅ / FAIL ❌ / SUSPECT ⚠️ + details""",
+    "sessionKey": f"hook:eval:{label}-{elapsed}"
 }
-with open('${EVAL_TMPFILE}', 'w') as f:
+
+with open(f"/tmp/eval-payload-{label}.json", "w") as f:
     json.dump(payload, f, ensure_ascii=False)
-" 2>/dev/null
+PYEOF
 
 curl -s -X POST "http://localhost:18789/hooks/agent-watcher" \
   -H "Authorization: Bearer ${HOOK_TOKEN}" \
   -H "Content-Type: application/json" \
   -d @"${EVAL_TMPFILE}" >> "$LOG" 2>&1
-
 rm -f "${EVAL_TMPFILE}"
 
 echo "" >> "$LOG"
-echo "$(date -Iseconds) EVAL sent" >> "$LOG"
+echo "$(date -Iseconds) EVAL triggered" >> "$LOG"
 
-# ─── PHASE 3: CHECK RESULT → RETRY/ESCALATE ───
-sleep 45
+# ─── PHASE 3: WAIT for eval → CHECK → RETRY or CHAIN ───
+sleep 60  # Give eval agent time
 
 RETRIES=0
 [ -f "$RETRY_FILE" ] && RETRIES=$(cat "$RETRY_FILE")
 
 REPORT_STATUS="unknown"
 VERDICT_REASON=""
+ISSUES_TEXT=""
 if [ -f "${REPORT_DIR}/${LABEL}.json" ]; then
-  REPORT_STATUS=$(python3 -c "
+  read REPORT_STATUS VERDICT_REASON ISSUES_TEXT <<< $(python3 -c "
 import json
 with open('${REPORT_DIR}/${LABEL}.json') as f:
     d = json.load(f)
-print(d.get('status', 'unknown'))
-" 2>/dev/null)
-  VERDICT_REASON=$(python3 -c "
-import json
-with open('${REPORT_DIR}/${LABEL}.json') as f:
-    d = json.load(f)
-print(d.get('verdict_reason', '')[:200])
+status = d.get('status', 'unknown').lower()
+reason = d.get('verdict_reason', '')[:200].replace(' ', '_')
+issues = '; '.join(d.get('issues', []))[:200].replace(' ', '_')
+print(status, reason, issues)
 " 2>/dev/null)
 fi
 
-echo "$(date -Iseconds) RESULT: ${REPORT_STATUS} reason: ${VERDICT_REASON} (retries: ${RETRIES})" >> "$LOG"
+echo "$(date -Iseconds) RESULT: ${REPORT_STATUS} (retries: ${RETRIES})" >> "$LOG"
 
-if [ "$REPORT_STATUS" = "fail" ] || [ "$REPORT_STATUS" = "suspect" ]; then
-  if [ "$RETRIES" -lt 2 ] && [ -n "$ORIGINAL_TASK" ]; then
-    # ─── RETRY ───
-    echo $((RETRIES + 1)) > "$RETRY_FILE"
-    
-    ISSUES=$(python3 -c "
-import json
-with open('${REPORT_DIR}/${LABEL}.json') as f:
-    d = json.load(f)
-issues = d.get('issues', [])
-print('; '.join(issues)[:200] if issues else 'Unknown')
-" 2>/dev/null)
-    
-    curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
-      -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
-      -d "text=🔄 ניסיון $((RETRIES + 1))/2 — ${LABEL} נכשל: ${ISSUES}" > /dev/null 2>&1
-    
-    echo "$(date -Iseconds) RETRY $((RETRIES + 1))" >> "$LOG"
-    echo "{\"label\":\"${LABEL}\",\"topic\":\"${TOPIC}\",\"retry\":$((RETRIES + 1)),\"issues\":\"${ISSUES}\"}" > "/tmp/retry-request-${LABEL}.json"
-  else
-    # ─── ESCALATE ───
-    curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
-      -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
-      -d "text=🚨 ${LABEL} נכשל אחרי ${RETRIES} ניסיונות! בעיות: ${VERDICT_REASON}. דורש התערבות." > /dev/null 2>&1
-    
-    echo "$(date -Iseconds) ESCALATED" >> "$LOG"
+case "$REPORT_STATUS" in
+  pass|fixed*|complete*|success*)
+    # ─── SUCCESS ───
+    echo "$(date -Iseconds) ✅ PASS" >> "$LOG"
     rm -f "$RETRY_FILE"
-  fi
-else
-  echo "$(date -Iseconds) ✅ DONE" >> "$LOG"
-  rm -f "$RETRY_FILE"
-fi
+    
+    # ─── PIPELINE: trigger next step if defined ───
+    if [ -n "$NEXT_STEP" ] && [ "$NEXT_STEP" != "" ] && [ "$NEXT_STEP" != "{}" ]; then
+      # Verify next step has actual task content
+      HAS_TASK=$(echo "$NEXT_STEP" | python3 -c "import json,sys;d=json.load(sys.stdin);print('yes' if d.get('task') else 'no')" 2>/dev/null)
+      if [ "$HAS_TASK" != "yes" ]; then
+        echo "$(date -Iseconds) 🔗 PIPELINE: no valid next step, skipping" >> "$LOG"
+      else
+      echo "$(date -Iseconds) 🔗 PIPELINE: triggering next step" >> "$LOG"
+      
+      NEXT_TASK=$(echo "$NEXT_STEP" | python3 -c "import json,sys;print(json.load(sys.stdin).get('task',''))" 2>/dev/null)
+      NEXT_EVAL=$(echo "$NEXT_STEP" | python3 -c "import json,sys;print(json.load(sys.stdin).get('eval',''))" 2>/dev/null)
+      NEXT_LABEL=$(echo "$NEXT_STEP" | python3 -c "import json,sys;print(json.load(sys.stdin).get('label','step-next'))" 2>/dev/null)
+      NEXT_TIMEOUT=$(echo "$NEXT_STEP" | python3 -c "import json,sys;print(json.load(sys.stdin).get('timeout',180))" 2>/dev/null)
+      NEXT_NEXT=$(echo "$NEXT_STEP" | python3 -c "import json,sys;print(json.dumps(json.load(sys.stdin).get('next',{})))" 2>/dev/null)
+      
+      curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
+        -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
+        -d "text=🔗 Pipeline: ${LABEL} עבר ✅ → מפעיל ${NEXT_LABEL}..." > /dev/null 2>&1
+      
+      # Spawn next step via hooks (it will run as an agent)
+      NEXT_TMPFILE="/tmp/next-step-${NEXT_LABEL}.json"
+      python3 -c "
+import json
+payload = {
+    'task': '''${NEXT_TASK}''',
+    'sessionKey': 'hook:pipeline:${NEXT_LABEL}'
+}
+with open('${NEXT_TMPFILE}', 'w') as f:
+    json.dump(payload, f)
+"
+      curl -s -X POST "http://localhost:18789/hooks/agent-watcher" \
+        -H "Authorization: Bearer ${HOOK_TOKEN}" \
+        -H "Content-Type: application/json" \
+        -d @"${NEXT_TMPFILE}" >> "$LOG" 2>&1
+      rm -f "${NEXT_TMPFILE}"
+      
+      # Start monitoring next step
+      nohup bash /root/.openclaw/workspace/swarm/smart-eval.sh \
+        "${NEXT_LABEL}" "${TOPIC}" "${NEXT_EVAL}" "${NEXT_TIMEOUT}" "${NEXT_TASK}" \
+        "${NEXT_NEXT}" > /dev/null 2>&1 &
+      
+      echo "$(date -Iseconds) 🔗 Next step ${NEXT_LABEL} spawned (monitor PID $!)" >> "$LOG"
+      fi
+    fi
+    ;;
+    
+  fail|suspect)
+    if [ "$RETRIES" -lt 2 ] && [ -n "$ORIGINAL_TASK" ]; then
+      # ─── AUTO-RETRY: spawn new agent via hooks ───
+      echo $((RETRIES + 1)) > "$RETRY_FILE"
+      RETRY_NUM=$((RETRIES + 1))
+      
+      ISSUES_READABLE=$(python3 -c "
+import json
+try:
+    with open('${REPORT_DIR}/${LABEL}.json') as f:
+        d = json.load(f)
+    print('; '.join(d.get('issues', ['Unknown']))[:300])
+except: print('Unknown issues')
+" 2>/dev/null)
+      
+      curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
+        -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
+        -d "text=🔄 ניסיון ${RETRY_NUM}/2 — ${LABEL} נכשל. מפעיל שוב..." > /dev/null 2>&1
+      
+      # Spawn retry agent via hooks
+      RETRY_LABEL="${LABEL}-retry${RETRY_NUM}"
+      RETRY_TMPFILE="/tmp/retry-payload-${RETRY_LABEL}.json"
+      python3 << RETRYEOF
+import json
+issues = """${ISSUES_READABLE}"""
+original = """${ORIGINAL_TASK}"""
+payload = {
+    "task": f"""RETRY #{int('${RETRY_NUM}')} — Previous attempt FAILED.
+
+ORIGINAL TASK:
+{original}
+
+PREVIOUS ISSUES (you MUST fix these):
+{issues}
+
+Do NOT repeat the same mistakes. Fix the issues listed above.
+Write report to ${REPORT_DIR}/${RETRY_LABEL}.json""",
+    "sessionKey": "hook:retry:${RETRY_LABEL}"
+}
+with open("${RETRY_TMPFILE}", "w") as f:
+    json.dump(payload, f, ensure_ascii=False)
+RETRYEOF
+      
+      curl -s -X POST "http://localhost:18789/hooks/agent-watcher" \
+        -H "Authorization: Bearer ${HOOK_TOKEN}" \
+        -H "Content-Type: application/json" \
+        -d @"${RETRY_TMPFILE}" >> "$LOG" 2>&1
+      rm -f "${RETRY_TMPFILE}"
+      
+      # Monitor the retry
+      nohup bash /root/.openclaw/workspace/swarm/smart-eval.sh \
+        "${RETRY_LABEL}" "${TOPIC}" "${EVAL}" "${MAX_WAIT}" "${ORIGINAL_TASK}" \
+        "${NEXT_STEP}" > /dev/null 2>&1 &
+      
+      echo "$(date -Iseconds) 🔄 RETRY ${RETRY_NUM} spawned: ${RETRY_LABEL} (monitor PID $!)" >> "$LOG"
+    else
+      # ─── ESCALATE ───
+      curl -s "https://api.telegram.org/bot${OR_TOKEN}/sendMessage" \
+        -d "chat_id=${CHAT_ID}" -d "message_thread_id=${TOPIC}" \
+        -d "text=🚨 ${LABEL} נכשל סופית אחרי ${RETRIES} ניסיונות! דורש התערבות ידנית." > /dev/null 2>&1
+      
+      echo "$(date -Iseconds) 🚨 ESCALATED — max retries" >> "$LOG"
+      rm -f "$RETRY_FILE"
+    fi
+    ;;
+    
+  *)
+    # Unknown status — eval agent might not have written report
+    echo "$(date -Iseconds) ⚠️ Unknown status: ${REPORT_STATUS}" >> "$LOG"
+    # Check if tests pass anyway
+    if [ -n "$EVAL" ]; then
+      echo "$(date -Iseconds) Running eval directly..." >> "$LOG"
+      DIRECT_RESULT=$(bash -c "${EVAL}" 2>&1 | tail -5)
+      echo "$(date -Iseconds) Direct eval: ${DIRECT_RESULT}" >> "$LOG"
+    fi
+    rm -f "$RETRY_FILE"
+    ;;
+esac
+
+echo "$(date -Iseconds) END" >> "$LOG"

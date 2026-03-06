@@ -1,10 +1,6 @@
 #!/bin/bash
-# verify-task.sh — Independent verification after agent reports done (v2)
-# Usage: verify-task.sh <agent_id> <thread_id>
-# Or:    verify-task.sh <agent_id> <thread_id> <test_command> <project_dir>
-#
-# If test_command/project_dir not given, reads from /tmp/agent-tasks metadata
-# Returns: exit 0 = PASS, exit 1 = FAIL
+# verify-task.sh v3 — Independent verification with strict enforcement
+# Usage: verify-task.sh <agent_id> <thread_id> [test_cmd] [project_dir]
 
 AGENT_ID="${1:?Usage: verify-task.sh <agent_id> <thread_id> [test_cmd] [project_dir]}"
 THREAD_ID="${2:?Missing thread_id}"
@@ -25,12 +21,15 @@ echo "🧪 Test: ${TEST_CMD:-none}"
 echo "========================================="
 
 ISSUES=0
+WARNINGS=0
 PASS_COUNT=0
 FAIL_COUNT=0
 
-# 1. Run test command
+# ═══════════════════════════════════════════
+# CHECK 1: Run test command
+# ═══════════════════════════════════════════
 if [ -n "$TEST_CMD" ] && [ -n "$PROJECT_DIR" ]; then
-    # Kill any process on common ports that might conflict
+    # Kill conflicting ports
     for port in 3000 4000 4444 5000 8000; do
         fuser -k ${port}/tcp 2>/dev/null
     done
@@ -44,68 +43,103 @@ if [ -n "$TEST_CMD" ] && [ -n "$PROJECT_DIR" ]; then
     PASS_COUNT=$(echo "$OUTPUT" | grep -c "✅")
     FAIL_COUNT=$(echo "$OUTPUT" | grep -c "❌")
     
-    # Show all failures
     if [ "$FAIL_COUNT" -gt 0 ]; then
         echo "FAILURES:"
         echo "$OUTPUT" | grep "❌"
         echo ""
     fi
     
-    # Show summary
     echo "$OUTPUT" | grep -E "^(Passed|Failed|Total):" 2>/dev/null || true
     
     if [ "$EXIT_CODE" -ne 0 ] || [ "$FAIL_COUNT" -gt 0 ]; then
-        echo "❌ TESTS FAILED: exit=$EXIT_CODE, ✅=$PASS_COUNT, ❌=$FAIL_COUNT"
+        echo "❌ CHECK 1 FAILED: Tests — exit=$EXIT_CODE, ✅=$PASS_COUNT, ❌=$FAIL_COUNT"
         ISSUES=$((ISSUES+1))
     else
-        echo "✅ TESTS PASSED: ✅=$PASS_COUNT, ❌=0"
+        echo "✅ CHECK 1 PASSED: Tests — ✅=$PASS_COUNT, ❌=0"
     fi
 else
-    echo "⚠️ No test command configured — cannot verify automatically"
+    echo "⚠️ CHECK 1 SKIPPED: No test command configured"
+    WARNINGS=$((WARNINGS+1))
 fi
 
-# 2. Check agent's own completion report
-DONE_FILE="/tmp/agent-done/${AGENT_ID}-${THREAD_ID}.json"
+# ═══════════════════════════════════════════
+# CHECK 2: Structured completion report
+# ═══════════════════════════════════════════
+DONE_FILE="/root/.openclaw/workspace/swarm/agent-reports/${AGENT_ID}-${THREAD_ID}.json"
 if [ -f "$DONE_FILE" ]; then
     AGENT_STATUS=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('status','unknown'))" < "$DONE_FILE" 2>/dev/null)
     AGENT_TESTS_PASSED=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('tests_passed','unknown'))" < "$DONE_FILE" 2>/dev/null)
-    echo ""
-    echo "Agent self-report: status=${AGENT_STATUS}, tests_passed=${AGENT_TESTS_PASSED}"
+    AGENT_SUMMARY=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('summary',''))" < "$DONE_FILE" 2>/dev/null)
+    AGENT_PASS=$(python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('test_count',{}).get('passed',0))" < "$DONE_FILE" 2>/dev/null)
+    AGENT_FAIL=$(python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('test_count',{}).get('failed',0))" < "$DONE_FILE" 2>/dev/null)
     
-    # Cross-check: if agent says pass but our tests fail = LIAR
-    if [ "$AGENT_TESTS_PASSED" = "True" ] && [ "$FAIL_COUNT" -gt 0 ]; then
-        echo "🚨 AGENT LIED: Claimed tests passed but $FAIL_COUNT failures found!"
-        ISSUES=$((ISSUES+1))
+    echo ""
+    echo "Agent report: status=${AGENT_STATUS}, claimed=${AGENT_PASS}✅/${AGENT_FAIL}❌"
+    echo "Agent summary: ${AGENT_SUMMARY}"
+    
+    # Cross-check: agent claims vs reality
+    if [ "$AGENT_TESTS_PASSED" = "True" ] || [ "$AGENT_TESTS_PASSED" = "true" ]; then
+        if [ "$FAIL_COUNT" -gt 0 ]; then
+            echo "🚨 AGENT LIED: Claimed tests passed but $FAIL_COUNT failures found!"
+            ISSUES=$((ISSUES+1))
+        fi
     fi
+    
+    # Cross-check counts
+    if [ -n "$AGENT_PASS" ] && [ "$AGENT_PASS" != "0" ] && [ "$PASS_COUNT" -gt 0 ]; then
+        if [ "$AGENT_PASS" != "$PASS_COUNT" ]; then
+            echo "⚠️ COUNT MISMATCH: Agent claimed ${AGENT_PASS} passed, verify found ${PASS_COUNT}"
+            WARNINGS=$((WARNINGS+1))
+        fi
+    fi
+    
+    echo "✅ CHECK 2 PASSED: Structured report exists"
 else
-    echo "⚠️ No structured completion report from agent"
+    echo "❌ CHECK 2 FAILED: No structured report at ${DONE_FILE}"
+    ISSUES=$((ISSUES+1))
 fi
 
-# 3. Check uncommitted changes
+# ═══════════════════════════════════════════
+# CHECK 3: Git commits
+# ═══════════════════════════════════════════
 if [ -n "$PROJECT_DIR" ] && [ -d "${PROJECT_DIR}/.git" ]; then
     cd "$PROJECT_DIR"
     DIRTY=$(git status --porcelain 2>/dev/null | wc -l)
     if [ "$DIRTY" -gt 0 ]; then
-        echo "⚠️ ${DIRTY} uncommitted changes"
+        echo "❌ CHECK 3 FAILED: ${DIRTY} uncommitted changes"
+        git status --porcelain 2>/dev/null | head -5
+        ISSUES=$((ISSUES+1))
+    else
+        echo "✅ CHECK 3 PASSED: All changes committed"
     fi
+else
+    echo "⚠️ CHECK 3 SKIPPED: No git repo"
+    WARNINGS=$((WARNINGS+1))
 fi
 
-# 4. Update metadata
+# ═══════════════════════════════════════════
+# UPDATE METADATA
+# ═══════════════════════════════════════════
 if [ -f "$META_FILE" ]; then
     python3 -c "
-import json,sys
+import json
 with open('$META_FILE') as f: d=json.load(f)
 d['status']='verified_pass' if $ISSUES==0 else 'verified_fail'
 d['verified_at']='$(date -Iseconds)'
 d['verify_passed']=$PASS_COUNT
 d['verify_failed']=$FAIL_COUNT
-d['issues']=$ISSUES
+d['verify_issues']=$ISSUES
+d['verify_warnings']=$WARNINGS
 with open('$META_FILE','w') as f: json.dump(d,f,indent=2)
 " 2>/dev/null
 fi
 
+# ═══════════════════════════════════════════
+# VERDICT
+# ═══════════════════════════════════════════
 echo ""
 echo "========================================="
+echo "Issues: $ISSUES | Warnings: $WARNINGS"
 if [ "$ISSUES" -eq 0 ]; then
     echo "✅ VERIFICATION: PASS"
     exit 0

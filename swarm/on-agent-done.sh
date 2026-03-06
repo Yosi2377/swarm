@@ -1,12 +1,6 @@
 #!/bin/bash
-# on-agent-done.sh — Called when a sub-agent reports completion
+# on-agent-done.sh v2 — Post-completion pipeline with strict verification
 # Usage: on-agent-done.sh <agent_id> <thread_id> [test_cmd] [project_dir]
-#
-# This script:
-# 1. Runs independent verification (verify-task.sh)
-# 2. If PASS → sends success message to General (thread 1) 
-# 3. If FAIL → sends failure details to agent's topic for retry
-# 4. Outputs structured result for orchestrator
 
 AGENT_ID="${1:?Usage: on-agent-done.sh <agent_id> <thread_id> [test_cmd] [project_dir]}"
 THREAD_ID="${2:?Missing thread_id}"
@@ -14,76 +8,81 @@ TEST_CMD="${3:-}"
 PROJECT_DIR="${4:-}"
 
 SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
+mkdir -p "${SWARM_DIR}/logs"
 
 echo "================================================"
 echo "🔍 POST-COMPLETION: ${AGENT_ID} task ${THREAD_ID}"
 echo "================================================"
 
-# Step 1: Run independent verification
+# Run independent verification
 VERIFY_OUTPUT=$(bash "${SWARM_DIR}/verify-task.sh" "$AGENT_ID" "$THREAD_ID" "$TEST_CMD" "$PROJECT_DIR" 2>&1)
 VERIFY_EXIT=$?
 
 echo "$VERIFY_OUTPUT"
 
-# Step 2: Check agent's structured report
-REPORT_FILE="/tmp/agent-done/${AGENT_ID}-${THREAD_ID}.json"
-REPORT_EXISTS="false"
-if [ -f "$REPORT_FILE" ]; then
-    REPORT_EXISTS="true"
-    AGENT_STATUS=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('status','unknown'))" < "$REPORT_FILE" 2>/dev/null)
-    AGENT_SUMMARY=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('summary','no summary'))" < "$REPORT_FILE" 2>/dev/null)
+# Get retry count from metadata
+META_FILE="/tmp/agent-tasks/${AGENT_ID}-${THREAD_ID}.json"
+RETRIES=0
+if [ -f "$META_FILE" ]; then
+    RETRIES=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('retries',0))" < "$META_FILE" 2>/dev/null || echo 0)
 fi
 
-# Step 3: Act on result
 if [ "$VERIFY_EXIT" -eq 0 ]; then
     echo ""
-    echo "✅ VERIFIED PASS — reporting to General"
+    echo "✅ VERIFIED PASS"
     
-    # Log success
-    echo "{\"agent\":\"${AGENT_ID}\",\"thread\":${THREAD_ID},\"result\":\"pass\",\"time\":\"$(date -Iseconds)\"}" \
+    # Log
+    echo "{\"agent\":\"${AGENT_ID}\",\"thread\":${THREAD_ID},\"result\":\"pass\",\"retries\":${RETRIES},\"time\":\"$(date -Iseconds)\"}" \
         >> "${SWARM_DIR}/logs/verifications.jsonl"
     
     echo "RESULT=PASS"
+    exit 0
 else
-    # Get retry count
-    META_FILE="/tmp/agent-tasks/${AGENT_ID}-${THREAD_ID}.json"
-    RETRIES=0
+    # Increment retry count
+    RETRIES=$((RETRIES + 1))
     if [ -f "$META_FILE" ]; then
-        RETRIES=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('retries',0))" < "$META_FILE" 2>/dev/null || echo 0)
-        # Increment retry count
         python3 -c "
 import json
 with open('$META_FILE') as f: d=json.load(f)
-d['retries']=int(d.get('retries',0))+1
+d['retries']=$RETRIES
+d['status']='retry_$RETRIES'
 with open('$META_FILE','w') as f: json.dump(d,f,indent=2)
 " 2>/dev/null
     fi
     
-    RETRIES=$((RETRIES + 1))
+    # Extract specific failures for retry message
+    FAILURES=$(echo "$VERIFY_OUTPUT" | grep -E "^❌" | head -10)
     
-    echo ""
     if [ "$RETRIES" -ge 3 ]; then
-        echo "❌ VERIFIED FAIL — max retries ($RETRIES) reached. ESCALATING."
+        echo ""
+        echo "🚨 ESCALATE — max retries ($RETRIES) reached"
         
-        # Log failure
-        echo "{\"agent\":\"${AGENT_ID}\",\"thread\":${THREAD_ID},\"result\":\"fail_escalate\",\"retries\":${RETRIES},\"time\":\"$(date -Iseconds)\"}" \
+        echo "{\"agent\":\"${AGENT_ID}\",\"thread\":${THREAD_ID},\"result\":\"escalate\",\"retries\":${RETRIES},\"time\":\"$(date -Iseconds)\"}" \
             >> "${SWARM_DIR}/logs/verifications.jsonl"
+        
+        # Notify orchestrator in General
+        bash "${SWARM_DIR}/send.sh" or 1 "🚨 ${AGENT_ID}-${THREAD_ID} נכשל 3 פעמים. דורש התערבות:
+${FAILURES}" 2>/dev/null
         
         echo "RESULT=ESCALATE"
+        exit 2
     else
-        echo "❌ VERIFIED FAIL — retry ${RETRIES}/3. Sending back to agent."
+        echo ""
+        echo "❌ RETRY ${RETRIES}/3"
         
-        # Send failure details to agent's topic
-        FAILURES=$(echo "$VERIFY_OUTPUT" | grep "❌" | head -5)
-        bash "${SWARM_DIR}/send.sh" or "$THREAD_ID" "❌ VERIFICATION FAILED (retry ${RETRIES}/3):
-${FAILURES}
-
-תקן ודווח שוב." 2>/dev/null
-        
-        # Log retry
-        echo "{\"agent\":\"${AGENT_ID}\",\"thread\":${THREAD_ID},\"result\":\"fail_retry\",\"retries\":${RETRIES},\"time\":\"$(date -Iseconds)\"}" \
+        echo "{\"agent\":\"${AGENT_ID}\",\"thread\":${THREAD_ID},\"result\":\"retry\",\"retries\":${RETRIES},\"time\":\"$(date -Iseconds)\"}" \
             >> "${SWARM_DIR}/logs/verifications.jsonl"
         
+        # Send detailed failure to agent's topic
+        bash "${SWARM_DIR}/send.sh" "${AGENT_ID}" "$THREAD_ID" "❌ VERIFICATION FAILED (retry ${RETRIES}/3):
+${FAILURES}
+
+תקן את הבעיות ודווח שוב. זכור:
+1. git add -A && git commit
+2. כתוב /root/.openclaw/workspace/swarm/agent-reports/${AGENT_ID}-${THREAD_ID}.json
+3. כל הטסטים חייבים לעבור" 2>/dev/null
+        
         echo "RESULT=RETRY"
+        exit 1
     fi
 fi

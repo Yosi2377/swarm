@@ -1,0 +1,8 @@
+{
+  "status": "success",
+  "summary": "Restored .env with EXTERNAL_API_TOKEN and env loading in server.js to fix tests 14-15",
+  "files_changed": ["server.js", ".env"],
+  "tests_run": true,
+  "tests_passed": true,
+  "test_count": {"passed": 16, "failed": 0, "total": 16}
+}

@@ -139,6 +139,19 @@ case "$REPORT_STATUS" in
     echo "$(date -Iseconds) ✅ PASS" >> "$LOG"
     rm -f "$RETRY_FILE"
     
+    # Save success lesson
+    SUMMARY=$(python3 -c "
+import json
+try:
+    with open('${REPORT_DIR}/${LABEL}.json') as f:
+        d = json.load(f)
+    print(d.get('summary','Task completed')[:200])
+except: print('Task completed')
+" 2>/dev/null)
+    AGENT_NAME=$(echo "$LABEL" | cut -d'-' -f1)
+    bash /root/.openclaw/workspace/swarm/save-lesson.sh \
+      "$AGENT_NAME" "low" "${LABEL} succeeded" "$SUMMARY" 2>/dev/null &
+    
     # ─── PIPELINE: trigger next step if defined ───
     if [ -n "$NEXT_STEP" ] && [ "$NEXT_STEP" != "" ] && [ "$NEXT_STEP" != "{}" ]; then
       # Verify next step has actual task content
@@ -186,6 +199,21 @@ with open('${NEXT_TMPFILE}', 'w') as f:
     ;;
     
   fail|suspect)
+    # Save failure lesson
+    FAIL_ISSUES=$(python3 -c "
+import json
+try:
+    with open('${REPORT_DIR}/${LABEL}.json') as f:
+        d = json.load(f)
+    issues = d.get('issues', [])
+    reason = d.get('verdict_reason', '')
+    print(f'{reason}. Issues: {\";\".join(issues)}'[:300])
+except: print('Unknown failure')
+" 2>/dev/null)
+    AGENT_NAME=$(echo "$LABEL" | cut -d'-' -f1)
+    bash /root/.openclaw/workspace/swarm/save-lesson.sh \
+      "$AGENT_NAME" "high" "${LABEL} failed: ${REPORT_STATUS}" "$FAIL_ISSUES" 2>/dev/null &
+    
     if [ "$RETRIES" -lt 2 ] && [ -n "$ORIGINAL_TASK" ]; then
       # ─── AUTO-RETRY: spawn new agent via hooks ───
       echo $((RETRIES + 1)) > "$RETRY_FILE"

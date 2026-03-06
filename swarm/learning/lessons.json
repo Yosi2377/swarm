@@ -650,6 +650,26 @@
       "lesson": "mobile.js auto-injects hamburger menu on all pages with .header-inner class. mobile.css handles responsive breakpoints. Key: 16px font-size on inputs prevents iOS zoom. All 23 HTML pages need viewport",
       "timestamp": "2026-03-05T01:32:56Z",
       "applied": 0
+    },
+    {
+      "id": "86157f8d",
+      "agent": "koder",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "test lesson from integration",
+      "lesson": "This is a test to verify lesson saving works",
+      "timestamp": "2026-03-06T01:03:38.284958+00:00",
+      "applied": 0
+    },
+    {
+      "id": "2721442c",
+      "agent": "lesson",
+      "severity": "low",
+      "impact": 0.3,
+      "what": "lesson-test succeeded",
+      "lesson": "All 16 tests pass. Agent added .env file loading and restored EXTERNAL_API_TOKEN to fix external API tests. Code is legitimate — no hardcoded fakes, no test modifications.",
+      "timestamp": "2026-03-06T01:06:37.030035+00:00",
+      "applied": 0
     }
   ]
 }

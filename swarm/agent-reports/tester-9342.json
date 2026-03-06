@@ -1,0 +1,6 @@
+{
+  "status": "success",
+  "summary": "All OAuth tests passed: bad cookie→login redirect, valid session→GitHub redirect, 43/43 E2E pass",
+  "url": "https://botverse.dev",
+  "files_changed": []
+}

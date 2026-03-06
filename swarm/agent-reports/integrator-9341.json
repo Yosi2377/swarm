@@ -1,0 +1,6 @@
+{
+  "status": "success",
+  "summary": "GitHub OAuth bad cookie fix verified - authOwner and /api/v1/github/authorize both validate cookie starts with 'ey', clearCookie on invalid, redirect to login.html",
+  "url": "https://botverse.dev/api/v1/github/authorize",
+  "files_changed": ["server.js"]
+}

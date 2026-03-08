@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐝 Swarm Agent Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:20px}
+h1{text-align:center;font-size:1.8em;margin-bottom:20px;color:#f0f6fc}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px;text-align:center}
+.card .value{font-size:2em;font-weight:700;color:#58a6ff}
+.card .label{font-size:.85em;color:#8b949e;margin-top:4px}
+table{width:100%;border-collapse:collapse;background:#161b22;border-radius:8px;overflow:hidden;margin-bottom:24px}
+th{background:#21262d;padding:10px 12px;text-align:left;font-size:.85em;color:#8b949e;border-bottom:1px solid #30363d}
+td{padding:10px 12px;border-bottom:1px solid #21262d;font-size:.9em}
+tr:hover{background:#1c2128}
+.status{padding:3px 8px;border-radius:12px;font-size:.8em;font-weight:600;display:inline-block}
+.s-queued{background:#30363d;color:#8b949e}
+.s-running{background:#1f3a5f;color:#58a6ff}
+.s-verifying{background:#3d2e00;color:#d29922}
+.s-passed{background:#0d3117;color:#3fb950}
+.s-failed_retryable{background:#3d1d00;color:#d18616}
+.s-failed_terminal{background:#3d0000;color:#f85149}
+.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:20px}
+.agent-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;text-align:center}
+.agent-card .emoji{font-size:1.8em}
+.agent-card .name{font-weight:600;margin:4px 0}
+.agent-card .score{color:#58a6ff;font-size:.85em}
+.agent-card .active{color:#3fb950;font-size:.8em}
+.refresh{text-align:center;color:#484f58;font-size:.8em;margin-top:10px}
+h2{color:#f0f6fc;margin-bottom:12px;font-size:1.2em}
+@media(max-width:600px){body{padding:10px}h1{font-size:1.3em}.stats{grid-template-columns:1fr 1fr}td,th{padding:6px 8px;font-size:.8em}}
+</style>
+</head>
+<body>
+<h1>🐝 Swarm Agent Dashboard</h1>
+<div class="stats" id="stats"></div>
+<h2>📋 Tasks</h2>
+<div style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Agent</th><th>Description</th><th>Status</th><th>Created</th><th>Duration</th></tr></thead><tbody id="tasks"></tbody></table></div>
+<h2>🤖 Agents</h2>
+<div class="agents-grid" id="agents"></div>
+<p class="refresh">Auto-refreshes every 10s</p>
+<script>
+function statusClass(s){return 's-'+(s||'queued').replace(/[^a-z_]/g,'')}
+function truncate(s,n){return s&&s.length>n?s.slice(0,n)+'…':s||''}
+function ago(d){if(!d)return'-';const s=Math.floor((Date.now()-new Date(d))/1000);if(s<60)return s+'s';if(s<3600)return Math.floor(s/60)+'m';return Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'m'}
+function fmt(d){if(!d)return'-';return new Date(d).toLocaleString('en-GB',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
+
+async function refresh(){
+  try{
+    const [stats,tasks,agents]=await Promise.all([
+      fetch('/api/stats').then(r=>r.json()),
+      fetch('/api/tasks').then(r=>r.json()),
+      fetch('/api/agents').then(r=>r.json())
+    ]);
+    document.getElementById('stats').innerHTML=[
+      {v:stats.totalTasks,l:'Total Tasks'},
+      {v:stats.passRate+'%',l:'Pass Rate'},
+      {v:stats.activeAgents,l:'Active Agents'},
+      {v:stats.avgCompletionTime+'s',l:'Avg Time'}
+    ].map(c=>`<div class="card"><div class="value">${c.v}</div><div class="label">${c.l}</div></div>`).join('');
+    document.getElementById('tasks').innerHTML=tasks.length?tasks.map(t=>`<tr>
+      <td>${t.id}</td><td>${t.agentId}</td><td>${truncate(t.description,40)}</td>
+      <td><span class="status ${statusClass(t.status)}">${t.status}</span></td>
+      <td>${fmt(t.created)}</td><td>${t.completed?ago(t.created):t.status==='passed'?'done':'-'}</td>
+    </tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:#484f58">No tasks yet</td></tr>';
+    document.getElementById('agents').innerHTML=agents.map(a=>`<div class="agent-card">
+      <div class="emoji">${a.emoji}</div><div class="name">${a.name}</div>
+      <div class="score">Score: ${a.score}</div><div class="active">${a.activeTasks} active</div>
+    </div>`).join('');
+  }catch(e){console.error(e)}
+}
+refresh();
+setInterval(refresh,10000);
+</script>
+</body>
+</html>

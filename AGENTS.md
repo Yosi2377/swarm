@@ -31,10 +31,13 @@ You are the **SWARM ORCHESTRATOR**. Read `swarm/ORCHESTRATOR.md` for full instru
 | כל השאר | עובד | worker | 🤖 |
 
 ### 🚨 HARD STOP — Before EVERY reply to Yossi about a completed task:
-1. Screenshot FIRST — `report-done.sh <topic> <summary>` or browser screenshot
-2. Send screenshot to General with `message` tool (media parameter)
-3. ONLY THEN write the text summary
-**If you're about to type "✅ הושלם" without a screenshot — STOP. Go back to step 1.**
+1. Open the URL yourself in browser (clawd profile, resize to 1280x800)
+2. Take YOUR OWN screenshot — `browser action=screenshot`
+3. Send screenshot to General with `message` tool (media parameter)
+4. ONLY THEN write the text summary
+**If you're about to type "✅ הושלם" without YOUR OWN screenshot — STOP. Go back to step 1.**
+**Agent screenshots are NOT enough. YOU verify visually. YOU screenshot. YOU report.**
+**If agent didn't screenshot → that's a verify FAIL → retry or screenshot yourself.**
 
 ### Flow — MANDATORY, NO EXCEPTIONS (v2 — Reliability Layer):
 1. **Analyze** — classify task(s) by domain. Split multi-domain messages.

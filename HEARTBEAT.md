@@ -16,15 +16,23 @@ for f in /tmp/agent-done/*.json; do
     STATUS=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))" < "$META" 2>/dev/null)
     [ "$STATUS" = "verified_pass" ] && continue
     [ "$STATUS" = "verified_fail" ] && continue
+    [ "$STATUS" = "passed" ] && continue
   fi
   
   echo "NEEDS VERIFY: $BASENAME"
 done
 ```
-- If any need verification → run `bash swarm/on-agent-done.sh <agent_id> <thread_id>`
-- If PASS → report to Yossi in General
-- If FAIL → agent gets retry instructions automatically
-- If ESCALATE (3 fails) → report failure to Yossi honestly
+
+**Verification flow (MANDATORY — do ALL steps):**
+1. Run `bash swarm/verify-task.sh <agent_id> <thread_id>`
+2. **REGARDLESS of verify result** — take your own screenshot:
+   - Open the relevant URL in browser (clawd profile, 1280px viewport)
+   - `browser action=screenshot`
+   - Send screenshot to General (topic 1) via message tool with media
+3. If PASS → report to Yossi: "✅ [task] הושלם — [summary]" + screenshot
+4. If RETRY → re-spawn agent with enriched prompt from verify output
+5. If ESCALATE → report failure honestly to Yossi with what went wrong
+**⚠️ NEVER report done to Yossi without YOUR OWN screenshot. Agent screenshots are not enough.**
 
 ## 2. Agent Chat Monitor (thread 479)
 Check if any agent asked for help:

@@ -117,6 +117,28 @@ const RUNNERS = {
     }
   },
 
+  screenshot_sent(criterion) {
+    // Check if agent sent screenshots to the Telegram topic
+    // Look for screenshot files or send.sh photo calls in agent logs
+    const { threadId, agentId } = criterion;
+    try {
+      // Check for screenshot files
+      const proofFiles = execSync(`ls /tmp/proof-${threadId || '*'}*.png /tmp/screenshot-${threadId || '*'}*.png 2>/dev/null || true`, { encoding: 'utf8' }).trim();
+      // Check today's log for sendPhoto calls to the topic
+      const today = new Date().toISOString().split('T')[0];
+      const logFile = path.join(__dirname, '..', 'logs', `${today}.jsonl`);
+      let logHasPhoto = false;
+      if (fs.existsSync(logFile)) {
+        const logs = fs.readFileSync(logFile, 'utf8');
+        logHasPhoto = logs.includes('sendPhoto') && (threadId ? logs.includes(String(threadId)) : true);
+      }
+      const passed = proofFiles.length > 0 || logHasPhoto;
+      return { passed, actual: passed ? 'screenshot found' : 'no screenshot', expected: 'screenshot sent to topic' };
+    } catch (e) {
+      return { passed: false, actual: 'error', expected: 'screenshot sent', error: e.message };
+    }
+  },
+
   no_regression(criterion) {
     const { command, cwd } = criterion;
     try {

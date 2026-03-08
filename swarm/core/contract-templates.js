@@ -11,7 +11,8 @@ const templates = {
     acceptance_criteria: [
       { type: 'test_pass', description: 'Relevant tests pass' },
       { type: 'no_regression', description: 'No new test failures' },
-      { type: 'manual_verify', description: 'Bug no longer reproducible' }
+      { type: 'manual_verify', description: 'Bug no longer reproducible' },
+      { type: 'screenshot_sent', description: 'Before/after screenshots sent to Telegram topic' }
     ],
     rollback: { strategy: 'git_revert', auto: false },
     metadata: { priority: 'high', estimated_minutes: 30, depends_on: [], blocks: [] }
@@ -21,7 +22,8 @@ const templates = {
     acceptance_criteria: [
       { type: 'test_pass', description: 'New feature tests pass' },
       { type: 'no_regression', description: 'Existing tests unbroken' },
-      { type: 'docs_updated', description: 'Documentation updated if needed' }
+      { type: 'docs_updated', description: 'Documentation updated if needed' },
+      { type: 'screenshot_sent', description: 'Screenshots of new feature sent to Telegram topic' }
     ],
     rollback: { strategy: 'git_revert', auto: false },
     metadata: { priority: 'medium', estimated_minutes: 120, depends_on: [], blocks: [] }
@@ -31,7 +33,8 @@ const templates = {
     acceptance_criteria: [
       { type: 'visual_check', description: 'UI renders correctly' },
       { type: 'responsive', description: 'Works on mobile and desktop' },
-      { type: 'no_regression', description: 'No visual regressions' }
+      { type: 'no_regression', description: 'No visual regressions' },
+      { type: 'screenshot_sent', description: 'Before/after screenshots sent to Telegram topic (desktop 1280px + mobile 375px)' }
     ],
     rollback: { strategy: 'git_revert', auto: false },
     metadata: { priority: 'medium', estimated_minutes: 60, depends_on: [], blocks: [] }

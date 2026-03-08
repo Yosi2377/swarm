@@ -26,6 +26,12 @@ An independent verifier will check EVERY criterion. Do not report done unless AL
 
 ${CONTRACT_PROMPT}
 
+## ⛔ MANDATORY BEFORE REPORTING DONE:
+1. Take screenshot: \`browser action=screenshot\` or \`bash swarm/report-done.sh THREAD "summary"\`
+2. Send screenshot to YOUR topic AND to General (topic 1) via send.sh with photo
+3. If you skip screenshots, verification will FAIL automatically — screenshot_sent is an acceptance criterion
+4. The orchestrator will NOT accept "done" without visual proof
+
 ## 🤝 Need Help? Consult Another Agent
 If you're stuck on something outside your expertise:
 \`\`\`bash

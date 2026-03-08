@@ -57,22 +57,145 @@ function inferContract(taskDescription) {
 }
 
 /**
- * Enrich a contract with project-specific config.
+ * Extract concrete verifiable items from task description.
+ * Finds URLs, file paths, CSS selectors, text strings, etc.
+ */
+function extractVerifiables(description) {
+  const verifiables = { urls: [], files: [], selectors: [], texts: [], patterns: [] };
+  
+  // URLs
+  const urlRegex = /https?:\/\/[^\s"'<>]+/g;
+  verifiables.urls = (description.match(urlRegex) || []);
+  
+  // File paths
+  const pathRegex = /\/[\w\-.\/]+\.\w+/g;
+  verifiables.files = (description.match(pathRegex) || []);
+  
+  // CSS selectors (#id, .class)
+  const selectorRegex = /[#.]\w[\w-]+/g;
+  const potentialSelectors = (description.match(selectorRegex) || []).filter(s => 
+    !s.startsWith('.js') && !s.startsWith('.html') && !s.startsWith('.css') && !s.startsWith('.md')
+  );
+  verifiables.selectors = potentialSelectors;
+  
+  // Quoted strings (things user expects to see)
+  const quotedRegex = /["'`]([^"'`]{2,50})["'`]/g;
+  let m;
+  while ((m = quotedRegex.exec(description))) {
+    verifiables.texts.push(m[1]);
+  }
+  
+  // Key terms after "הוסף"/"add"/"צריך להיות"/"should contain"
+  const addRegex = /(?:הוסף|add|צריך להיות|should (?:contain|show|have|display))\s+(.{3,40})/gi;
+  while ((m = addRegex.exec(description))) {
+    verifiables.patterns.push(m[1].trim());
+  }
+  
+  return verifiables;
+}
+
+/**
+ * Enrich a contract with project-specific config AND concrete criteria.
  */
 function enrichContract(contract, projectConfig = {}) {
   const enriched = JSON.parse(JSON.stringify(contract));
-  if (projectConfig.basePath) {
-    enriched.input.context = `Project: ${projectConfig.basePath}`;
+  
+  // Basic project info
+  const pc = projectConfig;
+  if (pc.basePath || pc.path) {
+    enriched.input.context = `Project: ${pc.basePath || pc.path}`;
   }
-  if (projectConfig.testCommand) {
+  if (pc.name) enriched.input.context += ` (${pc.name})`;
+  
+  // Store project config for verify
+  enriched._projectConfig = {
+    path: pc.path || pc.basePath || '',
+    sandbox: pc.sandbox || '',
+    url: pc.url || '',
+    sandboxUrl: pc.sandboxUrl || '',
+    testCommand: pc.testCommand || '',
+    service: pc.service || '',
+    sandboxService: pc.sandboxService || '',
+    db: pc.db || ''
+  };
+  
+  // Add test command criterion
+  if (pc.testCommand) {
     enriched.acceptance_criteria.push({
-      type: 'test_pass',
-      description: `Run: ${projectConfig.testCommand}`
+      type: 'test_passes',
+      command: pc.testCommand,
+      cwd: pc.sandbox || pc.path || '.',
+      description: `Project tests pass: ${pc.testCommand}`
     });
   }
-  if (projectConfig.priority) {
-    enriched.metadata.priority = projectConfig.priority;
+  
+  // Add HTTP check for sandbox URL
+  if (pc.sandboxUrl) {
+    enriched.acceptance_criteria.push({
+      type: 'http_status',
+      url: pc.sandboxUrl,
+      expected: 200,
+      description: `Sandbox responds: ${pc.sandboxUrl}`
+    });
   }
+  
+  // Add service health check
+  if (pc.sandboxService) {
+    enriched.acceptance_criteria.push({
+      type: 'custom',
+      script: `systemctl is-active ${pc.sandboxService}`,
+      description: `Service running: ${pc.sandboxService}`
+    });
+  }
+  
+  // Extract concrete verifiables from task description
+  const v = extractVerifiables(enriched.input.description);
+  
+  // Add URL-specific checks
+  for (const url of v.urls) {
+    if (!enriched.acceptance_criteria.some(c => c.url === url)) {
+      // If it's a link that should appear in the page, check for it
+      enriched.acceptance_criteria.push({
+        type: 'file_contains',
+        file: '*', // will be resolved to sandbox files
+        pattern: url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        description: `URL appears in code: ${url}`
+      });
+    }
+  }
+  
+  // Add text pattern checks
+  for (const text of v.texts) {
+    enriched.acceptance_criteria.push({
+      type: 'file_contains',
+      file: '*',
+      pattern: text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+      description: `Text appears: "${text}"`
+    });
+  }
+  
+  // Add pattern checks
+  for (const pattern of v.patterns) {
+    enriched.acceptance_criteria.push({
+      type: 'file_contains',
+      file: '*',
+      pattern: pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+      description: `Pattern appears: "${pattern}"`
+    });
+  }
+  
+  // Priority override
+  if (pc.priority) enriched.metadata.priority = pc.priority;
+  
+  // Resolve file_contains with '*' to actual sandbox path
+  const sandboxPublic = (pc.sandbox || pc.path || '') + '/public/index.html';
+  enriched.acceptance_criteria = enriched.acceptance_criteria.map(c => {
+    if (c.type === 'file_contains' && c.file === '*') {
+      return { ...c, file: sandboxPublic };
+    }
+    return c;
+  });
+  
   return enriched;
 }
 

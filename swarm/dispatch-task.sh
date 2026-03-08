@@ -10,11 +10,27 @@ PROJECT_DIR="${4:-}"
 
 SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+# Auto-resolve project config if project_dir given
+if [ -n "$PROJECT_DIR" ]; then
+  PROJECT_CONFIG=$(node -e "
+    const { getProject } = require('${SWARM_DIR}/core/project-ports');
+    const p = getProject('${PROJECT_DIR}');
+    console.log(JSON.stringify(p));
+  " 2>/dev/null)
+fi
+
 # Step 1: Generate base agent prompt (existing spawn-agent.sh)
 BASE_PROMPT=$(bash "${SWARM_DIR}/spawn-agent.sh" "$AGENT_ID" "$THREAD_ID" "$TASK_DESC" "" "$PROJECT_DIR" 2>/dev/null)
 
-# Step 2: Generate contract + state (new reliability layer)
-CONTRACT_PROMPT=$(bash "${SWARM_DIR}/orchestrator-dispatch.sh" "$AGENT_ID" "$THREAD_ID" "$TASK_DESC" "$PROJECT_DIR" 2>/dev/null)
+# Step 2: Generate contract + state (new reliability layer) with full project config
+CONTRACT_PROMPT=$(node -e "
+  const bridge = require('${SWARM_DIR}/core/orchestrator-bridge');
+  const { getProject } = require('${SWARM_DIR}/core/project-ports');
+  const projectConfig = '${PROJECT_DIR}' ? getProject('${PROJECT_DIR}') : {};
+  const result = bridge.prepareTask(process.argv[1], process.argv[2], process.argv[3], projectConfig);
+  if (result.errors) { console.error(JSON.stringify(result.errors)); process.exit(1); }
+  console.log(result.agentPrompt);
+" "$TASK_DESC" "$AGENT_ID" "$THREAD_ID" 2>/dev/null)
 
 # Step 3: Combine
 cat <<PROMPT

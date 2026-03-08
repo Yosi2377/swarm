@@ -61,6 +61,10 @@ chokidar.watch([TASKS_FILE, TASKS_DIR, AGENTS_FILE, LOGS_DIR, SCORES_FILE, LESSO
   notifyClients(type);
 });
 
+// Task Management API (REST endpoints for /tmp/agent-tasks)
+const { setupTaskAPI } = require('./task-api');
+setupTaskAPI(app);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Sessions file path

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐝 Task Manager — Swarm Dashboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d1117; color: #c9d1d9; min-height: 100vh; }
+  .header { background: #161b22; border-bottom: 1px solid #30363d; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 1.4em; color: #f0f6fc; }
+  .header .meta { font-size: 0.85em; color: #8b949e; }
+  .header .meta .live { color: #3fb950; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .stat { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; text-align: center; }
+  .stat .value { font-size: 2em; font-weight: bold; }
+  .stat .label { font-size: 0.8em; color: #8b949e; margin-top: 4px; }
+  .stat.running .value { color: #58a6ff; }
+  .stat.passed .value { color: #3fb950; }
+  .stat.failed .value { color: #f85149; }
+  .stat.queued .value { color: #d29922; }
+
+  .toolbar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .toolbar button, .toolbar select { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85em; }
+  .toolbar button:hover { background: #30363d; }
+  .toolbar button.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+
+  .task-list { display: flex; flex-direction: column; gap: 8px; }
+  .task-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; transition: border-color 0.2s; }
+  .task-card:hover { border-color: #58a6ff; }
+  .task-card .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .task-card .title { font-weight: 600; color: #f0f6fc; font-size: 1em; flex: 1; }
+  .task-card .id { font-size: 0.8em; color: #8b949e; font-family: monospace; }
+  .task-card .desc { color: #8b949e; font-size: 0.85em; margin-top: 8px; line-height: 1.4; max-height: 3em; overflow: hidden; }
+  .task-card .meta-row { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+  .task-card .meta-item { font-size: 0.8em; color: #8b949e; }
+  .task-card .meta-item strong { color: #c9d1d9; }
+  .task-card .actions { display: flex; gap: 6px; margin-top: 10px; }
+  .task-card .actions button { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
+  .task-card .actions .retry { border-color: #d29922; color: #d29922; }
+  .task-card .actions .retry:hover { background: #d29922; color: #000; }
+  .task-card .actions .cancel { border-color: #f85149; color: #f85149; }
+  .task-card .actions .cancel:hover { background: #f85149; color: #fff; }
+
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; text-transform: uppercase; }
+  .badge.queued { background: #d2992233; color: #d29922; }
+  .badge.assigned { background: #58a6ff33; color: #58a6ff; }
+  .badge.running { background: #1f6feb33; color: #58a6ff; }
+  .badge.verifying { background: #bc8cff33; color: #bc8cff; }
+  .badge.passed { background: #3fb95033; color: #3fb950; }
+  .badge.failed_retryable, .badge.failed { background: #f8514933; color: #f85149; }
+  .badge.failed_terminal { background: #da363333; color: #ff7b72; }
+  .badge.cancelled { background: #8b949e33; color: #8b949e; }
+  .badge.timed_out { background: #f8514933; color: #f85149; }
+  .badge.unknown { background: #30363d; color: #8b949e; }
+  .badge.stuck { background: #da363333; color: #ff7b72; border: 1px dashed #f85149; }
+
+  .create-form { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 20px; display: none; }
+  .create-form.open { display: block; }
+  .create-form h3 { margin-bottom: 12px; color: #f0f6fc; }
+  .create-form .field { margin-bottom: 10px; }
+  .create-form label { display: block; font-size: 0.85em; color: #8b949e; margin-bottom: 4px; }
+  .create-form input, .create-form textarea { width: 100%; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; padding: 8px; border-radius: 4px; font-size: 0.9em; }
+  .create-form textarea { min-height: 60px; resize: vertical; }
+  .create-form .submit-btn { background: #238636; border: 1px solid #2ea043; color: #fff; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 0.9em; }
+  .create-form .submit-btn:hover { background: #2ea043; }
+
+  .empty { text-align: center; padding: 40px; color: #8b949e; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1f6feb; color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 0.9em; display: none; z-index: 100; }
+  .toast.error { background: #da3633; }
+  .toast.show { display: block; animation: fadeInOut 3s forwards; }
+  @keyframes fadeInOut { 0% { opacity: 0; } 10% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; display: none; } }
+
+  a.back { color: #58a6ff; text-decoration: none; font-size: 0.9em; }
+  a.back:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>🐝 Task Manager</h1>
+    <a class="back" href="/">← Back to Dashboard</a>
+  </div>
+  <div class="meta">
+    <span class="live">● LIVE</span> · Auto-refresh 10s · <span id="lastUpdate">—</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="stats" id="stats"></div>
+
+  <div class="toolbar">
+    <button class="active" data-filter="all">All</button>
+    <button data-filter="running">Running</button>
+    <button data-filter="queued">Queued</button>
+    <button data-filter="passed">Passed</button>
+    <button data-filter="failed">Failed</button>
+    <button data-filter="cancelled">Cancelled</button>
+    <button id="createBtn" style="margin-right:auto;">➕ New Task</button>
+  </div>
+
+  <div class="create-form" id="createForm">
+    <h3>Create New Task</h3>
+    <div class="field">
+      <label>Agent ID</label>
+      <input id="f-agent" placeholder="koder, shomer, worker..." />
+    </div>
+    <div class="field">
+      <label>Thread ID</label>
+      <input id="f-thread" placeholder="1234" />
+    </div>
+    <div class="field">
+      <label>Task Description</label>
+      <textarea id="f-desc" placeholder="What should the agent do?"></textarea>
+    </div>
+    <div class="field">
+      <label>Project (optional)</label>
+      <input id="f-project" placeholder="botverse" />
+    </div>
+    <button class="submit-btn" id="submitTask">Create Task</button>
+  </div>
+
+  <div class="task-list" id="taskList"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '/api/tasks/managed';
+let currentFilter = 'all';
+let tasks = [];
+
+function toast(msg, isError) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => el.className = 'toast', 3000);
+}
+
+function statusBadge(status, stuck) {
+  if (stuck) return `<span class="badge stuck">⚠ STUCK</span>`;
+  const s = status || 'unknown';
+  const labels = { queued:'Queued', assigned:'Assigned', running:'Running', verifying:'Verifying',
+    passed:'✅ Passed', failed_retryable:'❌ Failed', failed_terminal:'💀 Terminal', cancelled:'Cancelled',
+    timed_out:'⏰ Timed Out', unknown:'Unknown' };
+  return `<span class="badge ${s.replace('_','-')}">${labels[s] || s}</span>`;
+}
+
+function renderStats() {
+  const counts = { total: tasks.length, running: 0, passed: 0, failed: 0, queued: 0 };
+  tasks.forEach(t => {
+    if (t.status === 'running' || t.status === 'assigned' || t.status === 'verifying') counts.running++;
+    else if (t.status === 'passed') counts.passed++;
+    else if (t.status.includes('failed') || t.status === 'timed_out') counts.failed++;
+    else if (t.status === 'queued') counts.queued++;
+  });
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="value">${counts.total}</div><div class="label">Total</div></div>
+    <div class="stat running"><div class="value">${counts.running}</div><div class="label">Running</div></div>
+    <div class="stat passed"><div class="value">${counts.passed}</div><div class="label">Passed</div></div>
+    <div class="stat failed"><div class="value">${counts.failed}</div><div class="label">Failed</div></div>
+    <div class="stat queued"><div class="value">${counts.queued}</div><div class="label">Queued</div></div>
+  `;
+}
+
+function renderTasks() {
+  const filtered = currentFilter === 'all' ? tasks :
+    currentFilter === 'failed' ? tasks.filter(t => t.status.includes('failed') || t.status === 'timed_out') :
+    currentFilter === 'running' ? tasks.filter(t => ['running','assigned','verifying'].includes(t.status)) :
+    tasks.filter(t => t.status === currentFilter);
+
+  if (filtered.length === 0) {
+    document.getElementById('taskList').innerHTML = '<div class="empty">No tasks found</div>';
+    return;
+  }
+
+  document.getElementById('taskList').innerHTML = filtered.map(t => {
+    const isActive = ['queued','assigned','running','verifying','failed_retryable','timed_out'].includes(t.status);
+    const canRetry = t.status !== 'passed' && t.status !== 'cancelled';
+    const canCancel = t.status !== 'cancelled' && t.status !== 'passed';
+    return `<div class="task-card">
+      <div class="top">
+        <div>
+          <div class="title">${t.task_desc ? t.task_desc.substring(0, 120) : t.id}</div>
+          <div class="id">${t.id}</div>
+        </div>
+        ${statusBadge(t.status, t.stuck_flagged)}
+      </div>
+      ${t.task_desc && t.task_desc.length > 120 ? `<div class="desc">${t.task_desc}</div>` : ''}
+      <div class="meta-row">
+        <div class="meta-item">🤖 <strong>${t.agent_id}</strong></div>
+        <div class="meta-item">💬 Thread <strong>${t.thread_id}</strong></div>
+        <div class="meta-item">🔄 Retries: <strong>${t.retryCount}/${t.maxRetries}</strong></div>
+        ${t.runtimeFormatted ? `<div class="meta-item">⏱ <strong>${t.runtimeFormatted}</strong></div>` : ''}
+        ${t.project ? `<div class="meta-item">📁 <strong>${t.project}</strong></div>` : ''}
+      </div>
+      <div class="actions">
+        ${canRetry ? `<button class="retry" onclick="retryTask('${t.id}')">🔄 Retry</button>` : ''}
+        ${canCancel ? `<button class="cancel" onclick="cancelTask('${t.id}')">✖ Cancel</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function fetchTasks() {
+  try {
+    const res = await fetch(API);
+    const data = await res.json();
+    tasks = data.tasks || [];
+    renderStats();
+    renderTasks();
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+  } catch (e) { console.error('Fetch error:', e); }
+}
+
+async function retryTask(id) {
+  if (!confirm(`Retry task ${id}?`)) return;
+  try {
+    const res = await fetch(`${API}/${id}/retry`, { method: 'POST' });
+    const data = await res.json();
+    if (res.ok) { toast(`✅ ${data.message}`); fetchTasks(); }
+    else toast(`❌ ${data.error}`, true);
+  } catch (e) { toast('❌ Network error', true); }
+}
+
+async function cancelTask(id) {
+  if (!confirm(`Cancel task ${id}?`)) return;
+  try {
+    const res = await fetch(`${API}/${id}/cancel`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({reason:'cancelled via dashboard'}) });
+    const data = await res.json();
+    if (res.ok) { toast(`✅ ${data.message}`); fetchTasks(); }
+    else toast(`❌ ${data.error}`, true);
+  } catch (e) { toast('❌ Network error', true); }
+}
+
+// Create form
+document.getElementById('createBtn').addEventListener('click', () => {
+  document.getElementById('createForm').classList.toggle('open');
+});
+document.getElementById('submitTask').addEventListener('click', async () => {
+  const agent_id = document.getElementById('f-agent').value.trim();
+  const thread_id = document.getElementById('f-thread').value.trim();
+  const task_desc = document.getElementById('f-desc').value.trim();
+  const project = document.getElementById('f-project').value.trim();
+  if (!agent_id || !thread_id || !task_desc) return toast('Fill all required fields', true);
+  try {
+    const res = await fetch(API, { method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ agent_id, thread_id, task_desc, project }) });
+    const data = await res.json();
+    if (res.ok) { toast(`✅ Task ${data.id} created`); document.getElementById('createForm').classList.remove('open'); fetchTasks(); }
+    else toast(`❌ ${data.error}`, true);
+  } catch (e) { toast('❌ Network error', true); }
+});
+
+// Filter buttons
+document.querySelectorAll('.toolbar button[data-filter]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.toolbar button[data-filter]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderTasks();
+  });
+});
+
+// Auto-refresh
+fetchTasks();
+setInterval(fetchTasks, 10000);
+
+// SSE for instant updates
+try {
+  const es = new EventSource('/api/stream');
+  es.onmessage = (e) => { try { const d = JSON.parse(e.data); if (d.type === 'tasks' || d.type === 'update') fetchTasks(); } catch {} };
+} catch {}
+</script>
+</body>
+</html>

@@ -36,14 +36,20 @@ You are the **SWARM ORCHESTRATOR**. Read `swarm/ORCHESTRATOR.md` for full instru
 3. ONLY THEN write the text summary
 **If you're about to type "✅ הושלם" without a screenshot — STOP. Go back to step 1.**
 
-### Flow — MANDATORY, NO EXCEPTIONS:
+### Flow — MANDATORY, NO EXCEPTIONS (v2 — Reliability Layer):
 1. **Analyze** — classify task(s) by domain. Split multi-domain messages.
 2. **Create topic** per task: `THREAD=$(/root/.openclaw/workspace/swarm/create-topic.sh "emoji Task Name" "" agent_id)`
 3. **Send task via send.sh**: `/root/.openclaw/workspace/swarm/send.sh <agent_id> $THREAD "📋 משימה: ..."`
-4. **Generate task text**: `TASK=$(bash /root/.openclaw/workspace/swarm/spawn-agent.sh agent_id $THREAD "task description")`
-5. **Spawn sub-agent** with `sessions_spawn` using `$TASK` — includes topic, lessons, learn.sh, marker, everything
-6. **Coordinate dependencies** — if task B needs task A's output, tell A to post to Agent Chat (479) when done
-7. **Acknowledge** in General: "🐝 נפתחו נושאים: ..." with agent assignments
+4. **Generate task with CONTRACT**: `TASK=$(bash /root/.openclaw/workspace/swarm/dispatch-task.sh agent_id $THREAD "task description" [project_dir])`
+   - This auto-generates: contract, acceptance criteria, state machine, rollback config
+   - OLD: `spawn-agent.sh` → NEW: `dispatch-task.sh` (includes contract!)
+5. **Spawn sub-agent** with `sessions_spawn` using `$TASK`
+6. **When agent reports done** → verify: `bash swarm/verify-task.sh <agent_id> <thread_id>`
+   - exit 0 = ✅ PASS → report to Yossi
+   - exit 1 = 🔄 RETRY → re-spawn with enriched prompt from output
+   - exit 2 = 🚨 ESCALATE → report failure honestly to Yossi
+7. **Coordinate dependencies** — if task B needs task A's output, tell A to post to Agent Chat (479) when done
+8. **Acknowledge** in General: "🐝 נפתחו נושאים: ..." with agent assignments
 
 ### ⚠️ NEVER DO THIS:
 - ❌ Send everything to topic 4950 or any hardcoded topic

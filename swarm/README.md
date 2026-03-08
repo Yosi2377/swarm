@@ -1,290 +1,100 @@
-# 🐝 SwarmClaw — Autonomous AI Agent Orchestration System
+# 🐝 Swarm — Execution Reliability Layer for AI Agents
 
-**Multi-agent task automation with independent verification, self-healing retries, and Telegram-native coordination.**
+> "The agents are replaceable. The reliability layer is the product."
 
-SwarmClaw transforms a single AI session into a coordinated team of specialized agents — each with its own identity, expertise, and accountability.
+## What is Swarm?
 
----
+Swarm is an **execution reliability layer** that ensures AI agents actually complete tasks correctly. Instead of trusting agents when they say "done", Swarm independently verifies their work using typed contracts, semantic verification, and smart retry.
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                    TELEGRAM GROUP                     │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐   │
-│  │ General  │ │ Task #1 │ │ Task #2 │ │ Task #N │   │
-│  │ (topic)  │ │ (topic) │ │ (topic) │ │ (topic) │   │
-│  └────▲─────┘ └────▲────┘ └────▲────┘ └────▲────┘   │
-└───────┼────────────┼──────────┼──────────┼───────────┘
-        │            │          │          │
-┌───────┴────────────┴──────────┴──────────┴───────────┐
-│                   ORCHESTRATOR (אור)                  │
-│                                                       │
-│  dispatch.sh ──► create-topic ──► spawn-agent         │
-│       │              │                │               │
-│       ▼              ▼                ▼               │
-│  ┌─────────┐  ┌──────────┐   ┌────────────┐         │
-│  │ Metadata │  │ Queue    │   │ Task Text  │         │
-│  │ /tmp/    │  │ /tmp/    │   │ + Lessons  │         │
-│  │ agent-   │  │ dispatch-│   │ + Context  │         │
-│  │ tasks/   │  │ queue/   │   └────────────┘         │
-│  └─────────┘  └─────┬────┘                           │
-│                      │                                │
-│              ┌───────▼────────┐                       │
-│              │ dispatch-      │  ◄── runs every 1min  │
-│              │ watcher.sh     │      (cron)           │
-│              └──┬──────┬──┬──┘                        │
-│                 │      │  │                            │
-│     ┌──────────┘      │  └──────────┐                │
-│     ▼                 ▼             ▼                 │
-│  ┌──────┐      ┌──────────┐   ┌─────────┐           │
-│  │Spawn │      │ Verify   │   │ Stuck   │           │
-│  │Agent │      │ & Report │   │ Check   │           │
-│  │(hook)│      │ (node.js)│   │ (>15m)  │           │
-│  └──┬───┘      └────┬─────┘   └────┬────┘           │
-│     │               │              │                  │
-│     ▼               ▼              ▼                  │
-│  ┌──────┐    ┌────────────┐  ┌──────────┐           │
-│  │OpenClaw   │ PASS→General  │ Escalate │           │
-│  │Sub-agent  │ FAIL→Retry(3) │ to Human │           │
-│  └──────┘    │ ESC→Human  │  └──────────┘           │
-│              └────────────┘                           │
-└───────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────┐
-│              VERIFICATION PIPELINE                    │
-│                                                       │
-│  1. Report exists?          (structured JSON)         │
-│  2. Tests pass?             (custom test command)     │
-│  3. URL responds?           (HTTP status check)       │
-│  4. Page renders?           (Puppeteer + login)       │
-│  4b. Expected content?      (--expect "text")         │
-│  5. Screenshot valid?       (pixel variance check)    │
-│  6. Git committed?          (clean working tree)      │
-│                                                       │
-│  PASS  → Screenshot proof to General + score update   │
-│  FAIL  → Retry with error feedback (up to 3x)        │
-│  ESCALATE → Notify human with full issue list         │
-└─────────────────────────────────────────────────────┘
+Task → Contract → Agent → Verification → Pass/Retry/Escalate
 ```
 
-## How It Works
+### Core Modules (swarm/core/)
 
-### 1. Dispatch
-```bash
-# One command does everything
-bash swarm/runner/dispatch.sh koder "Fix login bug on /admin" \
-    --url https://mysite.com/admin \
-    --test "npm test" \
-    --project /root/MyProject \
-    --expect "Login successful"
-```
+| Module | Purpose |
+|--------|---------|
+| **task-contract.js** | Define typed contracts with acceptance criteria |
+| **contract-templates.js** | Pre-built templates per task type (9 types) |
+| **contract-validator.js** | Validate contracts before execution |
+| **state-machine.js** | Strict lifecycle: queued → running → verifying → pass/fail |
+| **task-runner.js** | Orchestrate task execution with state tracking |
+| **failure-taxonomy.js** | Classify failures into 9 categories |
+| **smart-retry.js** | Context-aware retry with failure-specific prompts |
+| **semantic-verify.js** | 10+ criterion types (HTTP, file, DB, browser, custom) |
+| **orchestrator-bridge.js** | Glue connecting all modules |
+| **auto-retry-runner.js** | Automatic retry without human intervention |
+| **task-decomposer.js** | Break large tasks into subtasks |
+| **fast-prompt.js** | Lean prompts for faster agent execution |
+| **agent-consultation.js** | Inter-agent communication with auto-routing |
+| **project-ports.js** | Project configuration (ports, URLs, paths) |
 
-This:
-- Creates a dedicated Telegram topic with agent-colored icon
-- Generates task instructions with injected past lessons
-- Sends the task to the topic as the agent's bot
-- Writes metadata for tracking
-- Queues for automatic agent spawning
+### Key Features
 
-### 2. Automatic Spawning
-The `dispatch-watcher.sh` (runs every minute via cron):
-- Picks up queued tasks
-- Spawns OpenClaw sub-agents via webhook
-- Falls back to heartbeat pickup if hook fails
+- **Task Contracts** — Every task has typed acceptance criteria, not free text
+- **9 Task Types** — code_fix, feature, ui_change, api_endpoint, db_migration, security_fix, refactor, research, config_change
+- **Semantic Verification** — Checks HTTP status, file contents, DB counts, service health, screenshots
+- **Smart Retry** — Different strategy per failure type (auth=escalate, build=retry with error, partial=finish remaining)
+- **Auto-Routing** — Security questions → Shomer, design → Tzayar, etc.
+- **Task Decomposition** — Breaks "do X and Y and Z" into independent subtasks
+- **Speed Optimization** — Simple tasks get lean prompts, complex tasks get full context
 
-### 3. Agent Execution
-Each agent runs in isolation with:
-- Full tool access (browser, shell, file system)
-- Project-specific context and config
-- Past lessons from the learning system
-- Clear verification expectations
-
-### 4. Independent Verification
-When an agent reports done, the verification pipeline:
-- Runs tests independently (not trusting the agent)
-- Checks URLs and page rendering
-- Validates expected content on page
-- Takes independent screenshots
-- Checks git history for real commits
-
-### 5. Self-Healing
-- **PASS** → Proof sent to General, scores updated
-- **FAIL** → Agent gets specific error feedback, auto-retried (up to 3x)
-- **ESCALATE** → Human notified with full issue list
-- **STUCK** → Flagged after 15 minutes of inactivity
-
----
-
-## Agent Types
-
-| Agent | ID | Specialty | Bot |
-|-------|----|-----------|-----|
-| 🔒 שומר | `shomer` | Security, scanning, SSL, ports | @TeamShomer_Bot |
-| ⚙️ קודר | `koder` | Code, bugs, deployment, API | @TeamKoder_Bot |
-| 🎨 צייר | `tzayar` | Design, images, UI, logos | @TeamTzayar_Bot |
-| 🔍 חוקר | `researcher` | Research, best practices | @TeamResearcher_Bot |
-| 🧪 בודק | `bodek` | QA, testing, regression | @TeamBodek_Bot |
-| 📊 דאטא | `data` | MongoDB, SQL, migrations | @TeamData_Bot |
-| 🐛 דיבאגר | `debugger` | Error tracking, log analysis | @TeamDebugger_Bot |
-| 🐳 דוקר | `docker` | Docker, containers, DevOps | @TeamDocker_Bot |
-| 🖥️ פרונט | `front` | Frontend, HTML, CSS, JS | @TeamFront_Bot |
-| ⚡ באק | `back` | Backend, API, Node.js | @TeamBack_Bot |
-| 🧪 טסטר | `tester` | E2E, unit, integration tests | @TeamTester_Bot |
-| ♻️ ריפקטור | `refactor` | Refactoring, optimization | @TeamRefactor_Bot |
-| 📡 מוניטור | `monitor` | Monitoring, alerts, uptime | @TeamMonitor_Bot |
-| 🚀 אופטימייזר | `optimizer` | Performance, caching | @TeamOptimizer_Bot |
-| 🔗 אינטגרטור | `integrator` | APIs, webhooks, integrations | @TeamIntegrator_Bot |
-| 🤖 עובד | `worker` | General tasks | @TeamTWorker_Bot |
-
----
-
-## Learning System
-
-SwarmClaw learns from every task:
+## Quick Start
 
 ```bash
-# Agents learn before starting
-swarm/inject-lessons.sh "task description"  # Returns relevant past lessons
+# Dispatch a task with contract
+TASK=$(bash swarm/dispatch-task.sh koder 1234 "Fix login button" "/root/BotVerse")
 
-# Agents record after completing
-swarm/learn.sh lesson koder medium "Fixed CORS issue" "Always check nginx proxy_pass headers"
-swarm/learn.sh score koder success
+# Verify after agent completes
+bash swarm/verify-task.sh koder 1234
+# exit 0 = pass, exit 1 = retry, exit 2 = escalate
+
+# Full auto-verification with screenshots
+bash swarm/auto-verify-and-report.sh koder 1234 "https://botverse.dev" "Fix login"
+
+# Start dashboard
+bash swarm/api/start-dashboard.sh
+# → http://95.111.247.22:9200
 ```
 
-Lessons are stored in `learning/lessons.jsonl` and automatically injected into future task instructions.
+## API
 
----
+```
+GET  /api/health          — System health
+GET  /api/tasks           — List all tasks
+GET  /api/tasks/:id       — Task details + contract
+GET  /api/agents          — Agent list with scores
+GET  /api/stats           — Pass rate, active tasks, avg time
+POST /api/tasks           — Create new task with auto-contract
+POST /api/tasks/:id/retry — Manual retry
+```
 
-## Setup Guide
-
-### Prerequisites
-- Node.js 18+
-- OpenClaw agent platform
-- Telegram Bot tokens (one per agent)
-- Puppeteer dependencies (`apt install chromium-browser`)
-
-### Installation
+## Tests
 
 ```bash
-# 1. Clone the swarm directory
-git clone <repo> && cd swarm
-
-# 2. Configure bot tokens
-echo "YOUR_BOT_TOKEN" > .koder-token
-echo "YOUR_BOT_TOKEN" > .shomer-token
-# ... for each agent
-
-# 3. Configure OpenClaw hooks in openclaw.json
-# hooks.enabled = true, hooks.token = "your-token"
-
-# 4. Install cron
-echo "* * * * * $(pwd)/dispatch-watcher.sh >> /tmp/dispatch-watcher.log 2>&1" | crontab -
-
-# 5. Create required directories
-mkdir -p /tmp/{agent-tasks,dispatch-queue,agent-done,spawn-request}
+# Run all tests (157+)
+node swarm/tests/test-contract.js          # 41 tests
+node swarm/core/tests/test-state-machine.js # 21 tests
+node swarm/core/tests/test-failure-taxonomy.js # 30 tests
+node swarm/core/tests/test-semantic-verify.js  # 28 tests
+node swarm/core/tests/test-integration.js      # 19 tests
+node swarm/core/tests/test-auto-retry.js       # 4 tests
+node swarm/core/tests/test-decomposer.js       # 7 tests
+node swarm/core/tests/test-fast-prompt.js      # 7 tests
+node swarm/api/test-api.js                     # 5 tests
 ```
 
-### OpenClaw Hook Configuration
+## Agent Communication
 
-```json
-{
-  "hooks": {
-    "enabled": true,
-    "token": "your-secret-token",
-    "mappings": [{
-      "match": { "path": "agent-watcher" },
-      "action": "agent",
-      "wakeMode": "now",
-      "deliver": true,
-      "allowUnsafeExternalContent": true
-    }]
-  }
-}
-```
-
----
-
-## CLI Reference
-
-### dispatch.sh — Full pipeline dispatch
-```bash
-swarm/runner/dispatch.sh <agent_id> "task" [options]
-
-Options:
-  --url URL           URL to verify after completion
-  --test "command"    Test command to run for verification
-  --project /path     Project directory
-  --expect "text"     Text that must appear on the page
-  --scroll-to "sel"   CSS selector to scroll to for screenshot
-  --name "Topic Name" Custom topic name
-```
-
-### send.sh — Send as agent bot
-```bash
-swarm/send.sh <agent_id> <thread_id> "message" [--photo path]
-```
-
-### create-topic.sh — Create Telegram topic
-```bash
-THREAD=$(swarm/create-topic.sh "⚙️ Task Name" "" koder)
-```
-
-### spawn-agent.sh — Generate task text
-```bash
-TASK=$(swarm/spawn-agent.sh koder $THREAD "Fix the bug" "npm test" /root/Project)
-```
-
-### learn.sh — Learning system
-```bash
-swarm/learn.sh lesson <agent> <severity> "what" "lesson"
-swarm/learn.sh score <agent> success|fail
-swarm/learn.sh query "keywords"
-```
-
-### verify-and-report.js — Independent verification
-```bash
-node swarm/runner/verify-and-report.js <agent> <thread> \
-    [--url URL] [--test "cmd"] [--project /path] [--expect "text"]
-# Exit: 0=PASS, 1=FAIL/retry, 2=ESCALATE
-```
-
-### dispatch-watcher.sh — Automation daemon
-```bash
-# Runs via cron every minute. Handles:
-# - New dispatches → spawn agents
-# - Done markers → verify & report
-# - Stuck agents → escalate
-```
-
----
-
-## File Structure
-
-```
-swarm/
-├── runner/
-│   ├── dispatch.sh              # Full pipeline dispatch
-│   ├── agent-runner.js          # Agent execution engine
-│   ├── verify-and-report.js     # Independent verification
-│   └── screenshot-with-login.js # Authenticated screenshots
-├── dispatch-watcher.sh          # Cron-based automation daemon
-├── agent-watcher.sh             # Done-marker watcher
-├── create-topic.sh              # Telegram topic creation
-├── send.sh                      # Multi-bot message sending
-├── spawn-agent.sh               # Task text generation
-├── learn.sh                     # Learning system
-├── inject-lessons.sh            # Lesson injection
-├── learning/
-│   ├── lessons.jsonl            # Accumulated lessons
-│   └── scores.json              # Agent performance scores
-├── agent-reports/               # Structured task reports
-├── logs/                        # Message logs (JSONL)
-└── memory/                      # Agent memory storage
-```
-
----
+Agents communicate via Telegram topics. Inter-agent help requests are auto-routed:
+- Security → 🔒 שומר (Shomer)
+- Code → ⚙️ קודר (Koder)
+- Design → 🎨 צייר (Tzayar)
+- Research → 🔍 חוקר (Researcher)
+- QA → 🧪 בודק (Bodek)
 
 ## License
 
-Proprietary — SwarmClaw by TeamWork
+Proprietary — © 2026

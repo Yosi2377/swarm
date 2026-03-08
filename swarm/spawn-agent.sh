@@ -48,6 +48,27 @@ cat > "${META_DIR}/${AGENT_ID}-${THREAD_ID}.json" <<METAEOF
 }
 METAEOF
 
+# Load contract if exists
+CONTRACT_FILE="${META_DIR}/${AGENT_ID}-${THREAD_ID}.contract.json"
+CONTRACT_BLOCK=""
+if [ -f "$CONTRACT_FILE" ]; then
+    CONTRACT_BLOCK=$(node -e "
+const c = require('${CONTRACT_FILE}');
+const lines = ['## ✅ Acceptance Criteria (Auto-Verified)', ''];
+lines.push('Your work will be automatically verified against these criteria:');
+lines.push('');
+(c.acceptance_criteria || []).forEach((cr, i) => {
+  lines.push((i+1) + '. [' + cr.type + '] ' + cr.description);
+});
+lines.push('');
+lines.push('⚠️ All criteria must pass. Failures trigger automatic retry with context.');
+lines.push('');
+lines.push('Task type: ' + c.type + ' | Priority: ' + (c.metadata||{}).priority);
+lines.push('Rollback strategy: ' + ((c.rollback||{}).strategy || 'none'));
+console.log(lines.join('\n'));
+" 2>/dev/null)
+fi
+
 cat <<EOF
 You are agent ${AGENT_ID} working on thread ${THREAD_ID}.
 
@@ -91,7 +112,9 @@ ${SWARM_DIR}/send.sh or 1 "✅ ${AGENT_ID}-${THREAD_ID} הושלם: summary"
 bash ${SWARM_DIR}/done-marker.sh "${AGENT_ID}-${THREAD_ID}" "${THREAD_ID}" "summary"
 \`\`\`
 
-${LESSONS:+## Past Lessons
+${CONTRACT_BLOCK:+${CONTRACT_BLOCK}
+
+}${LESSONS:+## Past Lessons
 ${LESSONS}}
 
 ## 🧠 LEARNING — MANDATORY

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-03-09T02:57:08.359Z",
+  "timestamp": "2026-03-09T03:01:14.280Z",
   "passCount": 91,
   "failCount": 0,
   "reliability": 100,
@@ -51,38 +51,38 @@
       "dispatchOk": true,
       "verifyPass": true,
       "catchesMissing": true,
-      "elapsed": 277
+      "elapsed": 271
     },
     {
       "id": "ui_change",
       "dispatchOk": true,
       "verifyPass": true,
       "catchesMissing": true,
-      "elapsed": 268
+      "elapsed": 267
     },
     {
       "id": "feature",
       "dispatchOk": true,
       "verifyPass": true,
       "catchesMissing": true,
-      "elapsed": 276
+      "elapsed": 268
     },
     {
       "id": "config_change",
       "dispatchOk": true,
       "verifyPass": true,
       "catchesMissing": true,
-      "elapsed": 268
+      "elapsed": 264
     },
     {
       "id": "research",
       "dispatchOk": true,
       "verifyPass": true,
       "catchesMissing": true,
-      "elapsed": 268
+      "elapsed": 271
     }
   ],
-  "stressElapsed": 4,
+  "stressElapsed": 5,
   "tests": [
     {
       "name": "code_fix: contract has ID",
@@ -187,7 +187,7 @@
     {
       "name": "code_fix: dispatch produces output",
       "status": "PASS",
-      "details": "length=5022"
+      "details": "length=5286"
     },
     {
       "name": "code_fix: dispatch includes criteria section",
@@ -212,7 +212,7 @@
     {
       "name": "ui_change: dispatch produces output",
       "status": "PASS",
-      "details": "length=5082"
+      "details": "length=5346"
     },
     {
       "name": "ui_change: dispatch includes criteria section",
@@ -237,7 +237,7 @@
     {
       "name": "feature: dispatch produces output",
       "status": "PASS",
-      "details": "length=5012"
+      "details": "length=5276"
     },
     {
       "name": "feature: dispatch includes criteria section",
@@ -262,7 +262,7 @@
     {
       "name": "config_change: dispatch produces output",
       "status": "PASS",
-      "details": "length=4787"
+      "details": "length=5051"
     },
     {
       "name": "config_change: dispatch includes criteria section",
@@ -287,7 +287,7 @@
     {
       "name": "research: dispatch produces output",
       "status": "PASS",
-      "details": "length=4618"
+      "details": "length=4882"
     },
     {
       "name": "research: dispatch includes criteria section",
@@ -517,7 +517,7 @@
     {
       "name": "stress: all 10 tasks under 5s",
       "status": "PASS",
-      "details": "4ms"
+      "details": "5ms"
     },
     {
       "name": "stress: all 20 files exist (10 contracts + 10 states)",

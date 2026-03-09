@@ -24,7 +24,7 @@ const API_KEY = getOrCreateApiKey();
 
 // --- Rate Limiting ---
 const rateLimits = new Map();
-const RATE_LIMIT = 100;
+const RATE_LIMIT = 500;
 const RATE_WINDOW = 60000; // 1 minute
 
 function rateLimit(req, res, next) {

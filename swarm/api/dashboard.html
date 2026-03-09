@@ -193,6 +193,7 @@ tbody tr:hover{background:rgba(88,166,255,.06)}
 </div>
 
 <script>
+const k='?key='+(new URLSearchParams(location.search).get('key')||'');
 const S=document.getElementById.bind(document);
 let allTasks=[],allAgents=[],activityLog=[];
 
@@ -365,9 +366,9 @@ function renderAgents(agents,tasks){
 async function refresh(){
   try{
     const[stats,tasks,agents,health]=await Promise.all([
-      fetch('/api/stats').then(r=>r.json()),
-      fetch('/api/tasks').then(r=>r.json()),
-      fetch('/api/agents').then(r=>r.json()),
+      fetch('/api/stats'+k).then(r=>r.json()),
+      fetch('/api/tasks'+k).then(r=>r.json()),
+      fetch('/api/agents'+k).then(r=>r.json()),
       fetch('/api/health').then(r=>r.json()).catch(()=>null)
     ]);
     allTasks=tasks;allAgents=agents;

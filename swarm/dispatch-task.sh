@@ -57,6 +57,26 @@ An independent verifier will check EVERY criterion. Do not report done unless AL
 
 ${CONTRACT_PROMPT}
 
+## MANDATORY: Progress Reports
+Every 60 seconds of work, report progress:
+\`\`\`bash
+${SWARM_DIR}/progress-report.sh ${AGENT_ID} ${THREAD_ID} "what you're doing now"
+\`\`\`
+This is NOT optional. The watchdog will kill your task if no progress is reported for 3+ minutes.
+
+## MANDATORY: Error Recovery
+If you hit an error, DON'T just report done. Instead:
+1. Try to fix it yourself (up to 3 attempts)
+2. If still failing, explain what went wrong in detail
+3. Create the done marker with status: "failed" not "completed"
+
+## MANDATORY: Complex Task Handling
+For complex tasks with multiple steps:
+1. List all steps FIRST before starting
+2. Complete each step and verify before moving to next
+3. Report progress after each step
+4. If one step fails, don't skip it — report the failure
+
 ## ⛔ MANDATORY BEFORE REPORTING DONE — SCREENSHOT PROTOCOL:
 1. **NAVIGATE FIRST**: \`browser action=navigate url="THE_CORRECT_URL"\` — NOT whatever is already open!
 2. **VERIFY you're on the right page**: \`browser action=snapshot\` — read the content, confirm it's the right URL

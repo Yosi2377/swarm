@@ -34,7 +34,24 @@ done
 5. If ESCALATE → report failure honestly to Yossi with what went wrong
 **⚠️ NEVER report done to Yossi without YOUR OWN screenshot. Agent screenshots are not enough.**
 
-## 2. Agent Chat Monitor (thread 479)
+## 2. Watchdog — Detect Stuck Agents (NEW)
+```bash
+bash /root/.openclaw/workspace/swarm/watchdog.sh
+```
+- If any stuck agents detected, the output will show them
+- Stuck agents are auto-flagged as `failed_retryable` with retry requests created
+- Report stuck agents to Yossi if they've been stuck multiple times
+
+## 3. Process Retry Requests (NEW)
+```bash
+bash /root/.openclaw/workspace/swarm/auto-retry-watcher.sh
+```
+- Processes both done markers AND retry requests from watchdog
+- Auto-retries up to 3 times with enriched context
+- Escalates after max retries
+- Check output for any escalations that need human attention
+
+## 4. Agent Chat Monitor (thread 479)
 Check if any agent asked for help:
 ```bash
 # Check recent agent-chat messages for help requests
@@ -42,30 +59,5 @@ tail -20 /root/.openclaw/workspace/swarm/logs/$(date +%Y-%m-%d).jsonl 2>/dev/nul
 ```
 - If agent asked for help → read what they need → provide it via send.sh to their topic
 - Common requests: API tokens, credentials, config values, clarification on task
-
-## 3. Retry Request Handler
-```bash
-for f in /tmp/retry-request-*.json; do
-  [ -f "$f" ] || continue
-  cat "$f"
-  # Re-spawn the agent with issues as context, then delete file
-  # rm "$f"
-done
-```
-
-## 4. Stuck Agent Detection
-```bash
-# Check for agents running longer than 10 minutes without completion
-for f in /tmp/agent-tasks/*.json; do
-  [ -f "$f" ] || continue
-  STATUS=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))" < "$f" 2>/dev/null)
-  [ "$STATUS" = "running" ] || continue
-  
-  DISPATCHED=$(python3 -c "import sys,json; print(json.load(sys.stdin).get('dispatched_at',''))" < "$f" 2>/dev/null)
-  echo "STILL RUNNING: $(basename $f) since $DISPATCHED"
-done
-```
-- If running > 15 minutes → check subagents list for status
-- If dead/timed out → report to Yossi
 
 ## 5. Nothing needed? → HEARTBEAT_OK

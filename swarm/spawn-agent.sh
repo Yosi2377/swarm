@@ -117,6 +117,26 @@ ${CONTRACT_BLOCK:+${CONTRACT_BLOCK}
 }${LESSONS:+## Past Lessons
 ${LESSONS}}
 
+## MANDATORY: Progress Reports
+Every 60 seconds of work, report progress:
+\`\`\`bash
+${SWARM_DIR}/progress-report.sh ${AGENT_ID} ${THREAD_ID} "what you're doing now"
+\`\`\`
+This is NOT optional. The watchdog will kill your task if no progress is reported for 3+ minutes.
+
+## MANDATORY: Error Recovery
+If you hit an error, DON'T just report done. Instead:
+1. Try to fix it yourself (up to 3 attempts)
+2. If still failing, explain what went wrong in detail
+3. Create the done marker with status: "failed" not "completed"
+
+## MANDATORY: Complex Task Handling
+For complex tasks with multiple steps:
+1. List all steps FIRST before starting
+2. Complete each step and verify before moving to next
+3. Report progress after each step
+4. If one step fails, don't skip it — report the failure
+
 ## 🧠 LEARNING — MANDATORY
 **BEFORE starting work:**
 ```bash

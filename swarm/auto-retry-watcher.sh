@@ -1,10 +1,13 @@
 #!/bin/bash
 # Auto-Retry Watcher — called by orchestrator heartbeat
-# Checks /tmp/agent-done/ for completed agents and processes them
+# Checks /tmp/agent-done/ for completed agents AND /tmp/retry-request-*.json for retries
 # Output: JSON summary
 
 DONE_DIR="/tmp/agent-done"
-CORE_DIR="$(dirname "$0")/core"
+SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
+CORE_DIR="${SWARM_DIR}/core"
+LOG_DIR="${SWARM_DIR}/logs"
+MAX_RETRIES="${MAX_RETRIES:-3}"
 RESULTS=()
 PROCESSED=0
 PASSED=0
@@ -12,7 +15,7 @@ RETRIED=0
 ESCALATED=0
 SKIPPED=0
 
-mkdir -p "$DONE_DIR" /tmp/agent-tasks
+mkdir -p "$DONE_DIR" /tmp/agent-tasks "$LOG_DIR"
 
 # Exit cleanly if no done files
 shopt -s nullglob
@@ -69,6 +72,73 @@ for f in "${FILES[@]}"; do
   RESULTS+=("$RESULT")
 done
 
+# --- Phase 2: Process retry requests from watchdog ---
+RETRY_PROCESSED=0
+shopt -s nullglob
+RETRY_FILES=(/tmp/retry-request-*.json)
+for rf in "${RETRY_FILES[@]}"; do
+  RETRY_DATA=$(cat "$rf" 2>/dev/null)
+  [ -z "$RETRY_DATA" ] && continue
+
+  R_AGENT=$(echo "$RETRY_DATA" | node -e "try{const d=JSON.parse(require('fs').readFileSync(0,'utf8'));console.log(d.agentId||'')}catch{console.log('')}" 2>/dev/null)
+  R_THREAD=$(echo "$RETRY_DATA" | node -e "try{const d=JSON.parse(require('fs').readFileSync(0,'utf8'));console.log(d.threadId||'')}catch{console.log('')}" 2>/dev/null)
+  R_COUNT=$(echo "$RETRY_DATA" | node -e "try{const d=JSON.parse(require('fs').readFileSync(0,'utf8'));console.log(d.retryCount||1)}catch{console.log(1)}" 2>/dev/null)
+  R_REASON=$(echo "$RETRY_DATA" | node -e "try{const d=JSON.parse(require('fs').readFileSync(0,'utf8'));console.log(d.reason||'unknown')}catch{console.log('unknown')}" 2>/dev/null)
+  R_TASK=$(echo "$RETRY_DATA" | node -e "try{const d=JSON.parse(require('fs').readFileSync(0,'utf8'));console.log(d.originalTask||'')}catch{console.log('')}" 2>/dev/null)
+  R_PROGRESS=$(echo "$RETRY_DATA" | node -e "try{const d=JSON.parse(require('fs').readFileSync(0,'utf8'));console.log(d.progressSummary||'none')}catch{console.log('none')}" 2>/dev/null)
+
+  [ -z "$R_AGENT" ] || [ -z "$R_THREAD" ] && continue
+
+  # Check max retries
+  if [ "$R_COUNT" -gt "$MAX_RETRIES" ]; then
+    echo "[$(date -Iseconds)] ESCALATE: ${R_AGENT}-${R_THREAD} exceeded max retries ($MAX_RETRIES)" >> "$LOG_DIR/retries.log"
+    # Update task to failed_terminal
+    TASK_FILE="/tmp/agent-tasks/${R_AGENT}-${R_THREAD}.json"
+    if [ -f "$TASK_FILE" ]; then
+      node -e "const f='$TASK_FILE';const d=JSON.parse(require('fs').readFileSync(f,'utf8'));d.status='failed_terminal';d.failure_reason='max retries exceeded';require('fs').writeFileSync(f,JSON.stringify(d,null,2))" 2>/dev/null
+    fi
+    rm -f "$rf"
+    ESCALATED=$((ESCALATED + 1))
+    RESULTS+=("{\"action\":\"escalate\",\"taskId\":\"${R_AGENT}-${R_THREAD}\",\"reason\":\"max_retries\"}")
+    continue
+  fi
+
+  # Build enriched retry prompt
+  ENRICHED_CONTEXT="## RETRY ATTEMPT ${R_COUNT}/${MAX_RETRIES}
+Previous attempt failed: ${R_REASON}
+
+### What was already done:
+${R_PROGRESS}
+
+### Instructions for this retry:
+- The previous attempt got stuck/failed. Avoid the same issue.
+- Work more carefully and report progress frequently.
+- If the same approach fails, try an alternative.
+
+### Original task:
+${R_TASK}"
+
+  # Re-dispatch
+  if [ -f "${SWARM_DIR}/dispatch-task.sh" ]; then
+    # Update task metadata for retry
+    TASK_FILE="/tmp/agent-tasks/${R_AGENT}-${R_THREAD}.json"
+    if [ -f "$TASK_FILE" ]; then
+      node -e "const f='$TASK_FILE';const d=JSON.parse(require('fs').readFileSync(f,'utf8'));d.status='running';d.retries=${R_COUNT};d.last_retry=new Date().toISOString();require('fs').writeFileSync(f,JSON.stringify(d,null,2))" 2>/dev/null
+    fi
+
+    # Remove old done marker if any
+    rm -f "/tmp/agent-done/${R_AGENT}-${R_THREAD}.json"
+
+    echo "[$(date -Iseconds)] RETRY: ${R_AGENT}-${R_THREAD} attempt ${R_COUNT} reason=${R_REASON}" >> "$LOG_DIR/retries.log"
+    RETRIED=$((RETRIED + 1))
+    RESULTS+=("{\"action\":\"retry\",\"taskId\":\"${R_AGENT}-${R_THREAD}\",\"attempt\":${R_COUNT}}")
+  fi
+
+  # Delete retry request file
+  rm -f "$rf"
+  RETRY_PROCESSED=$((RETRY_PROCESSED + 1))
+done
+
 # Output JSON summary
 RESULTS_JSON=$(printf '%s\n' "${RESULTS[@]}" | node -e "
   const lines=require('fs').readFileSync('/dev/stdin','utf8').trim().split('\n').filter(Boolean);
@@ -76,4 +146,4 @@ RESULTS_JSON=$(printf '%s\n' "${RESULTS[@]}" | node -e "
   console.log(JSON.stringify(arr));
 " 2>/dev/null || echo '[]')
 
-echo "{\"processed\":$PROCESSED,\"passed\":$PASSED,\"retried\":$RETRIED,\"escalated\":$ESCALATED,\"skipped\":$SKIPPED,\"results\":$RESULTS_JSON}"
+echo "{\"processed\":$PROCESSED,\"passed\":$PASSED,\"retried\":$RETRIED,\"escalated\":$ESCALATED,\"skipped\":$SKIPPED,\"retryRequestsProcessed\":$RETRY_PROCESSED,\"results\":$RESULTS_JSON}"

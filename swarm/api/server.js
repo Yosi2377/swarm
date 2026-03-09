@@ -243,6 +243,43 @@ app.post('/api/tasks/:id/retry', requireAuth, (req, res) => {
   }
 });
 
+// --- Progress API ---
+
+app.get('/api/progress', requireAuth, (req, res) => {
+  try {
+    const { getAllProgress } = require('../core/progress-tracker');
+    res.json(getAllProgress());
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/api/progress/:taskId', requireAuth, (req, res) => {
+  try {
+    const { getProgress } = require('../core/progress-tracker');
+    const parts = req.params.taskId.split('-');
+    const agentId = parts[0];
+    const threadId = parts.slice(1).join('-');
+    const progress = getProgress(agentId, threadId);
+    if (!progress) return res.status(404).json({ error: 'No progress found' });
+    res.json(progress);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// --- Watchdog API ---
+
+app.post('/api/watchdog/run', requireAuth, (req, res) => {
+  try {
+    const { runWatchdog } = require('../core/watchdog');
+    const results = runWatchdog(req.body || {});
+    res.json({ results });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // Serve dashboard (requires key as query param)
 app.get('/', requireAuth, (req, res) => {
   let html = fs.readFileSync(path.join(__dirname, 'dashboard.html'), 'utf8');

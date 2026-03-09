@@ -1,79 +1,410 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🐝 Swarm Agent Dashboard</title>
 <style>
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--border:#30363d;
+  --text:#c9d1d9;--text2:#8b949e;--text-bright:#f0f6fc;
+  --blue:#58a6ff;--green:#3fb950;--red:#f85149;--orange:#d29922;--purple:#bc8cff;
+  --gradient:linear-gradient(135deg,#1a1e2e 0%,#0d1117 50%,#141926 100%);
+  --card-shadow:0 4px 12px rgba(0,0,0,.4);
+  --transition:all .3s ease;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:20px}
-h1{text-align:center;font-size:1.8em;margin-bottom:20px;color:#f0f6fc}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px}
-.card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px;text-align:center}
-.card .value{font-size:2em;font-weight:700;color:#58a6ff}
-.card .label{font-size:.85em;color:#8b949e;margin-top:4px}
-table{width:100%;border-collapse:collapse;background:#161b22;border-radius:8px;overflow:hidden;margin-bottom:24px}
-th{background:#21262d;padding:10px 12px;text-align:left;font-size:.85em;color:#8b949e;border-bottom:1px solid #30363d}
-td{padding:10px 12px;border-bottom:1px solid #21262d;font-size:.9em}
-tr:hover{background:#1c2128}
-.status{padding:3px 8px;border-radius:12px;font-size:.8em;font-weight:600;display:inline-block}
-.s-queued{background:#30363d;color:#8b949e}
-.s-running{background:#1f3a5f;color:#58a6ff}
-.s-verifying{background:#3d2e00;color:#d29922}
-.s-passed{background:#0d3117;color:#3fb950}
-.s-failed_retryable{background:#3d1d00;color:#d18616}
-.s-failed_terminal{background:#3d0000;color:#f85149}
-.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:20px}
-.agent-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;text-align:center}
-.agent-card .emoji{font-size:1.8em}
-.agent-card .name{font-weight:600;margin:4px 0}
-.agent-card .score{color:#58a6ff;font-size:.85em}
-.agent-card .active{color:#3fb950;font-size:.8em}
-.refresh{text-align:center;color:#484f58;font-size:.8em;margin-top:10px}
-h2{color:#f0f6fc;margin-bottom:12px;font-size:1.2em}
-@media(max-width:600px){body{padding:10px}h1{font-size:1.3em}.stats{grid-template-columns:1fr 1fr}td,th{padding:6px 8px;font-size:.8em}}
+body{background:var(--gradient);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+
+/* Header */
+.header{background:linear-gradient(135deg,#1f2937 0%,#111827 50%,#1e293b 100%);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.header h1{font-size:1.5em;color:var(--text-bright);display:flex;align-items:center;gap:10px}
+.header-right{display:flex;align-items:center;gap:16px}
+.header-right .uptime{font-size:.8em;color:var(--text2)}
+.pulse-dot{width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(63,185,80,.6)}50%{box-shadow:0 0 0 8px rgba(63,185,80,0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* Alerts */
+.alerts{padding:0 24px}
+.alert-banner{background:linear-gradient(90deg,rgba(248,81,73,.15),rgba(248,81,73,.05));border:1px solid rgba(248,81,73,.4);border-radius:8px;padding:12px 16px;margin-top:12px;display:flex;align-items:center;gap:10px;animation:fadeIn .4s ease}
+.alert-banner .icon{font-size:1.3em}
+.alert-banner .text{font-size:.9em;color:var(--red)}
+.alert-banner .text strong{color:var(--text-bright)}
+
+/* Layout */
+.main{display:grid;grid-template-columns:1fr 320px;gap:20px;padding:20px 24px}
+.content{min-width:0}
+.sidebar{display:flex;flex-direction:column;gap:16px}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;transition:var(--transition);box-shadow:var(--card-shadow);animation:fadeIn .4s ease}
+.card:hover{transform:translateY(-2px);border-color:var(--blue);box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.card .value{font-size:2em;font-weight:700;background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.card .label{font-size:.8em;color:var(--text2);margin-top:4px}
+.card.pass .value{background:linear-gradient(135deg,var(--green),#2ea043);-webkit-background-clip:text;background-clip:text}
+.card.fail .value{background:linear-gradient(135deg,var(--red),#da3633);-webkit-background-clip:text;background-clip:text}
+
+/* Section */
+.section{margin-bottom:20px}
+.section-title{color:var(--text-bright);font-size:1.1em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+
+/* Chart */
+.chart-container{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;box-shadow:var(--card-shadow);margin-bottom:20px}
+.chart-container canvas{width:100%;height:180px;display:block}
+.chart-legend{display:flex;gap:16px;margin-top:10px;justify-content:center}
+.chart-legend span{font-size:.8em;color:var(--text2);display:flex;align-items:center;gap:4px}
+.chart-legend span::before{content:'';width:10px;height:10px;border-radius:2px;display:inline-block}
+.legend-pass::before{background:var(--green)}.legend-fail::before{background:var(--red)}.legend-retry::before{background:var(--orange)}
+
+/* Table */
+.table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--card-shadow)}
+table{width:100%;border-collapse:collapse}
+th{background:var(--bg3);padding:10px 12px;text-align:left;font-size:.8em;color:var(--text2);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.5px}
+td{padding:10px 12px;border-bottom:1px solid rgba(48,54,61,.5);font-size:.88em}
+tr{transition:var(--transition);cursor:pointer}
+tbody tr:hover{background:rgba(88,166,255,.06)}
+.status{padding:3px 10px;border-radius:12px;font-size:.78em;font-weight:600;display:inline-block;letter-spacing:.3px}
+.s-queued{background:rgba(48,54,61,.6);color:var(--text2)}
+.s-running{background:rgba(31,58,95,.6);color:var(--blue);animation:pulse 2s infinite}
+.s-verifying{background:rgba(61,46,0,.6);color:var(--orange)}
+.s-passed{background:rgba(13,49,23,.6);color:var(--green)}
+.s-failedretryable,.s-failed_retryable{background:rgba(61,29,0,.6);color:var(--orange)}
+.s-failedterminal,.s-failed_terminal{background:rgba(61,0,0,.6);color:var(--red)}
+.desc-cell{max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.desc-cell[dir="rtl"]{text-align:right}
+
+/* Agents Grid */
+.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.agent-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;transition:var(--transition);box-shadow:var(--card-shadow);position:relative;overflow:hidden}
+.agent-card:hover{transform:translateY(-2px);border-color:var(--blue)}
+.agent-card .agent-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.agent-card .emoji{font-size:1.6em}
+.agent-card .name{font-weight:600;color:var(--text-bright);font-size:.95em}
+.agent-card .status-dot{width:8px;height:8px;border-radius:50%;margin-left:auto}
+.agent-card .status-dot.active{background:var(--green);animation:pulse 2s infinite}
+.agent-card .status-dot.idle{background:var(--text2)}
+.agent-card .agent-stats{display:flex;flex-direction:column;gap:6px}
+.agent-card .stat-row{display:flex;justify-content:space-between;font-size:.8em;color:var(--text2)}
+.agent-card .stat-row .val{color:var(--text)}
+.bar-container{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:6px}
+.bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.bar-pass{background:var(--green)}.bar-fail{background:var(--red)}
+
+/* Activity Feed */
+.feed-container{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;box-shadow:var(--card-shadow);flex:1;overflow:hidden}
+.feed-item{padding:8px 10px;border-left:3px solid var(--border);margin-bottom:6px;font-size:.82em;color:var(--text);animation:slideIn .3s ease;border-radius:0 6px 6px 0;transition:var(--transition)}
+.feed-item:hover{background:rgba(88,166,255,.04)}
+.feed-item.pass{border-left-color:var(--green)}.feed-item.fail{border-left-color:var(--red)}.feed-item.retry{border-left-color:var(--orange)}.feed-item.start{border-left-color:var(--blue)}
+.feed-time{font-size:.75em;color:var(--text2);margin-top:2px}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px);animation:fadeIn .2s ease}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:90%;max-width:640px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:fadeIn .3s ease}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:1}
+.modal-header h3{color:var(--text-bright);font-size:1.1em}
+.modal-close{background:none;border:none;color:var(--text2);font-size:1.4em;cursor:pointer;padding:4px 8px;border-radius:6px;transition:var(--transition)}
+.modal-close:hover{background:var(--bg3);color:var(--text-bright)}
+.modal-body{padding:20px}
+.modal-body .field{margin-bottom:14px}
+.modal-body .field-label{font-size:.78em;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.modal-body .field-value{font-size:.9em;color:var(--text);background:var(--bg);padding:8px 12px;border-radius:6px;border:1px solid var(--border);word-break:break-word}
+.modal-body .field-value pre{white-space:pre-wrap;font-family:inherit;font-size:.85em}
+.modal-body .history-item{padding:6px 0;border-bottom:1px solid rgba(48,54,61,.3);font-size:.85em}
+
+/* Responsive */
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
+  .sidebar{flex-direction:row;flex-wrap:wrap}
+  .sidebar>*{flex:1;min-width:280px}
+}
+@media(max-width:600px){
+  .header{padding:12px 16px;flex-wrap:wrap;gap:8px}
+  .header h1{font-size:1.2em}
+  .main{padding:12px 16px}
+  .stats{grid-template-columns:1fr 1fr}
+  .agents-grid{grid-template-columns:1fr 1fr}
+  td,th{padding:6px 8px;font-size:.78em}
+}
 </style>
 </head>
 <body>
-<h1>🐝 Swarm Agent Dashboard</h1>
-<div class="stats" id="stats"></div>
-<h2>📋 Tasks</h2>
-<div style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Agent</th><th>Description</th><th>Status</th><th>Created</th><th>Duration</th></tr></thead><tbody id="tasks"></tbody></table></div>
-<h2>🤖 Agents</h2>
-<div class="agents-grid" id="agents"></div>
-<p class="refresh">Auto-refreshes every 10s</p>
+
+<div class="header">
+  <h1>🐝 Swarm Agent Dashboard</h1>
+  <div class="header-right">
+    <span class="uptime" id="uptime"></span>
+    <span class="pulse-dot"></span>
+  </div>
+</div>
+
+<div class="alerts" id="alerts"></div>
+
+<div class="main">
+  <div class="content">
+    <div class="stats" id="stats"></div>
+
+    <div class="section">
+      <div class="section-title">📈 Task History (7 Days)</div>
+      <div class="chart-container">
+        <canvas id="chart" height="180"></canvas>
+        <div class="chart-legend">
+          <span class="legend-pass">Passed</span>
+          <span class="legend-fail">Failed</span>
+          <span class="legend-retry">Retried</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📋 Tasks</div>
+      <div class="table-wrap">
+        <table><thead><tr><th>ID</th><th>Agent</th><th>Description</th><th>Status</th><th>Created</th><th>Duration</th></tr></thead><tbody id="tasks"></tbody></table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🤖 Agents</div>
+      <div class="agents-grid" id="agents"></div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div>
+      <div class="section-title">⚡ Live Activity</div>
+      <div class="feed-container" id="feed">
+        <div style="text-align:center;color:var(--text2);padding:20px;font-size:.85em">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Task Details</h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
 <script>
+const S=document.getElementById.bind(document);
+let allTasks=[],allAgents=[],activityLog=[];
+
 function statusClass(s){return 's-'+(s||'queued').replace(/[^a-z_]/g,'')}
 function truncate(s,n){return s&&s.length>n?s.slice(0,n)+'…':s||''}
-function ago(d){if(!d)return'-';const s=Math.floor((Date.now()-new Date(d))/1000);if(s<60)return s+'s';if(s<3600)return Math.floor(s/60)+'m';return Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'m'}
+function isHebrew(s){return s&&/[\u0590-\u05FF]/.test(s)}
+function ago(d){if(!d)return'-';const s=Math.floor((Date.now()-new Date(d))/1000);if(s<0)return'-';if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'m ago';return Math.floor(s/86400)+'d ago'}
+function duration(a,b){if(!a)return'-';const e=b?new Date(b):new Date();const s=Math.floor((e-new Date(a))/1000);if(s<0)return'-';if(s<60)return s+'s';if(s<3600)return Math.floor(s/60)+'m '+s%60+'s';return Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'m'}
 function fmt(d){if(!d)return'-';return new Date(d).toLocaleString('en-GB',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
+function fmtTime(d){if(!d)return'';return new Date(d).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+
+// Chart
+function drawChart(tasks){
+  const canvas=S('chart');
+  const ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.parentElement.getBoundingClientRect();
+  canvas.width=rect.width*dpr-32*dpr;
+  canvas.height=180*dpr;
+  canvas.style.width=(rect.width-32)+'px';
+  canvas.style.height='180px';
+  ctx.scale(dpr,dpr);
+  const W=rect.width-32,H=180;
+  ctx.clearRect(0,0,W,H);
+
+  const days=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);
+    days.push(d);
+  }
+  const labels=days.map(d=>d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric'}));
+  const data=days.map(day=>{
+    const next=new Date(day);next.setDate(next.getDate()+1);
+    const dt=tasks.filter(t=>t.created&&new Date(t.created)>=day&&new Date(t.created)<next);
+    return{
+      pass:dt.filter(t=>t.status==='passed').length,
+      fail:dt.filter(t=>t.status&&t.status.startsWith('failed')).length,
+      retry:dt.filter(t=>(t.retries||0)>0).length,
+      total:dt.length
+    };
+  });
+  const maxVal=Math.max(1,...data.map(d=>Math.max(d.pass,d.fail,d.retry,d.total)));
+
+  const padL=36,padR=16,padT=20,padB=30;
+  const gW=W-padL-padR,gH=H-padT-padB;
+
+  // Grid
+  ctx.strokeStyle='rgba(48,54,61,.5)';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=padT+gH*(1-i/4);
+    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+    ctx.fillStyle='#8b949e';ctx.font='11px sans-serif';ctx.textAlign='right';
+    ctx.fillText(Math.round(maxVal*i/4),padL-6,y+4);
+  }
+  // Labels
+  ctx.fillStyle='#8b949e';ctx.font='11px sans-serif';ctx.textAlign='center';
+  labels.forEach((l,i)=>{
+    const x=padL+gW*i/(labels.length-1||1);
+    ctx.fillText(l,x,H-6);
+  });
+
+  function drawLine(key,color){
+    ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.lineCap='round';
+    ctx.beginPath();
+    data.forEach((d,i)=>{
+      const x=padL+gW*i/(data.length-1||1);
+      const y=padT+gH*(1-d[key]/maxVal);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    // Dots
+    data.forEach((d,i)=>{
+      const x=padL+gW*i/(data.length-1||1);
+      const y=padT+gH*(1-d[key]/maxVal);
+      ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='var(--bg2)';ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);ctx.fill();
+    });
+  }
+  drawLine('pass','#3fb950');
+  drawLine('fail','#f85149');
+  drawLine('retry','#d29922');
+}
+
+// Alerts
+function renderAlerts(tasks,agents){
+  const alerts=[];
+  const escalated=tasks.filter(t=>t.status==='failed_terminal'||t.status==='failedterminal');
+  escalated.forEach(t=>alerts.push(`🚨 <strong>Escalated:</strong> Task ${t.id} — ${truncate(t.description,50)}`));
+  const stuck=tasks.filter(t=>{
+    if(t.status!=='running'||!t.created)return false;
+    return(Date.now()-new Date(t.created))>600000;
+  });
+  stuck.forEach(t=>alerts.push(`⏱️ <strong>Stuck:</strong> ${t.agentId} running task ${t.id} for ${duration(t.created)}`));
+  S('alerts').innerHTML=alerts.map(a=>`<div class="alert-banner"><span class="icon">⚠️</span><span class="text">${a}</span></div>`).join('');
+}
+
+// Activity Feed
+function updateFeed(tasks){
+  const events=[];
+  tasks.forEach(t=>{
+    if(t.created)events.push({time:t.created,text:`${t.agentId} started task #${t.id}`,type:'start'});
+    if(t.status==='passed'&&t.completed)events.push({time:t.completed,text:`✅ Task #${t.id} — verify PASS`,type:'pass'});
+    if(t.status&&t.status.startsWith('failed')&&t.completed)events.push({time:t.completed,text:`❌ Task #${t.id} — ${t.status}`,type:'fail'});
+    if(t.retries>0)events.push({time:t.created,text:`🔄 Task #${t.id} — retry attempt ${t.retries}`,type:'retry'});
+    if(t.history)t.history.forEach(h=>{
+      events.push({time:h.timestamp||t.created,text:`${h.event} — task #${t.id}`,type:h.event.includes('retry')?'retry':'start'});
+    });
+  });
+  events.sort((a,b)=>new Date(b.time)-new Date(a.time));
+  const recent=events.slice(0,12);
+  S('feed').innerHTML=recent.length?recent.map(e=>
+    `<div class="feed-item ${e.type}"><div>${e.text}</div><div class="feed-time">${ago(e.time)}</div></div>`
+  ).join(''):'<div style="text-align:center;color:var(--text2);padding:20px;font-size:.85em">No activity yet</div>';
+}
+
+// Modal
+function openModal(taskId){
+  const t=allTasks.find(x=>x.id===taskId);
+  if(!t)return;
+  S('modal-title').textContent='Task #'+t.id;
+  const descDir=isHebrew(t.description)?'rtl':'ltr';
+  let html=`
+    <div class="field"><div class="field-label">Agent</div><div class="field-value">${t.agentId}</div></div>
+    <div class="field"><div class="field-label">Description</div><div class="field-value" dir="${descDir}">${t.description||'-'}</div></div>
+    <div class="field"><div class="field-label">Status</div><div class="field-value"><span class="status ${statusClass(t.status)}">${t.status}</span></div></div>
+    <div class="field"><div class="field-label">Created</div><div class="field-value">${fmt(t.created)}</div></div>
+    <div class="field"><div class="field-label">Completed</div><div class="field-value">${fmt(t.completed)}</div></div>
+    <div class="field"><div class="field-label">Duration</div><div class="field-value">${duration(t.created,t.completed)}</div></div>
+    <div class="field"><div class="field-label">Retries</div><div class="field-value">${t.retries||0}</div></div>
+  `;
+  if(t.contract){
+    html+=`<div class="field"><div class="field-label">Contract</div><div class="field-value"><pre>${JSON.stringify(t.contract,null,2)}</pre></div></div>`;
+  }
+  if(t.history&&t.history.length){
+    html+=`<div class="field"><div class="field-label">History</div><div class="field-value">${t.history.map(h=>`<div class="history-item">${fmtTime(h.timestamp)} — ${h.event}</div>`).join('')}</div></div>`;
+  }
+  S('modal-body').innerHTML=html;
+  S('modal').classList.add('show');
+}
+function closeModal(){S('modal').classList.remove('show')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+// Agents
+function renderAgents(agents,tasks){
+  S('agents').innerHTML=agents.map(a=>{
+    const at=tasks.filter(t=>t.agentId===a.id);
+    const passed=at.filter(t=>t.status==='passed').length;
+    const failed=at.filter(t=>t.status&&t.status.startsWith('failed')).length;
+    const total=at.length;
+    const rate=total?Math.round(passed/total*100):0;
+    const isActive=a.activeTasks>0;
+    const lastTask=at.sort((x,y)=>new Date(y.created||0)-new Date(x.created||0))[0];
+    return`<div class="agent-card">
+      <div class="agent-header">
+        <span class="emoji">${a.emoji}</span>
+        <span class="name">${a.name}</span>
+        <span class="status-dot ${isActive?'active':'idle'}"></span>
+      </div>
+      <div class="agent-stats">
+        <div class="stat-row"><span>Success Rate</span><span class="val">${rate}%</span></div>
+        <div class="stat-row"><span>Tasks</span><span class="val">${passed}✓ ${failed}✗ / ${total}</span></div>
+        <div class="stat-row"><span>Active</span><span class="val">${a.activeTasks}</span></div>
+        <div class="stat-row"><span>Last Active</span><span class="val">${lastTask?ago(lastTask.created):'-'}</span></div>
+        <div class="bar-container"><div class="bar-fill bar-pass" style="width:${rate}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 async function refresh(){
   try{
-    const [stats,tasks,agents]=await Promise.all([
+    const[stats,tasks,agents,health]=await Promise.all([
       fetch('/api/stats').then(r=>r.json()),
       fetch('/api/tasks').then(r=>r.json()),
-      fetch('/api/agents').then(r=>r.json())
+      fetch('/api/agents').then(r=>r.json()),
+      fetch('/api/health').then(r=>r.json()).catch(()=>null)
     ]);
-    document.getElementById('stats').innerHTML=[
-      {v:stats.totalTasks,l:'Total Tasks'},
-      {v:stats.passRate+'%',l:'Pass Rate'},
-      {v:stats.activeAgents,l:'Active Agents'},
-      {v:stats.avgCompletionTime+'s',l:'Avg Time'}
-    ].map(c=>`<div class="card"><div class="value">${c.v}</div><div class="label">${c.l}</div></div>`).join('');
-    document.getElementById('tasks').innerHTML=tasks.length?tasks.map(t=>`<tr>
-      <td>${t.id}</td><td>${t.agentId}</td><td>${truncate(t.description,40)}</td>
-      <td><span class="status ${statusClass(t.status)}">${t.status}</span></td>
-      <td>${fmt(t.created)}</td><td>${t.completed?ago(t.created):t.status==='passed'?'done':'-'}</td>
-    </tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:#484f58">No tasks yet</td></tr>';
-    document.getElementById('agents').innerHTML=agents.map(a=>`<div class="agent-card">
-      <div class="emoji">${a.emoji}</div><div class="name">${a.name}</div>
-      <div class="score">Score: ${a.score}</div><div class="active">${a.activeTasks} active</div>
-    </div>`).join('');
-  }catch(e){console.error(e)}
+    allTasks=tasks;allAgents=agents;
+
+    if(health)S('uptime').textContent='Uptime: '+duration(new Date(Date.now()-health.uptime*1000));
+
+    S('stats').innerHTML=[
+      {v:stats.totalTasks,l:'Total Tasks',c:''},
+      {v:stats.passRate+'%',l:'Pass Rate',c:'pass'},
+      {v:stats.failRate+'%',l:'Fail Rate',c:'fail'},
+      {v:stats.activeTasks||0,l:'Active Tasks',c:''},
+      {v:stats.activeAgents,l:'Active Agents',c:''},
+      {v:stats.avgCompletionTime+'s',l:'Avg Time',c:''}
+    ].map(c=>`<div class="card ${c.c}"><div class="value">${c.v}</div><div class="label">${c.l}</div></div>`).join('');
+
+    S('tasks').innerHTML=tasks.length?tasks.map(t=>{
+      const desc=truncate(t.description,45);
+      const dir=isHebrew(t.description)?'rtl':'ltr';
+      return`<tr onclick="openModal('${t.id}')">
+        <td><code>${t.id}</code></td><td>${t.agentId}</td>
+        <td class="desc-cell" dir="${dir}">${desc}</td>
+        <td><span class="status ${statusClass(t.status)}">${t.status}</span></td>
+        <td>${fmt(t.created)}</td>
+        <td>${t.completed?duration(t.created,t.completed):(t.status==='running'?duration(t.created):'-')}</td>
+      </tr>`;
+    }).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:24px">No tasks yet</td></tr>';
+
+    renderAgents(agents,tasks);
+    renderAlerts(tasks,agents);
+    updateFeed(tasks);
+    drawChart(tasks);
+  }catch(e){console.error('Refresh error:',e)}
 }
+
 refresh();
 setInterval(refresh,10000);
+window.addEventListener('resize',()=>{if(allTasks.length)drawChart(allTasks)});
 </script>
 </body>
 </html>

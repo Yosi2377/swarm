@@ -39,6 +39,9 @@ case "$AGENT_ID" in
   *)          echo "Unknown agent: $AGENT_ID"; exit 1 ;;
 esac
 
+if [ ! -f "$TOKEN_FILE" ]; then
+  TOKEN_FILE="$SWARM_DIR/.bot-token"
+fi
 TOKEN=$(cat "$TOKEN_FILE")
 CHAT_ID="-1003815143703"
 

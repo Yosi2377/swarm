@@ -252,6 +252,18 @@ app.get('/', requireAuth, (req, res) => {
   res.type('html').send(html);
 });
 
+// Task management API is now integrated into the main routes above
+
+// Serve tasks.html page
+app.get('/tasks.html', requireAuth, (req, res) => {
+  const tasksPage = path.join(__dirname, '..', 'dashboard', 'public', 'tasks.html');
+  if (fs.existsSync(tasksPage)) {
+    res.sendFile(tasksPage);
+  } else {
+    res.status(404).send('Tasks page not found');
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🐝 Swarm API running on port ${PORT}`);
   console.log(`🔑 API Key: ${API_KEY}`);

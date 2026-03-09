@@ -117,8 +117,8 @@ function onAgentDone(agentId, threadId, context) {
   const metaState = loadJson(statePath(agentId, threadId));
 
   if (!contract) {
-    // No contract = legacy task, just pass
-    return { action: 'pass', reason: 'No contract found — legacy task', taskId };
+    // No contract = untracked task — FAIL, don't auto-pass
+    return { action: 'retry', reason: 'No contract found — task was not dispatched through reliability layer. Use dispatch-task.sh to create a contract.', taskId };
   }
 
   const ctx = context || {};

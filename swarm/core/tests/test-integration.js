@@ -109,10 +109,10 @@ test('onAgentDone handles task with unrunnable criteria', () => {
   assert.ok(['pass', 'retry', 'escalate'].includes(result.action));
 });
 
-test('onAgentDone returns pass with legacy task (no contract)', () => {
+test('onAgentDone returns retry with legacy task (no contract)', () => {
   const result = bridge.onAgentDone('worker', '9999', {});
-  assert.strictEqual(result.action, 'pass');
-  assert.ok(result.reason.includes('legacy'));
+  assert.strictEqual(result.action, 'retry');
+  assert.ok(result.reason.includes('contract'));
 });
 
 // ─── 3. Full retry flow ───

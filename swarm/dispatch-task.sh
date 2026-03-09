@@ -32,7 +32,22 @@ CONTRACT_PROMPT=$(node -e "
   console.log(result.agentPrompt);
 " "$TASK_DESC" "$AGENT_ID" "$THREAD_ID" 2>/dev/null)
 
-# Step 3: Combine
+# Step 3: Update state to "running"
+node -e "
+  const { advanceTask, TASKS_DIR } = require('${SWARM_DIR}/core/task-runner');
+  const fs = require('fs');
+  const path = require('path');
+  // Find contract ID from task metadata
+  const metaPath = path.join(TASKS_DIR, '${AGENT_ID}-${THREAD_ID}.json');
+  if (fs.existsSync(metaPath)) {
+    const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+    meta.status = 'running';
+    meta.started_at = new Date().toISOString();
+    fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2));
+  }
+" 2>/dev/null
+
+# Step 4: Combine
 cat <<PROMPT
 ${BASE_PROMPT}
 
@@ -51,6 +66,13 @@ ${CONTRACT_PROMPT}
 ⚠️ **THE #1 AGENT MISTAKE**: Taking a screenshot of whatever page is already open from a PREVIOUS task.
 If your screenshot shows BotVerse but your task was about the Dashboard — that's a FAIL.
 **ALWAYS navigate to the correct URL before screenshotting. Every. Single. Time.**
+
+## 📌 WHEN DONE — Create completion marker:
+\`\`\`bash
+mkdir -p /tmp/agent-done
+echo '{"agent":"${AGENT_ID}","thread":"${THREAD_ID}","completed_at":"'\$(date -Iseconds)'"}' > /tmp/agent-done/${AGENT_ID}-${THREAD_ID}.json
+\`\`\`
+This marker triggers automatic verification. DO NOT skip this step.
 
 ## 🤝 Need Help? Consult Another Agent
 If you're stuck on something outside your expertise:

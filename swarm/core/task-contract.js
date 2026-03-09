@@ -35,7 +35,7 @@ const INFER_MAP = [
   { type: 'api_endpoint', keywords: ['api', 'endpoint', 'route', 'rest', 'graphql', 'נתיב'] },
   { type: 'config_change', keywords: ['config', 'הגדרות', 'env', 'environment', 'קונפיג', '.env', 'settings'] },
   { type: 'refactor', keywords: ['refactor', 'ריפקטור', 'clean', 'ניקוי', 'optimize', 'שיפור קוד'] },
-  { type: 'research', keywords: ['research', 'מחקר', 'investigate', 'חקירה', 'בדיקה', 'compare', 'השוואה'] },
+  { type: 'research', keywords: ['research', 'מחקר', 'investigate', 'חקירה', 'בדיקה', 'compare', 'השוואה', 'best practices', 'survey', 'analyze', 'ניתוח', 'recommendations'] },
   { type: 'feature', keywords: ['feature', 'פיצ\'ר', 'add', 'הוסף', 'חדש', 'new', 'implement', 'מימוש'] },
   { type: 'code_fix', keywords: ['fix', 'bug', 'תקן', 'תתקן', 'באג', 'שגיאה', 'error', 'broken', 'שבור', 'לא עובד', 'crash'] },
 ];

@@ -1,0 +1,545 @@
+{
+  "timestamp": "2026-03-09T02:57:08.359Z",
+  "passCount": 91,
+  "failCount": 0,
+  "reliability": 100,
+  "contractResults": [
+    {
+      "id": "code_fix",
+      "type": "code_fix",
+      "totalCriteria": 6,
+      "generic": 4,
+      "specific": 2,
+      "elapsed": 0
+    },
+    {
+      "id": "ui_change",
+      "type": "ui_change",
+      "totalCriteria": 5,
+      "generic": 4,
+      "specific": 1,
+      "elapsed": 0
+    },
+    {
+      "id": "feature",
+      "type": "api_endpoint",
+      "totalCriteria": 4,
+      "generic": 1,
+      "specific": 3,
+      "elapsed": 0
+    },
+    {
+      "id": "config_change",
+      "type": "config_change",
+      "totalCriteria": 3,
+      "generic": 1,
+      "specific": 2,
+      "elapsed": 0
+    },
+    {
+      "id": "research",
+      "type": "research",
+      "totalCriteria": 2,
+      "generic": 0,
+      "specific": 2,
+      "elapsed": 0
+    }
+  ],
+  "pipelineResults": [
+    {
+      "id": "code_fix",
+      "dispatchOk": true,
+      "verifyPass": true,
+      "catchesMissing": true,
+      "elapsed": 277
+    },
+    {
+      "id": "ui_change",
+      "dispatchOk": true,
+      "verifyPass": true,
+      "catchesMissing": true,
+      "elapsed": 268
+    },
+    {
+      "id": "feature",
+      "dispatchOk": true,
+      "verifyPass": true,
+      "catchesMissing": true,
+      "elapsed": 276
+    },
+    {
+      "id": "config_change",
+      "dispatchOk": true,
+      "verifyPass": true,
+      "catchesMissing": true,
+      "elapsed": 268
+    },
+    {
+      "id": "research",
+      "dispatchOk": true,
+      "verifyPass": true,
+      "catchesMissing": true,
+      "elapsed": 268
+    }
+  ],
+  "stressElapsed": 4,
+  "tests": [
+    {
+      "name": "code_fix: contract has ID",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "code_fix: contract has type",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "code_fix: has acceptance criteria",
+      "status": "PASS",
+      "details": "count=4"
+    },
+    {
+      "name": "code_fix: correct type inferred",
+      "status": "PASS",
+      "details": "expected=code_fix, got=code_fix"
+    },
+    {
+      "name": "ui_change: contract has ID",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "ui_change: contract has type",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "ui_change: has acceptance criteria",
+      "status": "PASS",
+      "details": "count=4"
+    },
+    {
+      "name": "ui_change: correct type inferred",
+      "status": "PASS",
+      "details": "expected=ui_change, got=ui_change"
+    },
+    {
+      "name": "feature: contract has ID",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "feature: contract has type",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "feature: has acceptance criteria",
+      "status": "PASS",
+      "details": "count=3"
+    },
+    {
+      "name": "feature: correct type inferred",
+      "status": "PASS",
+      "details": "expected=api_endpoint, got=api_endpoint"
+    },
+    {
+      "name": "config_change: contract has ID",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "config_change: contract has type",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "config_change: has acceptance criteria",
+      "status": "PASS",
+      "details": "count=3"
+    },
+    {
+      "name": "config_change: correct type inferred",
+      "status": "PASS",
+      "details": "expected=config_change, got=config_change"
+    },
+    {
+      "name": "research: contract has ID",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "research: contract has type",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "research: has acceptance criteria",
+      "status": "PASS",
+      "details": "count=2"
+    },
+    {
+      "name": "research: correct type inferred",
+      "status": "PASS",
+      "details": "expected=research, got=research"
+    },
+    {
+      "name": "code_fix: dispatch produces output",
+      "status": "PASS",
+      "details": "length=5022"
+    },
+    {
+      "name": "code_fix: dispatch includes criteria section",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "code_fix: work completed correctly",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "code_fix: verification passes for correct work",
+      "status": "PASS",
+      "details": "score=100"
+    },
+    {
+      "name": "code_fix: verification catches missing work (no false positives)",
+      "status": "PASS",
+      "details": "passed=false"
+    },
+    {
+      "name": "ui_change: dispatch produces output",
+      "status": "PASS",
+      "details": "length=5082"
+    },
+    {
+      "name": "ui_change: dispatch includes criteria section",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "ui_change: work completed correctly",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "ui_change: verification passes for correct work",
+      "status": "PASS",
+      "details": "score=100"
+    },
+    {
+      "name": "ui_change: verification catches missing work (no false positives)",
+      "status": "PASS",
+      "details": "passed=false"
+    },
+    {
+      "name": "feature: dispatch produces output",
+      "status": "PASS",
+      "details": "length=5012"
+    },
+    {
+      "name": "feature: dispatch includes criteria section",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "feature: work completed correctly",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "feature: verification passes for correct work",
+      "status": "PASS",
+      "details": "score=100"
+    },
+    {
+      "name": "feature: verification catches missing work (no false positives)",
+      "status": "PASS",
+      "details": "passed=false"
+    },
+    {
+      "name": "config_change: dispatch produces output",
+      "status": "PASS",
+      "details": "length=4787"
+    },
+    {
+      "name": "config_change: dispatch includes criteria section",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "config_change: work completed correctly",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "config_change: verification passes for correct work",
+      "status": "PASS",
+      "details": "score=100"
+    },
+    {
+      "name": "config_change: verification catches missing work (no false positives)",
+      "status": "PASS",
+      "details": "passed=false"
+    },
+    {
+      "name": "research: dispatch produces output",
+      "status": "PASS",
+      "details": "length=4618"
+    },
+    {
+      "name": "research: dispatch includes criteria section",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "research: work completed correctly",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "research: verification passes for correct work",
+      "status": "PASS",
+      "details": "score=100"
+    },
+    {
+      "name": "research: verification catches missing work (no false positives)",
+      "status": "PASS",
+      "details": "passed=false"
+    },
+    {
+      "name": "SM: initial state is queued",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "SM: queued → assigned",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "SM: assigned → running",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "SM: running → verifying",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "SM: verifying → passed",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "SM: passed is terminal",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "SM: retry count incremented",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "SM: first retry is retryable",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "SM: auto-escalates at max retries",
+      "status": "PASS",
+      "details": "status=failed_terminal"
+    },
+    {
+      "name": "SM: failed_terminal is terminal",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "SM: rejects invalid transition (queued → passed)",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-0: contract generated without errors",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-0: contract file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-0: state file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-1: contract generated without errors",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-1: contract file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-1: state file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-2: contract generated without errors",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-2: contract file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-2: state file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-3: contract generated without errors",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-3: contract file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-3: state file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-4: contract generated without errors",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-4: contract file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-4: state file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-5: contract generated without errors",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-5: contract file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-5: state file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-6: contract generated without errors",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-6: contract file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-6: state file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-7: contract generated without errors",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-7: contract file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-7: state file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-8: contract generated without errors",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-8: contract file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-8: state file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-9: contract generated without errors",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-9: contract file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress-9: state file exists",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "stress: all 10 tasks under 5s",
+      "status": "PASS",
+      "details": "4ms"
+    },
+    {
+      "name": "stress: all 20 files exist (10 contracts + 10 states)",
+      "status": "PASS",
+      "details": "found=20"
+    },
+    {
+      "name": "stress: no duplicate contract IDs",
+      "status": "PASS",
+      "details": "dupes=0"
+    },
+    {
+      "name": "verifyAndDecide: pass verdict for correct work",
+      "status": "PASS",
+      "details": "verdict=pass"
+    },
+    {
+      "name": "verifyAndDecide: non-pass for failing criteria",
+      "status": "PASS",
+      "details": "verdict=retry"
+    }
+  ],
+  "issues": [],
+  "fixes": []
+}

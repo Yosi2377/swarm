@@ -248,11 +248,7 @@ app.get('/', requireAuth, (req, res) => {
   let html = fs.readFileSync(path.join(__dirname, 'dashboard.html'), 'utf8');
   // Inject API key into dashboard
   html = html.replace('</h1>', `</h1>\n<div class="api-key-bar">🔑 API Key: <code id="apikey">${API_KEY}</code> <button onclick="navigator.clipboard.writeText(document.getElementById('apikey').textContent)">📋</button></div>`);
-  // Inject key constant and replace fetch calls to pass it
-  html = html.replace(
-    "async function refresh(){",
-    `const _KEY='${API_KEY}';\nasync function refresh(){`
-  );
+  // Key is passed via URL search params, no injection needed
   res.type('html').send(html);
 });
 

@@ -193,7 +193,7 @@ tbody tr:hover{background:rgba(88,166,255,.06)}
 </div>
 
 <script>
-const k='?key='+(typeof _KEY!=='undefined'?_KEY:(new URLSearchParams(location.search).get('key')||''));
+const k='?key='+(new URLSearchParams(location.search).get('key')||'');
 const S=document.getElementById.bind(document);
 let allTasks=[],allAgents=[],activityLog=[];
 

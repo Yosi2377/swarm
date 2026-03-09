@@ -248,19 +248,11 @@ app.get('/', requireAuth, (req, res) => {
   let html = fs.readFileSync(path.join(__dirname, 'dashboard.html'), 'utf8');
   // Inject API key into dashboard
   html = html.replace('</h1>', `</h1>\n<div class="api-key-bar">🔑 API Key: <code id="apikey">${API_KEY}</code> <button onclick="navigator.clipboard.writeText(document.getElementById('apikey').textContent)">📋</button></div>`);
-  // Inject key into fetch calls
-  html = html.replace(/fetch\('\//g, `fetch('/?key=${API_KEY}&_path=/`);
-  // Actually, better approach: inject key into API fetch URLs
+  // Inject key constant and replace fetch calls to pass it
   html = html.replace(
     "async function refresh(){",
     `const _KEY='${API_KEY}';\nasync function refresh(){`
   );
-  html = html.replace(/fetch\('\/api\//g, `fetch('/api/`);
-  // Add key param to all fetch URLs
-  html = html.replace(/fetch\('(\/api\/[^']+)'\)/g, (_, url) => {
-    const sep = url.includes('?') ? '&' : '?';
-    return `fetch('${url}${sep}key='+_KEY)`;
-  });
   res.type('html').send(html);
 });
 

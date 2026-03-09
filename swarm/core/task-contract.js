@@ -184,6 +184,23 @@ function enrichContract(contract, projectConfig = {}) {
     });
   }
   
+  // Auto-add code_executes for tasks involving code/skills/functions
+  const desc = (enriched.input.description || '').toLowerCase();
+  if (desc.match(/skill|code|function|module|script/) && pc.db) {
+    // If task involves writing code to a DB collection, auto-test it
+    const collMatch = desc.match(/collection[:\s]+["']?(\w+)["']?/) || 
+                      desc.match(/(skills?|functions?|modules?)/);
+    if (collMatch) {
+      enriched.acceptance_criteria.push({
+        type: 'code_executes',
+        db: pc.db || 'botverse',
+        collection: collMatch[1] || 'skills',
+        sampleSize: 5,
+        description: 'Random code samples execute without errors'
+      });
+    }
+  }
+
   // Priority override
   if (pc.priority) enriched.metadata.priority = pc.priority;
   

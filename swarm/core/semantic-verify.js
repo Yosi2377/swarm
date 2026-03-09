@@ -92,6 +92,50 @@ const RUNNERS = {
     }
   },
 
+  code_executes(criterion) {
+    // Actually RUN code and verify it doesn't crash
+    const { code, input, db: dbName, collection, sampleSize = 3 } = criterion;
+    const { testJsCode } = require('./auto-test');
+    
+    // If db+collection specified, test random samples from MongoDB
+    if (dbName && collection) {
+      try {
+        const scriptFile = `/tmp/autotest-mongo-${Date.now()}.js`;
+        fs.writeFileSync(scriptFile, `print(JSON.stringify(db.${collection}.aggregate([{$sample:{size:${sampleSize}}}]).toArray().map(s => ({name: s.name, code: s.code, description: s.description}))))`);
+        const cmd = `mongosh --quiet ${dbName} ${scriptFile}`;
+        const out = execSync(cmd, { encoding: 'utf8', timeout: 15000 }).trim();
+        const samples = JSON.parse(out);
+        const results = [];
+        for (const s of samples) {
+          if (!s.code || s.code.length < 10) {
+            results.push({ name: s.name, pass: false, error: 'empty code' });
+            continue;
+          }
+          const testInput = input || s.description || 'test';
+          const r = testJsCode(s.code, testInput);
+          results.push({ name: s.name, pass: r.pass, error: r.error });
+        }
+        const passed = results.every(r => r.pass);
+        return { 
+          passed, 
+          actual: `${results.filter(r=>r.pass).length}/${results.length} passed`, 
+          expected: 'all pass',
+          details: results
+        };
+      } catch(e) {
+        return { passed: false, actual: 'error', expected: 'code runs', error: e.message };
+      }
+    }
+    
+    // Direct code test
+    if (code) {
+      const r = testJsCode(code, input || 'test');
+      return { passed: r.pass, actual: r.output || r.error, expected: 'code runs without error' };
+    }
+    
+    return { passed: false, actual: 'no code or db specified', expected: 'code to test' };
+  },
+
   custom(criterion) {
     const { script, cwd } = criterion;
     try {

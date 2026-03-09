@@ -68,6 +68,12 @@ const puppeteer = require('puppeteer');
 SCREENSHOTS_OK=false
 [ -f "$DESKTOP_SHOT" ] && [ -s "$DESKTOP_SHOT" ] && SCREENSHOTS_OK=true
 
+# Verify the URL actually returns the right content (not a redirect to wrong page)
+URL_CONTENT=$(curl -s --max-time 10 "${URL}" 2>/dev/null | head -50)
+if echo "$URL_CONTENT" | grep -qi "error\|404\|not found\|cannot GET"; then
+  echo "⚠️ URL returns error page — screenshot may not be valid" >&2
+fi
+
 # Step 3: Send screenshots + report based on verify result
 case $VERIFY_EXIT in
   0)

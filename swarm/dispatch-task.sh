@@ -42,11 +42,15 @@ An independent verifier will check EVERY criterion. Do not report done unless AL
 
 ${CONTRACT_PROMPT}
 
-## ⛔ MANDATORY BEFORE REPORTING DONE:
-1. Take screenshot: \`browser action=screenshot\` or \`bash swarm/report-done.sh THREAD "summary"\`
-2. Send screenshot to YOUR topic AND to General (topic 1) via send.sh with photo
-3. If you skip screenshots, verification will FAIL automatically — screenshot_sent is an acceptance criterion
-4. The orchestrator will NOT accept "done" without visual proof
+## ⛔ MANDATORY BEFORE REPORTING DONE — SCREENSHOT PROTOCOL:
+1. **NAVIGATE FIRST**: \`browser action=navigate url="THE_CORRECT_URL"\` — NOT whatever is already open!
+2. **VERIFY you're on the right page**: \`browser action=snapshot\` — read the content, confirm it's the right URL
+3. **ONLY THEN screenshot**: \`browser action=screenshot\`
+4. **Send to topic + General via send.sh**
+
+⚠️ **THE #1 AGENT MISTAKE**: Taking a screenshot of whatever page is already open from a PREVIOUS task.
+If your screenshot shows BotVerse but your task was about the Dashboard — that's a FAIL.
+**ALWAYS navigate to the correct URL before screenshotting. Every. Single. Time.**
 
 ## 🤝 Need Help? Consult Another Agent
 If you're stuck on something outside your expertise:

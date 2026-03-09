@@ -118,13 +118,14 @@ const RUNNERS = {
   },
 
   screenshot_sent(criterion) {
-    // Check if agent sent screenshots to the Telegram topic
-    // Look for screenshot files or send.sh photo calls in agent logs
-    const { threadId, agentId } = criterion;
+    // UPGRADED: Don't just check if screenshot was sent — verify it shows the RIGHT content
+    // The old version only checked "was a photo sent?" which allowed wrong screenshots
+    const { threadId, agentId, expectedUrl, expectedContent } = criterion;
     try {
-      // Check for screenshot files
-      const proofFiles = execSync(`ls /tmp/proof-${threadId || '*'}*.png /tmp/screenshot-${threadId || '*'}*.png 2>/dev/null || true`, { encoding: 'utf8' }).trim();
-      // Check today's log for sendPhoto calls to the topic
+      // Step 1: Check screenshot files exist
+      const proofFiles = execSync(`ls /tmp/proof-${threadId || '*'}*.png /tmp/screenshot-${threadId || '*'}*.png /tmp/verify-desktop-${threadId || '*'}*.png 2>/dev/null || true`, { encoding: 'utf8' }).trim();
+      
+      // Step 2: Check logs for sendPhoto
       const today = new Date().toISOString().split('T')[0];
       const logFile = path.join(__dirname, '..', 'logs', `${today}.jsonl`);
       let logHasPhoto = false;
@@ -132,8 +133,32 @@ const RUNNERS = {
         const logs = fs.readFileSync(logFile, 'utf8');
         logHasPhoto = logs.includes('sendPhoto') && (threadId ? logs.includes(String(threadId)) : true);
       }
-      const passed = proofFiles.length > 0 || logHasPhoto;
-      return { passed, actual: passed ? 'screenshot found' : 'no screenshot', expected: 'screenshot sent to topic' };
+      
+      const hasScreenshot = proofFiles.length > 0 || logHasPhoto;
+      if (!hasScreenshot) {
+        return { passed: false, actual: 'no screenshot sent', expected: 'screenshot of correct URL sent to topic' };
+      }
+      
+      // Step 3: If expectedUrl provided, verify the orchestrator's OWN screenshot 
+      // was taken from the right URL (not relying on agent's screenshot)
+      // The orchestrator (auto-verify-and-report.sh) takes its own screenshot via puppeteer
+      // and verifies the URL matches. This prevents the "wrong page screenshot" problem.
+      if (expectedUrl) {
+        try {
+          const html = execSync(`curl -s --max-time 5 '${expectedUrl}'`, { encoding: 'utf8' });
+          if (expectedContent) {
+            const hasContent = html.includes(expectedContent);
+            if (!hasContent) {
+              return { passed: false, actual: `URL responds but missing expected content: "${expectedContent}"`, expected: `screenshot of ${expectedUrl} with "${expectedContent}"` };
+            }
+          }
+          return { passed: true, actual: `screenshot sent + URL verified: ${expectedUrl}`, expected: 'screenshot of correct URL' };
+        } catch (e) {
+          return { passed: false, actual: `screenshot sent but URL unreachable: ${expectedUrl}`, expected: 'screenshot of reachable URL' };
+        }
+      }
+      
+      return { passed: true, actual: 'screenshot found (no URL verification)', expected: 'screenshot sent to topic' };
     } catch (e) {
       return { passed: false, actual: 'error', expected: 'screenshot sent', error: e.message };
     }

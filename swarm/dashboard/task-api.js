@@ -62,7 +62,7 @@ function loadAllTasks() {
         history: data.task_state?.history || []
       };
     } catch { return null; }
-  }).filter(Boolean);
+  }).filter(t => t && t.id && !t.id.includes('undefined'));
 }
 
 function formatDuration(ms) {

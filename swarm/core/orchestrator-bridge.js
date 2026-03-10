@@ -127,19 +127,15 @@ function onAgentDone(agentId, threadId, context) {
   const decision = verifyAndDecide(taskId, contract, ctx);
 
   if (decision.verdict === 'pass') {
-    // Transition to passed
-    try {
-      advanceTask(contract.id, 'assigned', 'Agent started');
-      advanceTask(contract.id, 'running', 'Agent working');
-      advanceTask(contract.id, 'verifying', 'Verification started');
-      advanceTask(contract.id, 'passed', 'All criteria met');
-    } catch (_) {
-      // State may already be advanced
-    }
-
     if (metaState) {
+      const now = Date.now();
       metaState.status = 'passed';
       metaState.verified_at = new Date().toISOString();
+      if (metaState.task_state) {
+        metaState.task_state.history.push({ from: metaState.task_state.status, to: 'passed', reason: 'All criteria met', timestamp: now });
+        metaState.task_state.status = 'passed';
+        metaState.task_state.updatedAt = now;
+      }
       fs.writeFileSync(statePath(agentId, threadId), JSON.stringify(metaState, null, 2));
     }
 
@@ -159,9 +155,15 @@ function onAgentDone(agentId, threadId, context) {
     if (failureResult.action === 'escalate') {
       const humanMessage = escalateToHuman(taskId, failureResult.reason);
       if (metaState) {
+        const now = Date.now();
         metaState.status = 'failed_terminal';
         metaState.escalated_at = new Date().toISOString();
         metaState.escalation_reason = failureResult.reason;
+        if (metaState.task_state) {
+          metaState.task_state.history.push({ from: metaState.task_state.status, to: 'failed_terminal', reason: failureResult.reason, timestamp: now });
+          metaState.task_state.status = 'failed_terminal';
+          metaState.task_state.updatedAt = now;
+        }
         fs.writeFileSync(statePath(agentId, threadId), JSON.stringify(metaState, null, 2));
       }
       return { action: 'escalate', taskId, reason: failureResult.reason, humanMessage };
@@ -170,9 +172,15 @@ function onAgentDone(agentId, threadId, context) {
     const retryInfo = retryWithContext(taskId, contract.input.description);
 
     if (metaState) {
+      const now = Date.now();
       metaState.status = 'retrying';
       metaState.retry_count = (metaState.retry_count || 0) + 1;
       metaState.last_failure = decision.retryHint;
+      if (metaState.task_state) {
+        metaState.task_state.history.push({ from: metaState.task_state.status, to: 'retrying', reason: decision.retryHint || 'Retry needed', timestamp: now });
+        metaState.task_state.status = 'retrying';
+        metaState.task_state.updatedAt = now;
+      }
       fs.writeFileSync(statePath(agentId, threadId), JSON.stringify(metaState, null, 2));
     }
 
@@ -189,8 +197,14 @@ function onAgentDone(agentId, threadId, context) {
   // Escalate
   const humanMessage = escalateToHuman(taskId, decision.retryHint || 'Non-retryable failure');
   if (metaState) {
+    const now = Date.now();
     metaState.status = 'failed_terminal';
     metaState.escalated_at = new Date().toISOString();
+    if (metaState.task_state) {
+      metaState.task_state.history.push({ from: metaState.task_state.status, to: 'failed_terminal', reason: decision.retryHint || 'Non-retryable failure', timestamp: now });
+      metaState.task_state.status = 'failed_terminal';
+      metaState.task_state.updatedAt = now;
+    }
     fs.writeFileSync(statePath(agentId, threadId), JSON.stringify(metaState, null, 2));
   }
 

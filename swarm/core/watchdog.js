@@ -9,7 +9,7 @@ const DONE_DIR = process.env.DONE_DIR || '/tmp/agent-done';
 const RETRY_DIR = process.env.RETRY_DIR || '/tmp';
 const LOG_DIR = process.env.WATCHDOG_LOG_DIR || path.resolve(__dirname, '..', 'logs');
 
-const DEFAULT_MAX_MINUTES = parseInt(process.env.WATCHDOG_MAX_MINUTES || '5', 10);
+const DEFAULT_MAX_MINUTES = parseInt(process.env.WATCHDOG_MAX_MINUTES || '10', 10);
 const PROGRESS_EXTEND_MINUTES = parseInt(process.env.WATCHDOG_PROGRESS_EXTEND || '3', 10);
 
 function ensureDir(dir) {
@@ -44,8 +44,21 @@ function runWatchdog(options = {}) {
     const meta = loadJson(taskPath);
     if (!meta) continue;
 
-    // Only check "running" tasks
-    if (meta.status !== 'running') continue;
+    // Check BOTH status fields
+    const status = meta.task_state?.status || meta.status;
+    if (!['running', 'assigned', 'queued'].includes(status)) continue;
+
+    // If task is queued but has a started_at, treat as running (auto-fix)
+    if (status === 'queued' && meta.started_at) {
+      meta.status = 'running';
+      if (meta.task_state) {
+        const now = Date.now();
+        meta.task_state.history.push({ from: meta.task_state.status, to: 'running', reason: 'auto-corrected by watchdog', timestamp: now });
+        meta.task_state.status = 'running';
+        meta.task_state.updatedAt = now;
+      }
+      fs.writeFileSync(taskPath, JSON.stringify(meta, null, 2));
+    }
 
     const taskId = file.replace('.json', '');
     const agentId = meta.agent_id || meta.agentId || taskId.split('-')[0];

@@ -41,6 +41,12 @@ node -e "
   const metaPath = path.join(TASKS_DIR, '${AGENT_ID}-${THREAD_ID}.json');
   if (fs.existsSync(metaPath)) {
     const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+    if (meta.task_state) {
+      const now = Date.now();
+      meta.task_state.history.push({ from: meta.task_state.status, to: 'running', reason: 'Agent dispatched', timestamp: now });
+      meta.task_state.status = 'running';
+      meta.task_state.updatedAt = now;
+    }
     meta.status = 'running';
     meta.started_at = new Date().toISOString();
     fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2));

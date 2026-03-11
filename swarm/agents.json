@@ -175,7 +175,9 @@
         "library",
         "framework",
         "benchmark"
-      ]
+      ],
+      "tokenFile": ".researcher-token",
+      "username": "TeamResearcher_Bot"
     },
     "bodek": {
       "name": "בודק",
@@ -217,7 +219,23 @@
         "לתעד כל migration עם rollback plan",
         "לא להריץ queries ישירות על פרודקשן בלי review"
       ],
-      "keywords": ["MongoDB", "SQL", "migrations", "backups", "data", "דאטא", "נתונים", "database", "schema", "query", "דאטאבייס", "גיבוי", "אינדקס", "restore", "integrity"],
+      "keywords": [
+        "MongoDB",
+        "SQL",
+        "migrations",
+        "backups",
+        "data",
+        "דאטא",
+        "נתונים",
+        "database",
+        "schema",
+        "query",
+        "דאטאבייס",
+        "גיבוי",
+        "אינדקס",
+        "restore",
+        "integrity"
+      ],
       "username": "TeamData_Bot",
       "tokenFile": ".data-token"
     },
@@ -234,7 +252,21 @@
         "לשמור reproduction steps לכל באג",
         "לא לסגור באג בלי test שמוכיח שהוא תוקן"
       ],
-      "keywords": ["debug", "error", "log", "crash", "stack trace", "profiling", "דיבאג", "שגיאה", "לוג", "קריסה", "race condition", "memory leak", "root cause"],
+      "keywords": [
+        "debug",
+        "error",
+        "log",
+        "crash",
+        "stack trace",
+        "profiling",
+        "דיבאג",
+        "שגיאה",
+        "לוג",
+        "קריסה",
+        "race condition",
+        "memory leak",
+        "root cause"
+      ],
       "username": "TeamDebugger_Bot",
       "tokenFile": ".debugger-token"
     },
@@ -251,7 +283,22 @@
         "images חייבים להיות מבוססי Alpine או slim",
         "לא להשתמש ב-latest tag בפרודקשן"
       ],
-      "keywords": ["docker", "container", "K8s", "kubernetes", "deployment", "DevOps", "CI/CD", "nginx", "דוקר", "קונטיינר", "Dockerfile", "compose", "image", "orchestration"],
+      "keywords": [
+        "docker",
+        "container",
+        "K8s",
+        "kubernetes",
+        "deployment",
+        "DevOps",
+        "CI/CD",
+        "nginx",
+        "דוקר",
+        "קונטיינר",
+        "Dockerfile",
+        "compose",
+        "image",
+        "orchestration"
+      ],
       "username": "TeamDocker_Bot",
       "tokenFile": ".docker-token"
     },
@@ -268,7 +315,23 @@
         "CSS animations בלבד — לא jQuery",
         "לבדוק cross-browser compatibility"
       ],
-      "keywords": ["frontend", "HTML", "CSS", "JavaScript", "UI", "responsive", "animation", "פרונט", "ממשק", "React", "Vue", "component", "breakpoint", "flexbox", "grid"],
+      "keywords": [
+        "frontend",
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "UI",
+        "responsive",
+        "animation",
+        "פרונט",
+        "ממשק",
+        "React",
+        "Vue",
+        "component",
+        "breakpoint",
+        "flexbox",
+        "grid"
+      ],
       "username": "TeamFront_Bot",
       "tokenFile": ".front-token"
     },
@@ -285,7 +348,22 @@
         "לא לחשוף internal errors ללקוח",
         "rate limiting על כל public endpoint"
       ],
-      "keywords": ["backend", "API", "Node.js", "Express", "server", "middleware", "route", "באקאנד", "שרת", "async", "REST", "GraphQL", "authentication", "endpoint"],
+      "keywords": [
+        "backend",
+        "API",
+        "Node.js",
+        "Express",
+        "server",
+        "middleware",
+        "route",
+        "באקאנד",
+        "שרת",
+        "async",
+        "REST",
+        "GraphQL",
+        "authentication",
+        "endpoint"
+      ],
       "username": "TeamBack_Bot",
       "tokenFile": ".back-token"
     },
@@ -302,7 +380,21 @@
         "כל באג חייב reproduction steps",
         "test coverage מינימלי 80%"
       ],
-      "keywords": ["test", "E2E", "unit test", "integration", "automation", "jest", "mocha", "טסט", "בדיקה אוטומטית", "coverage", "edge case", "regression", "QA"],
+      "keywords": [
+        "test",
+        "E2E",
+        "unit test",
+        "integration",
+        "automation",
+        "jest",
+        "mocha",
+        "טסט",
+        "בדיקה אוטומטית",
+        "coverage",
+        "edge case",
+        "regression",
+        "QA"
+      ],
       "username": "TeamTester_Bot",
       "tokenFile": ".tester-token"
     },
@@ -319,7 +411,20 @@
         "לתעד את הסיבה לכל שינוי",
         "לא להכניס patterns מורכבים בלי צורך"
       ],
-      "keywords": ["refactor", "cleanup", "tech debt", "optimization", "DRY", "SOLID", "ריפקטור", "ניקוי קוד", "code smell", "KISS", "design pattern", "architecture"],
+      "keywords": [
+        "refactor",
+        "cleanup",
+        "tech debt",
+        "optimization",
+        "DRY",
+        "SOLID",
+        "ריפקטור",
+        "ניקוי קוד",
+        "code smell",
+        "KISS",
+        "design pattern",
+        "architecture"
+      ],
       "username": "TeamRefactor_Bot",
       "tokenFile": ".refactor-token"
     },
@@ -336,7 +441,21 @@
         "לבדוק שה-alerting עצמו עובד (meta-monitoring)",
         "false positives חייבים להיפתר תוך 24 שעות"
       ],
-      "keywords": ["monitoring", "alert", "health check", "uptime", "metrics", "ניטור", "התראה", "זמינות", "dashboard", "Grafana", "Prometheus", "logs", "SLA"],
+      "keywords": [
+        "monitoring",
+        "alert",
+        "health check",
+        "uptime",
+        "metrics",
+        "ניטור",
+        "התראה",
+        "זמינות",
+        "dashboard",
+        "Grafana",
+        "Prometheus",
+        "logs",
+        "SLA"
+      ],
       "username": "TeamMonitor_Bot",
       "tokenFile": ".monitor-token"
     },
@@ -353,7 +472,21 @@
         "לא להוסיף cache בלי invalidation strategy",
         "לבדוק שהoptimization לא שובר דברים"
       ],
-      "keywords": ["performance", "speed", "cache", "optimization", "lazy load", "bundle", "ביצועים", "מהירות", "קאש", "CDN", "flame graph", "bottleneck", "latency"],
+      "keywords": [
+        "performance",
+        "speed",
+        "cache",
+        "optimization",
+        "lazy load",
+        "bundle",
+        "ביצועים",
+        "מהירות",
+        "קאש",
+        "CDN",
+        "flame graph",
+        "bottleneck",
+        "latency"
+      ],
       "username": "TeamOptimizer_Bot",
       "tokenFile": ".optimizer-token"
     },
@@ -370,7 +503,21 @@
         "לבנות circuit breaker לכל external call",
         "לשמור backwards compatibility"
       ],
-      "keywords": ["integration", "API", "webhook", "OAuth", "third-party", "payment", "אינטגרציה", "חיבור", "SOAP", "REST", "GraphQL", "adapter", "circuit breaker"],
+      "keywords": [
+        "integration",
+        "API",
+        "webhook",
+        "OAuth",
+        "third-party",
+        "payment",
+        "אינטגרציה",
+        "חיבור",
+        "SOAP",
+        "REST",
+        "GraphQL",
+        "adapter",
+        "circuit breaker"
+      ],
       "username": "TeamIntegrator_Bot",
       "tokenFile": ".integrator-token"
     }

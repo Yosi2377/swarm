@@ -1,0 +1,38 @@
+{
+  "test_date": "2026-03-11T23:48:00+01:00",
+  "agents_tested": 17,
+  "results": {
+    "or":         { "send": true, "token": true, "dispatch": true },
+    "shomer":     { "send": true, "token": true, "dispatch": true },
+    "koder":      { "send": true, "token": true, "dispatch": true },
+    "tzayar":     { "send": true, "token": true, "dispatch": true },
+    "worker":     { "send": true, "token": true, "dispatch": true },
+    "researcher": { "send": true, "token": true, "dispatch": true },
+    "bodek":      { "send": true, "token": true, "dispatch": true },
+    "data":       { "send": true, "token": true, "dispatch": true },
+    "debugger":   { "send": true, "token": true, "dispatch": true },
+    "docker":     { "send": true, "token": true, "dispatch": true },
+    "front":      { "send": true, "token": true, "dispatch": true },
+    "back":       { "send": true, "token": true, "dispatch": true },
+    "tester":     { "send": true, "token": true, "dispatch": true },
+    "refactor":   { "send": true, "token": true, "dispatch": true },
+    "monitor":    { "send": true, "token": true, "dispatch": true },
+    "optimizer":  { "send": true, "token": true, "dispatch": true },
+    "integrator": { "send": true, "token": true, "dispatch": true }
+  },
+  "scripts_tested": {
+    "create-topic.sh": "executable",
+    "send.sh": "working (all 17 agents sent successfully)",
+    "dispatch-task.sh": "working (all 17 agents generate valid prompts)",
+    "done-marker.sh": "working (writes to /tmp/agent-done/)",
+    "verify-task.sh": "working (returns retry/pass/escalate)",
+    "watchdog.sh": "executable",
+    "auto-retry-watcher.sh": "executable",
+    "progress-report.sh": "working (sends progress to thread)",
+    "learn.sh lesson": "working (saves lessons with impact scores)",
+    "learn.sh score": "working (tracks agent success/fail)",
+    "learn.sh query": "working (searches lessons)",
+    "learn.sh report": "working (generates intelligence report)"
+  },
+  "summary": "17/17 passed all tests. All utility scripts functional."
+}

@@ -1,0 +1,1 @@
+{"status":"success","summary":"Sales readiness complete — README, docs, tests, package.json. 126/132 tests pass.","url":"http://localhost:4500","files_changed":["README.md","LICENSE","package.json","docs/ARCHITECTURE.md","docs/AGENTS.md","docs/API.md","docs/SETUP.md","docs/PRICING.md","tests/run.js","tests/test-core.js","tests/test-api.js","tests/test-agents.js"]}

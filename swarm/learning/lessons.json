@@ -690,6 +690,26 @@
       "lesson": ".env and .jwt_secret committed to git with all secrets exposed. Always check git ls-files for sensitive files. Also default admin password still active.",
       "timestamp": "2026-03-06T09:41:13Z",
       "applied": 0
+    },
+    {
+      "id": "4234f35e",
+      "agent": "tester",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "smoke test",
+      "lesson": "testing is important",
+      "timestamp": "2026-03-11T22:51:24Z",
+      "applied": 0
+    },
+    {
+      "id": "778db414",
+      "agent": "tester",
+      "severity": "medium",
+      "impact": 0.7,
+      "what": "Retry due to missing structured report",
+      "lesson": "Always create agent-reports JSON before marking done",
+      "timestamp": "2026-03-11T22:51:25Z",
+      "applied": 0
     }
   ]
 }

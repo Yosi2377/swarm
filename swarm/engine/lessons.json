@@ -75,5 +75,12 @@
     "result": "fail",
     "lesson": "Retry worked (detected timeout, spawned attempt 2) but agent still failed. Problem: prompt was too open-ended. Fix: for retry, give EXACT commands to run, not descriptions.",
     "timestamp": "2026-03-13T06:48:40+01:00"
+  },
+  {
+    "agent": "front",
+    "task": "translate dashboard to Hebrew",
+    "result": "fail",
+    "lesson": "Agent translated UI labels and severity but missed event TITLES (the main content). Event titles come from DB/API in English — need client-side translation (Google Translate API or i18n mapping). Also missed ONGOING badge.",
+    "timestamp": "2026-03-13T08:20:40+01:00"
   }
 ]

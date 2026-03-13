@@ -1,64 +1,96 @@
-# Swarm Engine
-
-Production-ready agent orchestration system for the TeamWork swarm.
+# Swarm Engine v3 — Production Orchestration System
 
 ## Architecture
 
 ```
-orchestrate.sh  →  creates topic, builds prompt, outputs JSON
-     ↓
-auto-loop.sh    →  polls for .done, runs checks, signals retries
-     ↓
-monitor.sh      →  background daemon tracking all tasks
-     ↓
-escalate.sh     →  handles failures after max retries
-     ↓
-learn.sh        →  saves/queries lessons from past tasks
+┌─────────────────────────────────────────────────┐
+│                  CALLER (orchestrator)           │
+│  1. run.sh "task" → JSON                        │
+│  2. sessions_spawn with prompt from JSON         │
+│  3. Wait for done_marker                         │
+│  4. verify.sh checks_file → PASS/FAIL           │
+│  5. If FAIL: retry-prompt.sh → re-spawn          │
+│  6. report.sh → Telegram + lessons               │
+└──────┬──────────┬───────────┬───────────────────┘
+       │          │           │
+  ┌────▼───┐ ┌───▼────┐ ┌───▼─────┐
+  │ run.sh │ │verify  │ │report   │
+  │        │ │.sh     │ │.sh      │
+  └───┬────┘ └───┬────┘ └───┬─────┘
+      │          │           │
+  ┌───▼──────────▼───────────▼──────┐
+  │  check.sh  smart-check.sh       │
+  │  learn.sh  retry-prompt.sh      │
+  │  create-topic.sh  send.sh       │
+  └─────────────────────────────────┘
 ```
 
 ## Scripts
 
-### `orchestrate.sh "task" [project_dir] [url]`
-Main entry point. Classifies task → agent, queries lessons, creates Telegram topic, builds prompt, outputs JSON for the caller.
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `run.sh` | Main pipeline — outputs JSON for caller | `run.sh "task" [project] [url]` |
+| `smart-check.sh` | Generate checks from task description | `smart-check.sh "task" [project] [url]` |
+| `verify.sh` | Run checks file, return PASS/FAIL | `verify.sh <checks_file>` |
+| `retry-prompt.sh` | Enrich prompt with failure details | `retry-prompt.sh <prompt> <errors> <N>` |
+| `report.sh` | Report to Telegram + save lesson | `report.sh <agent> <thread> <status> <summary>` |
+| `check.sh` | Individual check commands | `check.sh <type> <args...>` |
+| `learn.sh` | Save/query/inject lessons | `learn.sh save\|query\|inject ...` |
+| `status.sh` | Show engine status | `status.sh` |
 
-### `auto-loop.sh <agent> <thread> <prompt_file> <check_cmd> [max_retries]`
-Retry loop. Waits for `.done` marker, runs check command, enriches prompt on failure, writes `-retry.json` for orchestrator to re-spawn.
+## Example Full Flow
 
-### `learn.sh {save|query|inject} ...`
-- `save <agent> <task> <pass|fail> <lesson>` — store a lesson
-- `query <keywords> [max]` — search lessons
-- `inject <agent> <task_desc>` — get relevant lessons for prompt injection
+```bash
+# 1. Prepare task
+JSON=$(bash engine/run.sh "שנה שם מ-ABC ל-XYZ" /root/pharos-ai http://localhost:3200)
+AGENT=$(echo "$JSON" | jq -r .agent)
+THREAD=$(echo "$JSON" | jq -r .thread)
+PROMPT=$(echo "$JSON" | jq -r .prompt)
 
-### `escalate.sh <agent> <thread> <task> <errors>`
-Decides: reassign to fallback agent, simplify task, or report failure. Writes `-escalation.json`.
+# 2. Spawn agent (caller does this via sessions_spawn)
+# ... agent works ...
 
-### `monitor.sh [interval]`
-Background daemon. Scans `/tmp/engine-tasks/` and `/tmp/engine-steps/` every N seconds. Writes `/tmp/engine-status.json`.
+# 3. Verify
+echo "$JSON" | jq -r '.checks[]' > /tmp/checks.txt
+bash engine/verify.sh /tmp/checks.txt
+# Exit 0 = PASS, 1 = FAIL
 
-### `status.sh`
-Human-readable status of all tasks. Run anytime.
+# 4. On failure — retry
+RETRY=$(bash engine/retry-prompt.sh "$PROMPT_FILE" "❌ ABC still found" 2)
+# Re-spawn with $RETRY as prompt file
 
-### `check.sh <type> <args...>`
-7 verification types: `http_status`, `screenshot`, `git_changed`, `grep_content`, `test_run`, `process_running`, `file_exists`.
+# 5. Report
+bash engine/report.sh "$AGENT" "$THREAD" pass "Renamed ABC→XYZ"
+```
 
-## File Conventions
+## Retry Logic
 
-| Path | Purpose |
-|------|---------|
-| `/tmp/engine-tasks/{agent}-{thread}.prompt` | Task prompt |
-| `/tmp/engine-tasks/{agent}-{thread}-meta.json` | Task metadata |
-| `/tmp/engine-tasks/{agent}-{thread}-retry.json` | Retry signal |
-| `/tmp/engine-tasks/{agent}-{thread}-escalation.json` | Escalation decision |
-| `/tmp/engine-steps/{agent}-{thread}.done` | Completion marker |
-| `/tmp/engine-status.json` | Monitor status output |
-| `engine/lessons.json` | Learning database |
+1. `run.sh` sets `max_retries: 3` and `timeout_seconds: 300`
+2. Caller spawns agent, waits for `done_marker` or timeout
+3. On completion: `verify.sh` runs all checks
+4. On FAIL: `retry-prompt.sh` creates enriched prompt with:
+   - Original task
+   - Exact failure details
+   - Timeout-specific guidance if applicable
+5. Caller re-spawns with new prompt
+6. After max retries: `report.sh` with fail status
 
-## Flow
+## Lessons System
 
-1. Caller runs `orchestrate.sh "fix the login page" /root/BotVerse http://localhost:3200`
-2. Gets JSON back with agent, thread, prompt_file, check command
-3. Spawns sub-agent with the prompt
-4. Optionally runs `auto-loop.sh` for retry logic
-5. `monitor.sh` tracks everything in background
-6. On failure after retries → `escalate.sh` decides next step
-7. `learn.sh save` records lessons for future tasks
+- `learn.sh save <agent> <task> <pass|fail> <lesson>` — stores in `lessons.json`
+- `learn.sh inject <agent> <task>` — returns relevant past lessons for prompt enrichment
+- `run.sh` auto-injects lessons into prompts
+- `report.sh` auto-saves lessons after each task
+
+## Check Types
+
+| Check | Args | What it does |
+|-------|------|-------------|
+| `http_status` | `<url> [code]` | HTTP response code |
+| `git_changed` | `<repo> [min]` | Minimum git changes |
+| `grep_content` | `<url> <text>` | Text present in page |
+| `grep_content_absent` | `<url> <text>` | Text NOT in page |
+| `no_console_errors` | `<url>` | Zero JS console errors |
+| `file_exists` | `<path>` | File exists with size > 0 |
+| `screenshot` | `<url> <path>` | Take screenshot |
+| `process_running` | `<pattern>` | Process alive |

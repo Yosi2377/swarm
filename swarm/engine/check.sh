@@ -109,9 +109,108 @@ case "$CHECK_TYPE" in
     fi
     ;;
 
+  grep_content_absent)
+    URL="$1"; PATTERN="$2"
+    BODY=$(curl -s "$URL" 2>/dev/null)
+    VISIBLE=$(echo "$BODY" | sed 's/<script[^>]*src="[^"]*"[^>]*><\/script>//g; s/<link[^>]*>//g')
+    if echo "$VISIBLE" | grep -qi "$PATTERN"; then
+      echo "❌ Content still present: '$PATTERN' in $URL (should be gone)"
+      exit 1
+    else
+      echo "✅ Content absent: '$PATTERN' not in visible HTML"
+      exit 0
+    fi
+    ;;
+
+  no_console_errors)
+    URL="$1"
+    ERRORS=$(node -e "
+const p=require('puppeteer');
+(async()=>{
+  const b=await p.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+  const g=await b.newPage();
+  const e=[];
+  g.on('console',m=>{if(m.type()==='error')e.push(m.text())});
+  g.on('pageerror',x=>e.push(x.message));
+  await g.goto('$URL',{waitUntil:'networkidle2',timeout:30000}).catch(()=>{});
+  await new Promise(r=>setTimeout(r,2000));
+  console.log(JSON.stringify(e));
+  await b.close();
+})();
+" 2>/dev/null)
+    COUNT=$(echo "$ERRORS" | python3 -c "import sys,json; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "?")
+    if [ "$COUNT" = "0" ]; then
+      echo "✅ No console errors on $URL"
+      exit 0
+    else
+      echo "❌ $COUNT console errors on $URL"
+      exit 1
+    fi
+    ;;
+
   *)
-    echo "Usage: check.sh <http_status|screenshot|git_changed|grep_content|test_run|process_running|file_exists> <args...>"
+    echo "Usage: check.sh <http_status|screenshot|git_changed|grep_content|grep_content_absent|no_console_errors|test_run|process_running|file_exists> <args...>"
     exit 2
     ;;
 
+esac
+
+# --- Extended checks ---
+grep_content() {
+  local url="$1" pattern="$2"
+  local body=$(curl -s "$url" 2>/dev/null)
+  if echo "$body" | grep -qi "$pattern"; then
+    echo "✅ Content found: '$pattern' in $url"
+    return 0
+  else
+    echo "❌ Content NOT found: '$pattern' in $url"
+    return 1
+  fi
+}
+
+grep_content_absent() {
+  local url="$1" pattern="$2"
+  local body=$(curl -s "$url" 2>/dev/null)
+  # Exclude chunk/asset filenames (turbopack generates these from folder names)
+  local visible=$(echo "$body" | sed 's/<script[^>]*>[^<]*<\/script>//g; s/<link[^>]*>//g')
+  if echo "$visible" | grep -qi "$pattern"; then
+    echo "❌ Content still present: '$pattern' in $url (should be gone)"
+    return 1
+  else
+    echo "✅ Content absent: '$pattern' not in visible HTML of $url"
+    return 0
+  fi
+}
+
+no_console_errors() {
+  local url="$1"
+  local errors=$(node -e "
+const p=require('puppeteer');
+(async()=>{
+  const b=await p.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+  const g=await b.newPage();
+  const errs=[];
+  g.on('console',m=>{if(m.type()==='error')errs.push(m.text())});
+  g.on('pageerror',e=>errs.push(e.message));
+  await g.goto('$url',{waitUntil:'networkidle2',timeout:30000}).catch(()=>{});
+  await new Promise(r=>setTimeout(r,2000));
+  console.log(JSON.stringify(errs));
+  await b.close();
+})();
+" 2>/dev/null)
+  local count=$(echo "$errors" | python3 -c "import sys,json; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "?")
+  if [ "$count" = "0" ]; then
+    echo "✅ No console errors on $url"
+    return 0
+  else
+    echo "❌ $count console errors on $url: $errors"
+    return 1
+  fi
+}
+
+# Dispatch to extended checks
+case "${1:-}" in
+  grep_content) shift; grep_content "$@" ;;
+  grep_content_absent) shift; grep_content_absent "$@" ;;
+  no_console_errors) shift; no_console_errors "$@" ;;
 esac

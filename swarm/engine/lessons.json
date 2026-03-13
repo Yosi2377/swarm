@@ -61,5 +61,19 @@
     "result": "fail",
     "lesson": "Agent only renamed partial occurrences. Engine check was too weak (http_status only). MUST use grep_content to verify OLD name is gone AND new name exists. Never trust http_status alone for content changes.",
     "timestamp": "2026-03-13T06:08:56+01:00"
+  },
+  {
+    "agent": "koder",
+    "task": "fix console errors",
+    "result": "fail",
+    "lesson": "Agent timed out TWICE. PostHog was unused file — simple delete fixed it. Lesson: for removal tasks, give agent the EXACT file to delete, not 'find and fix'. Also: env.ts references need cleanup.",
+    "timestamp": "2026-03-13T06:48:40+01:00"
+  },
+  {
+    "agent": "engine",
+    "task": "retry mechanism",
+    "result": "fail",
+    "lesson": "Retry worked (detected timeout, spawned attempt 2) but agent still failed. Problem: prompt was too open-ended. Fix: for retry, give EXACT commands to run, not descriptions.",
+    "timestamp": "2026-03-13T06:48:40+01:00"
   }
 ]

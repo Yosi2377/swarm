@@ -12,5 +12,19 @@
     "result": "fail",
     "lesson": "Need to restart server after route changes",
     "timestamp": "2026-03-13T04:11:13+01:00"
+  },
+  {
+    "agent": "front",
+    "task": "translate RSS to Hebrew",
+    "result": "pass",
+    "lesson": "Google Translate API works via /api/translate proxy route, needs URL encoding for special chars",
+    "timestamp": "2026-03-13T04:11:43+01:00"
+  },
+  {
+    "agent": "tzayar",
+    "task": "dashboard UI polish",
+    "result": "pass",
+    "lesson": "Tailwind gradient classes work in dark mode, use bg-gradient-to-r",
+    "timestamp": "2026-03-13T04:11:43+01:00"
   }
 ]

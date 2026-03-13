@@ -54,5 +54,12 @@
     "result": "pass",
     "lesson": "Check constants.ts and Header.tsx for hardcoded GitHub URLs",
     "timestamp": "2026-03-13T04:49:03+01:00"
+  },
+  {
+    "agent": "koder",
+    "task": "rename project",
+    "result": "fail",
+    "lesson": "Agent only renamed partial occurrences. Engine check was too weak (http_status only). MUST use grep_content to verify OLD name is gone AND new name exists. Never trust http_status alone for content changes.",
+    "timestamp": "2026-03-13T06:08:56+01:00"
   }
 ]

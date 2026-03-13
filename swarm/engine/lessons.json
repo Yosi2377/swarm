@@ -33,5 +33,26 @@
     "result": "pass",
     "lesson": "Modified dashboard header indicator from red/STATIC to green/LIVE with pulse",
     "timestamp": "2026-03-13T04:23:40+01:00"
+  },
+  {
+    "agent": "koder",
+    "task": "rename PHAROS to ISRAWAR",
+    "result": "pass",
+    "lesson": "sed works for code rename but DB field names (pharosNote) should not be changed - breaks Prisma schema",
+    "timestamp": "2026-03-13T04:49:03+01:00"
+  },
+  {
+    "agent": "front",
+    "task": "premium UI redesign",
+    "result": "pass",
+    "lesson": "glassmorphism + deep navy theme works. Got 8.5/10 rating",
+    "timestamp": "2026-03-13T04:49:03+01:00"
+  },
+  {
+    "agent": "koder",
+    "task": "remove GitHub links",
+    "result": "pass",
+    "lesson": "Check constants.ts and Header.tsx for hardcoded GitHub URLs",
+    "timestamp": "2026-03-13T04:49:03+01:00"
   }
 ]

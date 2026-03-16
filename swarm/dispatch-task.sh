@@ -19,6 +19,39 @@ if [ -n "$PROJECT_DIR" ]; then
   " 2>/dev/null)
 fi
 
+# Step 0: Record task start in learning system
+bash "${SWARM_DIR}/learn.sh" score "$AGENT_ID" success "task-${THREAD_ID}-start" 2>/dev/null || true
+echo "📝 Task ${AGENT_ID}-${THREAD_ID} started at $(date -Iseconds)" >> "${SWARM_DIR}/learning/task_log.json" 2>/dev/null || true
+
+# Step 0.5: Auto-detect task type and load template
+TASK_LOWER=$(echo "$TASK_DESC" | tr '[:upper:]' '[:lower:]')
+TEMPLATE_TYPE=""
+if echo "$TASK_LOWER" | grep -qE '(fix|bug|broken|crash|error|repair|תקן|באג|שבור)'; then
+  TEMPLATE_TYPE="code-fix"
+elif echo "$TASK_LOWER" | grep -qE '(ui|css|design|style|layout|color|button|עיצוב|כפתור|צבע)'; then
+  TEMPLATE_TYPE="ui-change"
+elif echo "$TASK_LOWER" | grep -qE '(api|endpoint|route|rest|graphql)'; then
+  TEMPLATE_TYPE="api-endpoint"
+elif echo "$TASK_LOWER" | grep -qE '(config|env|environment|setting|הגדר)'; then
+  TEMPLATE_TYPE="config-change"
+elif echo "$TASK_LOWER" | grep -qE '(research|audit|investigate|check|scan|חקר|סריק|בדוק)'; then
+  TEMPLATE_TYPE="investigation"
+elif echo "$TASK_LOWER" | grep -qE '(add|feature|new|create|implement|הוסף|פיצ׳ר|חדש)'; then
+  TEMPLATE_TYPE="add-feature"
+fi
+
+TEMPLATE_CONTENT=""
+if [ -n "$TEMPLATE_TYPE" ]; then
+  TEMPLATE_FILE="${SWARM_DIR}/templates/${TEMPLATE_TYPE}.md"
+  if [ -f "$TEMPLATE_FILE" ]; then
+    TEMPLATE_CONTENT=$(cat "$TEMPLATE_FILE")
+  fi
+fi
+
+# Step 0.6: Load top 5 lessons
+LESSONS=""
+LESSONS=$(bash "${SWARM_DIR}/learn.sh" inject "$AGENT_ID" "$TASK_DESC" 2>/dev/null | head -50) || true
+
 # Step 1: Generate base agent prompt (existing spawn-agent.sh)
 BASE_PROMPT=$(bash "${SWARM_DIR}/spawn-agent.sh" "$AGENT_ID" "$THREAD_ID" "$TASK_DESC" "" "$PROJECT_DIR" 2>/dev/null)
 
@@ -57,6 +90,33 @@ node -e "
 cat <<PROMPT
 ${BASE_PROMPT}
 
+## 📋 Structured Checkpoint Format (MANDATORY)
+You MUST report progress using this EXACT format after each step:
+\`\`\`
+STEP 1: [description] → DONE/FAIL
+STEP 2: [description] → DONE/FAIL
+...
+FINAL: [summary] → ALL_PASS/PARTIAL/FAIL
+\`\`\`
+If a step FAILs, explain WHY in one line before moving to the next step.
+Do NOT skip this format. The orchestrator parses it automatically.
+
+$(if [ -n "$TEMPLATE_CONTENT" ]; then
+cat <<TMPL
+## 🗺️ Task Template: ${TEMPLATE_TYPE}
+Follow these steps IN ORDER. Do not skip steps. Check each checkpoint before moving on.
+
+${TEMPLATE_CONTENT}
+TMPL
+fi)
+
+$(if [ -n "$LESSONS" ]; then
+cat <<LSNS
+## 🧠 Lessons from Past Tasks (READ BEFORE STARTING)
+${LESSONS}
+LSNS
+fi)
+
 ## 🎯 Task Contract (Auto-Generated)
 The following contract defines EXACTLY what will be verified when you report done.
 An independent verifier will check EVERY criterion. Do not report done unless ALL pass.
@@ -93,7 +153,15 @@ For complex tasks with multiple steps:
 If your screenshot shows BotVerse but your task was about the Dashboard — that's a FAIL.
 **ALWAYS navigate to the correct URL before screenshotting. Every. Single. Time.**
 
-## 📌 WHEN DONE — Create completion marker:
+## 📌 WHEN DONE — Run self-verification BEFORE reporting:
+\`\`\`bash
+# Self-check before claiming done (agent-side)
+if [ -n "${PROJECT_DIR}" ]; then
+  cd "${PROJECT_DIR}" && npm test 2>/dev/null || echo "⚠️ Tests failed — fix before reporting done"
+fi
+\`\`\`
+
+## 📌 THEN — Create completion marker:
 \`\`\`bash
 mkdir -p /tmp/agent-done
 echo '{"agent":"${AGENT_ID}","thread":"${THREAD_ID}","completed_at":"'\$(date -Iseconds)'"}' > /tmp/agent-done/${AGENT_ID}-${THREAD_ID}.json

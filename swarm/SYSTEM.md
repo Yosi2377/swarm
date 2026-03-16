@@ -418,6 +418,44 @@ swarm/pipeline.sh verify <task-id> <sandbox-url>
 **FAIL = אסור לדווח done!** תתקן את הבעיות ותנסה שוב.
 **PASS = מותר להמשיך** → דיווח done via send.sh.
 
+## 📋 Structured Checkpoint Reporting (MANDATORY)
+
+Every agent MUST report progress using structured checkpoints. This format is parsed automatically by the orchestrator and verification system.
+
+### Format:
+```
+STEP 1: [description] → DONE/FAIL
+STEP 2: [description] → DONE/FAIL
+STEP 3: [description] → DONE/FAIL
+...
+FINAL: [summary] → ALL_PASS/PARTIAL/FAIL
+```
+
+### Rules:
+1. **Every step gets a checkpoint** — no silent steps
+2. **DONE or FAIL only** — no "almost" or "partially"
+3. **If FAIL** → add one line explaining why, then continue or stop
+4. **FINAL line is mandatory** — ALL_PASS (all steps DONE), PARTIAL (some FAIL), FAIL (critical failure)
+5. **Send checkpoints via send.sh** to your topic so orchestrator can track
+
+### Example:
+```
+STEP 1: Read bug description and identify file → DONE
+STEP 2: Found bug in server.js line 142 — missing null check → DONE
+STEP 3: Applied fix — added if (!user) return res.status(404) → DONE
+STEP 4: Restarted service → DONE
+STEP 5: Tested with curl — returns 404 for missing user → DONE
+STEP 6: Screenshot taken → DONE
+FINAL: Fixed null pointer crash in /api/user/:id → ALL_PASS
+```
+
+### When to send checkpoints:
+- After completing each logical step
+- In your final "done" message (full summary)
+- In progress reports every 60 seconds
+
+---
+
 ## Task State
 Save progress to `swarm/memory/task-<thread_id>.md` after EACH step.
 Resume from file if session restarts. If it's not in the file, it didn't happen.

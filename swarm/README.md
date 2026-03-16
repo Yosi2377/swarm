@@ -1,100 +1,48 @@
-# 🐝 Swarm — Execution Reliability Layer for AI Agents
+# Swarm Scripts
 
-> "The agents are replaceable. The reliability layer is the product."
+Core scripts for the OpenClaw swarm orchestration system. 90 unused/duplicate scripts archived to `archive/`.
 
-## What is Swarm?
+## Core Scripts
 
-Swarm is an **execution reliability layer** that ensures AI agents actually complete tasks correctly. Instead of trusting agents when they say "done", Swarm independently verifies their work using typed contracts, semantic verification, and smart retry.
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `create-topic.sh` | Create Telegram forum topic | `create-topic.sh "name" [icon_color] [agent_id]` |
+| `send.sh` | Send message as agent bot | `send.sh <agent_id> <thread_id> "message" [--photo path]` |
+| `dispatch-task.sh` | Full dispatch with contract & reliability layer | `dispatch-task.sh <agent_id> <thread_id> "task" [project_dir]` |
+| `verify-task.sh` | Independent verification (never trusts self-report) | `verify-task.sh <agent_id> <thread_id>` |
+| `self-correct.sh` | Analyze failure & generate enriched retry prompt | `self-correct.sh <agent_id> <thread_id> [project_dir]` |
+| `done-marker.sh` | Mark agent task as done | `done-marker.sh <label> <topic_id> "summary"` |
+| `watchdog.sh` | Detect stuck agents (cron-compatible) | `watchdog.sh [max_minutes]` |
+| `progress-report.sh` | Report agent progress (single event) | `progress-report.sh <agent_id> <thread_id> "message" [step]` |
+| `delegate.sh` | Full delegation with structured schema + lessons | `delegate.sh <agent> "task" [keywords] [thread] [priority]` |
+| `report-done.sh` | Screenshot + summary to topic | `report-done.sh <topic_id> "summary" [url]` |
+| `screenshot.sh` | Multi-viewport screenshots to Telegram | `screenshot.sh <url> <thread_id> <agent_id> [label]` |
 
-## Architecture
+## Support Scripts
 
-```
-Task → Contract → Agent → Verification → Pass/Retry/Escalate
-```
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `ask-help.sh` | Inter-agent help requests | `ask-help.sh <from> <to> <thread> "desc"` |
+| `checkpoint.sh` | Durable execution: checkpoint + resume | `checkpoint.sh <task_id> <step>` |
+| `episode.sh` | Save completed tasks as episodic memory | `episode.sh <agent_id> <thread_id>` |
+| `pieces-realtime.sh` | Save event to Pieces LTM in real-time | `pieces-realtime.sh "source" "content"` |
+| `pieces-save.sh` | Save task summary to Pieces LTM | `pieces-save.sh <agent_id> <thread_id> "summary"` |
+| `pipeline.sh` | Chain agents: A→B→C | `pipeline.sh <pipeline-definition-file>` |
+| `progress.sh` | Auto-report every 3 min (background) | `progress.sh <agent_id> <thread_id> "task" &` |
+| `reflect.sh` | Structured reflection after failure | `reflect.sh <agent_id> <thread_id>` |
+| `self-heal.sh` | Self-healing wrapper with retries | `self-heal.sh <max_retries> <command...>` |
+| `update-status.sh` | Update agent status | `update-status.sh <agent> <task_id> <status> [desc]` |
 
-### Core Modules (swarm/core/)
+## Engine
 
-| Module | Purpose |
+| Script | Purpose |
 |--------|---------|
-| **task-contract.js** | Define typed contracts with acceptance criteria |
-| **contract-templates.js** | Pre-built templates per task type (9 types) |
-| **contract-validator.js** | Validate contracts before execution |
-| **state-machine.js** | Strict lifecycle: queued → running → verifying → pass/fail |
-| **task-runner.js** | Orchestrate task execution with state tracking |
-| **failure-taxonomy.js** | Classify failures into 9 categories |
-| **smart-retry.js** | Context-aware retry with failure-specific prompts |
-| **semantic-verify.js** | 10+ criterion types (HTTP, file, DB, browser, custom) |
-| **orchestrator-bridge.js** | Glue connecting all modules |
-| **auto-retry-runner.js** | Automatic retry without human intervention |
-| **task-decomposer.js** | Break large tasks into subtasks |
-| **fast-prompt.js** | Lean prompts for faster agent execution |
-| **agent-consultation.js** | Inter-agent communication with auto-routing |
-| **project-ports.js** | Project configuration (ports, URLs, paths) |
+| `engine/learn.sh` | Learning engine — extract & store lessons from completed tasks |
 
-### Key Features
+## Archived
 
-- **Task Contracts** — Every task has typed acceptance criteria, not free text
-- **9 Task Types** — code_fix, feature, ui_change, api_endpoint, db_migration, security_fix, refactor, research, config_change
-- **Semantic Verification** — Checks HTTP status, file contents, DB counts, service health, screenshots
-- **Smart Retry** — Different strategy per failure type (auth=escalate, build=retry with error, partial=finish remaining)
-- **Auto-Routing** — Security questions → Shomer, design → Tzayar, etc.
-- **Task Decomposition** — Breaks "do X and Y and Z" into independent subtasks
-- **Speed Optimization** — Simple tasks get lean prompts, complex tasks get full context
+90 scripts moved to `archive/` (+ 16 engine scripts to `archive/engine/`). These were duplicates, unused, or superseded by the core scripts above.
 
-## Quick Start
+## Cleanup History
 
-```bash
-# Dispatch a task with contract
-TASK=$(bash swarm/dispatch-task.sh koder 1234 "Fix login button" "/root/BotVerse")
-
-# Verify after agent completes
-bash swarm/verify-task.sh koder 1234
-# exit 0 = pass, exit 1 = retry, exit 2 = escalate
-
-# Full auto-verification with screenshots
-bash swarm/auto-verify-and-report.sh koder 1234 "https://botverse.dev" "Fix login"
-
-# Start dashboard
-bash swarm/api/start-dashboard.sh
-# → http://95.111.247.22:9200
-```
-
-## API
-
-```
-GET  /api/health          — System health
-GET  /api/tasks           — List all tasks
-GET  /api/tasks/:id       — Task details + contract
-GET  /api/agents          — Agent list with scores
-GET  /api/stats           — Pass rate, active tasks, avg time
-POST /api/tasks           — Create new task with auto-contract
-POST /api/tasks/:id/retry — Manual retry
-```
-
-## Tests
-
-```bash
-# Run all tests (157+)
-node swarm/tests/test-contract.js          # 41 tests
-node swarm/core/tests/test-state-machine.js # 21 tests
-node swarm/core/tests/test-failure-taxonomy.js # 30 tests
-node swarm/core/tests/test-semantic-verify.js  # 28 tests
-node swarm/core/tests/test-integration.js      # 19 tests
-node swarm/core/tests/test-auto-retry.js       # 4 tests
-node swarm/core/tests/test-decomposer.js       # 7 tests
-node swarm/core/tests/test-fast-prompt.js      # 7 tests
-node swarm/api/test-api.js                     # 5 tests
-```
-
-## Agent Communication
-
-Agents communicate via Telegram topics. Inter-agent help requests are auto-routed:
-- Security → 🔒 שומר (Shomer)
-- Code → ⚙️ קודר (Koder)
-- Design → 🎨 צייר (Tzayar)
-- Research → 🔍 חוקר (Researcher)
-- QA → 🧪 בודק (Bodek)
-
-## License
-
-Proprietary — © 2026
+- **2026-03-16**: Reduced from ~107 scripts to 21 + 1 engine. Archived 106 unused scripts.

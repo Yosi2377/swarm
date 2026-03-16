@@ -1,0 +1,1 @@
+{"status":"success","summary":"Script cleanup: 107→22 scripts. 90 top-level + 16 engine scripts archived to swarm/archive/. README.md documents all remaining scripts. All core scripts tested and working.","url":"n/a","files_changed":["swarm/archive/","swarm/archive/engine/","swarm/README.md"]}

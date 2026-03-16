@@ -1,0 +1,1 @@
+{"status":"success","summary":"ISRAWAR data pipeline: API key added, port fixed to 3200, cron every 30min, ingest tested (250 RSS items, 118 extracted, 1 new event created). ConflictDaySnapshot endpoint exists at POST /api/v1/admin/[conflictId]/days (admin-protected).","url":"http://localhost:3200","files_changed":[".env.local","crontab"]}

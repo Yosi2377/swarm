@@ -1,0 +1,1 @@
+{"status":"success","summary":"Learning System v2 — complete rewrite with 20 passing tests","url":"n/a","files_changed":["swarm/engine/learn.sh","swarm/learning/metrics.json","swarm/learning/alerts.json","swarm/learning/task_log.json"]}

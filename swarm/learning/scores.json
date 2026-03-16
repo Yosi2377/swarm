@@ -9,11 +9,11 @@
       "streak": 1
     },
     "koder": {
-      "tasks": 79,
-      "success": 40,
+      "tasks": 82,
+      "success": 43,
       "fail": 39,
-      "score": 51,
-      "streak": 5
+      "score": 52,
+      "streak": 8
     },
     "shomer": {
       "tasks": 4,
@@ -77,6 +77,13 @@
       "fail": 0,
       "score": 100,
       "streak": 3
+    },
+    "test-agent": {
+      "tasks": 3,
+      "success": 1,
+      "fail": 2,
+      "score": 33,
+      "streak": -2
     }
   },
   "tools": {}

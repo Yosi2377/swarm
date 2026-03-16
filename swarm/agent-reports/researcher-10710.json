@@ -1,0 +1,1 @@
+{"status":"success","summary":"ISRAWAR full audit — 12 issues found (3 critical, 4 high, 3 medium, 2 low). Core problem: no automated data ingestion pipeline. App works but data goes stale.","url":"http://localhost:3200","files_changed":["swarm/memory/israwar-audit.md"]}

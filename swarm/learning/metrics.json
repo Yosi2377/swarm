@@ -1,1 +1,30 @@
-{"tasks":[],"agent_stats":{}}
+{
+  "tasks": [
+    {
+      "agent": "koder",
+      "task_id": "test-999",
+      "status": "success",
+      "category": "",
+      "reason": "",
+      "duration_seconds": 0,
+      "retry_count": 0,
+      "quality_score": 0,
+      "lint_errors": 0,
+      "task_type": "general",
+      "manual_intervention": false,
+      "timestamp": "2026-03-16T03:23:31+01:00"
+    }
+  ],
+  "agent_stats": {
+    "koder": {
+      "total": 1,
+      "success": 0,
+      "fail": 1,
+      "total_duration": 0,
+      "total_quality": 0,
+      "quality_count": 0,
+      "manual_count": 0,
+      "total_retries": 0
+    }
+  }
+}

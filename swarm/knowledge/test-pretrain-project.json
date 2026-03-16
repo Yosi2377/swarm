@@ -1,0 +1,20 @@
+{
+  "project": "test-pretrain-project",
+  "project_dir": "/tmp/test-pretrain-project",
+  "pretrained_at": "2026-03-16T03:23:28+01:00",
+  "entry_points": ["src/index.js"],
+  "key_directories": [
+  ".",
+  "./src"
+],
+  "file_stats": {".json": 1,".js": 1},
+  "total_files": 2,
+  "stack": ["node","express","mongodb","jest"],
+  "database": "mongodb",
+  "test_command": "jest",
+  "build_command": "tsc",
+  "patterns": ["rest-routes"],
+  "known_issues": [
+  "./src/index.js:1:const app = require('express')(); // TODO: add auth"
+]
+}

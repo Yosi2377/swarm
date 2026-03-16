@@ -3,12 +3,29 @@
 # Usage: dispatch-task.sh <agent_id> <thread_id> <task_description> [project_dir]
 # Output: Combined prompt (spawn-agent + contract) ready for sessions_spawn
 
-AGENT_ID="${1:?Usage: dispatch-task.sh <agent_id> <thread_id> <task_description> [project_dir]}"
+AGENT_ID_INPUT="${1:?Usage: dispatch-task.sh <agent_id|auto> <thread_id> <task_description> [project_dir]}"
 THREAD_ID="${2:?Missing thread_id}"
 TASK_DESC="${3:?Missing task_description}"
 PROJECT_DIR="${4:-}"
 
 SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Step -1: Smart routing — auto-select agent if "auto" or empty
+if [ "$AGENT_ID_INPUT" = "auto" ] || [ -z "$AGENT_ID_INPUT" ]; then
+  AGENT_ID=$(bash "${SWARM_DIR}/engine/route.sh" "$TASK_DESC" 2>/dev/null) || AGENT_ID="worker"
+  echo "🧭 Auto-routed to: $AGENT_ID" >&2
+else
+  AGENT_ID="$AGENT_ID_INPUT"
+fi
+
+# Step -0.5: Pretrain — generate project knowledge if project_dir given
+if [ -n "$PROJECT_DIR" ] && [ -d "$PROJECT_DIR" ]; then
+  KNOWLEDGE_FILE=$(bash "${SWARM_DIR}/engine/pretrain.sh" "$PROJECT_DIR" 2>/dev/null) || true
+fi
+
+# Step -0.25: Pre-task hooks
+PRE_HOOK_OUTPUT=""
+PRE_HOOK_OUTPUT=$(bash "${SWARM_DIR}/engine/hooks.sh" pre "$AGENT_ID" "$THREAD_ID" "$TASK_DESC" "$PROJECT_DIR" 2>/dev/null) || true
 
 # Auto-resolve project config if project_dir given
 if [ -n "$PROJECT_DIR" ]; then
@@ -123,6 +140,10 @@ An independent verifier will check EVERY criterion. Do not report done unless AL
 
 ${CONTRACT_PROMPT}
 
+$(if [ -n "$PRE_HOOK_OUTPUT" ]; then
+echo "$PRE_HOOK_OUTPUT"
+fi)
+
 ## MANDATORY: Progress Reports
 Every 60 seconds of work, report progress:
 \`\`\`bash
@@ -175,5 +196,12 @@ ${SWARM_DIR}/send.sh ${AGENT_ID} 479 "[EMOJI] → [TARGET_EMOJI] | TYPE: consult
 QUESTION"
 \`\`\`
 Auto-routing: security→שומר, design→צייר, research→חוקר, testing→בודק
+
+## 🪝 Post-Task Hooks (Auto-triggered)
+When your task is complete, the orchestrator will run post-task hooks automatically:
+- Record metrics to learning system
+- Independent verification of deliverables
+- Self-correction if verification fails
+No action needed from you — just create the done marker as instructed above.
 
 PROMPT

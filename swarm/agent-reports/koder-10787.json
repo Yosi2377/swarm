@@ -1,0 +1,1 @@
+{"status":"success","summary":"Fixed Severity type error in RSS ingest - imported enum from @/generated/prisma/enums, used STANDARD instead of MEDIUM","url":"http://localhost:3200","files_changed":["src/app/api/v1/rss/ingest/route.ts"]}

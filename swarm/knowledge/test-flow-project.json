@@ -1,0 +1,17 @@
+{
+  "project": "test-flow-project",
+  "project_dir": "/tmp/test-flow-project",
+  "pretrained_at": "2026-03-16T03:23:31+01:00",
+  "entry_points": [],
+  "key_directories": [
+  "."
+],
+  "file_stats": {".json": 1},
+  "total_files": 1,
+  "stack": ["node"],
+  "database": "unknown",
+  "test_command": "echo ok",
+  "build_command": "echo ok",
+  "patterns": [],
+  "known_issues": []
+}

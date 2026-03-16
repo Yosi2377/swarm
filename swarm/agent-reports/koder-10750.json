@@ -1,0 +1,1 @@
+{"status":"success","summary":"Model-agnostic task templates + dispatch integration","url":"n/a","files_changed":["swarm/templates/","swarm/dispatch-task.sh","swarm/SYSTEM.md","swarm/test-templates.sh"]}

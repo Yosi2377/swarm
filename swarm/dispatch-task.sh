@@ -65,7 +65,48 @@ if [ -n "$TEMPLATE_TYPE" ]; then
   fi
 fi
 
-# Step 0.6: Load top 5 lessons
+# Step 0.6: Detect if this is a multi-agent collaboration task
+COLLAB_AGENTS=""
+COLLAB_MODE=""
+if echo "$TASK_LOWER" | grep -qE '(review|ביקורת|בדיקת קוד|code review)'; then
+  COLLAB_MODE="review"
+  # Auto-detect: reviewer = shomer for security, tester for tests, refactor for code quality
+  case "$AGENT_ID" in
+    koder) COLLAB_AGENTS="koder,shomer" ;;
+    front) COLLAB_AGENTS="front,koder" ;;
+    back) COLLAB_AGENTS="back,shomer" ;;
+    *) COLLAB_AGENTS="${AGENT_ID},shomer" ;;
+  esac
+elif echo "$TASK_LOWER" | grep -qE '(architect|תכנון|design.*system|עיצוב.*מערכת|plan|debate|דיון|ויכוח)'; then
+  COLLAB_MODE="collab"
+  COLLAB_AGENTS="${AGENT_ID},shomer,front"
+elif echo "$TASK_LOWER" | grep -qE '(compare|השווה|pros.*cons|יתרונות.*חסרונות|evaluate|הערכה)'; then
+  COLLAB_MODE="debate"
+  COLLAB_AGENTS="${AGENT_ID},researcher"
+fi
+
+# If collab detected, inject collab prompt
+COLLAB_PROMPT=""
+if [ -n "$COLLAB_MODE" ]; then
+  COLLAB_PROMPT=$(node -e "
+    const PI = require('${SWARM_DIR}/collab/prompt-injector');
+    const pi = new PI();
+    const agents = '${COLLAB_AGENTS}'.split(',');
+    const prompt = pi.generate('${COLLAB_MODE}', {
+      agentId: '${AGENT_ID}',
+      participants: agents.filter(a => a !== '${AGENT_ID}'),
+      topic: process.argv[1],
+      conversationId: 'task-${THREAD_ID}',
+    });
+    console.log(prompt);
+  " "$TASK_DESC" 2>/dev/null) || true
+  
+  if [ -n "$COLLAB_PROMPT" ]; then
+    echo "🤝 Collab mode: ${COLLAB_MODE} (agents: ${COLLAB_AGENTS})" >&2
+  fi
+fi
+
+# Step 0.6b: Load top 5 lessons
 LESSONS=""
 LESSONS=$(bash "${SWARM_DIR}/learn.sh" inject "$AGENT_ID" "$TASK_DESC" 2>/dev/null | head -50) || true
 
@@ -142,6 +183,26 @@ ${CONTRACT_PROMPT}
 
 $(if [ -n "$PRE_HOOK_OUTPUT" ]; then
 echo "$PRE_HOOK_OUTPUT"
+fi)
+
+$(if [ -n "$COLLAB_PROMPT" ]; then
+cat <<COLLAB
+## 🤝 Collaboration Protocol (${COLLAB_MODE} mode)
+You are collaborating with: ${COLLAB_AGENTS}
+The collaboration system is at: ${SWARM_DIR}/collab/
+
+### Rules:
+${COLLAB_PROMPT}
+
+### How to collaborate:
+1. After completing your part, post your work to the topic for review
+2. If another agent posts feedback, READ it and RESPOND
+3. Don't just agree — if you disagree, explain why
+4. Use send.sh to communicate: ${SWARM_DIR}/send.sh <agent_id> ${THREAD_ID} "message"
+
+### Collab session runner (for orchestrator use):
+node ${SWARM_DIR}/collab/collab-session.js --task "YOUR_TASK" --agents "${COLLAB_AGENTS}" --topic ${THREAD_ID} --mode ${COLLAB_MODE}
+COLLAB
 fi)
 
 ## MANDATORY: Progress Reports

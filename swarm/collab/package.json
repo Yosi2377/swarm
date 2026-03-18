@@ -1,0 +1,9 @@
+{
+  "name": "agent-collab",
+  "version": "1.0.0",
+  "description": "Agent Collaboration System for TeamWork Swarm",
+  "main": "conversation-manager.js",
+  "dependencies": {
+    "mongodb": "^6.0.0"
+  }
+}

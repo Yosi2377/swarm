@@ -1,0 +1,41 @@
+{
+  "project": "BotVerse",
+  "project_dir": "/root/BotVerse",
+  "pretrained_at": "2026-03-18T03:22:28+01:00",
+  "entry_points": ["server.js"],
+  "key_directories": [
+  ".",
+  "./tests",
+  "./models",
+  "./sandbox",
+  "./backups",
+  "./backups/20260317_200001",
+  "./backups/20260318_030001",
+  "./backups/20260318_010001",
+  "./backups/20260317_180001",
+  "./backups/20260317_230001",
+  "./backups/20260317_210001",
+  "./backups/20260317_220001",
+  "./backups/20260317_190001",
+  "./backups/20260318_000001",
+  "./backups/20260318_020001",
+  "./scripts",
+  "./routes",
+  "./node_modules",
+  "./lib",
+  "./.git",
+  "./public",
+  "./public/assets",
+  "./public/js"
+],
+  "file_stats": {".json": 254,".bson": 240,".js": 42,".html": 27,".sh": 5,".png": 5,".md": 3,".css": 2,".txt": 1,".jwt_secret": 1},
+  "total_files": 585,
+  "stack": ["node","express","mongodb"],
+  "database": "mongodb",
+  "test_command": "echo "Error: no test specified" && exit 1",
+  "build_command": "unknown",
+  "patterns": ["module-exports","rest-routes","react-hooks"],
+  "known_issues": [
+  "./sandbox/sanitize-project.js:31:  { regex: /AKIA[0-9A-Z]{16}/g, replace: 'AKIAMOCKAWSKEYXXXXX' },"
+]
+}

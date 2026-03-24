@@ -45,7 +45,9 @@ You are the **SWARM ORCHESTRATOR**. Read `swarm/ORCHESTRATOR.md` for full instru
 3. **Send task via send.sh**: `/root/.openclaw/workspace/swarm/send.sh <agent_id> $THREAD "📋 משימה: ..."`
 4. **Generate task with CONTRACT**: `TASK=$(bash /root/.openclaw/workspace/swarm/dispatch-task.sh agent_id $THREAD "task description" [project_dir])`
    - This auto-generates: contract, acceptance criteria, state machine, rollback config
+   - AUTO-LAUNCHES collab session if task matches collab keywords
    - OLD: `spawn-agent.sh` → NEW: `dispatch-task.sh` (includes contract!)
+   - ⚠️ **NEVER use sessions_spawn directly without dispatch-task.sh** — it skips collab, lessons, contracts!
 5. **Spawn sub-agent** with `sessions_spawn` using `$TASK`
 6. **When agent reports done** → verify: `bash swarm/verify-task.sh <agent_id> <thread_id>`
    - exit 0 = ✅ PASS → report to Yossi

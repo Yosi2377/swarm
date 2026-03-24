@@ -8,6 +8,21 @@
  * Usage: node collab-session.js --task "description" --agents "koder,shomer,front" --topic 12345 [--mode debate|review|collab]
  */
 
+// Load env from BotVerse .env if GEMINI_API_KEY not set
+if (!process.env.GEMINI_API_KEY) {
+  const fs = require('fs');
+  const envFiles = ['/root/BotVerse/.env', '/root/.env'];
+  for (const ef of envFiles) {
+    if (fs.existsSync(ef)) {
+      fs.readFileSync(ef, 'utf8').split('\n').forEach(line => {
+        const m = line.match(/^([^#=]+)=(.+)$/);
+        if (m && !process.env[m[1].trim()]) process.env[m[1].trim()] = m[2].trim();
+      });
+      break;
+    }
+  }
+}
+
 const ConversationManager = require('./conversation-manager');
 const DecisionEngine = require('./decision-engine');
 const ReviewSystem = require('./review-system');
@@ -178,40 +193,76 @@ ${round === MAX_ROUNDS - 1 ? 'This is the final round. State your final position
 }
 
 /**
- * Generate a simulated agent response based on role and context.
- * In production, this calls sessions_spawn with the prompt.
+ * Generate a REAL AI agent response using openclaw CLI.
+ * Each agent gets its own AI call with role-specific system prompt.
  */
 async function generateAgentResponse(agent, prompt, round, task, context) {
   const ROLE_PERSPECTIVES = {
-    koder: { emoji: '⚙️', focus: 'implementation, code architecture, performance' },
-    shomer: { emoji: '🔒', focus: 'security, vulnerabilities, hardening' },
-    front: { emoji: '🖥️', focus: 'UI/UX, responsive design, user experience' },
-    tzayar: { emoji: '🎨', focus: 'visual design, branding, aesthetics' },
-    researcher: { emoji: '🔍', focus: 'best practices, alternatives, research' },
-    data: { emoji: '📊', focus: 'database design, data modeling, queries' },
-    back: { emoji: '⚡', focus: 'API design, server architecture, scalability' },
-    tester: { emoji: '🧪', focus: 'testing strategy, edge cases, quality' },
-    worker: { emoji: '🤖', focus: 'general tasks, support' },
+    koder: { emoji: '⚙️', focus: 'implementation, code architecture, performance', role: 'senior software engineer' },
+    shomer: { emoji: '🔒', focus: 'security, vulnerabilities, hardening', role: 'cybersecurity expert' },
+    front: { emoji: '🖥️', focus: 'UI/UX, responsive design, user experience', role: 'frontend developer and UX designer' },
+    tzayar: { emoji: '🎨', focus: 'visual design, branding, aesthetics', role: 'visual designer' },
+    researcher: { emoji: '🔍', focus: 'best practices, alternatives, research', role: 'technical researcher' },
+    data: { emoji: '📊', focus: 'database design, data modeling, queries', role: 'database architect' },
+    back: { emoji: '⚡', focus: 'API design, server architecture, scalability', role: 'backend engineer' },
+    tester: { emoji: '🧪', focus: 'testing strategy, edge cases, quality', role: 'QA engineer' },
+    worker: { emoji: '🤖', focus: 'general tasks, support', role: 'general engineer' },
   };
   
   const role = ROLE_PERSPECTIVES[agent] || ROLE_PERSPECTIVES.worker;
   
+  // Build conversation history for context
+  const historyLines = context.map(m => `${m.from}: ${m.content}`).join('\n');
+  
+  const systemPrompt = `You are ${agent}, a ${role.role} in a team discussion. Your expertise: ${role.focus}.
+You are discussing: "${task}"
+Round ${round + 1} of 4. Respond in Hebrew. Be specific, constructive, and concise (2-4 sentences max).
+${round === 0 ? 'Share your initial professional opinion on this task.' : 'Respond to what others said — agree, disagree, or build on their ideas. Reference specific points.'}
+${round === 3 ? 'This is the final round. State your concrete recommendation.' : ''}
+Do NOT use generic filler. Give real technical insight from your perspective.
+Start your message with: ${role.emoji} ${agent}:`;
+
+  const userMsg = round === 0 
+    ? `המשימה: ${task}\nמה דעתך המקצועית?`
+    : `${historyLines}\n\nמה התגובה שלך?`;
+
+  try {
+    // Write prompt to temp file, call gemini-call.js
+    const fs = require('fs');
+    const tmpFile = `/tmp/collab-prompt-${agent}-${Date.now()}.txt`;
+    fs.writeFileSync(tmpFile, systemPrompt + '\n\n' + userMsg);
+    
+    const geminiScript = path.resolve(__dirname, 'gemini-call.js');
+    const response = execSync(`node "${geminiScript}" "${tmpFile}"`, { 
+      timeout: 30000, 
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: { ...process.env }
+    }).toString().trim();
+    
+    // Cleanup temp file
+    try { fs.unlinkSync(tmpFile); } catch(e) {}
+    
+    if (response && response.length > 5) {
+      // Ensure it starts with the agent emoji
+      if (!response.startsWith(role.emoji)) {
+        return `${role.emoji} ${agent}: ${response}`;
+      }
+      return response;
+    }
+  } catch (err) {
+    // Fallback to template if API fails
+    console.error(`AI call failed for ${agent}: ${err.message}`);
+  }
+  
+  // Fallback: template response (should rarely happen)
   if (round === 0) {
-    return `${role.emoji} ${agent}: מנקודת מבט של ${role.focus} — אני חושב שצריך להתמקד ב-${task}. יש לי כמה הערות ראשוניות.`;
+    return `${role.emoji} ${agent}: מנקודת מבט של ${role.focus} — יש לי הערות על ${task}.`;
   }
-  
-  // React to previous messages
   const lastMsg = context.length > 0 ? context[context.length - 1] : null;
-  if (lastMsg && lastMsg.from !== agent) {
-    const reactions = [
-      `${role.emoji} ${agent}: מסכים חלקית עם ${lastMsg.from}. מנקודת מבט של ${role.focus}, אני מוסיף ש`,
-      `${role.emoji} ${agent}: חולק על ${lastMsg.from} בנקודה אחת — מבחינת ${role.focus}, `,
-      `${role.emoji} ${agent}: בהמשך למה ש-${lastMsg.from} אמר, חשוב לציין מבחינת ${role.focus} ש`,
-    ];
-    return reactions[round % reactions.length] + `צריך לקחת בחשבון את ההשלכות על ${role.focus}.`;
+  if (lastMsg) {
+    return `${role.emoji} ${agent}: בתגובה ל-${lastMsg.from} — מבחינת ${role.focus}, צריך לשקול גם את ההיבטים האלה.`;
   }
-  
-  return `${role.emoji} ${agent}: עדכון מ-${role.focus} — אני ממשיך לעבוד על החלק שלי.`;
+  return `${role.emoji} ${agent}: ממשיך לנתח מבחינת ${role.focus}.`;
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }

@@ -85,9 +85,11 @@ elif echo "$TASK_LOWER" | grep -qE '(compare|השווה|pros.*cons|יתרונו�
   COLLAB_AGENTS="${AGENT_ID},researcher"
 fi
 
-# If collab detected, inject collab prompt
+# If collab detected, inject collab prompt AND auto-run collab session
 COLLAB_PROMPT=""
+COLLAB_AUTO_RUN="false"
 if [ -n "$COLLAB_MODE" ]; then
+  COLLAB_AUTO_RUN="true"
   COLLAB_PROMPT=$(node -e "
     const PI = require('${SWARM_DIR}/collab/prompt-injector');
     const pi = new PI();
@@ -266,3 +268,32 @@ When your task is complete, the orchestrator will run post-task hooks automatica
 No action needed from you — just create the done marker as instructed above.
 
 PROMPT
+
+# Step 5: Auto-run collab session in background if detected
+if [ "$COLLAB_AUTO_RUN" = "true" ] && [ -n "$COLLAB_MODE" ] && [ -n "$COLLAB_AGENTS" ]; then
+  echo "🤝 AUTO-LAUNCHING collab session: mode=${COLLAB_MODE} agents=${COLLAB_AGENTS}" >&2
+  
+  # Save collab metadata for the task
+  mkdir -p /tmp/agent-tasks
+  META_FILE="/tmp/agent-tasks/${AGENT_ID}-${THREAD_ID}.json"
+  if [ -f "$META_FILE" ]; then
+    python3 -c "
+import json
+m = json.load(open('$META_FILE'))
+m['collab_mode'] = '$COLLAB_MODE'
+m['collab_agents'] = '$COLLAB_AGENTS'
+m['collab_auto_run'] = True
+json.dump(m, open('$META_FILE', 'w'), indent=2)
+" 2>/dev/null
+  fi
+  
+  # Launch collab session in background — agents discuss in the topic via Telegram
+  nohup node "${SWARM_DIR}/collab/collab-session.js" \
+    --task "$TASK_DESC" \
+    --agents "$COLLAB_AGENTS" \
+    --topic "$THREAD_ID" \
+    --mode "$COLLAB_MODE" \
+    >> "${SWARM_DIR}/logs/collab-${THREAD_ID}.log" 2>&1 &
+  
+  echo "🤝 Collab PID: $!" >&2
+fi

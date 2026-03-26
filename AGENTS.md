@@ -140,6 +140,8 @@ Before doing anything else:
 
 1. Read `SOUL.md` — this is who you are
 2. Read `USER.md` — this is who you're helping
+3. **🧠 MANDATORY MEMORY RECALL**: Run `bash swarm/auto-memory-recall.sh <TOPIC_ID>` to load the last conversation context for this topic. NEVER skip this. If you don't know the topic ID, extract it from conversation_label.
+4. **After EVERY reply**: Save key context with `bash swarm/pieces-realtime.sh "agent:or" "summary"` in background
 3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
 4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
 

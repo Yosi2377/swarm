@@ -8,20 +8,7 @@
  * Usage: node collab-session.js --task "description" --agents "koder,shomer,front" --topic 12345 [--mode debate|review|collab]
  */
 
-// Load env from BotVerse .env if GEMINI_API_KEY not set
-if (!process.env.GEMINI_API_KEY) {
-  const fs = require('fs');
-  const envFiles = ['/root/BotVerse/.env', '/root/.env'];
-  for (const ef of envFiles) {
-    if (fs.existsSync(ef)) {
-      fs.readFileSync(ef, 'utf8').split('\n').forEach(line => {
-        const m = line.match(/^([^#=]+)=(.+)$/);
-        if (m && !process.env[m[1].trim()]) process.env[m[1].trim()] = m[2].trim();
-      });
-      break;
-    }
-  }
-}
+// No external API keys needed — uses Claude via OpenClaw
 
 const ConversationManager = require('./conversation-manager');
 const DecisionEngine = require('./decision-engine');
@@ -227,13 +214,14 @@ Start your message with: ${role.emoji} ${agent}:`;
     : `${historyLines}\n\nמה התגובה שלך?`;
 
   try {
-    // Write prompt to temp file, call gemini-call.js
+    // Use openclaw CLI to spawn a quick agent response via Claude (no external APIs needed)
     const fs = require('fs');
+    const fullPrompt = systemPrompt + '\n\n' + userMsg + '\n\nענה בקצרה (עד 200 מילים). תן תובנה מקצועית אמיתית.';
     const tmpFile = `/tmp/collab-prompt-${agent}-${Date.now()}.txt`;
-    fs.writeFileSync(tmpFile, systemPrompt + '\n\n' + userMsg);
+    fs.writeFileSync(tmpFile, fullPrompt);
     
-    const geminiScript = path.resolve(__dirname, 'gemini-call.js');
-    const response = execSync(`node "${geminiScript}" "${tmpFile}"`, { 
+    const respondScript = path.resolve(__dirname, 'agent-respond.sh');
+    const response = execSync(`bash "${respondScript}" "${tmpFile}"`, { 
       timeout: 30000, 
       stdio: ['pipe', 'pipe', 'pipe'],
       env: { ...process.env }
@@ -251,7 +239,7 @@ Start your message with: ${role.emoji} ${agent}:`;
     }
   } catch (err) {
     // Fallback to template if API fails
-    console.error(`AI call failed for ${agent}: ${err.message}`);
+    console.error(`Claude call failed for ${agent}: ${err.message}`);
   }
   
   // Fallback: template response (should rarely happen)

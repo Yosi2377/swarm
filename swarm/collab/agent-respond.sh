@@ -1,25 +1,24 @@
 #!/bin/bash
-# agent-respond.sh — Get AI response for collab agent via Gemini 2.5 Flash
+# agent-respond.sh — Get AI response via Claude through OpenClaw gateway
+# ZERO external APIs. 100% Claude.
 PROMPT_FILE="$1"
 [ -z "$PROMPT_FILE" ] || [ ! -f "$PROMPT_FILE" ] && exit 1
 
-GEMINI_KEY=""
-for ef in /root/BotVerse/.env /root/.env; do
-  [ -f "$ef" ] && GEMINI_KEY=$(grep GEMINI_API_KEY "$ef" | cut -d= -f2) && [ -n "$GEMINI_KEY" ] && break
-done
-[ -z "$GEMINI_KEY" ] && exit 1
+PROMPT=$(cat "$PROMPT_FILE")
 
-PROMPT=$(python3 -c "import sys,json; print(json.dumps(open(sys.argv[1]).read()))" "$PROMPT_FILE" 2>/dev/null)
+# Rate guard — wait if too many recent calls
+bash "$(dirname "$0")/../rate-guard.sh" 2>/dev/null
 
-curl -sf -X POST \
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$GEMINI_KEY" \
-  -H "Content-Type: application/json" \
-  -d "{\"contents\":[{\"role\":\"user\",\"parts\":[{\"text\":$PROMPT}]}],\"generationConfig\":{\"maxOutputTokens\":500,\"temperature\":0.8,\"thinkingConfig\":{\"thinkingBudget\":0}}}" \
-  2>/dev/null | python3 -c "
+# Call Claude via OpenClaw gateway
+RESULT=$(timeout 45 openclaw agent --agent main -m "$PROMPT" --json 2>/dev/null)
+
+echo "$RESULT" | python3 -c "
 import sys,json
 try:
-    j=json.load(sys.stdin)
-    print(j['candidates'][0]['content']['parts'][0]['text'])
+    d=json.load(sys.stdin)
+    payloads = d.get('result',{}).get('payloads',[])
+    if payloads:
+        print(payloads[0].get('text',''))
 except:
     pass
 " 2>/dev/null

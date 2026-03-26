@@ -1,0 +1,204 @@
+{
+  "agents": {
+    "defaults": {
+      "workspace": "~/.openclaw/workspace",
+      "model": {
+        "primary": "anthropic/claude-opus-4-6"
+      }
+    },
+    "list": [
+      {
+        "id": "swarm-lead",
+        "name": "Swarm Lead",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-swarm-lead",
+        "agentDir": "~/.openclaw/config/agents/swarm-lead/agent",
+        "subagents": {
+          "allowAgents": [
+            "koder",
+            "shomer",
+            "tzayar",
+            "front",
+            "back",
+            "researcher",
+            "data",
+            "tester",
+            "bug-hunter",
+            "devops",
+            "monitor",
+            "refactor",
+            "optimizer",
+            "integrator"
+          ]
+        }
+      },
+      {
+        "id": "koder",
+        "name": "Koder",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-koder",
+        "agentDir": "~/.openclaw/config/agents/koder/agent"
+      },
+      {
+        "id": "shomer",
+        "name": "Shomer",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-shomer",
+        "agentDir": "~/.openclaw/config/agents/shomer/agent"
+      },
+      {
+        "id": "tzayar",
+        "name": "Tzayar",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-tzayar",
+        "agentDir": "~/.openclaw/config/agents/tzayar/agent"
+      },
+      {
+        "id": "front",
+        "name": "Front",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-front",
+        "agentDir": "~/.openclaw/config/agents/front/agent"
+      },
+      {
+        "id": "back",
+        "name": "Back",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-back",
+        "agentDir": "~/.openclaw/config/agents/back/agent"
+      },
+      {
+        "id": "researcher",
+        "name": "Researcher",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-researcher",
+        "agentDir": "~/.openclaw/config/agents/researcher/agent"
+      },
+      {
+        "id": "data",
+        "name": "Data",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-data",
+        "agentDir": "~/.openclaw/config/agents/data/agent"
+      },
+      {
+        "id": "tester",
+        "name": "Tester",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-tester",
+        "agentDir": "~/.openclaw/config/agents/tester/agent"
+      },
+      {
+        "id": "bug-hunter",
+        "name": "Bug Hunter",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-bug-hunter",
+        "agentDir": "~/.openclaw/config/agents/bug-hunter/agent",
+        "subagents": {
+          "allowAgents": [
+            "swarm-lead",
+            "koder",
+            "shomer",
+            "tzayar",
+            "front",
+            "back",
+            "researcher",
+            "data",
+            "tester",
+            "devops",
+            "monitor",
+            "refactor",
+            "optimizer",
+            "integrator"
+          ]
+        }
+      },
+      {
+        "id": "devops",
+        "name": "Devops",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-devops",
+        "agentDir": "~/.openclaw/config/agents/devops/agent"
+      },
+      {
+        "id": "monitor",
+        "name": "Monitor",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-monitor",
+        "agentDir": "~/.openclaw/config/agents/monitor/agent"
+      },
+      {
+        "id": "refactor",
+        "name": "Refactor",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-refactor",
+        "agentDir": "~/.openclaw/config/agents/refactor/agent"
+      },
+      {
+        "id": "optimizer",
+        "name": "Optimizer",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-optimizer",
+        "agentDir": "~/.openclaw/config/agents/optimizer/agent"
+      },
+      {
+        "id": "integrator",
+        "name": "Integrator",
+        "model": {
+          "primary": "anthropic/claude-opus-4-6"
+        },
+        "workspace": "~/.openclaw/workspace-integrator",
+        "agentDir": "~/.openclaw/config/agents/integrator/agent"
+      }
+    ]
+  },
+  "gateway": {
+    "port": 18789,
+    "auth": {
+      "mode": "token",
+      "token": "${OPENCLAW_AUTH_TOKEN}"
+    }
+  },
+  "models": {
+    "providers": {
+      "anthropic": {
+        "apiKey": "${ANTHROPIC_API_KEY}"
+      }
+    }
+  },
+  "tools": {
+    "allow": [],
+    "deny": [],
+    "agentToAgent": {
+      "enabled": true
+    }
+  }
+}

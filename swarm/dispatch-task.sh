@@ -3,6 +3,9 @@
 # Usage: dispatch-task.sh <agent_id> <thread_id> <task_description> [project_dir]
 # Output: Combined prompt (spawn-agent + contract) ready for sessions_spawn
 
+# Rate guard — prevent API overload
+bash "$(dirname "$0")/rate-guard.sh" 2>/dev/null
+
 AGENT_ID_INPUT="${1:?Usage: dispatch-task.sh <agent_id|auto> <thread_id> <task_description> [project_dir]}"
 THREAD_ID="${2:?Missing thread_id}"
 TASK_DESC="${3:?Missing task_description}"
@@ -228,14 +231,20 @@ For complex tasks with multiple steps:
 4. If one step fails, don't skip it — report the failure
 
 ## ⛔ MANDATORY BEFORE REPORTING DONE — SCREENSHOT PROTOCOL:
-1. **NAVIGATE FIRST**: \`browser action=navigate url="THE_CORRECT_URL"\` — NOT whatever is already open!
-2. **VERIFY you're on the right page**: \`browser action=snapshot\` — read the content, confirm it's the right URL
-3. **ONLY THEN screenshot**: \`browser action=screenshot\`
-4. **Send to topic + General via send.sh**
+**You MUST take a screenshot before reporting done. No exceptions. No screenshot = task FAILED.**
 
-⚠️ **THE #1 AGENT MISTAKE**: Taking a screenshot of whatever page is already open from a PREVIOUS task.
-If your screenshot shows BotVerse but your task was about the Dashboard — that's a FAIL.
-**ALWAYS navigate to the correct URL before screenshotting. Every. Single. Time.**
+Use this command (works in sub-agents, no browser tool needed):
+\`\`\`bash
+bash /root/.openclaw/workspace/swarm/agent-screenshot.sh "http://localhost:4000/THE_PAGE" TOPIC_ID AGENT_ID "📸 תיאור קצר"
+\`\`\`
+
+Example:
+\`\`\`bash
+bash /root/.openclaw/workspace/swarm/agent-screenshot.sh "http://localhost:4000/" 11279 front "📸 Homepage after mobile UX fix"
+\`\`\`
+
+This takes a screenshot with puppeteer AND sends it to the topic automatically.
+⚠️ **NO SCREENSHOT = AUTOMATIC FAIL. The orchestrator will reject your done marker.**
 
 ## 📌 WHEN DONE — Run self-verification BEFORE reporting:
 \`\`\`bash

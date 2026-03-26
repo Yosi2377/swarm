@@ -1,0 +1,259 @@
+topology teamwork : [orchestrator-worker, debate, human-gate] {
+  meta {
+    version: "1.0.0"
+    description: "TeamWork — Multi-agent swarm for BotVerse development"
+    domain: software-engineering
+    timeout: 2h
+  }
+
+  agent swarm-lead {
+    model: opus
+    permissions: autonomous
+    description: "Swarm orchestrator — analyzes tasks, routes to agents, verifies results"
+    prompt {
+      You are the swarm orchestrator for TeamWork.
+      Analyze incoming tasks, split multi-domain tasks, route to the correct agent.
+      Never do tasks yourself — always delegate.
+      After agent completes: verify with browser screenshot, report to user.
+    }
+    tools: [exec, browser, message, sessions_spawn, web_search, web_fetch, Read, Write]
+    outputs: {
+      task-type: code-change | research | design | security | devops | general
+      task-complexity: high | medium | low
+    }
+  }
+
+  agent koder {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    timeout: 30m
+    retry: 2
+    description: "Senior software engineer — code, bugs, deployment, API, backend"
+    prompt {
+      You are Koder, a senior software engineer.
+      Write clean, tested code. Follow project conventions.
+      Always work on SANDBOX, never production.
+    }
+    tools: [exec, Read, Write, Edit, web_search, web_fetch]
+  }
+
+  agent shomer {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    timeout: 20m
+    retry: 1
+    description: "Cybersecurity expert — scanning, hardening, SSL, vulnerabilities"
+    prompt {
+      You are Shomer, a cybersecurity expert.
+      Review code for security issues. Scan for vulnerabilities.
+      Recommend hardening. Check auth, rate limiting, input validation.
+    }
+    tools: [exec, Read, Write, web_search]
+  }
+
+  agent tzayar {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    invocation: manual
+    description: "Visual designer — images, UI mockups, logos, branding"
+    prompt {
+      You are Tzayar, a visual designer.
+      Create and edit images. Design UI mockups.
+    }
+    tools: [exec, Read, Write, browser]
+  }
+
+  agent front {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    timeout: 30m
+    retry: 2
+    description: "Frontend developer — HTML, CSS, JS, responsive, UX"
+    prompt {
+      You are Front, a frontend developer and UX designer.
+      Build responsive, accessible UI. Modern CSS. Test viewports.
+    }
+    tools: [exec, Read, Write, Edit, browser]
+  }
+
+  agent back {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    timeout: 30m
+    retry: 2
+    description: "Backend developer — Node.js, Express, API, server"
+    prompt {
+      You are Back, a backend developer.
+      Build robust APIs with error handling, validation, documentation.
+    }
+    tools: [exec, Read, Write, Edit]
+  }
+
+  agent researcher {
+    model: opus
+    phase: 2
+    description: "Technical researcher — best practices, comparisons, docs"
+    prompt {
+      You are Researcher. Find best practices, compare solutions,
+      summarize findings with actionable recommendations.
+    }
+    tools: [web_search, web_fetch, Read, Write]
+  }
+
+  agent data {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    description: "Database architect — MongoDB, migrations, backups"
+    prompt {
+      You are Data, a database architect.
+      Design schemas, optimize queries, manage backups.
+      Always backup before destructive operations.
+    }
+    tools: [exec, Read, Write]
+  }
+
+  agent tester {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    description: "QA engineer — E2E, unit, integration tests"
+    prompt {
+      You are Tester, a QA engineer.
+      Write and run tests. Find edge cases. Report pass/fail.
+    }
+    tools: [exec, Read, Write, browser]
+  }
+
+  agent bug-hunter {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    description: "Debug specialist — error tracking, log analysis, root cause"
+    prompt {
+      You are Bug-Hunter. Analyze errors, trace logs,
+      find root causes. Provide actionable fixes.
+    }
+    tools: [exec, Read, Write]
+  }
+
+  agent devops {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    description: "DevOps — Docker, containers, CI/CD, infrastructure"
+    prompt {
+      You are DevOps. Manage containers, Dockerfiles, CI/CD, infrastructure.
+    }
+    tools: [exec, Read, Write]
+  }
+
+  agent monitor {
+    model: opus
+    phase: 2
+    invocation: manual
+    description: "Monitoring — alerts, health checks, uptime"
+    prompt {
+      You are Monitor. Set up health checks, alerts, metrics.
+    }
+    tools: [exec, Read, Write, web_fetch]
+  }
+
+  agent refactor {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    description: "Refactoring — optimization, tech debt, clean code"
+    prompt {
+      You are Refactor. Improve code quality, reduce tech debt.
+    }
+    tools: [exec, Read, Write, Edit]
+  }
+
+  agent optimizer {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    invocation: manual
+    description: "Performance — caching, speed, load testing"
+    prompt {
+      You are Optimizer. Profile bottlenecks, implement caching, optimize.
+    }
+    tools: [exec, Read, Write]
+  }
+
+  agent integrator {
+    model: opus
+    permissions: autonomous
+    phase: 2
+    invocation: manual
+    description: "Integration — APIs, webhooks, third-party services"
+    prompt {
+      You are Integrator. Connect external APIs, configure webhooks.
+    }
+    tools: [exec, Read, Write, web_search, web_fetch]
+  }
+
+  group architecture-review {
+    members: [koder, shomer, front]
+    speaker-selection: round-robin
+    max-rounds: 4
+    termination: "All members agree on architecture approach"
+    description: "Architecture planning and review"
+  }
+
+  group code-review {
+    members: [koder, shomer]
+    speaker-selection: round-robin
+    max-rounds: 3
+    termination: "Code approved by both"
+    description: "Security-focused code review"
+  }
+
+  group research-debate {
+    members: [researcher, koder]
+    speaker-selection: round-robin
+    max-rounds: 3
+    termination: "Agreement on approach"
+    description: "Evaluate research findings for feasibility"
+  }
+
+  gates {
+    gate verify-task {
+      after: koder
+      run: "swarm/verify-task.sh"
+      retry: 2
+      on-fail: halt
+      timeout: 5m
+    }
+
+    gate human-approval {
+      after: verify-task
+      behavior: blocking
+      on-fail: halt
+    }
+  }
+
+  flow {
+    swarm-lead -> [koder, shomer, front, back, researcher, data, tester, bug-hunter, devops, monitor, refactor, optimizer, integrator]
+
+    swarm-lead -> architecture-review [when swarm-lead.task-complexity == high]
+    swarm-lead -> code-review [when swarm-lead.task-type == code-change]
+    swarm-lead -> research-debate [when swarm-lead.task-type == research]
+
+    koder -> verify-task
+    front -> verify-task
+    back -> verify-task
+
+    verify-task -> human-approval
+
+    koder -x-> bug-hunter
+    front -x-> bug-hunter
+    back -x-> bug-hunter
+  }
+}

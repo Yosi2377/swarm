@@ -133,7 +133,7 @@ ${round === MAX_ROUNDS - 1 ? 'This is the final round. State your final position
         });
         
         sendToTopic(agent, agentResponse);
-        await sleep(2000);
+        await sleep(5000); // 5s between messages to avoid API rate limits
       }
     }
   }

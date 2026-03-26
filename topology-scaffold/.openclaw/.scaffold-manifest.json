@@ -1,0 +1,416 @@
+{
+  "source": "teamwork.at",
+  "sourceHash": "3f9c10dcb0d4be3c761aa33fd5198f7262011bc4f6d3f08b1c42b827a8037b0c",
+  "target": "openclaw",
+  "generatedAt": "2026-03-26T14:58:31.877Z",
+  "files": {
+    "openclaw.json": {
+      "hash": "eee4c1b61e92f8c4772e3f890f3604feccd4cea1b65d22d4c24307d697b08de1",
+      "category": "machine"
+    },
+    "SOUL.md": {
+      "hash": "196cb2106756d7f642b7012768c117138e93bcff5977b813d089532df56c4a53",
+      "category": "agent"
+    },
+    "AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "agent"
+    },
+    "TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "MEMORY.md": {
+      "hash": "f3d6c3e15209f208bc9ed09f2f0750cd697974e65502ad3f0c1449a5a17f7153",
+      "category": "machine"
+    },
+    "BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "agent"
+    },
+    "IDENTITY.md": {
+      "hash": "a250cd51d53c6937d436a49bbf19cdccbec47c95549982532d8a5abf676dcd64",
+      "category": "agent"
+    },
+    "scripts/verify-task.sh": {
+      "hash": "461e2afe41425152682e2babb1275dc3510388cd3b58cb02c7a282602b9e9469",
+      "category": "script"
+    },
+    "domains/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "category": "machine"
+    },
+    "memory/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "category": "machine"
+    },
+    "skills/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "category": "machine"
+    },
+    "config/agents/swarm-lead/agent/IDENTITY.md": {
+      "hash": "712a397c9d23d1481debac71367ba4f058b65902f0a03d4c27d3ab1ed6cea589",
+      "category": "machine"
+    },
+    "config/agents/swarm-lead/agent/SOUL.md": {
+      "hash": "2ff33e6491e6f486d659fdf27eaaba463eb1d1b776769a568556f903203bfabb",
+      "category": "machine"
+    },
+    "config/agents/koder/agent/IDENTITY.md": {
+      "hash": "0af0a59fa702e27bc95f94f72f22f3bc4a1970950733139cca6e5b63c8e6eeb9",
+      "category": "machine"
+    },
+    "config/agents/koder/agent/SOUL.md": {
+      "hash": "6842ec6860e45b31bd84e3efe4b7c32475849a7245b36f4ad9d066804ac5d027",
+      "category": "machine"
+    },
+    "config/agents/shomer/agent/IDENTITY.md": {
+      "hash": "a17333e2f69d940c08c3b49ac85cf187c2a730545fbd13c05a57178d1c9daa38",
+      "category": "machine"
+    },
+    "config/agents/shomer/agent/SOUL.md": {
+      "hash": "c9393ba3e8e1932c7f8f62c91421523136c0b25431a9cb5982f2ff46037b0749",
+      "category": "machine"
+    },
+    "config/agents/tzayar/agent/IDENTITY.md": {
+      "hash": "1d08dd6099c7be36ca84ef6c1336d67d1e1e3ee19da53a08195727b618056a81",
+      "category": "machine"
+    },
+    "config/agents/tzayar/agent/SOUL.md": {
+      "hash": "79663cda062dac74277292483818fff2ae76188115bdd60a3d00071a65c7cf20",
+      "category": "machine"
+    },
+    "config/agents/front/agent/IDENTITY.md": {
+      "hash": "0eae837ef336d7ae2d19a7f3151a131a677dd34c80e79387ce8392bc290bf190",
+      "category": "machine"
+    },
+    "config/agents/front/agent/SOUL.md": {
+      "hash": "48bf0d81f4cf0e858cc8b4e697960424c3cd4c8368affd861313ada5dbe3c9ee",
+      "category": "machine"
+    },
+    "config/agents/back/agent/IDENTITY.md": {
+      "hash": "fed7779210b35e2139da92bd94efcbdd15b7ab9834c5d1dc9e7b0db429b97ab3",
+      "category": "machine"
+    },
+    "config/agents/back/agent/SOUL.md": {
+      "hash": "ea5ccb79a6eac9736ef62e82df68870f39d49d5e065f804c9f0dc95864b4765e",
+      "category": "machine"
+    },
+    "config/agents/researcher/agent/IDENTITY.md": {
+      "hash": "8142a40ff2174a2301d89eb2c96c0c05dbd2dabb41b4f39d3edc98f93907cc6c",
+      "category": "machine"
+    },
+    "config/agents/researcher/agent/SOUL.md": {
+      "hash": "86a2752effa26e46629884e774c9936e3de695aa37f3956089f8aa7e0f23ef14",
+      "category": "machine"
+    },
+    "config/agents/data/agent/IDENTITY.md": {
+      "hash": "de61604b595f41e0f35fc96703f584f01729b99df8283de6b1a18226a63860b9",
+      "category": "machine"
+    },
+    "config/agents/data/agent/SOUL.md": {
+      "hash": "551e3ace41a1f2b348d09d1eb93905bb0ea2dbe59106dd66733364ff0b11b965",
+      "category": "machine"
+    },
+    "config/agents/tester/agent/IDENTITY.md": {
+      "hash": "272a519ff937d22deb716f72447c773ad73f8e34653e9204efc53ddaa2420ad1",
+      "category": "machine"
+    },
+    "config/agents/tester/agent/SOUL.md": {
+      "hash": "4c0652c323911f976f6d4a2428efff8697c7a72251788e053998d282d8d1bded",
+      "category": "machine"
+    },
+    "config/agents/bug-hunter/agent/IDENTITY.md": {
+      "hash": "f92ede49c4193c0865429625fe4a1c32d00c68939cc4d4bbdd89056a50e000d7",
+      "category": "machine"
+    },
+    "config/agents/bug-hunter/agent/SOUL.md": {
+      "hash": "d11c13105936893e824f796d977d03650ffba3e303a38db6b70ee124a2c8fc8e",
+      "category": "machine"
+    },
+    "config/agents/devops/agent/IDENTITY.md": {
+      "hash": "102733750ecdf3962dc95ab7bc7aebaa4866a321d44f72b2392678884f337046",
+      "category": "machine"
+    },
+    "config/agents/devops/agent/SOUL.md": {
+      "hash": "ae83e8417c25f3c27a48a90a907bbdc091cd329b96213a7b3cfa4f4d3a137ece",
+      "category": "machine"
+    },
+    "config/agents/monitor/agent/IDENTITY.md": {
+      "hash": "c2483d51873b8ed68c6cfa487ae653310878d83b91709ee5468ef09564cda151",
+      "category": "machine"
+    },
+    "config/agents/monitor/agent/SOUL.md": {
+      "hash": "a9e51ef023ac2a9a10c14f84a87ffe20cd051b17d9478ddcd8ce82c44941d266",
+      "category": "machine"
+    },
+    "config/agents/refactor/agent/IDENTITY.md": {
+      "hash": "dabac7ef277c79613ec7f5d8111a932509ce5cee8a3ba7248328c52ef6a5d032",
+      "category": "machine"
+    },
+    "config/agents/refactor/agent/SOUL.md": {
+      "hash": "c54df3b9b3dcfb505ebd9ffd6e12a2c02c3469c0a65d6dcdda4a4ce9216861b0",
+      "category": "machine"
+    },
+    "config/agents/optimizer/agent/IDENTITY.md": {
+      "hash": "34cad09565e092d05f2af44ceab8f12aae4756b3e25d6183fa3d23921ee0086a",
+      "category": "machine"
+    },
+    "config/agents/optimizer/agent/SOUL.md": {
+      "hash": "8b3b8b2b26e56e5dab1201b70009f318a694175743e2fa92b7e2a4880d8d0c25",
+      "category": "machine"
+    },
+    "config/agents/integrator/agent/IDENTITY.md": {
+      "hash": "82ecb1a6f67925c422df0e0e929a9d05eb9a2f6f6910d0d4eb96349bfbd1564a",
+      "category": "machine"
+    },
+    "config/agents/integrator/agent/SOUL.md": {
+      "hash": "5fb12cd623ece253c10571b458d4c95d3270c393d514aafadb86c46b64e2b340",
+      "category": "machine"
+    },
+    "config/agents/swarm-lead/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/swarm-lead/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/swarm-lead/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/swarm-lead/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/koder/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/koder/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/koder/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/koder/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/shomer/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/shomer/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/shomer/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/shomer/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/tzayar/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/tzayar/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/tzayar/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/tzayar/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/front/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/front/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/front/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/front/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/back/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/back/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/back/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/back/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/researcher/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/researcher/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/researcher/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/researcher/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/data/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/data/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/data/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/data/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/tester/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/tester/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/tester/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/tester/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/bug-hunter/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/bug-hunter/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/bug-hunter/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/bug-hunter/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/devops/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/devops/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/devops/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/devops/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/monitor/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/monitor/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/monitor/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/monitor/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/refactor/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/refactor/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/refactor/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/refactor/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/optimizer/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/optimizer/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/optimizer/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/optimizer/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    },
+    "config/agents/integrator/agent/AGENTS.md": {
+      "hash": "825e096299d76648deb34caecd094db0680528bbb8a5fb407b82d8786cf9847b",
+      "category": "machine"
+    },
+    "config/agents/integrator/agent/TOOLS.md": {
+      "hash": "053310958a00e6cd6c80ce4b9577cab727a0b2a639f563751ed52a7b58dcf9cf",
+      "category": "machine"
+    },
+    "config/agents/integrator/agent/USER.md": {
+      "hash": "181a965566a7d2ef4a1fedfbda454fd0d5377e200cc035bf4e485a811fda311e",
+      "category": "machine"
+    },
+    "config/agents/integrator/agent/BOOTSTRAP.md": {
+      "hash": "7b325b3a93a99bcf9ccb355285b2ac568bf5ac92863b39c411823aa40e362119",
+      "category": "machine"
+    }
+  }
+}

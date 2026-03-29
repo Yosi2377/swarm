@@ -43,13 +43,15 @@ bash /root/.openclaw/workspace/swarm/watchdog.sh
 - Report stuck agents to Yossi if they've been stuck multiple times
 
 ## 3. Process Retry Requests (NEW)
+Run this only if the script exists:
 ```bash
-bash /root/.openclaw/workspace/swarm/auto-retry-watcher.sh
+if [ -x /root/.openclaw/workspace/swarm/auto-retry-watcher.sh ]; then
+  bash /root/.openclaw/workspace/swarm/auto-retry-watcher.sh
+fi
 ```
-- Processes both done markers AND retry requests from watchdog
-- Auto-retries up to 3 times with enriched context
-- Escalates after max retries
-- Check output for any escalations that need human attention
+- If the script does not exist, skip this step silently
+- Do not report the missing script repeatedly
+- Only report real retry/escalation items if the script exists and returns them
 
 ## 4. Agent Chat Monitor (thread 479)
 Check if any agent asked for help:

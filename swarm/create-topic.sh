@@ -21,6 +21,22 @@ ICON_COLOR="$2"
 AGENT="${3:-}"
 CHAT_ID="-1003815143703"
 
+TRANSPORT=$(python3 - <<PY
+import json
+from pathlib import Path
+p = Path("$DIR/runtime.json")
+if not p.exists():
+    print("telegram")
+else:
+    print(json.loads(p.read_text()).get("transport", "telegram"))
+PY
+)
+
+if [ "$TRANSPORT" = "irc" ]; then
+  node "$DIR/core/job-store.js" create "$NAME" "$AGENT"
+  exit $?
+fi
+
 # Use orchestrator bot token for topic creation
 TOKEN=$(cat "$DIR/.bot-token" 2>/dev/null)
 if [ -z "$TOKEN" ]; then

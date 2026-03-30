@@ -1,5 +1,13 @@
 # ORCHESTRATOR.md — SwarmClaw Orchestrator Protocol v5
 
+## IRC Mode Override
+When `swarm/runtime.json` sets `transport=irc`:
+- do not treat `thread_id` as a Telegram topic
+- `create-topic.sh` returns an internal `job-*` id
+- small jobs live in `#myops`
+- bigger jobs are promoted to dedicated channels like `#job-0007`
+- all summaries must return to `#myops`
+
 ## Core Principle: NEVER TRUST AGENT SELF-REPORTS
 ## Core Change v5: USE RUNNER, NOT RAW SPAWN
 

@@ -1,23 +1,119 @@
 #!/bin/bash
-# Swarm Send v2 — Enhanced message delivery
-# Usage: ./send.sh <agent_id> <thread_id> <message> [--photo path]
-# Example: ./send.sh shomer 479 "בודק פורטים..."
-# Example: ./send.sh koder 123 "תוצאה" --photo /tmp/screenshot.png
+# Swarm Send v3 — transport-aware delivery (Telegram legacy + IRC jobs)
+# Usage: ./send.sh <agent_id> <thread_or_job_id> <message> [--photo path]
+
+set -euo pipefail
 
 SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
-AGENT_ID="$1"
-THREAD_ID="$2"
-MESSAGE="$3"
-PHOTO_FLAG="$4"
-PHOTO_PATH="$5"
+AGENT_ID="${1:-}"
+THREAD_ID="${2:-}"
+MESSAGE="${3:-}"
+PHOTO_FLAG="${4:-}"
+PHOTO_PATH="${5:-}"
 
 if [ -z "$AGENT_ID" ] || [ -z "$THREAD_ID" ] || [ -z "$MESSAGE" ]; then
-  echo "Usage: $0 <agent_id> <thread_id> <message> [--photo path]"
+  echo "Usage: $0 <agent_id> <thread_or_job_id> <message> [--photo path]"
   echo "Agents: or, shomer, koder, tzayar, worker, researcher, bodek, data, debugger, docker, front, back, tester, refactor, monitor, optimizer, integrator"
   exit 1
 fi
 
-# Map agent to token file
+TRANSPORT=$(python3 - <<PY
+import json
+from pathlib import Path
+p = Path("$SWARM_DIR/runtime.json")
+if not p.exists():
+    print("telegram")
+else:
+    print(json.loads(p.read_text()).get("transport", "telegram"))
+PY
+)
+
+OPS_CHANNEL=$(python3 - <<PY
+import json
+from pathlib import Path
+p = Path("$SWARM_DIR/runtime.json")
+if not p.exists():
+    print("#myops")
+else:
+    cfg = json.loads(p.read_text())
+    print(cfg.get("irc", {}).get("opsChannel", "#myops"))
+PY
+)
+
+is_done_message() {
+  echo "$1" | grep -qiE '✅|סיימתי|הושלמה|done|finished|מוכן'
+}
+
+log_result() {
+  local ok="$1"
+  local msg_id="$2"
+  local transport_name="$3"
+  local target_name="$4"
+  local log_dir="$SWARM_DIR/logs"
+  mkdir -p "$log_dir"
+  local log_file="$log_dir/$(date +%Y-%m-%d).jsonl"
+  jq -cn \
+    --arg ts "$(date -Iseconds)" \
+    --arg agent "$AGENT_ID" \
+    --arg thread "$THREAD_ID" \
+    --arg msg "$MESSAGE" \
+    --arg msg_id "$msg_id" \
+    --arg ok "$ok" \
+    --arg transport "$transport_name" \
+    --arg target "$target_name" \
+    '{timestamp: $ts, agent: $agent, thread: $thread, message: $msg, message_id: $msg_id, ok: $ok, transport: $transport, target: $target}' >> "$log_file"
+}
+
+create_done_marker() {
+  mkdir -p /tmp/agent-done
+  local marker_msg
+  marker_msg=$(echo "$MESSAGE" | head -1 | cut -c1-120 | sed 's/["\\]//g')
+  echo "{\"thread\":\"$THREAD_ID\",\"status\":\"success\",\"message\":\"$marker_msg\",\"agent\":\"$AGENT_ID\"}" > "/tmp/agent-done/$(date +%s)-${AGENT_ID}.json" 2>/dev/null
+}
+
+if [ "$TRANSPORT" = "irc" ] || echo "$THREAD_ID" | grep -q '^job-'; then
+  JOB_ID="$THREAD_ID"
+  TARGET_CHANNEL=$(node "$SWARM_DIR/core/job-store.js" channel "$JOB_ID" 2>/dev/null)
+  if [ -z "$TARGET_CHANNEL" ]; then
+    echo "ERROR: Unknown job/channel for $JOB_ID" >&2
+    exit 1
+  fi
+
+  FINAL_MESSAGE="[$JOB_ID] $MESSAGE"
+  if [ "$PHOTO_FLAG" = "--photo" ] && [ -n "$PHOTO_PATH" ] && [ -f "$PHOTO_PATH" ]; then
+    FINAL_MESSAGE="$FINAL_MESSAGE\n[attachment omitted in IRC: $(basename "$PHOTO_PATH")]"
+  fi
+
+  set +e
+  RESULT=$(openclaw message send --channel irc --target "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" --json 2>&1)
+  STATUS=$?
+  set -e
+
+  MSG_ID=$(echo "$RESULT" | jq -r '.messageId // .message_id // .id // empty' 2>/dev/null)
+  [ -n "$MSG_ID" ] || MSG_ID="irc"
+
+  if [ $STATUS -ne 0 ]; then
+    log_result "false" "$MSG_ID" "irc" "$TARGET_CHANNEL"
+    echo "$RESULT"
+    exit $STATUS
+  fi
+
+  node "$SWARM_DIR/core/job-store.js" event "$JOB_ID" "message" "$MESSAGE" "$AGENT_ID" >/dev/null 2>&1 || true
+  log_result "true" "$MSG_ID" "irc" "$TARGET_CHANNEL"
+
+  if is_done_message "$MESSAGE"; then
+    node "$SWARM_DIR/core/job-store.js" close "$JOB_ID" "$MESSAGE" >/dev/null 2>&1 || true
+    if [ "$TARGET_CHANNEL" != "$OPS_CHANNEL" ]; then
+      openclaw message send --channel irc --target "$OPS_CHANNEL" --message "[$JOB_ID] ✅ סיכום סופי מ-$TARGET_CHANNEL: $MESSAGE" >/dev/null 2>&1 || true
+    fi
+    create_done_marker
+  fi
+
+  echo "$RESULT"
+  exit 0
+fi
+
+# Telegram legacy mode
 case "$AGENT_ID" in
   or)      TOKEN_FILE="$SWARM_DIR/.bot-token" ;;
   shomer)  TOKEN_FILE="$SWARM_DIR/.shomer-token" ;;
@@ -45,7 +141,6 @@ fi
 TOKEN=$(cat "$TOKEN_FILE")
 CHAT_ID="-1003815143703"
 
-# Build thread args — omit message_thread_id for General (thread=1) in forum groups
 THREAD_FORM_ARGS=()
 THREAD_JSON_EXTRA=""
 if [ "$THREAD_ID" != "1" ]; then
@@ -68,7 +163,6 @@ send_msg() {
   fi
 }
 
-# Send (with one retry on failure)
 RESULT=$(send_msg)
 OK=$(echo "$RESULT" | jq -r '.ok')
 if [ "$OK" != "true" ]; then
@@ -76,21 +170,12 @@ if [ "$OK" != "true" ]; then
   RESULT=$(send_msg)
 fi
 
-# Log to file
-LOG_DIR="$SWARM_DIR/logs"
-mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/$(date +%Y-%m-%d).jsonl"
 MSG_ID=$(echo "$RESULT" | jq -r '.result.message_id // "error"')
 OK=$(echo "$RESULT" | jq -r '.ok')
-jq -cn --arg ts "$(date -Iseconds)" --arg agent "$AGENT_ID" --argjson thread "$THREAD_ID" \
-  --arg msg "$MESSAGE" --arg msg_id "$MSG_ID" --arg ok "$OK" \
-  '{timestamp: $ts, agent: $agent, thread: $thread, message: $msg, message_id: $msg_id, ok: $ok}' >> "$LOG_FILE"
+log_result "$OK" "$MSG_ID" "telegram" "$CHAT_ID"
 
-# Create marker for agent-watcher if message contains completion keywords
-if echo "$MESSAGE" | grep -qiE '✅|סיימתי|הושלמה|done|finished|מוכן'; then
-  mkdir -p /tmp/agent-done
-  MARKER_MSG=$(echo "$MESSAGE" | head -1 | cut -c1-120 | sed 's/["\]//g')
-  echo "{\"thread\":$THREAD_ID,\"status\":\"success\",\"message\":\"$MARKER_MSG\",\"agent\":\"$AGENT_ID\"}" > "/tmp/agent-done/$(date +%s)-${AGENT_ID}.json" 2>/dev/null
+if is_done_message "$MESSAGE"; then
+  create_done_marker
 fi
 
 echo "$RESULT"

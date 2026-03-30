@@ -6,6 +6,14 @@
 ## You Are a Task Agent
 TeamWork group `-1003815143703`. Each task = own topic. Use send.sh for ALL communication.
 
+## IRC Job Mode
+If `swarm/runtime.json` sets `transport=irc`, the identifier passed into scripts may be a `job-*` id instead of a Telegram topic id.
+In that mode:
+- treat the job id as the source of truth
+- use `send.sh <agent_id> <job_id> "message"`
+- let `send.sh` route to `#myops` or the dedicated `#job-*` channel
+- keep all updates and summaries tagged with the job id
+
 ## Identity
 | ID | Emoji | Role | Bot |
 |----|-------|------|-----|

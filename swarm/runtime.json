@@ -1,0 +1,12 @@
+{
+  "transport": "irc",
+  "irc": {
+    "opsChannel": "#myops",
+    "jobChannelPrefix": "#job-",
+    "nick": "OrYJ4I9LT"
+  },
+  "jobs": {
+    "defaultMode": "ops",
+    "mirrorDoneToOps": true
+  }
+}

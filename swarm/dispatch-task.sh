@@ -13,6 +13,10 @@ PROJECT_DIR="${4:-}"
 
 SWARM_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+if echo "$THREAD_ID" | grep -q '^job-'; then
+  node "${SWARM_DIR}/core/job-store.js" ensure-channel "$THREAD_ID" "$TASK_DESC" >/dev/null 2>&1 || true
+fi
+
 # Step -1: Smart routing — auto-select agent if "auto" or empty
 if [ "$AGENT_ID_INPUT" = "auto" ] || [ -z "$AGENT_ID_INPUT" ]; then
   AGENT_ID=$(bash "${SWARM_DIR}/engine/route.sh" "$TASK_DESC" 2>/dev/null) || AGENT_ID="worker"

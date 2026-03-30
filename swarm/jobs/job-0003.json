@@ -1,0 +1,20 @@
+{
+  "jobId": "job-0003",
+  "title": "Small ops task",
+  "agent": "worker",
+  "status": "open",
+  "mode": "ops",
+  "channel": "#myops",
+  "createdAt": "2026-03-30T20:07:47.077Z",
+  "updatedAt": "2026-03-30T20:07:47.077Z",
+  "history": [
+    {
+      "at": "2026-03-30T20:07:47.077Z",
+      "type": "created",
+      "title": "Small ops task",
+      "agent": "worker",
+      "mode": "ops",
+      "channel": "#myops"
+    }
+  ]
+}

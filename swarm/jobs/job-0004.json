@@ -1,0 +1,28 @@
+{
+  "jobId": "job-0004",
+  "title": "Large migration",
+  "agent": "koder",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0004",
+  "createdAt": "2026-03-30T20:07:47.143Z",
+  "updatedAt": "2026-03-30T20:07:47.177Z",
+  "history": [
+    {
+      "at": "2026-03-30T20:07:47.143Z",
+      "type": "created",
+      "title": "Large migration",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-03-30T20:07:47.177Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "research migrate multi-agent architecture and integration review across services",
+      "mode": "dedicated",
+      "channel": "#job-0004"
+    }
+  ]
+}

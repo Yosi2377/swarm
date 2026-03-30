@@ -1,0 +1,28 @@
+{
+  "jobId": "job-0002",
+  "title": "Complex migration task",
+  "agent": "or",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0002",
+  "createdAt": "2026-03-30T20:02:59.016Z",
+  "updatedAt": "2026-03-30T20:02:59.047Z",
+  "history": [
+    {
+      "at": "2026-03-30T20:02:59.017Z",
+      "type": "created",
+      "title": "Complex migration task",
+      "agent": "or",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-03-30T20:02:59.047Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "research migrate multi-agent system compare architecture and integrations with security review",
+      "mode": "dedicated",
+      "channel": "#job-0002"
+    }
+  ]
+}

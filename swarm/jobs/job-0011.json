@@ -1,0 +1,20 @@
+{
+  "jobId": "job-0011",
+  "title": "Koder visible e2e",
+  "agent": "koder",
+  "status": "open",
+  "mode": "ops",
+  "channel": "#myops",
+  "createdAt": "2026-03-31T01:45:04.920Z",
+  "updatedAt": "2026-03-31T01:45:04.920Z",
+  "history": [
+    {
+      "at": "2026-03-31T01:45:04.920Z",
+      "type": "created",
+      "title": "Koder visible e2e",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    }
+  ]
+}

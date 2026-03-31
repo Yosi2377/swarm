@@ -1,0 +1,51 @@
+{
+  "jobId": "job-0006",
+  "title": "Smoke test large",
+  "agent": "koder",
+  "status": "closed",
+  "mode": "dedicated",
+  "channel": "#job-0006",
+  "createdAt": "2026-03-30T23:10:43.431Z",
+  "updatedAt": "2026-03-30T23:11:11.193Z",
+  "history": [
+    {
+      "at": "2026-03-30T23:10:43.431Z",
+      "type": "created",
+      "title": "Smoke test large",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-03-30T23:10:43.462Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "research migrate multi-agent architecture integration review across services and security",
+      "mode": "dedicated",
+      "channel": "#job-0006"
+    },
+    {
+      "at": "2026-03-30T23:11:00.788Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "smoke update from job-0006"
+    },
+    {
+      "at": "2026-03-30T23:11:07.417Z",
+      "type": "closed",
+      "summary": "✅ smoke close from job-0006"
+    },
+    {
+      "at": "2026-03-30T23:11:11.151Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "✅ smoke close from job-0006"
+    },
+    {
+      "at": "2026-03-30T23:11:11.193Z",
+      "type": "closed",
+      "summary": "✅ smoke close from job-0006"
+    }
+  ],
+  "summary": "✅ smoke close from job-0006"
+}

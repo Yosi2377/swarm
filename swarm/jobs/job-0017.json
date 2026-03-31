@@ -1,0 +1,20 @@
+{
+  "jobId": "job-0017",
+  "title": "Koder visible now",
+  "agent": "koder",
+  "status": "open",
+  "mode": "ops",
+  "channel": "#myops",
+  "createdAt": "2026-03-31T01:53:29.963Z",
+  "updatedAt": "2026-03-31T01:53:29.963Z",
+  "history": [
+    {
+      "at": "2026-03-31T01:53:29.963Z",
+      "type": "created",
+      "title": "Koder visible now",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    }
+  ]
+}

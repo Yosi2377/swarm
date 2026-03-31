@@ -1,0 +1,73 @@
+{
+  "jobId": "job-0009",
+  "title": "IRC large e2e",
+  "agent": "koder",
+  "status": "closed",
+  "mode": "dedicated",
+  "channel": "#job-0009",
+  "createdAt": "2026-03-31T00:59:26.647Z",
+  "updatedAt": "2026-03-31T01:02:13.876Z",
+  "history": [
+    {
+      "at": "2026-03-31T00:59:26.648Z",
+      "type": "created",
+      "title": "IRC large e2e",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-03-31T00:59:26.679Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "research migrate multi-agent architecture integration review security deployment across services",
+      "mode": "dedicated",
+      "channel": "#job-0009"
+    },
+    {
+      "at": "2026-03-31T01:00:01.181Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "[koder] large job update in dedicated IRC channel"
+    },
+    {
+      "at": "2026-03-31T01:00:01.224Z",
+      "type": "closed",
+      "summary": "✅ [koder] large IRC job complete"
+    },
+    {
+      "at": "2026-03-31T01:00:04.928Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "✅ [koder] large IRC job complete"
+    },
+    {
+      "at": "2026-03-31T01:00:04.968Z",
+      "type": "closed",
+      "summary": "✅ [koder] large IRC job complete"
+    },
+    {
+      "at": "2026-03-31T01:02:10.298Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "[koder] visibility controlled test"
+    },
+    {
+      "at": "2026-03-31T01:02:10.342Z",
+      "type": "closed",
+      "summary": "✅ [koder] dedicated channel controlled close"
+    },
+    {
+      "at": "2026-03-31T01:02:13.837Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "✅ [koder] dedicated channel controlled close"
+    },
+    {
+      "at": "2026-03-31T01:02:13.876Z",
+      "type": "closed",
+      "summary": "✅ [koder] dedicated channel controlled close"
+    }
+  ],
+  "summary": "✅ [koder] dedicated channel controlled close"
+}

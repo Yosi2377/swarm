@@ -1,0 +1,227 @@
+{
+  "worker": {
+    "enabled": true,
+    "nick": "WorkerY8487",
+    "channels": [
+      "#myops",
+      "#job-0012"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "PruYetPC6lI8NBNz0Zd1P42R",
+      "register": false,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "koder": {
+    "enabled": true,
+    "nick": "KoderY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "GuMNJtpGyYWss2OJepLFi29Z",
+      "register": false,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "shomer": {
+    "enabled": true,
+    "nick": "ShomerY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "lsG95VIyCZDaFKid6UO8oWcQ",
+      "register": false,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "tzayar": {
+    "enabled": true,
+    "nick": "TzayarY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "y6xQ9koOba1nAGKeCBGDeztZ",
+      "register": false,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "researcher": {
+    "enabled": true,
+    "nick": "ResearchY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "hZlEaIZyyDwqEt5YHgNKMw2N",
+      "register": false,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "bodek": {
+    "enabled": true,
+    "nick": "BodekY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "DtTD0aACC3NKSqzhdV2dFYka",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "data": {
+    "enabled": true,
+    "nick": "DataY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "pU6JxKVMY4ZurcJbB7JE5hWd",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "debugger": {
+    "enabled": true,
+    "nick": "DebugY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "roAu2O3rfmNhd9jfAY5iiNn2",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "docker": {
+    "enabled": true,
+    "nick": "DockerY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "BPTrqWd07tQurEUmLQnH4Nai",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "front": {
+    "enabled": true,
+    "nick": "FrontY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "NGgBgNweVtcI38i3NIVGBqIB",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "back": {
+    "enabled": true,
+    "nick": "BackY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "M4mVaDHAsuAmTe1Kh6e7P5QI",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "tester": {
+    "enabled": true,
+    "nick": "TesterY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "6QLKZyCFKvKmL1glJXT7KPNt",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "refactor": {
+    "enabled": true,
+    "nick": "RefactorY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "R9IkALvGLatkp8tDk1m8SyBk",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "monitor": {
+    "enabled": true,
+    "nick": "MonitorY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "T5pGm6WLzjfrOQDoJOSsCzOP",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "optimizer": {
+    "enabled": true,
+    "nick": "OptimizeY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "FthQg1XeB2bzabfXSBFXJgVU",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  },
+  "integrator": {
+    "enabled": true,
+    "nick": "IntegrateY8487",
+    "channels": [
+      "#myops"
+    ],
+    "nickserv": {
+      "enabled": true,
+      "service": "NickServ",
+      "password": "SDZNYL7m8NMOiYYm2dRGzY7q",
+      "register": true,
+      "registerEmail": "Yosi2377@gmail.com"
+    }
+  }
+}

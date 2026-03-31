@@ -1,0 +1,26 @@
+{
+  "jobId": "job-0020",
+  "title": "Trace worker",
+  "agent": "worker",
+  "status": "open",
+  "mode": "ops",
+  "channel": "#myops",
+  "createdAt": "2026-03-31T01:57:08.119Z",
+  "updatedAt": "2026-03-31T01:57:16.045Z",
+  "history": [
+    {
+      "at": "2026-03-31T01:57:08.119Z",
+      "type": "created",
+      "title": "Trace worker",
+      "agent": "worker",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-03-31T01:57:16.044Z",
+      "type": "message",
+      "actor": "worker",
+      "message": "worker trace visible"
+    }
+  ]
+}

@@ -220,6 +220,10 @@ Rules for IRC ops channels:
 - Always answer with an operational reply, status, acknowledgement, or requested action
 - Treat `#myops` as the main command channel
 - Treat `#job-*` channels as task-specific command channels tied to internal job IDs
+- For short control messages like `ping`, `status`, `test`, `?`, `נו`, or direct checks like `Or status`, reply **immediately** in one short line and **do not use tools at all for that first reply**
+- For those short IRC ops checks, do **not** run memory saves, web fetches, exec probes, or any other tools before or after the first visible acknowledgement
+- Do **not** start exploratory tool loops for short IRC ops checks
+- If deeper work is needed, first acknowledge receipt in-channel, then continue the work in a later step
 
 This override beats the normal "stay quiet in group chats" guideline below.
 

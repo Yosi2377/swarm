@@ -1,0 +1,34 @@
+{
+  "jobId": "job-0015",
+  "title": "Koder visible now",
+  "agent": "koder",
+  "status": "closed",
+  "mode": "dedicated",
+  "channel": "#job-0015",
+  "createdAt": "2026-03-31T01:51:04.591Z",
+  "updatedAt": "2026-03-31T01:51:44.866Z",
+  "history": [
+    {
+      "at": "2026-03-31T01:51:04.591Z",
+      "type": "created",
+      "title": "Koder visible now",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-03-31T01:51:04.622Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "research migrate multi-agent architecture integration review across services",
+      "mode": "dedicated",
+      "channel": "#job-0015"
+    },
+    {
+      "at": "2026-03-31T01:51:44.865Z",
+      "type": "closed",
+      "summary": "✅ [koder] visible close from IRC sender"
+    }
+  ],
+  "summary": "✅ [koder] visible close from IRC sender"
+}

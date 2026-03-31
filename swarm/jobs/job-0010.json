@@ -1,0 +1,20 @@
+{
+  "jobId": "job-0010",
+  "title": "Worker visible e2e",
+  "agent": "worker",
+  "status": "open",
+  "mode": "ops",
+  "channel": "#myops",
+  "createdAt": "2026-03-31T01:45:04.843Z",
+  "updatedAt": "2026-03-31T01:45:04.843Z",
+  "history": [
+    {
+      "at": "2026-03-31T01:45:04.843Z",
+      "type": "created",
+      "title": "Worker visible e2e",
+      "agent": "worker",
+      "mode": "ops",
+      "channel": "#myops"
+    }
+  ]
+}

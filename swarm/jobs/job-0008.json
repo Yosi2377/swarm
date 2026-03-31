@@ -1,0 +1,49 @@
+{
+  "jobId": "job-0008",
+  "title": "IRC small e2e",
+  "agent": "worker",
+  "status": "closed",
+  "mode": "ops",
+  "channel": "#myops",
+  "createdAt": "2026-03-31T00:59:26.569Z",
+  "updatedAt": "2026-03-31T01:02:06.564Z",
+  "history": [
+    {
+      "at": "2026-03-31T00:59:26.570Z",
+      "type": "created",
+      "title": "IRC small e2e",
+      "agent": "worker",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-03-31T00:59:57.217Z",
+      "type": "message",
+      "actor": "worker",
+      "message": "[worker] small job update from IRC e2e"
+    },
+    {
+      "at": "2026-03-31T01:00:08.568Z",
+      "type": "closed",
+      "summary": "✅ [worker] small IRC job complete"
+    },
+    {
+      "at": "2026-03-31T01:00:12.251Z",
+      "type": "message",
+      "actor": "worker",
+      "message": "✅ [worker] small IRC job complete"
+    },
+    {
+      "at": "2026-03-31T01:00:12.291Z",
+      "type": "closed",
+      "summary": "✅ [worker] small IRC job complete"
+    },
+    {
+      "at": "2026-03-31T01:02:06.564Z",
+      "type": "message",
+      "actor": "worker",
+      "message": "[worker] visibility controlled test"
+    }
+  ],
+  "summary": "✅ [worker] small IRC job complete"
+}

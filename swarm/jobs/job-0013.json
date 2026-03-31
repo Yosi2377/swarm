@@ -1,0 +1,20 @@
+{
+  "jobId": "job-0013",
+  "title": "Worker visible now",
+  "agent": "worker",
+  "status": "open",
+  "mode": "ops",
+  "channel": "#myops",
+  "createdAt": "2026-03-31T01:49:31.995Z",
+  "updatedAt": "2026-03-31T01:49:31.996Z",
+  "history": [
+    {
+      "at": "2026-03-31T01:49:31.996Z",
+      "type": "created",
+      "title": "Worker visible now",
+      "agent": "worker",
+      "mode": "ops",
+      "channel": "#myops"
+    }
+  ]
+}

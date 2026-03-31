@@ -1,0 +1,26 @@
+{
+  "jobId": "job-0005",
+  "title": "Smoke test small",
+  "agent": "worker",
+  "status": "open",
+  "mode": "ops",
+  "channel": "#myops",
+  "createdAt": "2026-03-30T23:10:43.363Z",
+  "updatedAt": "2026-03-30T23:10:56.739Z",
+  "history": [
+    {
+      "at": "2026-03-30T23:10:43.363Z",
+      "type": "created",
+      "title": "Smoke test small",
+      "agent": "worker",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-03-30T23:10:56.738Z",
+      "type": "message",
+      "actor": "worker",
+      "message": "smoke update from job-0005"
+    }
+  ]
+}

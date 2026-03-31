@@ -1,0 +1,20 @@
+{
+  "jobId": "job-0012",
+  "title": "Dedicated job e2e",
+  "agent": "koder",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0012",
+  "createdAt": "2026-03-31T01:48:42.975Z",
+  "updatedAt": "2026-03-31T01:48:42.975Z",
+  "history": [
+    {
+      "at": "2026-03-31T01:48:42.975Z",
+      "type": "created",
+      "title": "Dedicated job e2e",
+      "agent": "koder",
+      "mode": "dedicated",
+      "channel": "#job-0012"
+    }
+  ]
+}

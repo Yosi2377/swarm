@@ -89,7 +89,8 @@ if [ "$TRANSPORT" = "irc" ] || echo "$THREAD_ID" | grep -q '^job-'; then
     RESULT=$(openclaw message send --channel irc --target "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" --json 2>&1)
     STATUS=$?
   else
-    RESULT=$(python3 "$SWARM_DIR/irc-agent-send.py" --agent "$AGENT_ID" --target "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" 2>&1)
+    python3 "$SWARM_DIR/irc-agent-hub.py" ensure-start >/dev/null 2>&1 || true
+    RESULT=$(python3 "$SWARM_DIR/irc-agent-hub.py" send --agent "$AGENT_ID" --channel "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" 2>&1)
     STATUS=$?
   fi
   set -e

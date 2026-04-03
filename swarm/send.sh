@@ -82,22 +82,21 @@ if [ "$TRANSPORT" = "irc" ] || echo "$THREAD_ID" | grep -q '^job-'; then
   # Ensure the sending IRC account is actually joined + allowlisted for this
   # channel. Main Or account uses the top-level IRC config; the rest use
   # per-account IRC identities.
-  if [ "$AGENT_ID" = "or" ]; then
-    python3 "$SWARM_DIR/irc-ensure-account-channel.py" or "$TARGET_CHANNEL" >/dev/null 2>&1 || true
-    ACCOUNT_ARGS=(--account or)
-  else
-    python3 "$SWARM_DIR/irc-ensure-account-channel.py" "$AGENT_ID" "$TARGET_CHANNEL" >/dev/null 2>&1 || true
-    ACCOUNT_ARGS=(--account "$AGENT_ID")
-  fi
-
   FINAL_MESSAGE="[$JOB_ID] $MESSAGE"
   if [ "$PHOTO_FLAG" = "--photo" ] && [ -n "$PHOTO_PATH" ] && [ -f "$PHOTO_PATH" ]; then
     FINAL_MESSAGE="$FINAL_MESSAGE\n[attachment omitted in IRC: $(basename "$PHOTO_PATH")]"
   fi
 
   set +e
-  RESULT=$(openclaw message send --channel irc "${ACCOUNT_ARGS[@]}" --target "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" --json 2>&1)
-  STATUS=$?
+  if [ "$AGENT_ID" = "or" ]; then
+    python3 "$SWARM_DIR/irc-ensure-account-channel.py" or "$TARGET_CHANNEL" >/dev/null 2>&1 || true
+    RESULT=$(openclaw message send --channel irc --account or --target "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" --json 2>&1)
+    STATUS=$?
+  else
+    python3 "$SWARM_DIR/irc-agent-hub.py" ensure-start >/dev/null 2>&1 || true
+    RESULT=$(python3 "$SWARM_DIR/irc-agent-hub.py" send --agent "$AGENT_ID" --channel "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" 2>&1)
+    STATUS=$?
+  fi
   set -e
 
   MSG_ID=$(echo "$RESULT" | jq -r '.messageId // .message_id // .id // empty' 2>/dev/null)

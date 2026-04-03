@@ -252,6 +252,12 @@ def run_daemon():
         pass
     Path(PID_PATH).write_text(str(os.getpid()), encoding='utf-8')
     hub = Hub()
+    # Bring up all configured agent identities immediately and join their
+    # default channels so they are visibly present on the private IRC server.
+    hub.ensure_agents(list(hub.agents_cfg.keys()))
+    for aid, cfg in hub.agents_cfg.items():
+        for ch in cfg.get('channels', []) or []:
+            hub.conns[aid].request_join(ch)
     server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     server.bind(SOCK_PATH)
     os.chmod(SOCK_PATH, 0o666)

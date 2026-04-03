@@ -4,7 +4,8 @@
     "nick": "WorkerY8487",
     "channels": [
       "#myops",
-      "#job-0012"
+      "#job-0012",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -18,7 +19,8 @@
     "enabled": true,
     "nick": "KoderY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -32,7 +34,8 @@
     "enabled": true,
     "nick": "ShomerY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -46,7 +49,8 @@
     "enabled": true,
     "nick": "TzayarY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -60,7 +64,8 @@
     "enabled": true,
     "nick": "ResearchY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -74,7 +79,8 @@
     "enabled": true,
     "nick": "BodekY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -88,7 +94,8 @@
     "enabled": true,
     "nick": "DataY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -102,7 +109,8 @@
     "enabled": true,
     "nick": "DebugY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -116,7 +124,8 @@
     "enabled": true,
     "nick": "DockerY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -130,7 +139,8 @@
     "enabled": true,
     "nick": "FrontY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -144,7 +154,8 @@
     "enabled": true,
     "nick": "BackY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -158,7 +169,8 @@
     "enabled": true,
     "nick": "TesterY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -172,7 +184,8 @@
     "enabled": true,
     "nick": "RefactorY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -186,7 +199,8 @@
     "enabled": true,
     "nick": "MonitorY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -200,7 +214,8 @@
     "enabled": true,
     "nick": "OptimizeY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,
@@ -214,7 +229,8 @@
     "enabled": true,
     "nick": "IntegrateY8487",
     "channels": [
-      "#myops"
+      "#myops",
+      "#agent-chat"
     ],
     "nickserv": {
       "enabled": true,

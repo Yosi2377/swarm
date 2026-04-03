@@ -73,23 +73,66 @@ if [ -n "$TEMPLATE_TYPE" ]; then
 fi
 
 # Step 0.6: Detect if this is a multi-agent collaboration task
+TRANSPORT=$(python3 - <<PY
+import json
+from pathlib import Path
+p = Path("${SWARM_DIR}/runtime.json")
+if not p.exists():
+    print("telegram")
+else:
+    print(json.loads(p.read_text()).get("transport", "telegram"))
+PY
+)
+
+AGENT_CHAT_TARGET=$(python3 - <<PY
+import json
+from pathlib import Path
+p = Path("${SWARM_DIR}/runtime.json")
+if not p.exists():
+    print("479")
+else:
+    cfg = json.loads(p.read_text())
+    if cfg.get("transport") == "irc":
+        print("#agent-chat")
+    else:
+        print("479")
+PY
+)
+
 COLLAB_AGENTS=""
 COLLAB_MODE=""
 if echo "$TASK_LOWER" | grep -qE '(review|ביקורת|בדיקת קוד|code review)'; then
   COLLAB_MODE="review"
   # Auto-detect: reviewer = shomer for security, tester for tests, refactor for code quality
   case "$AGENT_ID" in
-    koder) COLLAB_AGENTS="koder,shomer" ;;
-    front) COLLAB_AGENTS="front,koder" ;;
-    back) COLLAB_AGENTS="back,shomer" ;;
-    *) COLLAB_AGENTS="${AGENT_ID},shomer" ;;
+    koder) COLLAB_AGENTS="koder,shomer,tester" ;;
+    front) COLLAB_AGENTS="front,koder,tzayar" ;;
+    back) COLLAB_AGENTS="back,shomer,researcher" ;;
+    *) COLLAB_AGENTS="${AGENT_ID},shomer,researcher" ;;
   esac
 elif echo "$TASK_LOWER" | grep -qE '(architect|תכנון|design.*system|עיצוב.*מערכת|plan|debate|דיון|ויכוח)'; then
   COLLAB_MODE="collab"
-  COLLAB_AGENTS="${AGENT_ID},shomer,front"
+  COLLAB_AGENTS="${AGENT_ID},shomer,front,researcher"
 elif echo "$TASK_LOWER" | grep -qE '(compare|השווה|pros.*cons|יתרונות.*חסרונות|evaluate|הערכה)'; then
   COLLAB_MODE="debate"
-  COLLAB_AGENTS="${AGENT_ID},researcher"
+  COLLAB_AGENTS="${AGENT_ID},researcher,shomer"
+elif echo "$THREAD_ID" | grep -q '^job-' ; then
+  # IRC/Job default: every real task gets visible consultation + voting in Agent Chat.
+  COLLAB_MODE="collab"
+  case "$AGENT_ID" in
+    koder) COLLAB_AGENTS="koder,shomer,researcher" ;;
+    front) COLLAB_AGENTS="front,tzayar,researcher" ;;
+    back) COLLAB_AGENTS="back,shomer,researcher" ;;
+    shomer) COLLAB_AGENTS="shomer,koder,researcher" ;;
+    data) COLLAB_AGENTS="data,researcher,debugger" ;;
+    debugger) COLLAB_AGENTS="debugger,koder,researcher" ;;
+    docker) COLLAB_AGENTS="docker,shomer,researcher" ;;
+    tester|bodek) COLLAB_AGENTS="${AGENT_ID},koder,researcher" ;;
+    refactor) COLLAB_AGENTS="refactor,koder,researcher" ;;
+    monitor|optimizer|integrator) COLLAB_AGENTS="${AGENT_ID},researcher,koder" ;;
+    tzayar) COLLAB_AGENTS="tzayar,front,researcher" ;;
+    worker|researcher|*) COLLAB_AGENTS="${AGENT_ID},researcher,shomer" ;;
+  esac
 fi
 
 # If collab detected, inject collab prompt AND auto-run collab session
@@ -300,11 +343,17 @@ json.dump(m, open('$META_FILE', 'w'), indent=2)
 " 2>/dev/null
   fi
   
-  # Launch collab session in background — agents discuss in the topic via Telegram
+  COLLAB_TOPIC="$THREAD_ID"
+  if [ "$TRANSPORT" = "irc" ]; then
+    COLLAB_TOPIC="$AGENT_CHAT_TARGET"
+  fi
+
+  # Launch collab session in background — on IRC it discusses visibly in #agent-chat,
+  # on Telegram it continues to use the topic/thread.
   nohup node "${SWARM_DIR}/collab/collab-session.js" \
-    --task "$TASK_DESC" \
+    --task "[$THREAD_ID][$AGENT_ID] $TASK_DESC" \
     --agents "$COLLAB_AGENTS" \
-    --topic "$THREAD_ID" \
+    --topic "$COLLAB_TOPIC" \
     --mode "$COLLAB_MODE" \
     >> "${SWARM_DIR}/logs/collab-${THREAD_ID}.log" 2>&1 &
   

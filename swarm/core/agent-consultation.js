@@ -7,7 +7,13 @@ const { execSync } = require('child_process');
 const SWARM_DIR = path.resolve(__dirname, '..');
 const SEND_SH = path.join(SWARM_DIR, 'send.sh');
 const CONSULT_DIR = '/tmp/agent-consultations';
-const AGENT_CHAT_TOPIC = '479';
+function getAgentChatTopic() {
+  try {
+    const runtime = JSON.parse(fs.readFileSync(path.join(SWARM_DIR, 'runtime.json'), 'utf8'));
+    if ((runtime.transport || '').toLowerCase() === 'irc') return '#agent-chat';
+  } catch (_) {}
+  return '479';
+}
 
 const AGENT_EMOJIS = {
   or: '🐝', shomer: '🔒', koder: '⚙️', tzayar: '🎨',
@@ -49,7 +55,8 @@ function getEmoji(agent) {
 
 function sendToAgentChat(agentId, message) {
   try {
-    execSync(`bash "${SEND_SH}" "${agentId}" "${AGENT_CHAT_TOPIC}" "${message.replace(/"/g, '\\"')}"`, {
+    const target = getAgentChatTopic();
+    execSync(`bash "${SEND_SH}" "${agentId}" "${target}" "${message.replace(/"/g, '\\"')}"`, {
       encoding: 'utf8', timeout: 15000, stdio: 'pipe'
     });
     return true;
@@ -160,5 +167,5 @@ module.exports = {
   getAllConsultations,
   autoRoute,
   AGENT_EMOJIS,
-  AGENT_CHAT_TOPIC
+  AGENT_CHAT_TOPIC: getAgentChatTopic
 };

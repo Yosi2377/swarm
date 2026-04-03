@@ -72,17 +72,35 @@ create_done_marker() {
 }
 
 if [ "$TRANSPORT" = "irc" ] || echo "$THREAD_ID" | grep -q '^job-'; then
-  JOB_ID="$THREAD_ID"
-  TARGET_CHANNEL=$(node "$SWARM_DIR/core/job-store.js" channel "$JOB_ID" 2>/dev/null)
-  if [ -z "$TARGET_CHANNEL" ]; then
-    echo "ERROR: Unknown job/channel for $JOB_ID" >&2
-    exit 1
-  fi
+  RAW_CHANNEL=""
+  JOB_ID=""
+  case "$THREAD_ID" in
+    479|agent-chat|\#agent-chat)
+      RAW_CHANNEL="#agent-chat"
+      ;;
+    \#*)
+      RAW_CHANNEL="$THREAD_ID"
+      ;;
+    *)
+      JOB_ID="$THREAD_ID"
+      TARGET_CHANNEL=$(node "$SWARM_DIR/core/job-store.js" channel "$JOB_ID" 2>/dev/null)
+      if [ -z "$TARGET_CHANNEL" ]; then
+        echo "ERROR: Unknown job/channel for $JOB_ID" >&2
+        exit 1
+      fi
+      ;;
+  esac
+
+  TARGET_CHANNEL="${RAW_CHANNEL:-$TARGET_CHANNEL}"
 
   # Ensure the sending IRC account is actually joined + allowlisted for this
   # channel. Main Or account uses the top-level IRC config; the rest use
   # per-account IRC identities.
-  FINAL_MESSAGE="[$JOB_ID] $MESSAGE"
+  if [ -n "$JOB_ID" ]; then
+    FINAL_MESSAGE="[$JOB_ID] $MESSAGE"
+  else
+    FINAL_MESSAGE="$MESSAGE"
+  fi
   if [ "$PHOTO_FLAG" = "--photo" ] && [ -n "$PHOTO_PATH" ] && [ -f "$PHOTO_PATH" ]; then
     FINAL_MESSAGE="$FINAL_MESSAGE\n[attachment omitted in IRC: $(basename "$PHOTO_PATH")]"
   fi
@@ -108,13 +126,19 @@ if [ "$TRANSPORT" = "irc" ] || echo "$THREAD_ID" | grep -q '^job-'; then
     exit $STATUS
   fi
 
-  node "$SWARM_DIR/core/job-store.js" event "$JOB_ID" "message" "$MESSAGE" "$AGENT_ID" >/dev/null 2>&1 || true
+  if [ -n "$JOB_ID" ]; then
+    node "$SWARM_DIR/core/job-store.js" event "$JOB_ID" "message" "$MESSAGE" "$AGENT_ID" >/dev/null 2>&1 || true
+  fi
   log_result "true" "$MSG_ID" "irc" "$TARGET_CHANNEL"
 
-  if is_done_message "$MESSAGE"; then
+  if [ -n "$JOB_ID" ] && is_done_message "$MESSAGE"; then
     node "$SWARM_DIR/core/job-store.js" close "$JOB_ID" "$MESSAGE" >/dev/null 2>&1 || true
     if [ "$TARGET_CHANNEL" != "$OPS_CHANNEL" ]; then
-      openclaw message send --channel irc "${ACCOUNT_ARGS[@]}" --target "$OPS_CHANNEL" --message "[$JOB_ID] ✅ סיכום סופי מ-$TARGET_CHANNEL: $MESSAGE" >/dev/null 2>&1 || true
+      if [ "$AGENT_ID" = "or" ]; then
+        openclaw message send --channel irc --account or --target "$OPS_CHANNEL" --message "[$JOB_ID] ✅ סיכום סופי מ-$TARGET_CHANNEL: $MESSAGE" >/dev/null 2>&1 || true
+      else
+        python3 "$SWARM_DIR/irc-agent-hub.py" send --agent "$AGENT_ID" --channel "$OPS_CHANNEL" --message "[$JOB_ID] ✅ סיכום סופי מ-$TARGET_CHANNEL: $MESSAGE" >/dev/null 2>&1 || true
+      fi
     fi
     create_done_marker
   fi

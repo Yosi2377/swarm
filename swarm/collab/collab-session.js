@@ -54,8 +54,18 @@ async function run() {
   const de = new DecisionEngine();
   const rs = new ReviewSystem();
   const rep = new ReputationTracker();
-  const bridge = new TelegramBridge({ defaultTopic: parseInt(TOPIC_ID) });
+  const isNumericTopic = /^\d+$/.test(String(TOPIC_ID));
+  const bridge = isNumericTopic ? new TelegramBridge({ defaultTopic: parseInt(TOPIC_ID, 10) }) : null;
   const injector = new PromptInjector();
+  const interMessageDelayMs = isNumericTopic ? 5000 : 1500;
+
+  // Visible kickoff first so IRC users immediately see that consultation/voting started.
+  sendToTopic(AGENTS[0], `🐝 סשן שיתוף פעולה (${MODE}) התחיל\nמשימה: ${TASK}\nמשתתפים: ${AGENTS.join(', ')}`);
+  if (!isNumericTopic) {
+    for (const agent of AGENTS.slice(1)) {
+      sendToTopic(agent, `👀 ${agent}: נכנס לדיון על ${TASK} ומכין עמדה.`);
+    }
+  }
 
   await cm.connect();
   await de.connect();
@@ -81,9 +91,6 @@ async function run() {
   for (const agent of AGENTS) {
     await cm.listenForMessages(agent, { conversation_id: convId });
   }
-
-  // Announce
-  sendToTopic(AGENTS[0], `🐝 סשן שיתוף פעולה (${MODE}) התחיל\nמשימה: ${TASK}\nמשתתפים: ${AGENTS.join(', ')}`);
 
   // Round-based discussion (max 4 rounds)
   const MAX_ROUNDS = 4;
@@ -133,7 +140,7 @@ ${round === MAX_ROUNDS - 1 ? 'This is the final round. State your final position
         });
         
         sendToTopic(agent, agentResponse);
-        await sleep(5000); // 5s between messages to avoid API rate limits
+        await sleep(interMessageDelayMs);
       }
     }
   }
@@ -163,7 +170,11 @@ ${round === MAX_ROUNDS - 1 ? 'This is the final round. State your final position
     highlights: `${AGENTS.length} agents collaborated on: ${TASK}`,
   };
   
-  bridge.postSummary(summary, parseInt(TOPIC_ID));
+  if (bridge) {
+    bridge.postSummary(summary, parseInt(TOPIC_ID, 10));
+  } else {
+    sendToTopic(AGENTS[0], `📊 Collaboration Summary\nMessages: ${summary.messageCount || 0}\nDecisions: ${summary.decisionCount || 0}\nReviews: ${summary.reviewCount || 0}${summary.highlights ? `\nHighlights:\n${summary.highlights}` : ''}`);
+  }
 
   // Update reputation
   for (const agent of AGENTS) {

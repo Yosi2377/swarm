@@ -9,8 +9,9 @@ PROMPT=$(cat "$PROMPT_FILE")
 # Rate guard — wait if too many recent calls
 bash "$(dirname "$0")/../rate-guard.sh" 2>/dev/null
 
-# Call Claude via OpenClaw gateway
-RESULT=$(timeout 45 openclaw agent --agent main -m "$PROMPT" --json 2>/dev/null)
+# Call the main OpenClaw agent with a longer timeout and minimal thinking to
+# reduce template fallbacks during collab sessions.
+RESULT=$(timeout 180 openclaw agent --agent main --thinking minimal --timeout 170 -m "$PROMPT" --json 2>/dev/null)
 
 echo "$RESULT" | python3 -c "
 import sys,json

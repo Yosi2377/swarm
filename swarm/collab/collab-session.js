@@ -233,7 +233,7 @@ Start your message with: ${role.emoji} ${agent}:`;
     
     const respondScript = path.resolve(__dirname, 'agent-respond.sh');
     const response = execSync(`bash "${respondScript}" "${tmpFile}"`, { 
-      timeout: 30000, 
+      timeout: 190000, 
       stdio: ['pipe', 'pipe', 'pipe'],
       env: { ...process.env }
     }).toString().trim();

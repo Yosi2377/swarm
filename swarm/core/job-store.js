@@ -58,17 +58,28 @@ function saveJob(job) {
 }
 
 function classifyMode(taskDescription) {
-  const text = String(taskDescription || '').toLowerCase();
-  if (!text.trim()) return runtimeConfig().jobs?.defaultMode || 'ops';
-  const complexPatterns = [
-    /,.*,/,
-    /\b(review|research|investigate|audit|migrate|refactor|system|architecture|collab|debate|compare|multi-agent|security|docker|deployment|monitoring)\b/,
-    /\b(api|backend|frontend|database|integration)\b.*\b(and|with)\b/,
+  const text = String(taskDescription || '').trim().toLowerCase();
+  if (!text) return runtimeConfig().jobs?.defaultMode || 'ops';
+
+  // On IRC, #myops should stay as the control room. Only very short control /
+  // status checks belong there. Real work questions should open a dedicated
+  // job channel.
+  const opsOnlyPatterns = [
+    /^\?$/,
+    /^status$/,
+    /^ping$/,
+    /^test$/,
+    /^נו$/,
+    /^or status$/,
+    /^or\s+ping$/,
+    /^or\s+test$/,
+    /^what'?s up\??$/,
   ];
-  if (text.length > 180 || complexPatterns.some((re) => re.test(text))) {
-    return 'dedicated';
+  if (opsOnlyPatterns.some((re) => re.test(text))) {
+    return 'ops';
   }
-  return 'ops';
+
+  return 'dedicated';
 }
 
 function channelFor(jobId, mode) {

@@ -79,19 +79,24 @@ if [ "$TRANSPORT" = "irc" ] || echo "$THREAD_ID" | grep -q '^job-'; then
     exit 1
   fi
 
-  # Ensure OpenClaw is actually joined + allowlisted for this IRC job channel.
-  python3 "$SWARM_DIR/irc-ensure-account-channel.py" main "$TARGET_CHANNEL" >/dev/null 2>&1 || true
+  # Ensure the sending IRC account is actually joined + allowlisted for this
+  # channel. Main Or account uses the top-level IRC config; the rest use
+  # per-account IRC identities.
+  if [ "$AGENT_ID" = "or" ]; then
+    python3 "$SWARM_DIR/irc-ensure-account-channel.py" or "$TARGET_CHANNEL" >/dev/null 2>&1 || true
+    ACCOUNT_ARGS=(--account or)
+  else
+    python3 "$SWARM_DIR/irc-ensure-account-channel.py" "$AGENT_ID" "$TARGET_CHANNEL" >/dev/null 2>&1 || true
+    ACCOUNT_ARGS=(--account "$AGENT_ID")
+  fi
 
-  # Stable IRC mode: use the single connected Or nick and tag the logical
-  # speaker. This works reliably through ZNC and preserves agent identity in
-  # the message body even when per-agent nick fan-out is unavailable.
-  FINAL_MESSAGE="[$JOB_ID][$AGENT_ID] $MESSAGE"
+  FINAL_MESSAGE="[$JOB_ID] $MESSAGE"
   if [ "$PHOTO_FLAG" = "--photo" ] && [ -n "$PHOTO_PATH" ] && [ -f "$PHOTO_PATH" ]; then
     FINAL_MESSAGE="$FINAL_MESSAGE\n[attachment omitted in IRC: $(basename "$PHOTO_PATH")]"
   fi
 
   set +e
-  RESULT=$(openclaw message send --channel irc --target "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" --json 2>&1)
+  RESULT=$(openclaw message send --channel irc "${ACCOUNT_ARGS[@]}" --target "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" --json 2>&1)
   STATUS=$?
   set -e
 
@@ -110,7 +115,7 @@ if [ "$TRANSPORT" = "irc" ] || echo "$THREAD_ID" | grep -q '^job-'; then
   if is_done_message "$MESSAGE"; then
     node "$SWARM_DIR/core/job-store.js" close "$JOB_ID" "$MESSAGE" >/dev/null 2>&1 || true
     if [ "$TARGET_CHANNEL" != "$OPS_CHANNEL" ]; then
-      openclaw message send --channel irc --target "$OPS_CHANNEL" --message "[$JOB_ID] ✅ סיכום סופי מ-$TARGET_CHANNEL: $MESSAGE" >/dev/null 2>&1 || true
+      openclaw message send --channel irc "${ACCOUNT_ARGS[@]}" --target "$OPS_CHANNEL" --message "[$JOB_ID] ✅ סיכום סופי מ-$TARGET_CHANNEL: $MESSAGE" >/dev/null 2>&1 || true
     fi
     create_done_marker
   fi

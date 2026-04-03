@@ -19,7 +19,7 @@ def main():
     irc = data.setdefault('channels', {}).setdefault('irc', {})
     changed = False
 
-    if account_id in ('main', 'or', '-'):
+    if account_id in ('main', '-'):
         channels = list(irc.get('channels', []))
         if channel not in channels:
             channels.append(channel)

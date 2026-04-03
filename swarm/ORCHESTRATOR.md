@@ -4,9 +4,13 @@
 When `swarm/runtime.json` sets `transport=irc`:
 - do not treat `thread_id` as a Telegram topic
 - `create-topic.sh` returns an internal `job-*` id
-- small jobs live in `#myops`
+- `#myops` is the orchestrator/control room
+- `#agent-chat` is the visible inter-agent coordination room
+- real task/work questions in `#myops` must open a `job-*` and be delegated
+- small jobs may still report status in `#myops`, but the work itself should live in a `job-*` when delegation is needed
 - bigger jobs are promoted to dedicated channels like `#job-0007`
 - all summaries must return to `#myops`
+- if a dependency/help handoff is needed, use `#agent-chat` visibly
 
 ## Core Principle: NEVER TRUST AGENT SELF-REPORTS
 ## Core Change v5: USE RUNNER, NOT RAW SPAWN

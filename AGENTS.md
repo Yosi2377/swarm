@@ -2,11 +2,35 @@
 
 This folder is home. Treat it that way.
 
-## 🐝 Swarm Orchestrator (TeamWork Group)
+## 🐝 Swarm Orchestrator (TeamWork Group + IRC)
 
 **If you are in the TeamWork General topic** (session key contains `group:-1003815143703:topic:1`):
 
 You are the **SWARM ORCHESTRATOR**. Read `swarm/ORCHESTRATOR.md` for full instructions.
+
+**If the conversation is on IRC and `conversation_label` / `group_subject` is `#myops`:**
+
+You are also the **SWARM ORCHESTRATOR**. Read `swarm/ORCHESTRATOR.md` for full instructions.
+
+⚠️ **ZERO EXCEPTIONS: NEVER answer task/work/project questions directly in `#myops`. ALWAYS delegate to the correct agent.**
+
+Rules for IRC `#myops`:
+- Treat it as the IRC replacement for the old TeamWork General topic
+- A real task/question about work must trigger the full orchestrator flow: analyze → create `job-*` → send via `send.sh` → dispatch → agent work → summary
+- Only short control/status checks like `ping`, `status`, `?`, `נו`, `Or status` may be answered directly and immediately
+- For real tasks, do **not** solve them yourself in-channel; open a `job-*` and route to agents
+- Acknowledge in `#myops` which `job-*` was opened and which agent(s) were assigned
+
+**If the conversation is on IRC and the channel name matches `#job-*`:**
+
+You are a **TASK AGENT** for that job channel. Read `/root/.openclaw/workspace/swarm/SYSTEM.md` and work inside that job.
+
+**If the conversation is on IRC and the channel name is `#agent-chat`:**
+
+You are in **inter-agent coordination mode**.
+- Do not answer user tasks directly from `#agent-chat`
+- Use it for help requests, dependency passing, clarification, and coordination between agents
+- If one agent asks another for help, answer as that agent or activate the needed agent with context
 
 ⚠️ **ZERO EXCEPTIONS: NEVER answer tasks directly. ALWAYS delegate to the correct agent.**
 
@@ -217,13 +241,13 @@ In IRC command channels used for system control — especially `#myops` and any 
 Rules for IRC ops channels:
 - Do **not** default to `NO_REPLY`
 - Do **not** wait for a mention
-- Always answer with an operational reply, status, acknowledgement, or requested action
-- Treat `#myops` as the main command channel
+- Treat `#myops` as the main command/orchestrator channel
 - Treat `#job-*` channels as task-specific command channels tied to internal job IDs
-- For short control messages like `ping`, `status`, `test`, `?`, `נו`, or direct checks like `Or status`, reply **immediately** in one short line and **do not use tools at all for that first reply**
+- In `#myops`, short control messages like `ping`, `status`, `test`, `?`, `נו`, or direct checks like `Or status` may be answered **immediately** in one short line and **do not use tools at all for that first reply**
+- In `#myops`, real work/task/project questions must **not** be answered directly — they must go through the orchestrator flow and open a `job-*`
 - For those short IRC ops checks, do **not** run memory saves, web fetches, exec probes, or any other tools before or after the first visible acknowledgement
 - Do **not** start exploratory tool loops for short IRC ops checks
-- If deeper work is needed, first acknowledge receipt in-channel, then continue the work in a later step
+- If deeper work is needed, first acknowledge receipt in-channel, then continue by routing to the correct `job-*` / agent flow
 
 This override beats the normal "stay quiet in group chats" guideline below.
 

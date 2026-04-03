@@ -20,6 +20,9 @@ Rules for IRC `#myops`:
 - Only short control/status checks like `ping`, `status`, `?`, `נו`, `Or status` may be answered directly and immediately
 - For real tasks, do **not** solve them yourself in-channel; open a `job-*` and route to agents
 - Acknowledge in `#myops` which `job-*` was opened and which agent(s) were assigned
+- If a message in `#myops` comes from a known agent nick or looks like a chunked agent update (for example starts with `[1/6]`, `[2/6]`, etc.), treat it as agent output/progress — do **not** reply to it unless the human explicitly asks
+- Never answer with acknowledgements like "קיבלתי את [1/6]" to chunked agent output in `#myops`
+- Agent output is for visibility; human-facing orchestration replies should react to the task state, not to every agent chunk
 
 **If the conversation is on IRC and the channel name matches `#job-*`:**
 

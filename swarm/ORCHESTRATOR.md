@@ -11,6 +11,8 @@ When `swarm/runtime.json` sets `transport=irc`:
 - bigger jobs are promoted to dedicated channels like `#job-0007`
 - all summaries must return to `#myops`
 - if a dependency/help handoff is needed, use `#agent-chat` visibly
+- do not answer or acknowledge chunked agent output in `#myops` (such as `[1/6]`, `[2/6]`, etc.); those are transport fragments of an agent message, not prompts for the orchestrator
+- when a long agent summary is mirrored to `#myops`, let it pass through silently unless the human explicitly reacts or asks something new
 
 ## Core Principle: NEVER TRUST AGENT SELF-REPORTS
 ## Core Change v5: USE RUNNER, NOT RAW SPAWN

@@ -42,6 +42,23 @@ if (!TASK || !TOPIC_ID) {
 
 const SEND_SH = path.resolve(__dirname, '..', 'send.sh');
 
+const ROLE_PERSPECTIVES = {
+  koder: { emoji: '⚙️', focus: 'implementation, code architecture, performance', role: 'senior software engineer' },
+  shomer: { emoji: '🔒', focus: 'security, vulnerabilities, hardening', role: 'cybersecurity expert' },
+  front: { emoji: '🖥️', focus: 'UI/UX, responsive design, user experience', role: 'frontend developer and UX designer' },
+  tzayar: { emoji: '🎨', focus: 'visual design, branding, aesthetics', role: 'visual designer' },
+  researcher: { emoji: '🔍', focus: 'best practices, alternatives, research', role: 'technical researcher' },
+  data: { emoji: '📊', focus: 'database design, data modeling, queries', role: 'database architect' },
+  back: { emoji: '⚡', focus: 'API design, server architecture, scalability', role: 'backend engineer' },
+  tester: { emoji: '🧪', focus: 'testing strategy, edge cases, quality', role: 'QA engineer' },
+  debugger: { emoji: '🐛', focus: 'root cause analysis, logs, failures, debugging', role: 'debugging specialist' },
+  worker: { emoji: '🤖', focus: 'general tasks, support', role: 'general engineer' },
+};
+
+function getRoleProfile(agent) {
+  return ROLE_PERSPECTIVES[agent] || ROLE_PERSPECTIVES.worker;
+}
+
 function sendToTopic(agentId, msg) {
   try {
     const escaped = msg.replace(/'/g, "'\\''");
@@ -145,29 +162,64 @@ ${round === MAX_ROUNDS - 1 ? 'This is the final round. State your final position
     }
   }
 
-  // Decision phase: if agents discussed, propose and vote
-  sendToTopic(AGENTS[0], '🗳️ שלב הצבעה — הסוכנים מצביעים על ההחלטה');
+  // Decision phase: propose and collect explicit votes.
+  sendToTopic(AGENTS[0], '🗳️ שלב הצבעה — כל סוכן מצביע בעד / נגד / נמנע עם נימוק קצר.');
   
   const allMsgsResult = await cm.listenForMessages(AGENTS[0], { conversation_id: convId });
+  const discussionMessages = allMsgsResult.messages || [];
   
-  // Simple consensus: propose based on last round messages
-  const decResult = await de.proposeDecision(AGENTS[0], TASK, 
+  const decResult = await de.proposeDecision(
+    AGENTS[0],
+    TASK,
     `Consensus from ${AGENTS.length}-agent ${MODE} session`,
-    { conversation_id: convId });
-  
+    { conversation_id: convId },
+  );
+
+  const voteDetails = [];
   for (const agent of AGENTS) {
-    await de.vote(agent, decResult.decision._id, 'for', `Participated in discussion`);
+    const voteInfo = await generateAgentVote(agent, TASK, discussionMessages, MODE);
+    voteDetails.push({ agent, ...voteInfo });
+    await de.vote(agent, decResult.decision._id, voteInfo.vote, voteInfo.reason);
     await rep.recordEvent(agent, 'vote_cast');
+    sendToTopic(agent, voteInfo.message);
+    await sleep(interMessageDelayMs);
   }
-  
-  await de.resolveDecision(decResult.decision._id);
+
+  let tally = await de.getVoteTally(decResult.decision._id);
+  const tieBreakers = [];
+  if (tally && tally.for === tally.against && tally.for > 0) {
+    sendToTopic(AGENTS[0], `⚖️ תיקו ${tally.for}-${tally.against}. מזמין סוכן מכריע נוסף.`);
+    for (const tieBreaker of getTieBreakerCandidates(AGENTS)) {
+      const voteInfo = await generateAgentVote(tieBreaker, TASK, discussionMessages, MODE, { tieBreaker: true, tally });
+      tieBreakers.push(tieBreaker);
+      voteDetails.push({ agent: tieBreaker, ...voteInfo, tieBreaker: true });
+      await de.vote(tieBreaker, decResult.decision._id, voteInfo.vote, `[tie-break] ${voteInfo.reason}`);
+      await rep.recordEvent(tieBreaker, 'vote_cast');
+      sendToTopic(tieBreaker, voteInfo.message);
+      await sleep(interMessageDelayMs);
+      tally = await de.getVoteTally(decResult.decision._id);
+      if (tally && tally.for !== tally.against) break;
+    }
+  }
+
+  tally = await de.getVoteTally(decResult.decision._id);
+  const decisionStatus = tally && tally.for >= tally.against ? 'decided' : 'overruled';
+  const decidedBy = Object.entries((tally && tally.voters) || {})
+    .filter(([, vote]) => vote === 'for')
+    .map(([agent]) => agent);
+
+  await de.resolveDecision(decResult.decision._id, decisionStatus, decidedBy);
+  sendToTopic(
+    AGENTS[0],
+    `📊 תוצאת ההצבעה — בעד: ${tally?.for || 0}, נגד: ${tally?.against || 0}, נמנע: ${tally?.abstain || 0}${tieBreakers.length ? `\nקול מכריע: ${tieBreakers.join(', ')}` : ''}`,
+  );
 
   // Post summary
   const summary = {
     messageCount: (await cm.listenForMessages(AGENTS[0], { conversation_id: convId })).messages.length,
     decisionCount: 1,
     reviewCount: 0,
-    highlights: `${AGENTS.length} agents collaborated on: ${TASK}`,
+    highlights: `${AGENTS.length + tieBreakers.length} agents collaborated on: ${TASK}` + (tieBreakers.length ? `\nTie-breaker: ${tieBreakers.join(', ')}` : ''),
   };
   
   if (bridge) {
@@ -195,19 +247,7 @@ ${round === MAX_ROUNDS - 1 ? 'This is the final round. State your final position
  * Each agent gets its own AI call with role-specific system prompt.
  */
 async function generateAgentResponse(agent, prompt, round, task, context) {
-  const ROLE_PERSPECTIVES = {
-    koder: { emoji: '⚙️', focus: 'implementation, code architecture, performance', role: 'senior software engineer' },
-    shomer: { emoji: '🔒', focus: 'security, vulnerabilities, hardening', role: 'cybersecurity expert' },
-    front: { emoji: '🖥️', focus: 'UI/UX, responsive design, user experience', role: 'frontend developer and UX designer' },
-    tzayar: { emoji: '🎨', focus: 'visual design, branding, aesthetics', role: 'visual designer' },
-    researcher: { emoji: '🔍', focus: 'best practices, alternatives, research', role: 'technical researcher' },
-    data: { emoji: '📊', focus: 'database design, data modeling, queries', role: 'database architect' },
-    back: { emoji: '⚡', focus: 'API design, server architecture, scalability', role: 'backend engineer' },
-    tester: { emoji: '🧪', focus: 'testing strategy, edge cases, quality', role: 'QA engineer' },
-    worker: { emoji: '🤖', focus: 'general tasks, support', role: 'general engineer' },
-  };
-  
-  const role = ROLE_PERSPECTIVES[agent] || ROLE_PERSPECTIVES.worker;
+  const role = getRoleProfile(agent);
   
   // Build conversation history for context
   const historyLines = context.map(m => `${m.from}: ${m.content}`).join('\n');
@@ -262,6 +302,49 @@ Start your message with: ${role.emoji} ${agent}:`;
     return `${role.emoji} ${agent}: בתגובה ל-${lastMsg.from} — מבחינת ${role.focus}, צריך לשקול גם את ההיבטים האלה.`;
   }
   return `${role.emoji} ${agent}: ממשיך לנתח מבחינת ${role.focus}.`;
+}
+
+async function generateAgentVote(agent, task, context, mode, opts = {}) {
+  const role = getRoleProfile(agent);
+  const historyLines = (context || []).slice(-8).map(m => `${m.from}: ${m.content}`).join('\n');
+  const tieBreakerNote = opts.tieBreaker ? `\nזהו קול מכריע בגלל תיקו קודם (${opts.tally?.for || 0}-${opts.tally?.against || 0}). אתה חייב להכריע בעד או נגד, לא נמנע.` : '';
+  const prompt = `You are ${agent}, a ${role.role}.\nTask: ${task}\nMode: ${mode}\nRecent discussion:\n${historyLines || '(no recent messages)'}${tieBreakerNote}\n\nReturn EXACTLY in this format:\nVOTE: for|against|abstain\nREASON: one concise sentence in Hebrew\nMESSAGE: ${role.emoji} ${agent}: <brief Hebrew vote explanation>`;
+
+  try {
+    const fs = require('fs');
+    const tmpFile = `/tmp/collab-vote-${agent}-${Date.now()}.txt`;
+    fs.writeFileSync(tmpFile, prompt);
+    const respondScript = path.resolve(__dirname, 'agent-respond.sh');
+    const response = execSync(`bash "${respondScript}" "${tmpFile}"`, {
+      timeout: 190000,
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: { ...process.env },
+    }).toString().trim();
+    try { fs.unlinkSync(tmpFile); } catch (e) {}
+
+    const voteMatch = response.match(/VOTE:\s*(for|against|abstain)/i);
+    const reasonMatch = response.match(/REASON:\s*(.+)/i);
+    const messageMatch = response.match(/MESSAGE:\s*([\s\S]+)/i);
+    const vote = voteMatch ? voteMatch[1].toLowerCase() : (opts.tieBreaker ? 'for' : 'abstain');
+    const reason = reasonMatch ? reasonMatch[1].trim() : 'הצבעה ללא נימוק מפורש';
+    let message = messageMatch ? messageMatch[1].trim() : `${role.emoji} ${agent}: ${vote === 'for' ? 'בעד' : vote === 'against' ? 'נגד' : 'נמנע'} — ${reason}`;
+    if (!message.startsWith(role.emoji)) {
+      message = `${role.emoji} ${agent}: ${message}`;
+    }
+    return { vote, reason, message };
+  } catch (err) {
+    const fallbackVote = opts.tieBreaker ? 'for' : 'abstain';
+    return {
+      vote: fallbackVote,
+      reason: opts.tieBreaker ? 'קול מכריע ברירת מחדל עקב timeout' : 'timeout במהלך ההצבעה',
+      message: `${role.emoji} ${agent}: ${fallbackVote === 'for' ? 'בעד' : 'נמנע'} — ${opts.tieBreaker ? 'מכריע כדי לשבור תיקו.' : 'לא הספקתי לנתח עד הסוף.'}`,
+    };
+  }
+}
+
+function getTieBreakerCandidates(participants) {
+  const preferred = ['researcher', 'shomer', 'worker', 'tester', 'front', 'back', 'debugger', 'data', 'optimizer', 'integrator'];
+  return preferred.filter((agent) => !participants.includes(agent));
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }

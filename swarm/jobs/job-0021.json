@@ -1,0 +1,52 @@
+{
+  "jobId": "job-0021",
+  "title": "IRC routing test",
+  "agent": "worker",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0021",
+  "createdAt": "2026-04-03T08:57:19.289Z",
+  "updatedAt": "2026-04-03T09:04:24.373Z",
+  "history": [
+    {
+      "at": "2026-04-03T08:57:19.290Z",
+      "type": "created",
+      "title": "IRC routing test",
+      "agent": "worker",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T08:57:19.321Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "multi-agent collaboration integration backend and frontend review",
+      "mode": "dedicated",
+      "channel": "#job-0021"
+    },
+    {
+      "at": "2026-04-03T08:57:32.622Z",
+      "type": "message",
+      "actor": "worker",
+      "message": "בדיקת IRC ראשונה מה-worker"
+    },
+    {
+      "at": "2026-04-03T08:57:32.843Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "בדיקת IRC שנייה מ-koder"
+    },
+    {
+      "at": "2026-04-03T09:04:24.224Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "koder -> worker reply over IRC"
+    },
+    {
+      "at": "2026-04-03T09:04:24.373Z",
+      "type": "message",
+      "actor": "worker",
+      "message": "worker -> koder test over IRC"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "jobId": "job-0022",
+  "title": "private irc smoke",
+  "agent": "worker",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0022",
+  "createdAt": "2026-04-03T09:53:02.721Z",
+  "updatedAt": "2026-04-03T09:53:19.429Z",
+  "history": [
+    {
+      "at": "2026-04-03T09:53:02.721Z",
+      "type": "created",
+      "title": "private irc smoke",
+      "agent": "worker",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T09:53:02.754Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "dynamic job channel multi-agent smoke test",
+      "mode": "dedicated",
+      "channel": "#job-0022"
+    },
+    {
+      "at": "2026-04-03T09:53:18.368Z",
+      "type": "message",
+      "actor": "worker",
+      "message": "worker dynamic job smoke"
+    },
+    {
+      "at": "2026-04-03T09:53:19.429Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "koder dynamic job smoke"
+    }
+  ]
+}

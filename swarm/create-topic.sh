@@ -33,8 +33,12 @@ PY
 )
 
 if [ "$TRANSPORT" = "irc" ]; then
-  node "$DIR/core/job-store.js" create "$NAME" "$AGENT"
-  exit $?
+  JOB_ID=$(node "$DIR/core/job-store.js" create "$NAME" "$AGENT")
+  # On IRC, every real task should be classified immediately so the initial
+  # agent message does not stay in #myops by accident.
+  node "$DIR/core/job-store.js" ensure-channel "$JOB_ID" "$NAME" >/dev/null 2>&1 || true
+  echo "$JOB_ID"
+  exit 0
 fi
 
 # Use orchestrator bot token for topic creation

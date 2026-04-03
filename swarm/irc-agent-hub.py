@@ -28,6 +28,40 @@ def read_json(path: Path):
     return json.loads(path.read_text(encoding='utf-8'))
 
 
+def split_irc_message(message: str, max_bytes: int = 320):
+    text = str(message or '').replace('\r\n', '\n').replace('\r', '\n').strip()
+    if not text:
+        return ['']
+
+    parts = []
+    for raw_line in text.split('\n'):
+        line = raw_line.strip()
+        if not line:
+            continue
+        while len(line.encode('utf-8')) > max_bytes:
+            cut = min(len(line), max_bytes)
+            while cut > 1 and len(line[:cut].encode('utf-8')) > max_bytes:
+                cut -= 1
+            split_at = line.rfind(' ', 0, cut)
+            if split_at < max(1, int(cut * 0.6)):
+                split_at = cut
+            chunk = line[:split_at].rstrip()
+            if chunk:
+                parts.append(chunk)
+            line = line[split_at:].lstrip()
+        if line:
+            parts.append(line)
+
+    if len(parts) <= 1:
+        return parts or ['']
+
+    total = len(parts)
+    tagged = []
+    for idx, part in enumerate(parts, 1):
+        tagged.append(f'[{idx}/{total}] {part}')
+    return tagged
+
+
 class AgentConn:
     def __init__(self, host, port, tls, agent_id, nick):
         self.host = host
@@ -151,7 +185,9 @@ class AgentConn:
                                         while b'\r\n' in self.buffer:
                                             line, self.buffer = self.buffer.split(b'\r\n', 1)
                                             self.handle_line(line.decode(errors='ignore'))
-                            self.send_line(f'PRIVMSG {ch} :{msg}')
+                            for part in split_irc_message(msg):
+                                self.send_line(f'PRIVMSG {ch} :{part}')
+                                time.sleep(0.15)
                             if 'result' in cmd:
                                 cmd['result']['ok'] = True
                         elif kind == 'quit':

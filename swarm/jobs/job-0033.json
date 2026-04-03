@@ -1,0 +1,34 @@
+{
+  "jobId": "job-0033",
+  "title": "🔍 BotVerse consultation + vote",
+  "agent": "researcher",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0033",
+  "createdAt": "2026-04-03T15:08:07.620Z",
+  "updatedAt": "2026-04-03T15:09:23.592Z",
+  "history": [
+    {
+      "at": "2026-04-03T15:08:07.621Z",
+      "type": "created",
+      "title": "🔍 BotVerse consultation + vote",
+      "agent": "researcher",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T15:08:07.651Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "🔍 BotVerse consultation + vote",
+      "mode": "dedicated",
+      "channel": "#job-0033"
+    },
+    {
+      "at": "2026-04-03T15:09:23.592Z",
+      "type": "message",
+      "actor": "researcher",
+      "message": "📋 משימה: לבצע consultation על מצב BotVerse בהתבסס על job-0030/job-0031/job-0032, ואם צריך גם בדיקה read-only משלך. בסוף להחזיר הצבעה מסכמת בעברית: קולות GREEN/YELLOW/RED מכל תחום + המלצה סופית אחת קצרה וברורה."
+    }
+  ]
+}

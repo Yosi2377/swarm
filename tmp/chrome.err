@@ -1,0 +1,8 @@
+[1002877:1002877:0403/143125.662241:ERROR:base/memory/shared_memory_switch.cc:289] Failed global descriptor lookup: 7
+
+(95.111.247.22:9089:1002630): dbind-WARNING **: 14:31:25.851: Could not open X display
+
+(95.111.247.22:9089:1002630): dbind-WARNING **: 14:31:25.852: Couldn't connect to accessibility bus: Failed to connect to socket /run/user/0/at-spi/bus_1: No such file or directory
+[1002630:1002630:0403/143125.911777:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.ListActivatableNames: object_path= /org/freedesktop/DBus: org.freedesktop.DBus.Error.AccessDenied: An AppArmor policy prevents this sender from sending this message to this recipient; type="method_call", sender=":1.50749710" (uid=0 pid=1002630 comm="/snap/chromium/3390/usr/lib/chromium-browser/chrom" label="snap.chromium.chromium (enforce)") interface="org.freedesktop.DBus" member="ListActivatableNames" error name="(unset)" requested_reply="0" destination="org.freedesktop.DBus" (bus)
+[1002630:1002630:0403/143126.141716:ERROR:components/dbus/xdg/request.cc:169] Request ended (non-user cancelled).
+[1002630:1002841:0403/143126.589904:ERROR:components/headless/command_handler/headless_command_handler.cc:265] Failed to write file /root/.openclaw/workspace/tmp/botverse-sandbox-job-0024.png: Permission denied (13)

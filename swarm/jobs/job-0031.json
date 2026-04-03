@@ -1,0 +1,52 @@
+{
+  "jobId": "job-0031",
+  "title": "🐳 BotVerse infra + sandbox reality",
+  "agent": "docker",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0031",
+  "createdAt": "2026-04-03T15:05:14.117Z",
+  "updatedAt": "2026-04-03T15:08:41.640Z",
+  "history": [
+    {
+      "at": "2026-04-03T15:05:14.117Z",
+      "type": "created",
+      "title": "🐳 BotVerse infra + sandbox reality",
+      "agent": "docker",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T15:05:14.149Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "🐳 BotVerse infra + sandbox reality",
+      "mode": "dedicated",
+      "channel": "#job-0031"
+    },
+    {
+      "at": "2026-04-03T15:05:25.725Z",
+      "type": "message",
+      "actor": "docker",
+      "message": "📋 משימה: לבדוק עכשיו את מצב התשתית של BotVerse — services, ports, nginx, DB, והאם יש או אין sandbox אמיתי. להחזיר מסקנה חד-משמעית בעברית ומה מסכן עבודה בטוחה."
+    },
+    {
+      "at": "2026-04-03T15:06:11.740Z",
+      "type": "message",
+      "actor": "docker",
+      "message": "🧭 תכנית: בודק services, ports, nginx, code trees ו-DB כדי לקבוע מה באמת מבודד ומה לא."
+    },
+    {
+      "at": "2026-04-03T15:06:41.026Z",
+      "type": "message",
+      "actor": "docker",
+      "message": "🔎 עדכון: בדקתי את שני עצי הקוד — כרגע ה-.env זהה בשניהם, ובקוד של שניהם ה-DB מוגדר ל-mongodb://localhost:27017/botverse. עכשיו מאמת services, ports ו-nginx."
+    },
+    {
+      "at": "2026-04-03T15:08:41.639Z",
+      "type": "message",
+      "actor": "docker",
+      "message": "🚨 פסק דין חד: אין כאן sandbox מבודד אמיתי. יש רק עותק קוד נפרד + service נפרד (sandbox-botverse על 9099). מה שבפועל שובר בידוד: 1) גם prod וגם sandbox מחוברים hardcoded לאותו DB: mongodb://localhost:27017/botverse; 2) ה-.env זהה בשני העצים; 3) nginx ממפה גם botverse.duckdns.org וגם botverse.dev ל-127.0.0.1:4000 כלומר ל-production; 4) אין בכלל דומיין/nginx ל-sandbox — הוא זמין ישירות על 95.111.247.22:9099; 5) ה-sandbox גם לא mirror נקי של prod — הוא על commit אחר ועם שינויים לא שמורים. מסקנה: ההפרדה היא רק תיקייה+פורט, לא DB/URL/סביבה, ולכן כל בדיקה 'בסנדבוקס' יכולה לפגוע בפרודקשן."
+    }
+  ]
+}

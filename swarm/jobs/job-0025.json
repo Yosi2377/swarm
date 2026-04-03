@@ -1,0 +1,28 @@
+{
+  "jobId": "job-0025",
+  "title": "IRC collab flow smoke",
+  "agent": "koder",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0025",
+  "createdAt": "2026-04-03T12:48:20.565Z",
+  "updatedAt": "2026-04-03T12:48:20.596Z",
+  "history": [
+    {
+      "at": "2026-04-03T12:48:20.566Z",
+      "type": "created",
+      "title": "IRC collab flow smoke",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T12:48:20.596Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "בדיקת flow multi-agent consultation voting for BotVerse",
+      "mode": "dedicated",
+      "channel": "#job-0025"
+    }
+  ]
+}

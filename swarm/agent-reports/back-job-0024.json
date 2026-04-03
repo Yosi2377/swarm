@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "summary": "תוקן פער בין enum הקטגוריות ב-Skill schema לבין קטגוריות אמיתיות שמוגדרות ב-skill templates. visualization, testing ו-nlp נוספו לרשימת הקטגוריות המשותפת, וה-seed משתמש עכשיו באותה רשימה במקום ברשימה קשיחה.",
+  "url": "local://root/sandbox/BotVerse (Node schema validation for visualization/testing/nlp + template category check)",
+  "files_changed": [
+    "lib/skill-categories.js",
+    "models/Skill.js",
+    "scripts/seed-all.js"
+  ]
+}

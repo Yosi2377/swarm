@@ -1,0 +1,56 @@
+{
+  "jobId": "job-0023",
+  "title": "⚙️ BotVerse status check",
+  "agent": "koder",
+  "status": "closed",
+  "mode": "ops",
+  "channel": "#myops",
+  "createdAt": "2026-04-03T10:41:08.445Z",
+  "updatedAt": "2026-04-03T11:41:33.835Z",
+  "history": [
+    {
+      "at": "2026-04-03T10:41:08.445Z",
+      "type": "created",
+      "title": "⚙️ BotVerse status check",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T10:42:14.698Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "📋 משימה: בדיקת סטטוס מלאה ל-BotVerse — health, repo, site load, blockers, next steps. תחזיר סיכום קצר בעברית."
+    },
+    {
+      "at": "2026-04-03T10:43:27.314Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "🧭 תכנית: בודק service, repo, טעינת האתר, לוגים/בדיקות, ואז מסכם בעברית."
+    },
+    {
+      "at": "2026-04-03T10:43:56.917Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "⏳ עדכון: service פעיל ו-https://botverse.dev מחזיר 200. עכשיו בודק git/tests ולוגים כדי לוודא שאין בעיות פעילות."
+    },
+    {
+      "at": "2026-04-03T10:45:28.358Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "✅ סיכום: botverse.service פעיל (running, uptime ~שבוע). האתר https://botverse.dev נטען ומחזיר 200, וגם localhost:4000 עונה. ה-repo ב-/root/BotVerse נקי ללא שינויים לא שמורים, על branch feature/premium-design; הקומיטים האחרונים הם auto-backup, והאחרון הלא-גיבוי הוא c4628b7. בדיקות: לא הרצתי tests/e2e.sh כי זה סקריפט write-heavy מול production ומשאיר נתוני בדיקה; במקום זה הרצתי smoke checks read-only ל-API/דפים מרכזיים וכולם עברו 200. בלוקר/מעקב: בלוגים יש שגיאת Skill validation עבור category=visualization ביצירת skill — שווה בדיקה ממוקדת."
+    },
+    {
+      "at": "2026-04-03T10:45:28.397Z",
+      "type": "closed",
+      "summary": "✅ סיכום: botverse.service פעיל (running, uptime ~שבוע). האתר https://botverse.dev נטען ומחזיר 200, וגם localhost:4000 עונה. ה-repo ב-/root/BotVerse נקי ללא שינויים לא שמורים, על branch feature/premium-design; הקומיטים האחרונים הם auto-backup, והאחרון הלא-גיבוי הוא c4628b7. בדיקות: לא הרצתי tests/e2e.sh כי זה סקריפט write-heavy מול production ומשאיר נתוני בדיקה; במקום זה הרצתי smoke checks read-only ל-API/דפים מרכזיים וכולם עברו 200. בלוקר/מעקב: בלוגים יש שגיאת Skill validation עבור category=visualization ביצירת skill — שווה בדיקה ממוקדת."
+    },
+    {
+      "at": "2026-04-03T11:41:33.835Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "\\u2705 \\u05e1\\u05d9\\u05db\\u05d5\\u05dd: botverse.service \\u05e4\\u05e2\\u05d9\\u05dc (running, uptime ~\\u05e9\\u05d1\\u05d5\\u05e2). \\u05d4\\u05d0\\u05ea\\u05e8 https://botverse.dev \\u05e0\\u05d8\\u05e2\\u05df \\u05d5\\u05de\\u05d7\\u05d6\\u05d9\\u05e8 200, \\u05d5\\u05d2\\u05dd localhost:4000 \\u05e2\\u05d5\\u05e0\\u05d4. \\u05d4-repo \\u05d1-/root/BotVerse \\u05e0\\u05e7\\u05d9 \\u05dc\\u05dc\\u05d0 \\u05e9\\u05d9\\u05e0\\u05d5\\u05d9\\u05d9\\u05dd \\u05dc\\u05d0 \\u05e9\\u05de\\u05d5\\u05e8\\u05d9\\u05dd, \\u05e2\\u05dc branch feature/premium-design; \\u05d4\\u05e7\\u05d5\\u05de\\u05d9\\u05d8\\u05d9\\u05dd \\u05d4\\u05d0\\u05d7\\u05e8\\u05d5\\u05e0\\u05d9\\u05dd \\u05d4\\u05dd auto-backup, \\u05d5\\u05d4\\u05d0\\u05d7\\u05e8\\u05d5\\u05df \\u05d4\\u05dc\\u05d0-\\u05d2\\u05d9\\u05d1\\u05d5\\u05d9 \\u05d4\\u05d5\\u05d0 c4628b7. \\u05d1\\u05d3\\u05d9\\u05e7\\u05d5\\u05ea: \\u05dc\\u05d0 \\u05d4\\u05e8\\u05e6\\u05ea\\u05d9 tests/e2e.sh \\u05db\\u05d9 \\u05d6\\u05d4 \\u05e1\\u05e7\\u05e8\\u05d9\\u05e4\\u05d8 write-heavy \\u05de\\u05d5\\u05dc production \\u05d5\\u05de\\u05e9\\u05d0\\u05d9\\u05e8 \\u05e0\\u05ea\\u05d5\\u05e0\\u05d9 \\u05d1\\u05d3\\u05d9\\u05e7\\u05d4; \\u05d1\\u05de\\u05e7\\u05d5\\u05dd \\u05d6\\u05d4 \\u05d4\\u05e8\\u05e6\\u05ea\\u05d9 smoke checks read-only \\u05dc-API/\\u05d3\\u05e4\\u05d9\\u05dd \\u05de\\u05e8\\u05db\\u05d6\\u05d9\\u05d9\\u05dd \\u05d5\\u05db\\u05d5\\u05dc\\u05dd \\u05e2\\u05d1\\u05e8\\u05d5 200. \\u05d1\\u05dc\\u05d5\\u05e7\\u05e8/\\u05de\\u05e2\\u05e7\\u05d1: \\u05d1\\u05dc\\u05d5\\u05d2\\u05d9\\u05dd \\u05d9\\u05e9 \\u05e9\\u05d2\\u05d9\\u05d0\\u05ea Skill validation \\u05e2\\u05d1\\u05d5\\u05e8 category=visualization \\u05d1\\u05d9\\u05e6\\u05d9\\u05e8\\u05ea skill \\u2014 \\u05e9\\u05d5\\u05d5\\u05d4 \\u05d1\\u05d3\\u05d9\\u05e7\\u05d4 \\u05de\\u05de\\u05d5\\u05e7\\u05d3\\u05ea."
+    }
+  ],
+  "summary": "✅ סיכום: botverse.service פעיל (running, uptime ~שבוע). האתר https://botverse.dev נטען ומחזיר 200, וגם localhost:4000 עונה. ה-repo ב-/root/BotVerse נקי ללא שינויים לא שמורים, על branch feature/premium-design; הקומיטים האחרונים הם auto-backup, והאחרון הלא-גיבוי הוא c4628b7. בדיקות: לא הרצתי tests/e2e.sh כי זה סקריפט write-heavy מול production ומשאיר נתוני בדיקה; במקום זה הרצתי smoke checks read-only ל-API/דפים מרכזיים וכולם עברו 200. בלוקר/מעקב: בלוגים יש שגיאת Skill validation עבור category=visualization ביצירת skill — שווה בדיקה ממוקדת."
+}

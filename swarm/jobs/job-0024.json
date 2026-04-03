@@ -1,0 +1,58 @@
+{
+  "jobId": "job-0024",
+  "title": "⚡ BotVerse skill category fix",
+  "agent": "back",
+  "status": "closed",
+  "mode": "dedicated",
+  "channel": "#job-0024",
+  "createdAt": "2026-04-03T12:23:41.458Z",
+  "updatedAt": "2026-04-03T12:48:42.619Z",
+  "history": [
+    {
+      "at": "2026-04-03T12:23:41.458Z",
+      "type": "created",
+      "title": "⚡ BotVerse skill category fix",
+      "agent": "back",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T12:23:48.192Z",
+      "type": "message",
+      "actor": "back",
+      "message": "📋 משימה: לתקן את באג יצירת ה-skill ב-BotVerse סביב category=visualization. לעבוד ב-sandbox בלבד, לא בפרודקשן. לבדוק root cause, לתקן, לאמת שהיצירה עובדת, ולסכם בעברית עם הקבצים ששונו והאימות שבוצע."
+    },
+    {
+      "at": "2026-04-03T12:24:50.153Z",
+      "type": "message",
+      "actor": "back",
+      "message": "🧭 תכנית: משחזר את באג category=visualization ב-sandbox, מאתר root cause, מתקן, ומאמת יצירת skill תקינה."
+    },
+    {
+      "at": "2026-04-03T12:25:30.281Z",
+      "type": "message",
+      "actor": "back",
+      "message": "🔎 עדכון: שוחזר מקומית ב-sandbox. ה-schema של Skill חוסם visualization (וגם testing/nlp) למרות שיש templates/categories כאלה בקוד. עכשיו מתקן ומוסיף אימות ממוקד."
+    },
+    {
+      "at": "2026-04-03T12:28:46.504Z",
+      "type": "message",
+      "actor": "back",
+      "message": "✅ סיכום: root cause היה drift בין Skill schema לבין הקטגוריות שמוגדרות ב-templates/seed — ה-enum ב-model לא כלל visualization (וגם testing, nlp), ולכן Mongoose הפיל create עם `not a valid enum value`. שיניתי: lib/skill-categories.js, models/Skill.js, scripts/seed-all.js. אימות: הרצתי בדיקת Node ממוקדת ב-sandbox שיצרה מסמכי Skill עם categories=visualization/testing/nlp וכולם עברו validateSync, וגם בדקתי שכל הקטגוריות מתוך scripts/skill-templates.js מוכרות כעת. commit: 736ac93. חסימה לפרודקשן: אין blocker קוד/backend, אבל לא בוצע deploy (כמתבקש — sandbox בלבד)."
+    },
+    {
+      "at": "2026-04-03T12:28:46.545Z",
+      "type": "closed",
+      "summary": "✅ סיכום: root cause היה drift בין Skill schema לבין הקטגוריות שמוגדרות ב-templates/seed — ה-enum ב-model לא כלל visualization (וגם testing, nlp), ולכן Mongoose הפיל create עם `not a valid enum value`. שיניתי: lib/skill-categories.js, models/Skill.js, scripts/seed-all.js. אימות: הרצתי בדיקת Node ממוקדת ב-sandbox שיצרה מסמכי Skill עם categories=visualization/testing/nlp וכולם עברו validateSync, וגם בדקתי שכל הקטגוריות מתוך scripts/skill-templates.js מוכרות כעת. commit: 736ac93. חסימה לפרודקשן: אין blocker קוד/backend, אבל לא בוצע deploy (כמתבקש — sandbox בלבד)."
+    },
+    {
+      "at": "2026-04-03T12:48:42.618Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "בדיקת flow multi-agent consultation voting for BotVerse",
+      "mode": "dedicated",
+      "channel": "#job-0024"
+    }
+  ],
+  "summary": "✅ סיכום: root cause היה drift בין Skill schema לבין הקטגוריות שמוגדרות ב-templates/seed — ה-enum ב-model לא כלל visualization (וגם testing, nlp), ולכן Mongoose הפיל create עם `not a valid enum value`. שיניתי: lib/skill-categories.js, models/Skill.js, scripts/seed-all.js. אימות: הרצתי בדיקת Node ממוקדת ב-sandbox שיצרה מסמכי Skill עם categories=visualization/testing/nlp וכולם עברו validateSync, וגם בדקתי שכל הקטגוריות מתוך scripts/skill-templates.js מוכרות כעת. commit: 736ac93. חסימה לפרודקשן: אין blocker קוד/backend, אבל לא בוצע deploy (כמתבקש — sandbox בלבד)."
+}

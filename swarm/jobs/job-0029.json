@@ -1,0 +1,28 @@
+{
+  "jobId": "job-0029",
+  "title": "⚙️ Test dedicated routing",
+  "agent": "koder",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0029",
+  "createdAt": "2026-04-03T15:03:12.083Z",
+  "updatedAt": "2026-04-03T15:03:12.115Z",
+  "history": [
+    {
+      "at": "2026-04-03T15:03:12.083Z",
+      "type": "created",
+      "title": "⚙️ Test dedicated routing",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T15:03:12.114Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "⚙️ Test dedicated routing",
+      "mode": "dedicated",
+      "channel": "#job-0029"
+    }
+  ]
+}

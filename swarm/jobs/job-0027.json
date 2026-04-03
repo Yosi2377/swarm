@@ -1,0 +1,44 @@
+{
+  "jobId": "job-0027",
+  "title": "🐳 BotVerse sandbox reality check",
+  "agent": "docker",
+  "status": "open",
+  "mode": "ops",
+  "channel": "#myops",
+  "createdAt": "2026-04-03T14:27:46.492Z",
+  "updatedAt": "2026-04-03T14:32:02.393Z",
+  "history": [
+    {
+      "at": "2026-04-03T14:27:46.493Z",
+      "type": "created",
+      "title": "🐳 BotVerse sandbox reality check",
+      "agent": "docker",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T14:27:51.631Z",
+      "type": "message",
+      "actor": "docker",
+      "message": "📋 משימה: לבדוק האם ל-BotVerse באמת יש sandbox אמיתי ומבודד, או שיש רק תיקייה/endpoint שנראים כמו sandbox. לבדוק נתיבים, services, ports, nginx, git, DB, ומה באמת מבודד ומה לא. להחזיר סיכום קצר בעברית עם מסקנה חד-משמעית."
+    },
+    {
+      "at": "2026-04-03T14:28:22.323Z",
+      "type": "message",
+      "actor": "docker",
+      "message": "🧭 תכנית: בודק נתיבים, services, ports, nginx, git ו-DB כדי לקבוע אם יש sandbox אמיתי ומבודד."
+    },
+    {
+      "at": "2026-04-03T14:29:11.569Z",
+      "type": "message",
+      "actor": "docker",
+      "message": "⏳ עדכון: מצאתי שיש תיקיית /root/sandbox/BotVerse ו-service בשם sandbox-botverse, אבל צריך לוודא אם הוא באמת נפרד — בודק עכשיו unit files, פורטים ו-DB בפועל."
+    },
+    {
+      "at": "2026-04-03T14:32:02.393Z",
+      "type": "message",
+      "actor": "docker",
+      "message": "סיכום חד: ל-BotVerse אין sandbox אמיתי ומבודד. יש עותק קוד נפרד ב-/root/sandbox/BotVerse ו-service נפרד (sandbox-botverse) שרץ על 9099, אבל הוא מחובר לאותו MongoDB של production: mongodb://localhost:27017/botverse. בנוסף, גם botverse.dev וגם botverse.duckdns.org ב-nginx מפנים ל-4000 של production, ו-9089 בכלל מציג ZozoBet ולא BotVerse. כלומר: יש סביבת קוד/תהליך חלקית, אבל לא בידוד אמיתי — כל write מה-sandbox עלול לגעת בפרודקשן."
+    }
+  ]
+}

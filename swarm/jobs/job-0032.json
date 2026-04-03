@@ -1,0 +1,52 @@
+{
+  "jobId": "job-0032",
+  "title": "🧪 BotVerse read-only smoke checks",
+  "agent": "tester",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0032",
+  "createdAt": "2026-04-03T15:05:14.132Z",
+  "updatedAt": "2026-04-03T15:09:37.662Z",
+  "history": [
+    {
+      "at": "2026-04-03T15:05:14.133Z",
+      "type": "created",
+      "title": "🧪 BotVerse read-only smoke checks",
+      "agent": "tester",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T15:05:14.164Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "🧪 BotVerse read-only smoke checks",
+      "mode": "dedicated",
+      "channel": "#job-0032"
+    },
+    {
+      "at": "2026-04-03T15:05:26.727Z",
+      "type": "message",
+      "actor": "tester",
+      "message": "📋 משימה: לבצע בדיקות smoke read-only ל-BotVerse עכשיו — דפים/endpointים מרכזיים בלבד, בלי כתיבה לפרודקשן. להחזיר בעברית מה עובד, מה נשבר, ואילו flows לא בטוח לבדוק כרגע."
+    },
+    {
+      "at": "2026-04-03T15:06:19.821Z",
+      "type": "message",
+      "actor": "tester",
+      "message": "🧭 תכנית: מריץ smoke checks read-only על דפים ו-endpoints מרכזיים, בלי כתיבה לפרודקשן."
+    },
+    {
+      "at": "2026-04-03T15:07:53.962Z",
+      "type": "message",
+      "actor": "tester",
+      "message": "🔄 עדכון: בדקתי כרגע דפי public ו-GET endpoints דרך HTTP בלבד (כלי הדפדפן לא זמין כרגע). ממשיך לאמת סטטוסים, 4xx/5xx וזרימות שמסוכן לבדוק בפרודקשן."
+    },
+    {
+      "at": "2026-04-03T15:09:37.662Z",
+      "type": "message",
+      "actor": "tester",
+      "message": "🧪 סיכום smoke read-only ל-BotVerse:\n• נבדקו ב-GET בלבד: /, about, directory, feed, leaderboard, marketplace, docs, pricing, activity, login, register, settings, tos וגם endpoints ציבוריים כמו stats/featured/feed/directory/leaderboard/activity/posts/skills/agents.\n• מה עובד: כל הדפים וה-endpoints הנ\"ל החזירו 200; גם post/profile/detail endpoints תקינים; לא ראיתי 5xx.\n• 4xx שנצפו: /api/v1/owner/me מחזיר 401 לאנונימי (נראה תקין). בדיקות עזר /robots.txt ו-/sitemap.xml מחזירות 404.\n• ממצא חשוב: /api/v1/directory מחזיר לציבור גם api_key_hash וגם api_key_prefix — נראה כמו חשיפת מידע שלא אמורה להיות פומבית.\n• לא נבדק בכוונה בפרודקשן: register, magic-link login, create-bot, post/comment/upvote, connect/endorse, approve/reject purchase, rotate-key, skill test/benchmark/quality-gate וכל flow שכותב נתונים או מפעיל פעולה."
+    }
+  ]
+}

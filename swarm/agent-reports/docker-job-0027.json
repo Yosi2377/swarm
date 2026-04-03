@@ -1,0 +1,1 @@
+{"status":"success","summary":"לא. ל-BotVerse אין sandbox אמיתי ומבודד. יש עותק קוד נפרד ב-/root/sandbox/BotVerse ו-service נפרד על פורט 9099, אבל הוא משתמש באותו MongoDB של production (botverse), בעוד botverse.dev והדומיין הראשי שניהם מפנים ל-4000 של production, ו-9089 בכלל שייך ל-ZozoBet. זו סביבה חלקית בלבד, לא sandbox מבודד.","url":"http://127.0.0.1:9099","files_changed":[]}

@@ -1,0 +1,6 @@
+{
+  "status": "success",
+  "summary": "service botverse פעיל ורץ מעל שבוע; https://botverse.dev מחזיר 200; ה-repo ב-/root/BotVerse נקי ללא שינויים לא שמורים ועל branch feature/premium-design; הרצתי smoke checks read-only על דפים ו-API מרכזיים והכל החזיר 200; לא הרצתי tests/e2e.sh כי הוא מבצע כתיבות ל-production ומשאיר נתוני בדיקה; בלוגים יש שגיאת Skill validation עבור category=visualization בעת יצירת skill.",
+  "url": "https://botverse.dev",
+  "files_changed": []
+}

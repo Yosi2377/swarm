@@ -1,0 +1,58 @@
+{
+  "jobId": "job-0030",
+  "title": "⚙️ BotVerse live health + repo check",
+  "agent": "koder",
+  "status": "closed",
+  "mode": "dedicated",
+  "channel": "#job-0030",
+  "createdAt": "2026-04-03T15:05:14.104Z",
+  "updatedAt": "2026-04-03T15:08:15.590Z",
+  "history": [
+    {
+      "at": "2026-04-03T15:05:14.104Z",
+      "type": "created",
+      "title": "⚙️ BotVerse live health + repo check",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-03T15:05:14.134Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "⚙️ BotVerse live health + repo check",
+      "mode": "dedicated",
+      "channel": "#job-0030"
+    },
+    {
+      "at": "2026-04-03T15:05:24.724Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "📋 משימה: לבדוק עכשיו את הסטטוס החי של BotVerse בפרודקשן — service health, האתר/HTTP, endpoints עיקריים, repo status ב-/root/BotVerse, לוגים רלוונטיים, וחסמים/המלצה קצרה. להחזיר סיכום ברור בעברית."
+    },
+    {
+      "at": "2026-04-03T15:06:17.691Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "🧭 תכנית: בודק service, HTTP, repo, לוגים ו-endpoints מרכזיים ואז מסכם בעברית."
+    },
+    {
+      "at": "2026-04-03T15:06:44.052Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "🔄 עדכון: ה-service botverse פעיל ב-systemd. עכשיו בודק דפי פרודקשן, endpoints ציבוריים ויומן שגיאות אחרון."
+    },
+    {
+      "at": "2026-04-03T15:08:15.551Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "✅ סיכום live ל-BotVerse\n• service botverse: active/running, ללא restarts, uptime בערך 8 ימים (PID 751516, מאז 26/03 16:37), מאזין על :4000\n• HTTP/פרונט: /, /explore, /marketplace = 200\n• API ציבורי: /api/v1/health, /api/v1/stats, /api/v1/feed, /api/v1/skills = 200\n• health פנימי: ציון 100, כל 8/8 ה-endpoints שסומנו שם תקינים\n• git ב-/root/BotVerse: working tree נקי, branch=feature/premium-design, מסונכרן עם origin\n• commits אחרונים שנראים מהותיים: תיקוני footer/GitHub OAuth; מעליהם יש auto-backup-ים שעתיים\n• לוגים: אין crash loop. החריגה הבולטת ב-24h האחרונות: Create skill error כי category=visualization לא ערך enum חוקי\n• לא ביצעתי POST/login/write tests כדי לא לסכן פרודקשן\n👉 המלצה: לבדוק/לנרמל את category visualization ב-create skill אם משתמשים מדווחים על כשל ביצירה; מעבר לזה ה-production נראה זמין ויציב כרגע."
+    },
+    {
+      "at": "2026-04-03T15:08:15.590Z",
+      "type": "closed",
+      "summary": "✅ סיכום live ל-BotVerse\n• service botverse: active/running, ללא restarts, uptime בערך 8 ימים (PID 751516, מאז 26/03 16:37), מאזין על :4000\n• HTTP/פרונט: /, /explore, /marketplace = 200\n• API ציבורי: /api/v1/health, /api/v1/stats, /api/v1/feed, /api/v1/skills = 200\n• health פנימי: ציון 100, כל 8/8 ה-endpoints שסומנו שם תקינים\n• git ב-/root/BotVerse: working tree נקי, branch=feature/premium-design, מסונכרן עם origin\n• commits אחרונים שנראים מהותיים: תיקוני footer/GitHub OAuth; מעליהם יש auto-backup-ים שעתיים\n• לוגים: אין crash loop. החריגה הבולטת ב-24h האחרונות: Create skill error כי category=visualization לא ערך enum חוקי\n• לא ביצעתי POST/login/write tests כדי לא לסכן פרודקשן\n👉 המלצה: לבדוק/לנרמל את category visualization ב-create skill אם משתמשים מדווחים על כשל ביצירה; מעבר לזה ה-production נראה זמין ויציב כרגע."
+    }
+  ],
+  "summary": "✅ סיכום live ל-BotVerse\n• service botverse: active/running, ללא restarts, uptime בערך 8 ימים (PID 751516, מאז 26/03 16:37), מאזין על :4000\n• HTTP/פרונט: /, /explore, /marketplace = 200\n• API ציבורי: /api/v1/health, /api/v1/stats, /api/v1/feed, /api/v1/skills = 200\n• health פנימי: ציון 100, כל 8/8 ה-endpoints שסומנו שם תקינים\n• git ב-/root/BotVerse: working tree נקי, branch=feature/premium-design, מסונכרן עם origin\n• commits אחרונים שנראים מהותיים: תיקוני footer/GitHub OAuth; מעליהם יש auto-backup-ים שעתיים\n• לוגים: אין crash loop. החריגה הבולטת ב-24h האחרונות: Create skill error כי category=visualization לא ערך enum חוקי\n• לא ביצעתי POST/login/write tests כדי לא לסכן פרודקשן\n👉 המלצה: לבדוק/לנרמל את category visualization ב-create skill אם משתמשים מדווחים על כשל ביצירה; מעבר לזה ה-production נראה זמין ויציב כרגע."
+}

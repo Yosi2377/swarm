@@ -41,6 +41,11 @@ if (!TASK || !TOPIC_ID) {
 }
 
 const SEND_SH = path.resolve(__dirname, '..', 'send.sh');
+const JOB_ID_MATCH = String(TASK || '').match(/\[(job-\d+)\]/i);
+const JOB_TAG = JOB_ID_MATCH ? `[${JOB_ID_MATCH[1]}] ` : '';
+const LOCK_KEY = JOB_ID_MATCH ? JOB_ID_MATCH[1] : String(TOPIC_ID || 'collab');
+const LOCK_DIR = '/tmp/swarm-collab-locks';
+const LOCK_FILE = path.join(LOCK_DIR, `${LOCK_KEY}.lock`);
 
 const ROLE_PERSPECTIVES = {
   koder: { emoji: '⚙️', focus: 'implementation, code architecture, performance', role: 'senior software engineer' },
@@ -67,6 +72,19 @@ function sendToTopic(agentId, msg) {
 }
 
 async function run() {
+  fs.mkdirSync(LOCK_DIR, { recursive: true });
+  if (fs.existsSync(LOCK_FILE)) {
+    const pid = parseInt(fs.readFileSync(LOCK_FILE, 'utf8').trim(), 10);
+    if (Number.isFinite(pid)) {
+      try {
+        process.kill(pid, 0);
+        console.log(`collab session already running for ${LOCK_KEY} (pid ${pid})`);
+        return;
+      } catch (_) {}
+    }
+  }
+  fs.writeFileSync(LOCK_FILE, String(process.pid));
+
   const cm = new ConversationManager();
   const de = new DecisionEngine();
   const rs = new ReviewSystem();

@@ -107,8 +107,8 @@ if [ "$TRANSPORT" = "irc" ] || echo "$THREAD_ID" | grep -q '^job-'; then
 
   set +e
   if [ "$AGENT_ID" = "or" ]; then
-    python3 "$SWARM_DIR/irc-ensure-account-channel.py" or "$TARGET_CHANNEL" >/dev/null 2>&1 || true
-    RESULT=$(openclaw message send --channel irc --account or --target "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" --json 2>&1)
+    python3 "$SWARM_DIR/irc-ensure-account-channel.py" main "$TARGET_CHANNEL" >/dev/null 2>&1 || true
+    RESULT=$(openclaw message send --channel irc --target "$TARGET_CHANNEL" --message "$FINAL_MESSAGE" --json 2>&1)
     STATUS=$?
   else
     python3 "$SWARM_DIR/irc-agent-hub.py" ensure-start >/dev/null 2>&1 || true
@@ -135,7 +135,7 @@ if [ "$TRANSPORT" = "irc" ] || echo "$THREAD_ID" | grep -q '^job-'; then
     node "$SWARM_DIR/core/job-store.js" close "$JOB_ID" "$MESSAGE" >/dev/null 2>&1 || true
     if [ "$TARGET_CHANNEL" != "$OPS_CHANNEL" ]; then
       if [ "$AGENT_ID" = "or" ]; then
-        openclaw message send --channel irc --account or --target "$OPS_CHANNEL" --message "[$JOB_ID] ✅ סיכום סופי מ-$TARGET_CHANNEL: $MESSAGE" >/dev/null 2>&1 || true
+        openclaw message send --channel irc --target "$OPS_CHANNEL" --message "[$JOB_ID] ✅ סיכום סופי מ-$TARGET_CHANNEL: $MESSAGE" >/dev/null 2>&1 || true
       else
         python3 "$SWARM_DIR/irc-agent-hub.py" send --agent "$AGENT_ID" --channel "$OPS_CHANNEL" --message "[$JOB_ID] ✅ סיכום סופי מ-$TARGET_CHANNEL: $MESSAGE" >/dev/null 2>&1 || true
       fi

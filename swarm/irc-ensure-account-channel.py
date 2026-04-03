@@ -9,7 +9,7 @@ CFG = Path('/root/.openclaw/openclaw.json')
 
 def main():
     if len(sys.argv) != 3:
-        print('Usage: irc-ensure-account-channel.py <account_id> <channel>', file=sys.stderr)
+        print('Usage: irc-ensure-account-channel.py <account_id|main> <channel>', file=sys.stderr)
         return 1
     account_id, channel = sys.argv[1], sys.argv[2]
     if not channel.startswith('#'):
@@ -17,14 +17,23 @@ def main():
         return 1
     data = json.loads(CFG.read_text(encoding='utf-8'))
     irc = data.setdefault('channels', {}).setdefault('irc', {})
-    accounts = irc.setdefault('accounts', {})
-    account = accounts.setdefault(account_id, {'enabled': True})
-    channels = list(account.get('channels', []))
     changed = False
-    if channel not in channels:
-        channels.append(channel)
-        account['channels'] = channels
-        changed = True
+
+    if account_id in ('main', 'or', '-'):
+        channels = list(irc.get('channels', []))
+        if channel not in channels:
+            channels.append(channel)
+            irc['channels'] = channels
+            changed = True
+    else:
+        accounts = irc.setdefault('accounts', {})
+        account = accounts.setdefault(account_id, {'enabled': True})
+        channels = list(account.get('channels', []))
+        if channel not in channels:
+            channels.append(channel)
+            account['channels'] = channels
+            changed = True
+
     groups = irc.setdefault('groups', {})
     if channel not in groups:
         groups[channel] = {'requireMention': False, 'allowFrom': ['*']}

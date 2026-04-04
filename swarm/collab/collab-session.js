@@ -10,6 +10,7 @@
 
 // No external API keys needed — uses Claude via OpenClaw
 
+const fs = require('fs');
 const ConversationManager = require('./conversation-manager');
 const DecisionEngine = require('./decision-engine');
 const ReviewSystem = require('./review-system');

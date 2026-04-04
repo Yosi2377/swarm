@@ -99,6 +99,13 @@ else:
 PY
 )
 
+# Hard rule for IRC: if this is already a real job id, force it into its
+# dedicated #job-* channel before any agent work starts. This prevents tasks
+# from staying in #myops as ops-mode single-agent work.
+if [ "$TRANSPORT" = "irc" ] && echo "$THREAD_ID" | grep -q '^job-'; then
+  node "${SWARM_DIR}/core/job-store.js" ensure-channel "$THREAD_ID" "$TASK_DESC" >/dev/null 2>&1 || true
+fi
+
 COLLAB_AGENTS=""
 COLLAB_MODE=""
 if echo "$TASK_LOWER" | grep -qE '(review|ביקורת|בדיקת קוד|code review)'; then

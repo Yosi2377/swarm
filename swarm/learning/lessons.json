@@ -9,7 +9,7 @@
       "what": "Pushed code directly to production without sandbox",
       "lesson": "ALWAYS work in sandbox first, never push to production without user approval",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 65
+      "applied": 72
     },
     {
       "id": "e82efb93",
@@ -19,7 +19,7 @@
       "what": "Didn't create topic for task",
       "lesson": "EVERY task gets its own Telegram topic, no exceptions",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 59
+      "applied": 66
     },
     {
       "id": "eeb50f4e",
@@ -39,7 +39,7 @@
       "what": "Orchestrator coded instead of delegating to koder",
       "lesson": "Orchestrator must DELEGATE to agents, never code directly",
       "timestamp": "2026-02-15T04:03:55Z",
-      "applied": 0
+      "applied": 1
     },
     {
       "id": "1fd332a1",
@@ -79,7 +79,7 @@
       "what": "Koder deployed dashboard changes directly without waiting for user approval",
       "lesson": "Even for non-production services like the dashboard, WAIT for user approval before deploying. The flow is: screenshots → user reviews → user approves → deploy.",
       "timestamp": "2026-02-15T04:13:47Z",
-      "applied": 64
+      "applied": 73
     },
     {
       "id": "611b3199",
@@ -89,7 +89,7 @@
       "what": "commenceTime saved as string not Date object",
       "lesson": "Always use new Date() when saving dates to MongoDB, not toString(). Mongoose won't auto-convert strings to Date type.",
       "timestamp": "2026-02-15T11:53:28Z",
-      "applied": 63
+      "applied": 72
     },
     {
       "id": "bdf77ff4",
@@ -99,7 +99,7 @@
       "what": "limit(100) blocked events from loading",
       "lesson": "Never use hard limit() on queries that may return more results. Use pagination or remove limit for admin/internal queries.",
       "timestamp": "2026-02-15T11:53:28Z",
-      "applied": 63
+      "applied": 71
     },
     {
       "id": "70b8ae5a",
@@ -119,7 +119,7 @@
       "what": "stale events not marked completed after date passed",
       "lesson": "Add a cleanup job or query filter: if event.commenceTime < now and status is not completed, auto-mark or filter out.",
       "timestamp": "2026-02-15T11:53:28Z",
-      "applied": 29
+      "applied": 30
     },
     {
       "id": "f706aebd",
@@ -349,7 +349,7 @@
       "what": "self-heal failed: false",
       "lesson": "Command failed 3 times. Log: /tmp/heal-20260218-060328.log",
       "timestamp": "2026-02-18T05:03:29Z",
-      "applied": 16
+      "applied": 18
     },
     {
       "id": "6b8399da",
@@ -429,7 +429,7 @@
       "what": "self-heal failed: ls /root/.openclaw/workspace",
       "lesson": "Command failed 2 times. Log: /tmp/heal-20260218-062055.log",
       "timestamp": "2026-02-18T05:20:55Z",
-      "applied": 16
+      "applied": 17
     },
     {
       "id": "2fd859d1",
@@ -519,7 +519,7 @@
       "what": "Orchestrator waits for Yossi to ask 'what happened' instead of proactively updating",
       "lesson": "After spawning an agent: set a reminder/check after 3-5 min and proactively report to General. NEVER wait for user to ask for status.",
       "timestamp": "2026-02-19T09:20:53Z",
-      "applied": 15
+      "applied": 18
     },
     {
       "id": "8c5a93e8",
@@ -609,7 +609,7 @@
       "what": "messages.html only worked with API key, not owner cookie auth",
       "lesson": "Always test new pages as logged-in owner (cookie), not just bot API key. Add user flow E2E tests, not just HTTP 200.",
       "timestamp": "2026-03-02T23:30:52Z",
-      "applied": 15
+      "applied": 17
     },
     {
       "id": "11ae1363",

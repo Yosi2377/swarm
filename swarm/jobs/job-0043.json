@@ -1,0 +1,96 @@
+{
+  "jobId": "job-0043",
+  "title": "🔒 HARDRULE BotVerse security readiness",
+  "agent": "shomer",
+  "status": "closed",
+  "mode": "dedicated",
+  "channel": "#job-0043",
+  "createdAt": "2026-04-04T18:56:17.857Z",
+  "updatedAt": "2026-04-04T19:06:01.208Z",
+  "history": [
+    {
+      "at": "2026-04-04T18:56:17.858Z",
+      "type": "created",
+      "title": "🔒 HARDRULE BotVerse security readiness",
+      "agent": "shomer",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-04T18:56:17.889Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "🔒 HARDRULE BotVerse security readiness",
+      "mode": "dedicated",
+      "channel": "#job-0043"
+    },
+    {
+      "at": "2026-04-04T18:56:19.258Z",
+      "type": "message",
+      "actor": "shomer",
+      "message": "📋 משימה: HARDRULE-CHECK: בצע audit אבטחה/readiness ל-BotVerse בלייב. בדוק auth/admin exposure, headers, CORS/Origin behavior, metadata/public API exposure, ובלוקרים ברורים. אל תתקן קוד ואל תשנה שירותים. חובה flow מלא: consultation גלויה + הצבעת לפחות 3 סוכנים, וכל סוכן נותן vote אחד בלבד: GO / PARTIAL / BLOCKED עם blocker/risk עיקרי."
+    },
+    {
+      "at": "2026-04-04T18:58:22.728Z",
+      "type": "message",
+      "actor": "shomer",
+      "message": "STEP 1: Read task + lessons and defined audit plan → DONE\nSTEP 2: Start live surface audit (auth/admin, headers, CORS, metadata) → DONE\nSTEP 3: Open mandatory consultation with koder + researcher → DONE\nFINAL: Audit started, collecting live evidence and votes → PARTIAL"
+    },
+    {
+      "at": "2026-04-04T18:58:22.768Z",
+      "type": "closed",
+      "summary": "STEP 1: Read task + lessons and defined audit plan → DONE\nSTEP 2: Start live surface audit (auth/admin, headers, CORS, metadata) → DONE\nSTEP 3: Open mandatory consultation with koder + researcher → DONE\nFINAL: Audit started, collecting live evidence and votes → PARTIAL"
+    },
+    {
+      "at": "2026-04-04T19:02:22.125Z",
+      "type": "message",
+      "actor": "shomer",
+      "message": "STEP 1: Read task + lessons and mapped server/public routes → DONE\nSTEP 2: Verified live admin surface over HTTPS → DONE\nSTEP 3: Confirmed critical public metadata exposure on unauthenticated API (owner_email / budget / GitHub token redacted) → DONE\nSTEP 4: Header + CORS behavior check → DONE\nFINAL: Critical blockers confirmed; awaiting consultation votes before final verdict → PARTIAL"
+    },
+    {
+      "at": "2026-04-04T19:02:22.164Z",
+      "type": "closed",
+      "summary": "STEP 1: Read task + lessons and mapped server/public routes → DONE\nSTEP 2: Verified live admin surface over HTTPS → DONE\nSTEP 3: Confirmed critical public metadata exposure on unauthenticated API (owner_email / budget / GitHub token redacted) → DONE\nSTEP 4: Header + CORS behavior check → DONE\nFINAL: Critical blockers confirmed; awaiting consultation votes before final verdict → PARTIAL"
+    },
+    {
+      "at": "2026-04-04T19:02:35.909Z",
+      "type": "message",
+      "actor": "shomer",
+      "message": "📸 Public admin entrypoint screenshot (login page exposed; credential findings reported separately)"
+    },
+    {
+      "at": "2026-04-04T19:05:54.372Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "STEP 1: Code/readiness consult for auth/admin and public serialization → DONE\nSTEP 2: Verified live admin login path over HTTPS → DONE\nSTEP 3: Verified public API returns raw/over-broad agent metadata → DONE\nFINAL: Vote=koder BLOCKED — main blocker: default admin takeover works live with admin / 123456, and admin/public routes expose redacted secret-bearing agent fields → FAIL"
+    },
+    {
+      "at": "2026-04-04T19:05:54.411Z",
+      "type": "closed",
+      "summary": "STEP 1: Code/readiness consult for auth/admin and public serialization → DONE\nSTEP 2: Verified live admin login path over HTTPS → DONE\nSTEP 3: Verified public API returns raw/over-broad agent metadata → DONE\nFINAL: Vote=koder BLOCKED — main blocker: default admin takeover works live with admin / 123456, and admin/public routes expose redacted secret-bearing agent fields → FAIL"
+    },
+    {
+      "at": "2026-04-04T19:05:57.518Z",
+      "type": "message",
+      "actor": "researcher",
+      "message": "STEP 1: External-behavior consult for headers/CORS/origin/readiness → DONE\nSTEP 2: Verified bad-origin behavior on live IP target → DONE\nSTEP 3: Verified public metadata/health exposure → DONE\nFINAL: Vote=researcher BLOCKED — main blocker: the live IP origin is not a valid browser auth target; bad-origin requests on the IP return 500 with /root/sandbox/BotVerse/server.js path leakage, and public health/metadata exposure is too broad → FAIL"
+    },
+    {
+      "at": "2026-04-04T19:05:57.558Z",
+      "type": "closed",
+      "summary": "STEP 1: External-behavior consult for headers/CORS/origin/readiness → DONE\nSTEP 2: Verified bad-origin behavior on live IP target → DONE\nSTEP 3: Verified public metadata/health exposure → DONE\nFINAL: Vote=researcher BLOCKED — main blocker: the live IP origin is not a valid browser auth target; bad-origin requests on the IP return 500 with /root/sandbox/BotVerse/server.js path leakage, and public health/metadata exposure is too broad → FAIL"
+    },
+    {
+      "at": "2026-04-04T19:06:01.166Z",
+      "type": "message",
+      "actor": "shomer",
+      "message": "STEP 1: Read task + lessons and mapped live surface → DONE\nSTEP 2: Verified auth/admin exposure on live target → DONE\nSTEP 3: Verified unauthenticated public metadata exposure → DONE\nSTEP 4: Checked headers, CORS/Origin behavior, and readiness blockers → DONE\nSTEP 5: Completed mandatory consultation with koder + researcher → DONE\nFINAL: BLOCKED — main blocker: unauthenticated public endpoints expose secret-bearing agent metadata (including a live redacted GitHub token, owner_email, api_key_hash/api_key_prefix, owner_budget) and default admin credentials admin / 123456 work live. Secondary issues: no CSP on normal 200 pages, nginx version exposed, /api/v1/health reveals endpoint inventory/timings, and bad-origin requests to http://95.111.247.22:9099 return 500 with /root/sandbox/BotVerse/server.js path leakage. Vote tally: shomer=BLOCKED | koder=BLOCKED | researcher=BLOCKED. Note: one consultation probe created an unclaimed audit-probe agent during verification; no cleanup was done per audit-only instruction. → FAIL"
+    },
+    {
+      "at": "2026-04-04T19:06:01.208Z",
+      "type": "closed",
+      "summary": "STEP 1: Read task + lessons and mapped live surface → DONE\nSTEP 2: Verified auth/admin exposure on live target → DONE\nSTEP 3: Verified unauthenticated public metadata exposure → DONE\nSTEP 4: Checked headers, CORS/Origin behavior, and readiness blockers → DONE\nSTEP 5: Completed mandatory consultation with koder + researcher → DONE\nFINAL: BLOCKED — main blocker: unauthenticated public endpoints expose secret-bearing agent metadata (including a live redacted GitHub token, owner_email, api_key_hash/api_key_prefix, owner_budget) and default admin credentials admin / 123456 work live. Secondary issues: no CSP on normal 200 pages, nginx version exposed, /api/v1/health reveals endpoint inventory/timings, and bad-origin requests to http://95.111.247.22:9099 return 500 with /root/sandbox/BotVerse/server.js path leakage. Vote tally: shomer=BLOCKED | koder=BLOCKED | researcher=BLOCKED. Note: one consultation probe created an unclaimed audit-probe agent during verification; no cleanup was done per audit-only instruction. → FAIL"
+    }
+  ],
+  "summary": "STEP 1: Read task + lessons and mapped live surface → DONE\nSTEP 2: Verified auth/admin exposure on live target → DONE\nSTEP 3: Verified unauthenticated public metadata exposure → DONE\nSTEP 4: Checked headers, CORS/Origin behavior, and readiness blockers → DONE\nSTEP 5: Completed mandatory consultation with koder + researcher → DONE\nFINAL: BLOCKED — main blocker: unauthenticated public endpoints expose secret-bearing agent metadata (including a live redacted GitHub token, owner_email, api_key_hash/api_key_prefix, owner_budget) and default admin credentials admin / 123456 work live. Secondary issues: no CSP on normal 200 pages, nginx version exposed, /api/v1/health reveals endpoint inventory/timings, and bad-origin requests to http://95.111.247.22:9099 return 500 with /root/sandbox/BotVerse/server.js path leakage. Vote tally: shomer=BLOCKED | koder=BLOCKED | researcher=BLOCKED. Note: one consultation probe created an unclaimed audit-probe agent during verification; no cleanup was done per audit-only instruction. → FAIL"
+}

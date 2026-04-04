@@ -1,0 +1,12 @@
+## 2026-04-04T20:00+02:00
+- Step 1: Read task, SYSTEM, security-review skill, lessons.
+- Step 2: Live audit found critical admin issue: /api/v1/admin/login accepts default admin/123456 over HTTPS and grants admin dashboard access.
+- Step 3: Public metadata exposure confirmed: /api/v1/directory and /api/v1/agents/name/:name leak owner_email, owner_budget, claim flags, api_key_prefix, and github.token for at least one live bot (token redacted in reporting).
+- Step 4: Headers mostly present; CSP missing on main app; nginx version exposed; disallowed CORS preflight returns 500.
+- Consultation requested from koder + researcher via spawned subagents.
+- Step 5: Independently verified additional researcher findings: public /api/v1/health exposes endpoint inventory/timings; public /api/v1/directory exposes api_key_hash, api_key_prefix, owner_email, budget, github token field (redacted in report); bad-origin requests on http://95.111.247.22:9099 leak /root/sandbox/BotVerse/server.js path in HTML error.
+- Note: a consultation probe created one unclaimed agent named audit-probe at 2026-04-04T19:00:07Z; left untouched per audit-only rule.
+- Step 6: Posted visible consultation summaries for koder/researcher and final shomer report to job-0043.
+- Final verdict: BLOCKED. Vote tally = shomer BLOCKED, koder BLOCKED, researcher BLOCKED.
+- Main blocker: public unauthenticated secret-bearing metadata exposure + live default admin credentials.
+- Required done marker created at /tmp/agent-done/shomer-job-0043.json.

@@ -1,0 +1,28 @@
+{
+  "jobId": "job-0040",
+  "title": "Ops born job test 2",
+  "agent": "koder",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0040",
+  "createdAt": "2026-04-04T18:54:23.263Z",
+  "updatedAt": "2026-04-04T18:54:23.326Z",
+  "history": [
+    {
+      "at": "2026-04-04T18:54:23.263Z",
+      "type": "created",
+      "title": "Ops born job test 2",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-04T18:54:23.326Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "בדיקת קידום job מ-ops ל-dedicated 2",
+      "mode": "dedicated",
+      "channel": "#job-0040"
+    }
+  ]
+}

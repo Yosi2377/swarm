@@ -1,0 +1,75 @@
+{
+  "jobId": "job-0037",
+  "title": "🔒 BotVerse security/readiness vote",
+  "agent": "shomer",
+  "status": "closed",
+  "mode": "dedicated",
+  "channel": "#job-0037",
+  "createdAt": "2026-04-04T17:45:13.189Z",
+  "updatedAt": "2026-04-04T17:56:22.350Z",
+  "history": [
+    {
+      "at": "2026-04-04T17:45:13.189Z",
+      "type": "created",
+      "title": "🔒 BotVerse security/readiness vote",
+      "agent": "shomer",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-04T17:45:13.220Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "🔒 BotVerse security/readiness vote",
+      "mode": "dedicated",
+      "channel": "#job-0037"
+    },
+    {
+      "at": "2026-04-04T17:45:14.789Z",
+      "type": "message",
+      "actor": "shomer",
+      "message": "📋 משימה: בצע security/readiness check מהיר ל-BotVerse החי: credentials ברירת מחדל, auth, headers/HTTPS, וסיכוני חשיפה ברורים. חובה consultation + הצבעה של לפחות 3 סוכנים. כל סוכן חייב לתת vote אחד בלבד: GO / PARTIAL / BLOCKED, עם סיכון/בלוקר עיקרי. אל תשנה שום דבר — רק audit ודוח."
+    },
+    {
+      "at": "2026-04-04T17:49:17.945Z",
+      "type": "message",
+      "actor": "shomer",
+      "message": "STEP 1: Live HTTPS/header/auth smoke check → DONE\nSTEP 2: Initial security findings → DONE\n- Public GET /api/v1/directory currently exposes api_key_hash + api_key_prefix for agents.\n- HTTPS/HSTS OK; CSP missing on normal 200 pages; server version exposed.\n- /api/v1/owner/me = 401 unauthenticated; admin API probes require auth, but /admin.html is publicly reachable login UI.\nSTEP 3: Consultation request to koder + researcher → DONE\n@koder @researcher please reply with exactly one vote (GO / PARTIAL / BLOCKED) + main blocker/risk.\nFINAL: Initial audit complete, awaiting collab votes → PARTIAL"
+    },
+    {
+      "at": "2026-04-04T17:49:17.985Z",
+      "type": "closed",
+      "summary": "STEP 1: Live HTTPS/header/auth smoke check → DONE\nSTEP 2: Initial security findings → DONE\n- Public GET /api/v1/directory currently exposes api_key_hash + api_key_prefix for agents.\n- HTTPS/HSTS OK; CSP missing on normal 200 pages; server version exposed.\n- /api/v1/owner/me = 401 unauthenticated; admin API probes require auth, but /admin.html is publicly reachable login UI.\nSTEP 3: Consultation request to koder + researcher → DONE\n@koder @researcher please reply with exactly one vote (GO / PARTIAL / BLOCKED) + main blocker/risk.\nFINAL: Initial audit complete, awaiting collab votes → PARTIAL"
+    },
+    {
+      "at": "2026-04-04T17:52:28.009Z",
+      "type": "message",
+      "actor": "researcher",
+      "message": "PARTIAL — TLS/HSTS look good, but the main HTML has no Content-Security-Policy while using inline JS, and the server exposes nginx/Ubuntu version; biggest risk is avoidable XSS blast radius plus stack disclosure."
+    },
+    {
+      "at": "2026-04-04T17:54:25.129Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "BLOCKED — public auth/API is not prod-ready: /api/v1/auth/send-magic-link leaks account existence (404 + register_url), Origin header requests 500, and /api/v1/agents/register mints API keys from minimal payload."
+    },
+    {
+      "at": "2026-04-04T17:56:20.160Z",
+      "type": "message",
+      "actor": "shomer",
+      "message": "📸 BotVerse security/readiness status"
+    },
+    {
+      "at": "2026-04-04T17:56:22.310Z",
+      "type": "message",
+      "actor": "shomer",
+      "message": "STEP 1: Verify live site reachability with required curl HEAD+GET checks → DONE\nSTEP 2: Assess HTTPS/TLS and security headers → DONE\nSTEP 3: Assess auth exposure, default-credential risk, and public blockers → DONE\nSTEP 4: Gather consultation votes from researcher and koder → DONE\nSTEP 5: Decide final readiness vote and tally → DONE\nFINAL: Live summary — HTTPS works (HTTP→HTTPS redirect, valid Let's Encrypt cert, HSTS present) and unauthenticated owner/admin API probes are gated, but BotVerse is not security-ready: public GET /api/v1/directory exposes api_key_hash + api_key_prefix and extra internal metadata, sending an Origin header triggers 500 on live endpoints (/api/v1/posts, /api/v1/stats, /api/v1/owner/me), normal HTML pages still ship without CSP while exposing nginx/Ubuntu version, and default-credential risk remains unresolved because a public admin login exists and recent ops history shows default-style admin credentials existed. Vote tally: GO 0 / PARTIAL 1 / BLOCKED 2 (researcher=PARTIAL, koder=BLOCKED, shomer=BLOCKED). Final vote: BLOCKED. Main blocker/risk: public exposure plus brittle auth/CORS handling on production. → FAIL"
+    },
+    {
+      "at": "2026-04-04T17:56:22.350Z",
+      "type": "closed",
+      "summary": "STEP 1: Verify live site reachability with required curl HEAD+GET checks → DONE\nSTEP 2: Assess HTTPS/TLS and security headers → DONE\nSTEP 3: Assess auth exposure, default-credential risk, and public blockers → DONE\nSTEP 4: Gather consultation votes from researcher and koder → DONE\nSTEP 5: Decide final readiness vote and tally → DONE\nFINAL: Live summary — HTTPS works (HTTP→HTTPS redirect, valid Let's Encrypt cert, HSTS present) and unauthenticated owner/admin API probes are gated, but BotVerse is not security-ready: public GET /api/v1/directory exposes api_key_hash + api_key_prefix and extra internal metadata, sending an Origin header triggers 500 on live endpoints (/api/v1/posts, /api/v1/stats, /api/v1/owner/me), normal HTML pages still ship without CSP while exposing nginx/Ubuntu version, and default-credential risk remains unresolved because a public admin login exists and recent ops history shows default-style admin credentials existed. Vote tally: GO 0 / PARTIAL 1 / BLOCKED 2 (researcher=PARTIAL, koder=BLOCKED, shomer=BLOCKED). Final vote: BLOCKED. Main blocker/risk: public exposure plus brittle auth/CORS handling on production. → FAIL"
+    }
+  ],
+  "summary": "STEP 1: Verify live site reachability with required curl HEAD+GET checks → DONE\nSTEP 2: Assess HTTPS/TLS and security headers → DONE\nSTEP 3: Assess auth exposure, default-credential risk, and public blockers → DONE\nSTEP 4: Gather consultation votes from researcher and koder → DONE\nSTEP 5: Decide final readiness vote and tally → DONE\nFINAL: Live summary — HTTPS works (HTTP→HTTPS redirect, valid Let's Encrypt cert, HSTS present) and unauthenticated owner/admin API probes are gated, but BotVerse is not security-ready: public GET /api/v1/directory exposes api_key_hash + api_key_prefix and extra internal metadata, sending an Origin header triggers 500 on live endpoints (/api/v1/posts, /api/v1/stats, /api/v1/owner/me), normal HTML pages still ship without CSP while exposing nginx/Ubuntu version, and default-credential risk remains unresolved because a public admin login exists and recent ops history shows default-style admin credentials existed. Vote tally: GO 0 / PARTIAL 1 / BLOCKED 2 (researcher=PARTIAL, koder=BLOCKED, shomer=BLOCKED). Final vote: BLOCKED. Main blocker/risk: public exposure plus brittle auth/CORS handling on production. → FAIL"
+}

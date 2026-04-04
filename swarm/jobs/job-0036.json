@@ -1,0 +1,114 @@
+{
+  "jobId": "job-0036",
+  "title": "🧪 BotVerse smoke/regression + vote",
+  "agent": "tester",
+  "status": "closed",
+  "mode": "dedicated",
+  "channel": "#job-0036",
+  "createdAt": "2026-04-04T17:45:11.251Z",
+  "updatedAt": "2026-04-04T17:55:51.557Z",
+  "history": [
+    {
+      "at": "2026-04-04T17:45:11.251Z",
+      "type": "created",
+      "title": "🧪 BotVerse smoke/regression + vote",
+      "agent": "tester",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-04T17:45:11.283Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "🧪 BotVerse smoke/regression + vote",
+      "mode": "dedicated",
+      "channel": "#job-0036"
+    },
+    {
+      "at": "2026-04-04T17:45:12.650Z",
+      "type": "message",
+      "actor": "tester",
+      "message": "📋 משימה: הרץ בדיקת smoke/regression על BotVerse החי: homepage, login/register, וזרימות public קריטיות שאפשר לבדוק בלי לשבור כלום. חובה consultation + הצבעה של לפחות 3 סוכנים. כל סוכן חייב לתת vote אחד בלבד: GO / PARTIAL / BLOCKED, עם הסבר קצר. אם יש כשלים — תעדף severity ואל תתקן קוד."
+    },
+    {
+      "at": "2026-04-04T17:51:29.469Z",
+      "type": "message",
+      "actor": "researcher",
+      "message": "📸 Researcher consult"
+    },
+    {
+      "at": "2026-04-04T17:52:04.139Z",
+      "type": "message",
+      "actor": "tester",
+      "message": "STEP 1: Ran required local command cd /root/BotVerse && bash tests/e2e.sh → DONE\nSTEP 2: Live smoke on https://botverse.dev homepage/login/register/public pages → DONE\nCurrent findings: local e2e is 43/43 pass, but live public smoke shows frontend regressions: /directory.html requests /api/v1/agents?sort=karma&limit=50 → 404, /about.html requests /api/agents|skills|posts|projects → 404, and several public pages spam /api/v1/owner/me 401 when logged out. Awaiting koder/researcher consultation + votes.\nFINAL: Interim QA update only, not final vote yet → PARTIAL"
+    },
+    {
+      "at": "2026-04-04T17:52:04.181Z",
+      "type": "closed",
+      "summary": "STEP 1: Ran required local command cd /root/BotVerse && bash tests/e2e.sh → DONE\nSTEP 2: Live smoke on https://botverse.dev homepage/login/register/public pages → DONE\nCurrent findings: local e2e is 43/43 pass, but live public smoke shows frontend regressions: /directory.html requests /api/v1/agents?sort=karma&limit=50 → 404, /about.html requests /api/agents|skills|posts|projects → 404, and several public pages spam /api/v1/owner/me 401 when logged out. Awaiting koder/researcher consultation + votes.\nFINAL: Interim QA update only, not final vote yet → PARTIAL"
+    },
+    {
+      "at": "2026-04-04T17:52:17.002Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "📸 Koder consult"
+    },
+    {
+      "at": "2026-04-04T17:53:11.039Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "STEP 1: Audited public BotVerse homepage + auth entry paths with headless browser smoke checks and captured screenshot → DONE\nSTEP 2: Reviewed console/network behavior on homepage, /login, /register, plus auth-gated public nav targets for sanity → DONE\nFINAL: PARTIAL — homepage/login/register load and render, but anonymous visits consistently trigger console-visible 401s from /api/v1/owner/me (and some gated pages hit extra unauthorized owner endpoints before redirect/gating); severity-ranked findings: [Low-Med] repeated unauthorized API noise on public pages, [Low] public nav exposes auth-only routes that redirect/show locked states, [Pass] no hard JS crash and blank auth submits stay client-side with native validation. Vote: PARTIAL"
+    },
+    {
+      "at": "2026-04-04T17:53:11.079Z",
+      "type": "closed",
+      "summary": "STEP 1: Audited public BotVerse homepage + auth entry paths with headless browser smoke checks and captured screenshot → DONE\nSTEP 2: Reviewed console/network behavior on homepage, /login, /register, plus auth-gated public nav targets for sanity → DONE\nFINAL: PARTIAL — homepage/login/register load and render, but anonymous visits consistently trigger console-visible 401s from /api/v1/owner/me (and some gated pages hit extra unauthorized owner endpoints before redirect/gating); severity-ranked findings: [Low-Med] repeated unauthorized API noise on public pages, [Low] public nav exposes auth-only routes that redirect/show locked states, [Pass] no hard JS crash and blank auth submits stay client-side with native validation. Vote: PARTIAL"
+    },
+    {
+      "at": "2026-04-04T17:53:43.071Z",
+      "type": "message",
+      "actor": "tester",
+      "message": "📸 BotVerse smoke/regression status"
+    },
+    {
+      "at": "2026-04-04T17:54:47.173Z",
+      "type": "message",
+      "actor": "researcher",
+      "message": "STEP 1: Live homepage smoke review completed on https://botverse.dev/ with Puppeteer render + screenshot. No hard public breakage found above/below the fold; homepage sections populate and core nav CTAs load. Ranked findings: MEDIUM — first-time onboarding is a bit confusing because '👤 I\\'m a Human' leads to login and '🤖 I\\'m an Agent' leads straight to API docs instead of a clearer guided start. LOW — mixed .html URLs in public nav make the product feel slightly unfinished."
+    },
+    {
+      "at": "2026-04-04T17:54:47.213Z",
+      "type": "closed",
+      "summary": "STEP 1: Live homepage smoke review completed on https://botverse.dev/ with Puppeteer render + screenshot. No hard public breakage found above/below the fold; homepage sections populate and core nav CTAs load. Ranked findings: MEDIUM — first-time onboarding is a bit confusing because '👤 I\\'m a Human' leads to login and '🤖 I\\'m an Agent' leads straight to API docs instead of a clearer guided start. LOW — mixed .html URLs in public nav make the product feel slightly unfinished."
+    },
+    {
+      "at": "2026-04-04T17:54:55.805Z",
+      "type": "message",
+      "actor": "researcher",
+      "message": "STEP 2: Login/register review completed. Register page is clean and readable; unauthenticated dashboard/settings flows correctly resolve back to login in real browser rendering. Ranked findings: MEDIUM — login page shows a raw API setup snippet ('POST /api/v1/agents/me/setup-owner-email') directly inside the human login flow, which is technically accurate but hurts clarity/trust at the conversion step. LOW — login secondary CTA and helper copy are visually de-emphasized enough that new users may hesitate on what to do next."
+    },
+    {
+      "at": "2026-04-04T17:55:03.136Z",
+      "type": "message",
+      "actor": "researcher",
+      "message": "FINAL: PARTIAL — homepage/login/register are live and not obviously broken, but first-time user trust/onboarding is still weakened by confusing CTA flow and overly technical login copy. Severity order: MEDIUM 1) homepage CTA split sends humans to login and agents to docs instead of a clearer onboarding path; MEDIUM 2) login page exposes raw API setup instructions in the main human auth flow; LOW 3) mixed public .html routing feels slightly unfinished. Vote: PARTIAL."
+    },
+    {
+      "at": "2026-04-04T17:55:03.175Z",
+      "type": "closed",
+      "summary": "FINAL: PARTIAL — homepage/login/register are live and not obviously broken, but first-time user trust/onboarding is still weakened by confusing CTA flow and overly technical login copy. Severity order: MEDIUM 1) homepage CTA split sends humans to login and agents to docs instead of a clearer onboarding path; MEDIUM 2) login page exposes raw API setup instructions in the main human auth flow; LOW 3) mixed public .html routing feels slightly unfinished. Vote: PARTIAL."
+    },
+    {
+      "at": "2026-04-04T17:55:51.515Z",
+      "type": "message",
+      "actor": "tester",
+      "message": "STEP 1: Ran required command cd /root/BotVerse && bash tests/e2e.sh and completed live smoke on homepage/login/register/public flows → DONE\nSTEP 2: Gathered consultation from koder + researcher and compared votes/findings against live browser/network checks → DONE\nSTEP 3: Final QA status + vote tally prepared → DONE\nFINAL: Vote tally = tester: PARTIAL, koder: PARTIAL, researcher: PARTIAL (0 GO / 3 PARTIAL / 0 BLOCKED). Current QA status: core public flows are up and usable, and required local e2e passed 43/43, but live public smoke still shows medium-severity regressions: (1) /directory.html requests /api/v1/agents?sort=karma&limit=50 and gets 404 while page falls back to non-live/static content, (2) /about.html requests /api/agents, /api/skills, /api/posts, /api/projects and gets 404, leaving credibility/stat modules disconnected, (3) public pages repeatedly call owner-only endpoints such as /api/v1/owner/me and emit anonymous 401 noise, and (4) onboarding/trust friction remains from homepage CTA routing and technical API copy on login. Final vote: PARTIAL — ship-worthy for limited/demo public browsing, but not clean enough for a confident full public QA GO until broken public API wiring and anonymous 401 noise are fixed. → PARTIAL"
+    },
+    {
+      "at": "2026-04-04T17:55:51.557Z",
+      "type": "closed",
+      "summary": "STEP 1: Ran required command cd /root/BotVerse && bash tests/e2e.sh and completed live smoke on homepage/login/register/public flows → DONE\nSTEP 2: Gathered consultation from koder + researcher and compared votes/findings against live browser/network checks → DONE\nSTEP 3: Final QA status + vote tally prepared → DONE\nFINAL: Vote tally = tester: PARTIAL, koder: PARTIAL, researcher: PARTIAL (0 GO / 3 PARTIAL / 0 BLOCKED). Current QA status: core public flows are up and usable, and required local e2e passed 43/43, but live public smoke still shows medium-severity regressions: (1) /directory.html requests /api/v1/agents?sort=karma&limit=50 and gets 404 while page falls back to non-live/static content, (2) /about.html requests /api/agents, /api/skills, /api/posts, /api/projects and gets 404, leaving credibility/stat modules disconnected, (3) public pages repeatedly call owner-only endpoints such as /api/v1/owner/me and emit anonymous 401 noise, and (4) onboarding/trust friction remains from homepage CTA routing and technical API copy on login. Final vote: PARTIAL — ship-worthy for limited/demo public browsing, but not clean enough for a confident full public QA GO until broken public API wiring and anonymous 401 noise are fixed. → PARTIAL"
+    }
+  ],
+  "summary": "STEP 1: Ran required command cd /root/BotVerse && bash tests/e2e.sh and completed live smoke on homepage/login/register/public flows → DONE\nSTEP 2: Gathered consultation from koder + researcher and compared votes/findings against live browser/network checks → DONE\nSTEP 3: Final QA status + vote tally prepared → DONE\nFINAL: Vote tally = tester: PARTIAL, koder: PARTIAL, researcher: PARTIAL (0 GO / 3 PARTIAL / 0 BLOCKED). Current QA status: core public flows are up and usable, and required local e2e passed 43/43, but live public smoke still shows medium-severity regressions: (1) /directory.html requests /api/v1/agents?sort=karma&limit=50 and gets 404 while page falls back to non-live/static content, (2) /about.html requests /api/agents, /api/skills, /api/posts, /api/projects and gets 404, leaving credibility/stat modules disconnected, (3) public pages repeatedly call owner-only endpoints such as /api/v1/owner/me and emit anonymous 401 noise, and (4) onboarding/trust friction remains from homepage CTA routing and technical API copy on login. Final vote: PARTIAL — ship-worthy for limited/demo public browsing, but not clean enough for a confident full public QA GO until broken public API wiring and anonymous 401 noise are fixed. → PARTIAL"
+}

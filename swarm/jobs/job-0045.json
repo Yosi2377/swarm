@@ -1,0 +1,40 @@
+{
+  "jobId": "job-0045",
+  "title": "⚙️ BotVerse status audit",
+  "agent": "koder",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0045",
+  "createdAt": "2026-04-05T21:33:59.131Z",
+  "updatedAt": "2026-04-05T21:40:01.728Z",
+  "history": [
+    {
+      "at": "2026-04-05T21:33:59.131Z",
+      "type": "created",
+      "title": "⚙️ BotVerse status audit",
+      "agent": "koder",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-05T21:33:59.163Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "⚙️ BotVerse status audit",
+      "mode": "dedicated",
+      "channel": "#job-0045"
+    },
+    {
+      "at": "2026-04-05T21:34:40.377Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "📋 משימה: בדוק מה המצב הנוכחי של BotVerse בלי לשנות קוד או לבצע deploy. תן דוח מצב עדכני: 1) האם https://botverse.dev עולה ונראה תקין, 2) מצב השירות/תהליך הריצה, 3) git status ו-5 commits אחרונים ב-/root/BotVerse, 4) האם יש בעיות/שגיאות/בלוקרים כרגע, 5) מהם 3 הצעדים הבאים המומלצים. דווח בקצרה וברור בתוך ה-job."
+    },
+    {
+      "at": "2026-04-05T21:40:01.728Z",
+      "type": "message",
+      "actor": "koder",
+      "message": "❌ VERIFICATION FAILED (1/3):\n• No structured report\n\nתקן ודווח שוב."
+    }
+  ]
+}

@@ -131,12 +131,13 @@ def reset_history(agent_id: str, sender: str):
 
 
 class AgentConn:
-    def __init__(self, host, port, tls, agent_id, nick, dm_queue, ignored_nicks):
+    def __init__(self, host, port, tls, agent_id, nick, dm_queue, ignored_nicks, auth_pass=None):
         self.host = host
         self.port = port
         self.tls = tls
         self.agent_id = agent_id
         self.nick = nick
+        self.auth_pass = auth_pass
         self.dm_queue = dm_queue
         self.ignored_nicks = {n.lower() for n in ignored_nicks}
         self.sock = None
@@ -159,6 +160,8 @@ class AgentConn:
         self.ready = False
         self.joined.clear()
         self.last_connect = time.time()
+        if self.auth_pass:
+            self.send_line(f'PASS {self.auth_pass}')
         self.send_line(f'NICK {self.nick}')
         self.send_line(f'USER {self.nick} 0 * :{self.agent_id}')
         log(f'[{self.agent_id}] connect started as {self.nick}')
@@ -352,8 +355,12 @@ class Hub:
             if aid not in self.agents_cfg:
                 raise RuntimeError(f'unknown agent {aid}')
             if aid not in self.conns:
-                nick = self.agents_cfg[aid]['nick']
-                self.conns[aid] = AgentConn(self.host, self.port, self.tls, aid, nick, self.dm_queue, ignored)
+                cfg = self.agents_cfg[aid]
+                nick = cfg['nick']
+                nickserv = cfg.get('nickserv') or {}
+                password = nickserv.get('password') or ''
+                auth_pass = f'{nick}:{password}' if password else None
+                self.conns[aid] = AgentConn(self.host, self.port, self.tls, aid, nick, self.dm_queue, ignored, auth_pass=auth_pass)
 
     def handle(self, req):
         cmd = req.get('cmd')

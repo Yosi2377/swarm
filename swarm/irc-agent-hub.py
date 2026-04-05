@@ -148,6 +148,7 @@ class AgentConn:
         self.last_error = None
         self.last_connect = 0.0
         self.events = queue.Queue()
+        self.desired_channels = set()
         self.thread = threading.Thread(target=self.run, daemon=True)
         self.thread.start()
 
@@ -214,6 +215,9 @@ class AgentConn:
             self._handle_privmsg(text)
         if any(code in text for code in [' 001 ', ' 376 ', ' 422 ']):
             self.ready = True
+            for ch in sorted(self.desired_channels):
+                if ch.startswith('#') and ch not in self.joined:
+                    self.events.put({'kind': 'join', 'channel': ch})
             return
         if ' 433 ' in text:
             self.last_error = 'nickname in use'
@@ -274,7 +278,9 @@ class AgentConn:
                         kind = cmd.get('kind')
                         if kind == 'join':
                             ch = cmd['channel']
-                            if ch.startswith('#') and ch not in self.joined:
+                            if ch.startswith('#'):
+                                self.desired_channels.add(ch)
+                            if self.ready and ch.startswith('#') and ch not in self.joined:
                                 self.send_line(f'JOIN {ch}')
                         elif kind == 'send':
                             target = cmd['target']

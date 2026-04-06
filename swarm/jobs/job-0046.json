@@ -1,0 +1,34 @@
+{
+  "jobId": "job-0046",
+  "title": "🤖 FLOW-E2E routing verification",
+  "agent": "worker",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0046",
+  "createdAt": "2026-04-05T23:44:59.780Z",
+  "updatedAt": "2026-04-05T23:45:00.384Z",
+  "history": [
+    {
+      "at": "2026-04-05T23:44:59.780Z",
+      "type": "created",
+      "title": "🤖 FLOW-E2E routing verification",
+      "agent": "worker",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-05T23:44:59.817Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "🤖 FLOW-E2E routing verification",
+      "mode": "dedicated",
+      "channel": "#job-0046"
+    },
+    {
+      "at": "2026-04-05T23:45:00.384Z",
+      "type": "message",
+      "actor": "worker",
+      "message": "Routing verification job opened. Scope: routing verification only. No execution work started yet."
+    }
+  ]
+}

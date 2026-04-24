@@ -6,7 +6,7 @@
   "mode": "dedicated",
   "channel": "#job-0034",
   "createdAt": "2026-04-04T16:42:42.684Z",
-  "updatedAt": "2026-04-04T16:44:42.097Z",
+  "updatedAt": "2026-04-24T13:23:23.862Z",
   "history": [
     {
       "at": "2026-04-04T16:42:42.684Z",
@@ -40,7 +40,35 @@
       "at": "2026-04-04T16:44:42.097Z",
       "type": "closed",
       "summary": "STEP 1: Define the investigation question and success criteria → DONE\nSTEP 2: Gather internal data from BotVerse code, services, and logs → PENDING\nSTEP 3: Gather external data from live URLs/pages and domain checks → PENDING\nSTEP 4: Query past lessons for monitoring/investigation guidance → PENDING\nSTEP 5: Analyze findings into concrete status conclusions → PENDING\nSTEP 6: Write structured report to swarm memory → PENDING\nSTEP 7: Send final status summary to job channel → PENDING\nFINAL: Investigation started, step plan published → PARTIAL"
+    },
+    {
+      "at": "2026-04-24T13:19:37.143Z",
+      "type": "message",
+      "actor": "monitor",
+      "message": "STEP 1: Define the investigation question and success criteria → DONE\nSTEP 2: Gather internal data from BotVerse code, services, and logs → DONE\nSTEP 3: Gather external data from live URLs/pages and domain checks → PENDING\nSTEP 4: Query past lessons for monitoring/investigation guidance → PENDING\nSTEP 5: Analyze findings into concrete status conclusions → PENDING\nSTEP 6: Write structured report to swarm memory → PENDING\nSTEP 7: Send final status summary to job channel → PENDING\nFINAL: Internal BotVerse evidence gathered; services are up and logs show repeated production CORS rejections → PARTIAL"
+    },
+    {
+      "at": "2026-04-24T13:19:37.189Z",
+      "type": "closed",
+      "summary": "STEP 1: Define the investigation question and success criteria → DONE\nSTEP 2: Gather internal data from BotVerse code, services, and logs → DONE\nSTEP 3: Gather external data from live URLs/pages and domain checks → PENDING\nSTEP 4: Query past lessons for monitoring/investigation guidance → PENDING\nSTEP 5: Analyze findings into concrete status conclusions → PENDING\nSTEP 6: Write structured report to swarm memory → PENDING\nSTEP 7: Send final status summary to job channel → PENDING\nFINAL: Internal BotVerse evidence gathered; services are up and logs show repeated production CORS rejections → PARTIAL"
+    },
+    {
+      "at": "2026-04-24T13:20:36.478Z",
+      "type": "message",
+      "actor": "monitor",
+      "message": "📸 BotVerse homepage status check"
+    },
+    {
+      "at": "2026-04-24T13:23:23.818Z",
+      "type": "message",
+      "actor": "monitor",
+      "message": "STEP 1: Define the investigation question and success criteria → DONE\nSTEP 2: Gather internal data from BotVerse code, services, and logs → DONE\nSTEP 3: Gather external data from live URLs/pages and domain checks → DONE\nSTEP 4: Query past lessons for monitoring/investigation guidance → DONE\nSTEP 5: Analyze findings into concrete status conclusions → DONE\nSTEP 6: Write structured report to swarm memory → DONE\nSTEP 7: Send final status summary to job channel → DONE\nFINAL: BotVerse production and sandbox are up; botverse.dev resolves to 95.111.247.22, HTTPS and key pages return 200, tests/e2e.sh passed 43/43, screenshot was sent, and the main issue found is repeated production CORS rejections at server.js:168 that return 500 for disallowed preflight origins. Full report: swarm/memory/investigation-job-0034.md → ALL_PASS"
+    },
+    {
+      "at": "2026-04-24T13:23:23.862Z",
+      "type": "closed",
+      "summary": "STEP 1: Define the investigation question and success criteria → DONE\nSTEP 2: Gather internal data from BotVerse code, services, and logs → DONE\nSTEP 3: Gather external data from live URLs/pages and domain checks → DONE\nSTEP 4: Query past lessons for monitoring/investigation guidance → DONE\nSTEP 5: Analyze findings into concrete status conclusions → DONE\nSTEP 6: Write structured report to swarm memory → DONE\nSTEP 7: Send final status summary to job channel → DONE\nFINAL: BotVerse production and sandbox are up; botverse.dev resolves to 95.111.247.22, HTTPS and key pages return 200, tests/e2e.sh passed 43/43, screenshot was sent, and the main issue found is repeated production CORS rejections at server.js:168 that return 500 for disallowed preflight origins. Full report: swarm/memory/investigation-job-0034.md → ALL_PASS"
     }
   ],
-  "summary": "STEP 1: Define the investigation question and success criteria → DONE\nSTEP 2: Gather internal data from BotVerse code, services, and logs → PENDING\nSTEP 3: Gather external data from live URLs/pages and domain checks → PENDING\nSTEP 4: Query past lessons for monitoring/investigation guidance → PENDING\nSTEP 5: Analyze findings into concrete status conclusions → PENDING\nSTEP 6: Write structured report to swarm memory → PENDING\nSTEP 7: Send final status summary to job channel → PENDING\nFINAL: Investigation started, step plan published → PARTIAL"
+  "summary": "STEP 1: Define the investigation question and success criteria → DONE\nSTEP 2: Gather internal data from BotVerse code, services, and logs → DONE\nSTEP 3: Gather external data from live URLs/pages and domain checks → DONE\nSTEP 4: Query past lessons for monitoring/investigation guidance → DONE\nSTEP 5: Analyze findings into concrete status conclusions → DONE\nSTEP 6: Write structured report to swarm memory → DONE\nSTEP 7: Send final status summary to job channel → DONE\nFINAL: BotVerse production and sandbox are up; botverse.dev resolves to 95.111.247.22, HTTPS and key pages return 200, tests/e2e.sh passed 43/43, screenshot was sent, and the main issue found is repeated production CORS rejections at server.js:168 that return 500 for disallowed preflight origins. Full report: swarm/memory/investigation-job-0034.md → ALL_PASS"
 }

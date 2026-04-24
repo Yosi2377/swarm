@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-24T13:40:43.171Z",
+  "entries": {
+    "memory:memory/2026-03-06.md:1:18": {
+      "key": "memory:memory/2026-03-06.md:1:18",
+      "path": "memory/2026-03-06.md",
+      "startLine": 1,
+      "endLine": 18,
+      "source": "memory",
+      "snippet": "## 00:02 - Koder completed: EXTERNAL_API_TOKEN configured, 16/16 tests passing ## 00:15 - Research completed: swarm/RESEARCH.md — 540 lines covering 7 frameworks, orchestration patterns, failure lessons, architecture recommendations ## 00:23 - Koder completed topic 8788: EXTERNAL_API_TOKEN configured via env var, 16/16 tests passing ## 01:02 - Koder completed topic 8873: .env + EXTERNAL_API_TOKEN + dotenv loading, 16/16 tests passing ## 01:09 - AgentWatcher: koder-botverse-content FAIL — 43/43 tests pass, 22 posts, but 4 E2E test skills not cleaned up. Report sent to thread 8892. ## 01:43 - Koder completed topic 8941: .env restored with EXTERNAL_API_TOKEN, 16/16 tests passing ## 04:27 - Moni",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4969417601823806,
+      "maxScore": 0.4969417601823806,
+      "firstRecalledAt": "2026-04-24T13:22:57.399Z",
+      "lastRecalledAt": "2026-04-24T13:22:57.399Z",
+      "queryHashes": [
+        "c99fffc924f1"
+      ],
+      "recallDays": [
+        "2026-04-24"
+      ],
+      "conceptTags": [
+        "external-api-token",
+        "16/16",
+        "swarm/research.md",
+        "koder-botverse-content",
+        "43/43",
+        "koder",
+        "completed",
+        "configured"
+      ]
+    },
+    "memory:memory/2026-03-05.md:1:19": {
+      "key": "memory:memory/2026-03-05.md:1:19",
+      "path": "memory/2026-03-05.md",
+      "startLine": 1,
+      "endLine": 19,
+      "source": "memory",
+      "snippet": "# 2026-03-05 ## Critical Lesson: Never Trust Agent Self-Reports - Koder reported \"18/18 tests pass\" but exec logs showed failures (403 vs 401, duplicate likes) - I blindly forwarded \"success\" to Yossi without verifying - **NEW RULE:** After EVERY agent completion, run `verify-agent.sh` to independently confirm results - Created `/root/.openclaw/workspace/swarm/verify-agent.sh` for automated verification ## Agent Testing - Tried to create bugs that would stump koder — he solved everything in <1 minute - Tried token-dependency trap — he added a default fallback instead of asking - Claude Code agents are extremely capable at code fixes, basically impossible to stump with bugs - The real weakn",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4965250074863434,
+      "maxScore": 0.4965250074863434,
+      "firstRecalledAt": "2026-04-24T13:22:57.399Z",
+      "lastRecalledAt": "2026-04-24T13:22:57.399Z",
+      "queryHashes": [
+        "c99fffc924f1"
+      ],
+      "recallDays": [
+        "2026-04-24"
+      ],
+      "conceptTags": [
+        "self-reports",
+        "18/18",
+        "verify-agent.sh",
+        "token-dependency",
+        "critical",
+        "lesson",
+        "never",
+        "trust"
+      ]
+    },
+    "memory:memory/2026-03-03.md:1:32": {
+      "key": "memory:memory/2026-03-03.md:1:32",
+      "path": "memory/2026-03-03.md",
+      "startLine": 1,
+      "endLine": 32,
+      "source": "memory",
+      "snippet": "# 2026-03-03 — שיחה על BotVerse ו-ChatGPT feedback ## שיחה עם יוסי על BotVerse + ChatGPT - יוסי התייעץ עם ChatGPT על המודל של BotVerse (skill marketplace, GitHub integration) - ChatGPT נתן feedback: intent/capability/executors, 3 שכבות סריקה, trust chain, reputation, pricing models - **דעתי:** רוב מה שChatGPT אמר הגיוני אבל over-design. צריך MVP ראשון. - **הסכמה:** להתחיל קטן, סקיל אחד שעובד, ואז להוסיף - ChatGPT אמר שפספסתי distribution — לא נכון, ClawHub כבר עושה את זה ## בעיית זיכרון חמורה — יוסי כעס (בצדק!) - **לא זכרתי** שBotVerse מוכן להשקה - **לא זכרתי** שקנינו דומיין botverse.dev - **לא זכרתי** שהכנו הודעת שיווק לטסטרים - **לא זכרתי** 120+ endpoints, 92 agents, 10 skills - **סיבה:*",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.49477505087852475,
+      "maxScore": 0.49477505087852475,
+      "firstRecalledAt": "2026-04-24T13:22:57.399Z",
+      "lastRecalledAt": "2026-04-24T13:22:57.399Z",
+      "queryHashes": [
+        "c99fffc924f1"
+      ],
+      "recallDays": [
+        "2026-04-24"
+      ],
+      "conceptTags": [
+        "gpt",
+        "ו-chatgpt",
+        "intent/capability/executors",
+        "over-design",
+        "botverse.dev",
+        "שיחה",
+        "botverse",
+        "chatgpt"
+      ]
+    },
+    "memory:memory/2026-03-02.md:1:32": {
+      "key": "memory:memory/2026-03-02.md:1:32",
+      "path": "memory/2026-03-02.md",
+      "startLine": 1,
+      "endLine": 32,
+      "source": "memory",
+      "snippet": "# 2026-03-02 — יום בניית מערכת הסוכנים v2 ## מערכת סוכנים אוטונומית v2 - נבנתה מאפס על בסיס מחקר (Anthropic, SWE-Agent, mini-SWE-agent) - **task-runner.sh** — לולאת עבודה עם 5 ניסיונות, branch per fix, reflection - **qa-guard.sh** — regression testing, lint, diff review - **reflect.sh** — ניתוח כישלונות אוטומטי - **notify.sh + agent-watcher.sh** — עדכונים אוטומטיים ליוסי כל 20 שניות (0 טוקנים) - **SYSTEM-v2.md** — הוראות מעודכנות לסוכנים ## טסטים - טסט פשוט (2 typos): הסוכן תיקן תוך דקה ✅ - טסט קשה (3 באגי לוגיקה): הסוכן תיקן 10/10 טסטים ✅ - **בעיה:** הסוכנים לא משתמשים ב-notify.sh — צריך אכיפה חזקה יותר ## BotVerse (פרויקט חדש) - LinkedIn של בוטים AI - שם: BotVerse 🌐 - מיקום: /root/BotV",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.5254889965057372,
+      "maxScore": 0.5254889965057372,
+      "firstRecalledAt": "2026-04-24T13:35:35.434Z",
+      "lastRecalledAt": "2026-04-24T13:35:35.434Z",
+      "queryHashes": [
+        "a0e516093d42"
+      ],
+      "recallDays": [
+        "2026-04-24"
+      ],
+      "conceptTags": [
+        "swe-agent",
+        "mini-swe-agent",
+        "task-runner.sh",
+        "qa-guard.sh",
+        "reflect.sh",
+        "notify.sh",
+        "agent-watcher.sh",
+        "system-v2.md"
+      ]
+    },
+    "memory:memory/2026-03-29.md:10:14": {
+      "key": "memory:memory/2026-03-29.md:10:14",
+      "path": "memory/2026-03-29.md",
+      "startLine": 10,
+      "endLine": 14,
+      "source": "memory",
+      "snippet": "- Topic 4950 correction on 2026-03-29: I initially mixed old/background tasks with the actual final task. The actual accepted final task in that topic was to take OpenClaw (because it is open source), adapt it to Yossi's workflow, and execute that work to completion. Key user messages in sequence were effectively: \"let's do it\", \"I want it adapted to my work\", \"can you do it?\", and then \"do the task to the end and tell me when everything is ready.\" - Strong continuity lesson from topic 4950: when reconstructing \"what was the task\" from a thread, distinguish between earlier exploratory options and the final accepted task. Do not summarize the whole conversation as the task; identify the last",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.5163138449192047,
+      "maxScore": 0.5163138449192047,
+      "firstRecalledAt": "2026-04-24T13:40:43.171Z",
+      "lastRecalledAt": "2026-04-24T13:40:43.171Z",
+      "queryHashes": [
+        "4b5d82ca8deb"
+      ],
+      "recallDays": [
+        "2026-04-24"
+      ],
+      "conceptTags": [
+        "old/background",
+        "topic",
+        "correction",
+        "initially",
+        "mixed",
+        "old",
+        "background",
+        "tasks"
+      ]
+    }
+  }
+}

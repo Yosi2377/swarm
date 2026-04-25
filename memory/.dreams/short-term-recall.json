@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-24T13:40:43.171Z",
+  "updatedAt": "2026-04-25T20:01:17.377Z",
   "entries": {
     "memory:memory/2026-03-06.md:1:18": {
       "key": "memory:memory/2026-03-06.md:1:18",
@@ -155,6 +155,99 @@
         "old",
         "background",
         "tasks"
+      ]
+    },
+    "memory:memory/2026-02-19.md:17:35": {
+      "key": "memory:memory/2026-02-19.md:17:35",
+      "path": "memory/2026-02-19.md",
+      "startLine": 17,
+      "endLine": 35,
+      "source": "memory",
+      "snippet": "- delegate.sh flow: task → inject-lessons → inject-skills → sessions_spawn → learn.sh score - Token budget rule: cron = bash only, agent only when alert. No background token burn. ### Next Step: Yossi wants to test the system with a real task. When new session starts, continue from here — run the task through delegate.sh and verify the full Level 8 flow works. ### Commit: 61b3df4 — \"Level 8: self-improve system + inject-lessons + delegate wrapper + lesson cleanup\" ## Session: BettingPlatform Updates (Topic 4950) — Evening ### Done 1. **Odds stale warning inline** — moved from toast to inside match page with animation (bigger, bounce, pulse, glow) 2. **Bet failed warning inline** — same t",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7896165540245725,
+      "maxScore": 0.7896165540245725,
+      "firstRecalledAt": "2026-04-25T20:01:17.377Z",
+      "lastRecalledAt": "2026-04-25T20:01:17.377Z",
+      "queryHashes": [
+        "bf0f4b0f8ff5"
+      ],
+      "recallDays": [
+        "2026-04-25"
+      ],
+      "conceptTags": [
+        "delegate.sh",
+        "inject-lessons",
+        "inject-skills",
+        "sessions-spawn",
+        "learn.sh",
+        "self-improve",
+        "flow",
+        "task"
+      ]
+    },
+    "memory:memory/2026-02-19.md:1:22": {
+      "key": "memory:memory/2026-02-19.md:1:22",
+      "path": "memory/2026-02-19.md",
+      "startLine": 1,
+      "endLine": 22,
+      "source": "memory",
+      "snippet": "## Level 8 System — Ready for Testing ### What was built today: 1. **`swarm/delegate.sh`** — Full delegation wrapper: auto-injects lessons + skills into agent prompts. Usage: `bash swarm/delegate.sh <agent> \"task\" \"keywords\"` 2. **`swarm/inject-lessons.sh`** — TF-IDF search over lessons.json, returns top 5 relevant lessons. 0 tokens (bash only) 3. **`swarm/self-improve.sh`** — 5 bash checks: patterns, production health, CSS selectors, lesson quality, sandbox sync. 0 tokens 4. **`swarm/cron-self-improve.sh`** — Wrapper for cron, writes /tmp/watchdog-alert.json only when issues found 5. **Cron jobs**: `self-improve-morning` (10:00) + `self-improve-evening` (22:00) — bash only, agent wakes on",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.5136487513780593,
+      "maxScore": 0.5136487513780593,
+      "firstRecalledAt": "2026-04-25T20:01:17.377Z",
+      "lastRecalledAt": "2026-04-25T20:01:17.377Z",
+      "queryHashes": [
+        "bf0f4b0f8ff5"
+      ],
+      "recallDays": [
+        "2026-04-25"
+      ],
+      "conceptTags": [
+        "swarm/delegate.sh",
+        "auto-injects",
+        "swarm/inject-lessons.sh",
+        "tf-idf",
+        "lessons.json",
+        "swarm/self-improve.sh",
+        "swarm/cron-self-improve.sh",
+        "tmp/watchdog-alert.json"
+      ]
+    },
+    "memory:memory/2026-02-18.md:1:27": {
+      "key": "memory:memory/2026-02-18.md:1:27",
+      "path": "memory/2026-02-18.md",
+      "startLine": 1,
+      "endLine": 27,
+      "source": "memory",
+      "snippet": "# 2026-02-18 — Major Session ## Swarm System Levels 5.5-7.0 - Built scan-bugs.sh (Level 5.5), projects.json + project-task.sh (Level 6.0), evolve.sh (Level 6.5), spawn-agent.sh (Level 7.0) - Meta-agent test: spawned SEO agent → added schema.org structured data → deployed - 15 deploys today, 0 rollbacks ## Cron Jobs → Bash Watchdog (CRITICAL CHANGE) - **Removed all 7 AI cron jobs** — they burned Claude Max tokens (1,440+ AI calls/day!) - Archived in `swarm/crons-archive/` (7 JSON files) for future restore - **Replaced with `swarm/watchdog.sh`** — pure bash, systemd timer every 60s, 0 tokens - Watchdog checks: services, HTTP, disk, MongoDB, stale odds, JS errors, 404s - If bash finds code bu",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.48857034444808956,
+      "maxScore": 0.48857034444808956,
+      "firstRecalledAt": "2026-04-25T20:01:17.377Z",
+      "lastRecalledAt": "2026-04-25T20:01:17.377Z",
+      "queryHashes": [
+        "bf0f4b0f8ff5"
+      ],
+      "recallDays": [
+        "2026-04-25"
+      ],
+      "conceptTags": [
+        "5.5-7.0",
+        "scan-bugs.sh",
+        "5.5",
+        "projects.json",
+        "project-task.sh",
+        "6.0",
+        "evolve.sh",
+        "6.5"
       ]
     }
   }

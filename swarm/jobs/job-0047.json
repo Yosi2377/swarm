@@ -1,0 +1,34 @@
+{
+  "jobId": "job-0047",
+  "title": "📡 בדיקת תקינות מערכת הסוכנים",
+  "agent": "monitor",
+  "status": "open",
+  "mode": "dedicated",
+  "channel": "#job-0047",
+  "createdAt": "2026-04-30T03:15:51.441Z",
+  "updatedAt": "2026-04-30T03:15:57.167Z",
+  "history": [
+    {
+      "at": "2026-04-30T03:15:51.441Z",
+      "type": "created",
+      "title": "📡 בדיקת תקינות מערכת הסוכנים",
+      "agent": "monitor",
+      "mode": "ops",
+      "channel": "#myops"
+    },
+    {
+      "at": "2026-04-30T03:15:51.472Z",
+      "type": "channel-updated",
+      "reason": "task-classification",
+      "taskDescription": "📡 בדיקת תקינות מערכת הסוכנים",
+      "mode": "dedicated",
+      "channel": "#job-0047"
+    },
+    {
+      "at": "2026-04-30T03:15:57.167Z",
+      "type": "message",
+      "actor": "monitor",
+      "message": "📋 משימה: בדיקת תקינות מלאה למערכת הסוכנים (spawn, dispatch, watchdog, heartbeat, retry flow), והרצת בדיקות ברמת orchestrator + סיכום תקלות והמלצות תיקון."
+    }
+  ]
+}
